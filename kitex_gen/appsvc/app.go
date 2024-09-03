@@ -28,9 +28,9 @@ type App struct {
 	Logo            string              `thrift:"logo,13,required" frugal:"13,required,string" json:"logo"`
 	Author          *usersvc.User       `thrift:"author,14,required" frugal:"14,required,usersvc.User" json:"author"`
 	Labels          []string            `thrift:"labels,15,required" frugal:"15,required,list<string>" json:"labels"`
-	CreatedAt       int64               `thrift:"created_at,16,required" frugal:"16,required,i64" json:"created_at"`
-	UpdatedAt       int64               `thrift:"updated_at,17,required" frugal:"17,required,i64" json:"updated_at"`
-	PublishedAt     int64               `thrift:"published_at,18,required" frugal:"18,required,i64" json:"published_at"`
+	CreatedAt       *base.Time          `thrift:"created_at,16,required" frugal:"16,required,base.Time" json:"created_at"`
+	UpdatedAt       *base.Time          `thrift:"updated_at,17,required" frugal:"17,required,base.Time" json:"updated_at"`
+	PublishedAt     *base.Time          `thrift:"published_at,18,optional" frugal:"18,optional,base.Time" json:"published_at,omitempty"`
 }
 
 func NewApp() *App {
@@ -105,15 +105,30 @@ func (p *App) GetLabels() (v []string) {
 	return p.Labels
 }
 
-func (p *App) GetCreatedAt() (v int64) {
+var App_CreatedAt_DEFAULT *base.Time
+
+func (p *App) GetCreatedAt() (v *base.Time) {
+	if !p.IsSetCreatedAt() {
+		return App_CreatedAt_DEFAULT
+	}
 	return p.CreatedAt
 }
 
-func (p *App) GetUpdatedAt() (v int64) {
+var App_UpdatedAt_DEFAULT *base.Time
+
+func (p *App) GetUpdatedAt() (v *base.Time) {
+	if !p.IsSetUpdatedAt() {
+		return App_UpdatedAt_DEFAULT
+	}
 	return p.UpdatedAt
 }
 
-func (p *App) GetPublishedAt() (v int64) {
+var App_PublishedAt_DEFAULT *base.Time
+
+func (p *App) GetPublishedAt() (v *base.Time) {
+	if !p.IsSetPublishedAt() {
+		return App_PublishedAt_DEFAULT
+	}
 	return p.PublishedAt
 }
 func (p *App) SetId(val int64) {
@@ -161,13 +176,13 @@ func (p *App) SetAuthor(val *usersvc.User) {
 func (p *App) SetLabels(val []string) {
 	p.Labels = val
 }
-func (p *App) SetCreatedAt(val int64) {
+func (p *App) SetCreatedAt(val *base.Time) {
 	p.CreatedAt = val
 }
-func (p *App) SetUpdatedAt(val int64) {
+func (p *App) SetUpdatedAt(val *base.Time) {
 	p.UpdatedAt = val
 }
-func (p *App) SetPublishedAt(val int64) {
+func (p *App) SetPublishedAt(val *base.Time) {
 	p.PublishedAt = val
 }
 
@@ -196,6 +211,18 @@ func (p *App) IsSetAuthor() bool {
 	return p.Author != nil
 }
 
+func (p *App) IsSetCreatedAt() bool {
+	return p.CreatedAt != nil
+}
+
+func (p *App) IsSetUpdatedAt() bool {
+	return p.UpdatedAt != nil
+}
+
+func (p *App) IsSetPublishedAt() bool {
+	return p.PublishedAt != nil
+}
+
 func (p *App) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
@@ -217,7 +244,6 @@ func (p *App) Read(iprot thrift.TProtocol) (err error) {
 	var issetLabels bool = false
 	var issetCreatedAt bool = false
 	var issetUpdatedAt bool = false
-	var issetPublishedAt bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -369,7 +395,7 @@ func (p *App) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 16:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField16(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -378,7 +404,7 @@ func (p *App) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 17:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField17(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -387,11 +413,10 @@ func (p *App) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 18:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField18(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPublishedAt = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -490,11 +515,6 @@ func (p *App) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetUpdatedAt {
 		fieldId = 17
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetPublishedAt {
-		fieldId = 18
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -714,34 +734,25 @@ func (p *App) ReadField15(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *App) ReadField16(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
 	p.CreatedAt = _field
 	return nil
 }
 func (p *App) ReadField17(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
 	p.UpdatedAt = _field
 	return nil
 }
 func (p *App) ReadField18(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
 	p.PublishedAt = _field
 	return nil
@@ -1123,10 +1134,10 @@ WriteFieldEndError:
 }
 
 func (p *App) writeField16(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("created_at", thrift.I64, 16); err != nil {
+	if err = oprot.WriteFieldBegin("created_at", thrift.STRUCT, 16); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.CreatedAt); err != nil {
+	if err := p.CreatedAt.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1140,10 +1151,10 @@ WriteFieldEndError:
 }
 
 func (p *App) writeField17(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("updated_at", thrift.I64, 17); err != nil {
+	if err = oprot.WriteFieldBegin("updated_at", thrift.STRUCT, 17); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.UpdatedAt); err != nil {
+	if err := p.UpdatedAt.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1157,14 +1168,16 @@ WriteFieldEndError:
 }
 
 func (p *App) writeField18(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("published_at", thrift.I64, 18); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.PublishedAt); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetPublishedAt() {
+		if err = oprot.WriteFieldBegin("published_at", thrift.STRUCT, 18); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.PublishedAt.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -1367,23 +1380,23 @@ func (p *App) Field15DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *App) Field16DeepEqual(src int64) bool {
+func (p *App) Field16DeepEqual(src *base.Time) bool {
 
-	if p.CreatedAt != src {
+	if !p.CreatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *App) Field17DeepEqual(src int64) bool {
+func (p *App) Field17DeepEqual(src *base.Time) bool {
 
-	if p.UpdatedAt != src {
+	if !p.UpdatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *App) Field18DeepEqual(src int64) bool {
+func (p *App) Field18DeepEqual(src *base.Time) bool {
 
-	if p.PublishedAt != src {
+	if !p.PublishedAt.DeepEqual(src) {
 		return false
 	}
 	return true
@@ -1402,7 +1415,8 @@ type CreateAppReq struct {
 	PresetQuestions []string `thrift:"preset_questions,10,required" frugal:"10,required,list<string>" json:"preset_questions"`
 	PluginIds       []int64  `thrift:"plugin_ids,11,required" frugal:"11,required,list<i64>" json:"plugin_ids"`
 	Logo            string   `thrift:"logo,12,required" frugal:"12,required,string" json:"logo"`
-	Labels          []string `thrift:"labels,13,required" frugal:"13,required,list<string>" json:"labels"`
+	LabelIds        []int64  `thrift:"label_ids,13,required" frugal:"13,required,list<i64>" json:"label_ids"`
+	NewLabelTexts_  []string `thrift:"new_label_texts,14,required" frugal:"14,required,list<string>" json:"new_label_texts"`
 }
 
 func NewCreateAppReq() *CreateAppReq {
@@ -1460,8 +1474,12 @@ func (p *CreateAppReq) GetLogo() (v string) {
 	return p.Logo
 }
 
-func (p *CreateAppReq) GetLabels() (v []string) {
-	return p.Labels
+func (p *CreateAppReq) GetLabelIds() (v []int64) {
+	return p.LabelIds
+}
+
+func (p *CreateAppReq) GetNewLabelTexts_() (v []string) {
+	return p.NewLabelTexts_
 }
 func (p *CreateAppReq) SetName(val string) {
 	p.Name = val
@@ -1499,8 +1517,11 @@ func (p *CreateAppReq) SetPluginIds(val []int64) {
 func (p *CreateAppReq) SetLogo(val string) {
 	p.Logo = val
 }
-func (p *CreateAppReq) SetLabels(val []string) {
-	p.Labels = val
+func (p *CreateAppReq) SetLabelIds(val []int64) {
+	p.LabelIds = val
+}
+func (p *CreateAppReq) SetNewLabelTexts_(val []string) {
+	p.NewLabelTexts_ = val
 }
 
 var fieldIDToName_CreateAppReq = map[int16]string{
@@ -1516,7 +1537,8 @@ var fieldIDToName_CreateAppReq = map[int16]string{
 	10: "preset_questions",
 	11: "plugin_ids",
 	12: "logo",
-	13: "labels",
+	13: "label_ids",
+	14: "new_label_texts",
 }
 
 func (p *CreateAppReq) Read(iprot thrift.TProtocol) (err error) {
@@ -1535,7 +1557,8 @@ func (p *CreateAppReq) Read(iprot thrift.TProtocol) (err error) {
 	var issetPresetQuestions bool = false
 	var issetPluginIds bool = false
 	var issetLogo bool = false
-	var issetLabels bool = false
+	var issetLabelIds bool = false
+	var issetNewLabelTexts_ bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1664,7 +1687,16 @@ func (p *CreateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField13(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetLabels = true
+				issetLabelIds = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 14:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField14(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetNewLabelTexts_ = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -1741,8 +1773,13 @@ func (p *CreateAppReq) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetLabels {
+	if !issetLabelIds {
 		fieldId = 13
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetNewLabelTexts_ {
+		fieldId = 14
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -1924,6 +1961,29 @@ func (p *CreateAppReq) ReadField13(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
+	_field := make([]int64, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.LabelIds = _field
+	return nil
+}
+func (p *CreateAppReq) ReadField14(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
 	_field := make([]string, 0, size)
 	for i := 0; i < size; i++ {
 
@@ -1939,7 +1999,7 @@ func (p *CreateAppReq) ReadField13(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.Labels = _field
+	p.NewLabelTexts_ = _field
 	return nil
 }
 
@@ -1999,6 +2059,10 @@ func (p *CreateAppReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField13(oprot); err != nil {
 			fieldId = 13
+			goto WriteFieldError
+		}
+		if err = p.writeField14(oprot); err != nil {
+			fieldId = 14
 			goto WriteFieldError
 		}
 	}
@@ -2240,14 +2304,14 @@ WriteFieldEndError:
 }
 
 func (p *CreateAppReq) writeField13(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("labels", thrift.LIST, 13); err != nil {
+	if err = oprot.WriteFieldBegin("label_ids", thrift.LIST, 13); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.Labels)); err != nil {
+	if err := oprot.WriteListBegin(thrift.I64, len(p.LabelIds)); err != nil {
 		return err
 	}
-	for _, v := range p.Labels {
-		if err := oprot.WriteString(v); err != nil {
+	for _, v := range p.LabelIds {
+		if err := oprot.WriteI64(v); err != nil {
 			return err
 		}
 	}
@@ -2262,6 +2326,31 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 13 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 13 end error: ", p), err)
+}
+
+func (p *CreateAppReq) writeField14(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("new_label_texts", thrift.LIST, 14); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.STRING, len(p.NewLabelTexts_)); err != nil {
+		return err
+	}
+	for _, v := range p.NewLabelTexts_ {
+		if err := oprot.WriteString(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 14 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 14 end error: ", p), err)
 }
 
 func (p *CreateAppReq) String() string {
@@ -2314,7 +2403,10 @@ func (p *CreateAppReq) DeepEqual(ano *CreateAppReq) bool {
 	if !p.Field12DeepEqual(ano.Logo) {
 		return false
 	}
-	if !p.Field13DeepEqual(ano.Labels) {
+	if !p.Field13DeepEqual(ano.LabelIds) {
+		return false
+	}
+	if !p.Field14DeepEqual(ano.NewLabelTexts_) {
 		return false
 	}
 	return true
@@ -2416,12 +2508,25 @@ func (p *CreateAppReq) Field12DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *CreateAppReq) Field13DeepEqual(src []string) bool {
+func (p *CreateAppReq) Field13DeepEqual(src []int64) bool {
 
-	if len(p.Labels) != len(src) {
+	if len(p.LabelIds) != len(src) {
 		return false
 	}
-	for i, v := range p.Labels {
+	for i, v := range p.LabelIds {
+		_src := src[i]
+		if v != _src {
+			return false
+		}
+	}
+	return true
+}
+func (p *CreateAppReq) Field14DeepEqual(src []string) bool {
+
+	if len(p.NewLabelTexts_) != len(src) {
+		return false
+	}
+	for i, v := range p.NewLabelTexts_ {
 		_src := src[i]
 		if strings.Compare(v, _src) != 0 {
 			return false
@@ -2444,7 +2549,8 @@ type UpdateAppReq struct {
 	PresetQuestions []string `thrift:"preset_questions,11,required" frugal:"11,required,list<string>" json:"preset_questions"`
 	PluginIds       []int64  `thrift:"plugin_ids,12,required" frugal:"12,required,list<i64>" json:"plugin_ids"`
 	Logo            string   `thrift:"logo,13,required" frugal:"13,required,string" json:"logo"`
-	Labels          []string `thrift:"labels,14,required" frugal:"14,required,list<string>" json:"labels"`
+	LabelIds        []int64  `thrift:"label_ids,14,required" frugal:"14,required,list<i64>" json:"label_ids"`
+	NewLabelTexts_  []string `thrift:"new_label_texts,15,required" frugal:"15,required,list<string>" json:"new_label_texts"`
 }
 
 func NewUpdateAppReq() *UpdateAppReq {
@@ -2506,8 +2612,12 @@ func (p *UpdateAppReq) GetLogo() (v string) {
 	return p.Logo
 }
 
-func (p *UpdateAppReq) GetLabels() (v []string) {
-	return p.Labels
+func (p *UpdateAppReq) GetLabelIds() (v []int64) {
+	return p.LabelIds
+}
+
+func (p *UpdateAppReq) GetNewLabelTexts_() (v []string) {
+	return p.NewLabelTexts_
 }
 func (p *UpdateAppReq) SetId(val int64) {
 	p.Id = val
@@ -2548,8 +2658,11 @@ func (p *UpdateAppReq) SetPluginIds(val []int64) {
 func (p *UpdateAppReq) SetLogo(val string) {
 	p.Logo = val
 }
-func (p *UpdateAppReq) SetLabels(val []string) {
-	p.Labels = val
+func (p *UpdateAppReq) SetLabelIds(val []int64) {
+	p.LabelIds = val
+}
+func (p *UpdateAppReq) SetNewLabelTexts_(val []string) {
+	p.NewLabelTexts_ = val
 }
 
 var fieldIDToName_UpdateAppReq = map[int16]string{
@@ -2566,7 +2679,8 @@ var fieldIDToName_UpdateAppReq = map[int16]string{
 	11: "preset_questions",
 	12: "plugin_ids",
 	13: "logo",
-	14: "labels",
+	14: "label_ids",
+	15: "new_label_texts",
 }
 
 func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
@@ -2586,7 +2700,8 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 	var issetPresetQuestions bool = false
 	var issetPluginIds bool = false
 	var issetLogo bool = false
-	var issetLabels bool = false
+	var issetLabelIds bool = false
+	var issetNewLabelTexts_ bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -2724,7 +2839,16 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField14(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetLabels = true
+				issetLabelIds = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 15:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField15(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetNewLabelTexts_ = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -2806,8 +2930,13 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetLabels {
+	if !issetLabelIds {
 		fieldId = 14
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetNewLabelTexts_ {
+		fieldId = 15
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -3000,6 +3129,29 @@ func (p *UpdateAppReq) ReadField14(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
+	_field := make([]int64, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.LabelIds = _field
+	return nil
+}
+func (p *UpdateAppReq) ReadField15(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
 	_field := make([]string, 0, size)
 	for i := 0; i < size; i++ {
 
@@ -3015,7 +3167,7 @@ func (p *UpdateAppReq) ReadField14(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.Labels = _field
+	p.NewLabelTexts_ = _field
 	return nil
 }
 
@@ -3079,6 +3231,10 @@ func (p *UpdateAppReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField14(oprot); err != nil {
 			fieldId = 14
+			goto WriteFieldError
+		}
+		if err = p.writeField15(oprot); err != nil {
+			fieldId = 15
 			goto WriteFieldError
 		}
 	}
@@ -3337,14 +3493,14 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField14(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("labels", thrift.LIST, 14); err != nil {
+	if err = oprot.WriteFieldBegin("label_ids", thrift.LIST, 14); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.Labels)); err != nil {
+	if err := oprot.WriteListBegin(thrift.I64, len(p.LabelIds)); err != nil {
 		return err
 	}
-	for _, v := range p.Labels {
-		if err := oprot.WriteString(v); err != nil {
+	for _, v := range p.LabelIds {
+		if err := oprot.WriteI64(v); err != nil {
 			return err
 		}
 	}
@@ -3359,6 +3515,31 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 14 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 14 end error: ", p), err)
+}
+
+func (p *UpdateAppReq) writeField15(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("new_label_texts", thrift.LIST, 15); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.STRING, len(p.NewLabelTexts_)); err != nil {
+		return err
+	}
+	for _, v := range p.NewLabelTexts_ {
+		if err := oprot.WriteString(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 15 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 15 end error: ", p), err)
 }
 
 func (p *UpdateAppReq) String() string {
@@ -3414,7 +3595,10 @@ func (p *UpdateAppReq) DeepEqual(ano *UpdateAppReq) bool {
 	if !p.Field13DeepEqual(ano.Logo) {
 		return false
 	}
-	if !p.Field14DeepEqual(ano.Labels) {
+	if !p.Field14DeepEqual(ano.LabelIds) {
+		return false
+	}
+	if !p.Field15DeepEqual(ano.NewLabelTexts_) {
 		return false
 	}
 	return true
@@ -3523,12 +3707,25 @@ func (p *UpdateAppReq) Field13DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field14DeepEqual(src []string) bool {
+func (p *UpdateAppReq) Field14DeepEqual(src []int64) bool {
 
-	if len(p.Labels) != len(src) {
+	if len(p.LabelIds) != len(src) {
 		return false
 	}
-	for i, v := range p.Labels {
+	for i, v := range p.LabelIds {
+		_src := src[i]
+		if v != _src {
+			return false
+		}
+	}
+	return true
+}
+func (p *UpdateAppReq) Field15DeepEqual(src []string) bool {
+
+	if len(p.NewLabelTexts_) != len(src) {
+		return false
+	}
+	for i, v := range p.NewLabelTexts_ {
 		_src := src[i]
 		if strings.Compare(v, _src) != 0 {
 			return false
@@ -4304,6 +4501,827 @@ func (p *ListAppResp) Field2DeepEqual(src []*App) bool {
 	return true
 }
 
+type AppLabel struct {
+	Id        int64      `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Text      string     `thrift:"text,2,required" frugal:"2,required,string" json:"text"`
+	CreatedAt *base.Time `thrift:"created_at,3,required" frugal:"3,required,base.Time" json:"created_at"`
+}
+
+func NewAppLabel() *AppLabel {
+	return &AppLabel{}
+}
+
+func (p *AppLabel) InitDefault() {
+}
+
+func (p *AppLabel) GetId() (v int64) {
+	return p.Id
+}
+
+func (p *AppLabel) GetText() (v string) {
+	return p.Text
+}
+
+var AppLabel_CreatedAt_DEFAULT *base.Time
+
+func (p *AppLabel) GetCreatedAt() (v *base.Time) {
+	if !p.IsSetCreatedAt() {
+		return AppLabel_CreatedAt_DEFAULT
+	}
+	return p.CreatedAt
+}
+func (p *AppLabel) SetId(val int64) {
+	p.Id = val
+}
+func (p *AppLabel) SetText(val string) {
+	p.Text = val
+}
+func (p *AppLabel) SetCreatedAt(val *base.Time) {
+	p.CreatedAt = val
+}
+
+var fieldIDToName_AppLabel = map[int16]string{
+	1: "id",
+	2: "text",
+	3: "created_at",
+}
+
+func (p *AppLabel) IsSetCreatedAt() bool {
+	return p.CreatedAt != nil
+}
+
+func (p *AppLabel) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetId bool = false
+	var issetText bool = false
+	var issetCreatedAt bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetId = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetText = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetCreatedAt = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetId {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetText {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCreatedAt {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_AppLabel[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_AppLabel[fieldId]))
+}
+
+func (p *AppLabel) ReadField1(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Id = _field
+	return nil
+}
+func (p *AppLabel) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Text = _field
+	return nil
+}
+func (p *AppLabel) ReadField3(iprot thrift.TProtocol) error {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.CreatedAt = _field
+	return nil
+}
+
+func (p *AppLabel) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("AppLabel"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *AppLabel) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("id", thrift.I64, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Id); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *AppLabel) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("text", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Text); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *AppLabel) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("created_at", thrift.STRUCT, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.CreatedAt.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *AppLabel) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("AppLabel(%+v)", *p)
+
+}
+
+func (p *AppLabel) DeepEqual(ano *AppLabel) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Id) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.Text) {
+		return false
+	}
+	if !p.Field3DeepEqual(ano.CreatedAt) {
+		return false
+	}
+	return true
+}
+
+func (p *AppLabel) Field1DeepEqual(src int64) bool {
+
+	if p.Id != src {
+		return false
+	}
+	return true
+}
+func (p *AppLabel) Field2DeepEqual(src string) bool {
+
+	if strings.Compare(p.Text, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *AppLabel) Field3DeepEqual(src *base.Time) bool {
+
+	if !p.CreatedAt.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type ListAppLabelReq struct {
+	Pagination *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
+	Text       string              `thrift:"text,2,required" frugal:"2,required,string" json:"text"`
+}
+
+func NewListAppLabelReq() *ListAppLabelReq {
+	return &ListAppLabelReq{}
+}
+
+func (p *ListAppLabelReq) InitDefault() {
+}
+
+var ListAppLabelReq_Pagination_DEFAULT *base.PaginationReq
+
+func (p *ListAppLabelReq) GetPagination() (v *base.PaginationReq) {
+	if !p.IsSetPagination() {
+		return ListAppLabelReq_Pagination_DEFAULT
+	}
+	return p.Pagination
+}
+
+func (p *ListAppLabelReq) GetText() (v string) {
+	return p.Text
+}
+func (p *ListAppLabelReq) SetPagination(val *base.PaginationReq) {
+	p.Pagination = val
+}
+func (p *ListAppLabelReq) SetText(val string) {
+	p.Text = val
+}
+
+var fieldIDToName_ListAppLabelReq = map[int16]string{
+	1: "pagination",
+	2: "text",
+}
+
+func (p *ListAppLabelReq) IsSetPagination() bool {
+	return p.Pagination != nil
+}
+
+func (p *ListAppLabelReq) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetPagination bool = false
+	var issetText bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetPagination = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetText = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetPagination {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetText {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ListAppLabelReq[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ListAppLabelReq[fieldId]))
+}
+
+func (p *ListAppLabelReq) ReadField1(iprot thrift.TProtocol) error {
+	_field := base.NewPaginationReq()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Pagination = _field
+	return nil
+}
+func (p *ListAppLabelReq) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Text = _field
+	return nil
+}
+
+func (p *ListAppLabelReq) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ListAppLabelReq"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ListAppLabelReq) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("pagination", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Pagination.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *ListAppLabelReq) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("text", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Text); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *ListAppLabelReq) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ListAppLabelReq(%+v)", *p)
+
+}
+
+func (p *ListAppLabelReq) DeepEqual(ano *ListAppLabelReq) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Pagination) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.Text) {
+		return false
+	}
+	return true
+}
+
+func (p *ListAppLabelReq) Field1DeepEqual(src *base.PaginationReq) bool {
+
+	if !p.Pagination.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+func (p *ListAppLabelReq) Field2DeepEqual(src string) bool {
+
+	if strings.Compare(p.Text, src) != 0 {
+		return false
+	}
+	return true
+}
+
+type ListAppLabelResp struct {
+	Pagination *base.PaginationResp `thrift:"pagination,1,required" frugal:"1,required,base.PaginationResp" json:"pagination"`
+	Labels     []*AppLabel          `thrift:"labels,2,required" frugal:"2,required,list<AppLabel>" json:"labels"`
+}
+
+func NewListAppLabelResp() *ListAppLabelResp {
+	return &ListAppLabelResp{}
+}
+
+func (p *ListAppLabelResp) InitDefault() {
+}
+
+var ListAppLabelResp_Pagination_DEFAULT *base.PaginationResp
+
+func (p *ListAppLabelResp) GetPagination() (v *base.PaginationResp) {
+	if !p.IsSetPagination() {
+		return ListAppLabelResp_Pagination_DEFAULT
+	}
+	return p.Pagination
+}
+
+func (p *ListAppLabelResp) GetLabels() (v []*AppLabel) {
+	return p.Labels
+}
+func (p *ListAppLabelResp) SetPagination(val *base.PaginationResp) {
+	p.Pagination = val
+}
+func (p *ListAppLabelResp) SetLabels(val []*AppLabel) {
+	p.Labels = val
+}
+
+var fieldIDToName_ListAppLabelResp = map[int16]string{
+	1: "pagination",
+	2: "labels",
+}
+
+func (p *ListAppLabelResp) IsSetPagination() bool {
+	return p.Pagination != nil
+}
+
+func (p *ListAppLabelResp) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetPagination bool = false
+	var issetLabels bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetPagination = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetLabels = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetPagination {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetLabels {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ListAppLabelResp[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ListAppLabelResp[fieldId]))
+}
+
+func (p *ListAppLabelResp) ReadField1(iprot thrift.TProtocol) error {
+	_field := base.NewPaginationResp()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Pagination = _field
+	return nil
+}
+func (p *ListAppLabelResp) ReadField2(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	_field := make([]*AppLabel, 0, size)
+	values := make([]AppLabel, size)
+	for i := 0; i < size; i++ {
+		_elem := &values[i]
+		_elem.InitDefault()
+
+		if err := _elem.Read(iprot); err != nil {
+			return err
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.Labels = _field
+	return nil
+}
+
+func (p *ListAppLabelResp) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ListAppLabelResp"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ListAppLabelResp) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("pagination", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Pagination.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *ListAppLabelResp) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("labels", thrift.LIST, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Labels)); err != nil {
+		return err
+	}
+	for _, v := range p.Labels {
+		if err := v.Write(oprot); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *ListAppLabelResp) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ListAppLabelResp(%+v)", *p)
+
+}
+
+func (p *ListAppLabelResp) DeepEqual(ano *ListAppLabelResp) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Pagination) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.Labels) {
+		return false
+	}
+	return true
+}
+
+func (p *ListAppLabelResp) Field1DeepEqual(src *base.PaginationResp) bool {
+
+	if !p.Pagination.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+func (p *ListAppLabelResp) Field2DeepEqual(src []*AppLabel) bool {
+
+	if len(p.Labels) != len(src) {
+		return false
+	}
+	for i, v := range p.Labels {
+		_src := src[i]
+		if !v.DeepEqual(_src) {
+			return false
+		}
+	}
+	return true
+}
+
 type AppService interface {
 	CreateApp(ctx context.Context, req *CreateAppReq) (r *base.Empty, err error)
 
@@ -4314,6 +5332,10 @@ type AppService interface {
 	GetAppByID(ctx context.Context, req *base.IDReq) (r *App, err error)
 
 	ListApp(ctx context.Context, req *ListAppReq) (r *ListAppResp, err error)
+
+	PublishApp(ctx context.Context, req *base.IDReq) (r *base.Empty, err error)
+
+	ListAppLabel(ctx context.Context, req *ListAppLabelReq) (r *ListAppLabelResp, err error)
 }
 
 type AppServiceCreateAppArgs struct {
@@ -6009,6 +7031,686 @@ func (p *AppServiceListAppResult) DeepEqual(ano *AppServiceListAppResult) bool {
 }
 
 func (p *AppServiceListAppResult) Field0DeepEqual(src *ListAppResp) bool {
+
+	if !p.Success.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type AppServicePublishAppArgs struct {
+	Req *base.IDReq `thrift:"req,1" frugal:"1,default,base.IDReq" json:"req"`
+}
+
+func NewAppServicePublishAppArgs() *AppServicePublishAppArgs {
+	return &AppServicePublishAppArgs{}
+}
+
+func (p *AppServicePublishAppArgs) InitDefault() {
+}
+
+var AppServicePublishAppArgs_Req_DEFAULT *base.IDReq
+
+func (p *AppServicePublishAppArgs) GetReq() (v *base.IDReq) {
+	if !p.IsSetReq() {
+		return AppServicePublishAppArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *AppServicePublishAppArgs) SetReq(val *base.IDReq) {
+	p.Req = val
+}
+
+var fieldIDToName_AppServicePublishAppArgs = map[int16]string{
+	1: "req",
+}
+
+func (p *AppServicePublishAppArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *AppServicePublishAppArgs) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_AppServicePublishAppArgs[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *AppServicePublishAppArgs) ReadField1(iprot thrift.TProtocol) error {
+	_field := base.NewIDReq()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Req = _field
+	return nil
+}
+
+func (p *AppServicePublishAppArgs) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("PublishApp_args"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *AppServicePublishAppArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Req.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *AppServicePublishAppArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("AppServicePublishAppArgs(%+v)", *p)
+
+}
+
+func (p *AppServicePublishAppArgs) DeepEqual(ano *AppServicePublishAppArgs) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Req) {
+		return false
+	}
+	return true
+}
+
+func (p *AppServicePublishAppArgs) Field1DeepEqual(src *base.IDReq) bool {
+
+	if !p.Req.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type AppServicePublishAppResult struct {
+	Success *base.Empty `thrift:"success,0,optional" frugal:"0,optional,base.Empty" json:"success,omitempty"`
+}
+
+func NewAppServicePublishAppResult() *AppServicePublishAppResult {
+	return &AppServicePublishAppResult{}
+}
+
+func (p *AppServicePublishAppResult) InitDefault() {
+}
+
+var AppServicePublishAppResult_Success_DEFAULT *base.Empty
+
+func (p *AppServicePublishAppResult) GetSuccess() (v *base.Empty) {
+	if !p.IsSetSuccess() {
+		return AppServicePublishAppResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *AppServicePublishAppResult) SetSuccess(x interface{}) {
+	p.Success = x.(*base.Empty)
+}
+
+var fieldIDToName_AppServicePublishAppResult = map[int16]string{
+	0: "success",
+}
+
+func (p *AppServicePublishAppResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *AppServicePublishAppResult) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 0:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField0(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_AppServicePublishAppResult[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *AppServicePublishAppResult) ReadField0(iprot thrift.TProtocol) error {
+	_field := base.NewEmpty()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Success = _field
+	return nil
+}
+
+func (p *AppServicePublishAppResult) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("PublishApp_result"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField0(oprot); err != nil {
+			fieldId = 0
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *AppServicePublishAppResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Success.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
+}
+
+func (p *AppServicePublishAppResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("AppServicePublishAppResult(%+v)", *p)
+
+}
+
+func (p *AppServicePublishAppResult) DeepEqual(ano *AppServicePublishAppResult) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field0DeepEqual(ano.Success) {
+		return false
+	}
+	return true
+}
+
+func (p *AppServicePublishAppResult) Field0DeepEqual(src *base.Empty) bool {
+
+	if !p.Success.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type AppServiceListAppLabelArgs struct {
+	Req *ListAppLabelReq `thrift:"req,1" frugal:"1,default,ListAppLabelReq" json:"req"`
+}
+
+func NewAppServiceListAppLabelArgs() *AppServiceListAppLabelArgs {
+	return &AppServiceListAppLabelArgs{}
+}
+
+func (p *AppServiceListAppLabelArgs) InitDefault() {
+}
+
+var AppServiceListAppLabelArgs_Req_DEFAULT *ListAppLabelReq
+
+func (p *AppServiceListAppLabelArgs) GetReq() (v *ListAppLabelReq) {
+	if !p.IsSetReq() {
+		return AppServiceListAppLabelArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *AppServiceListAppLabelArgs) SetReq(val *ListAppLabelReq) {
+	p.Req = val
+}
+
+var fieldIDToName_AppServiceListAppLabelArgs = map[int16]string{
+	1: "req",
+}
+
+func (p *AppServiceListAppLabelArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *AppServiceListAppLabelArgs) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_AppServiceListAppLabelArgs[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *AppServiceListAppLabelArgs) ReadField1(iprot thrift.TProtocol) error {
+	_field := NewListAppLabelReq()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Req = _field
+	return nil
+}
+
+func (p *AppServiceListAppLabelArgs) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ListAppLabel_args"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *AppServiceListAppLabelArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Req.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *AppServiceListAppLabelArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("AppServiceListAppLabelArgs(%+v)", *p)
+
+}
+
+func (p *AppServiceListAppLabelArgs) DeepEqual(ano *AppServiceListAppLabelArgs) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Req) {
+		return false
+	}
+	return true
+}
+
+func (p *AppServiceListAppLabelArgs) Field1DeepEqual(src *ListAppLabelReq) bool {
+
+	if !p.Req.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type AppServiceListAppLabelResult struct {
+	Success *ListAppLabelResp `thrift:"success,0,optional" frugal:"0,optional,ListAppLabelResp" json:"success,omitempty"`
+}
+
+func NewAppServiceListAppLabelResult() *AppServiceListAppLabelResult {
+	return &AppServiceListAppLabelResult{}
+}
+
+func (p *AppServiceListAppLabelResult) InitDefault() {
+}
+
+var AppServiceListAppLabelResult_Success_DEFAULT *ListAppLabelResp
+
+func (p *AppServiceListAppLabelResult) GetSuccess() (v *ListAppLabelResp) {
+	if !p.IsSetSuccess() {
+		return AppServiceListAppLabelResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *AppServiceListAppLabelResult) SetSuccess(x interface{}) {
+	p.Success = x.(*ListAppLabelResp)
+}
+
+var fieldIDToName_AppServiceListAppLabelResult = map[int16]string{
+	0: "success",
+}
+
+func (p *AppServiceListAppLabelResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *AppServiceListAppLabelResult) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 0:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField0(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_AppServiceListAppLabelResult[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *AppServiceListAppLabelResult) ReadField0(iprot thrift.TProtocol) error {
+	_field := NewListAppLabelResp()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Success = _field
+	return nil
+}
+
+func (p *AppServiceListAppLabelResult) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ListAppLabel_result"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField0(oprot); err != nil {
+			fieldId = 0
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *AppServiceListAppLabelResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Success.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
+}
+
+func (p *AppServiceListAppLabelResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("AppServiceListAppLabelResult(%+v)", *p)
+
+}
+
+func (p *AppServiceListAppLabelResult) DeepEqual(ano *AppServiceListAppLabelResult) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field0DeepEqual(ano.Success) {
+		return false
+	}
+	return true
+}
+
+func (p *AppServiceListAppLabelResult) Field0DeepEqual(src *ListAppLabelResp) bool {
 
 	if !p.Success.DeepEqual(src) {
 		return false

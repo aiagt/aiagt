@@ -17,9 +17,9 @@ struct Plugin {
     11: required list<string> labels
     12: required list<PluginTool> tools
     13: required string logo
-    14: required i64 created_at
-    15: required i64 updated_at
-    16: required i64 published_at
+    14: required base.Time created_at
+    15: required base.Time updated_at
+    16: optional base.Time published_at
 }
 
 struct PluginSecret {
@@ -38,9 +38,9 @@ struct PluginTool {
     6: required string response_type
     7: required string api
     8: optional i64 import_model_id
-    9: required i64 created_at
-    10: required i64 updated_at
-    11: required i64 tested_at
+    9: required base.Time created_at
+    10: required base.Time updated_at
+    11: optional base.Time tested_at
 }
 
 struct CreatePluginReq {
@@ -142,6 +142,8 @@ service PluginService {
     base.Empty DeletePlugin(1: base.IDReq req)
     Plugin GetPluginByID(1: base.IDReq req)
     ListPluginResp ListPlugin(1: ListPluginReq req)
+
+    base.Empty PublishPlugin(1: base.IDReq req)
 
     base.Empty CreateTool(1: CreatePluginToolReq req)
     base.Empty UpdateTool(1: UpdatePluginToolReq req)

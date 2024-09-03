@@ -49,6 +49,20 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"PublishApp": kitex.NewMethodInfo(
+		publishAppHandler,
+		newAppServicePublishAppArgs,
+		newAppServicePublishAppResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"ListAppLabel": kitex.NewMethodInfo(
+		listAppLabelHandler,
+		newAppServiceListAppLabelArgs,
+		newAppServiceListAppLabelResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 }
 
 var (
@@ -205,6 +219,42 @@ func newAppServiceListAppResult() interface{} {
 	return appsvc.NewAppServiceListAppResult()
 }
 
+func publishAppHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*appsvc.AppServicePublishAppArgs)
+	realResult := result.(*appsvc.AppServicePublishAppResult)
+	success, err := handler.(appsvc.AppService).PublishApp(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newAppServicePublishAppArgs() interface{} {
+	return appsvc.NewAppServicePublishAppArgs()
+}
+
+func newAppServicePublishAppResult() interface{} {
+	return appsvc.NewAppServicePublishAppResult()
+}
+
+func listAppLabelHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*appsvc.AppServiceListAppLabelArgs)
+	realResult := result.(*appsvc.AppServiceListAppLabelResult)
+	success, err := handler.(appsvc.AppService).ListAppLabel(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newAppServiceListAppLabelArgs() interface{} {
+	return appsvc.NewAppServiceListAppLabelArgs()
+}
+
+func newAppServiceListAppLabelResult() interface{} {
+	return appsvc.NewAppServiceListAppLabelResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -260,6 +310,26 @@ func (p *kClient) ListApp(ctx context.Context, req *appsvc.ListAppReq) (r *appsv
 	_args.Req = req
 	var _result appsvc.AppServiceListAppResult
 	if err = p.c.Call(ctx, "ListApp", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) PublishApp(ctx context.Context, req *base.IDReq) (r *base.Empty, err error) {
+	var _args appsvc.AppServicePublishAppArgs
+	_args.Req = req
+	var _result appsvc.AppServicePublishAppResult
+	if err = p.c.Call(ctx, "PublishApp", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) ListAppLabel(ctx context.Context, req *appsvc.ListAppLabelReq) (r *appsvc.ListAppLabelResp, err error) {
+	var _args appsvc.AppServiceListAppLabelArgs
+	_args.Req = req
+	var _result appsvc.AppServiceListAppLabelResult
+	if err = p.c.Call(ctx, "ListAppLabel", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

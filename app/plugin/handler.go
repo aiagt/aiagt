@@ -39,6 +39,12 @@ func (s *PluginServiceImpl) ListPlugin(ctx context.Context, req *pluginsvc.ListP
 	return
 }
 
+// PublishPlugin implements the PluginServiceImpl interface.
+func (s *PluginServiceImpl) PublishPlugin(ctx context.Context, req *base.IDReq) (resp *base.Empty, err error) {
+	// TODO: Your code here...
+	return
+}
+
 // CreateTool implements the PluginServiceImpl interface.
 func (s *PluginServiceImpl) CreateTool(ctx context.Context, req *pluginsvc.CreatePluginToolReq) (resp *base.Empty, err error) {
 	// TODO: Your code here...

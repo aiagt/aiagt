@@ -38,3 +38,15 @@ func (s *AppServiceImpl) ListApp(ctx context.Context, req *appsvc.ListAppReq) (r
 	// TODO: Your code here...
 	return
 }
+
+// PublishApp implements the AppServiceImpl interface.
+func (s *AppServiceImpl) PublishApp(ctx context.Context, req *base.IDReq) (resp *base.Empty, err error) {
+	// TODO: Your code here...
+	return
+}
+
+// ListAppLabel implements the AppServiceImpl interface.
+func (s *AppServiceImpl) ListAppLabel(ctx context.Context, req *appsvc.ListAppLabelReq) (resp *appsvc.ListAppLabelResp, err error) {
+	// TODO: Your code here...
+	return
+}

@@ -49,6 +49,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"PublishPlugin": kitex.NewMethodInfo(
+		publishPluginHandler,
+		newPluginServicePublishPluginArgs,
+		newPluginServicePublishPluginResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 	"CreateTool": kitex.NewMethodInfo(
 		createToolHandler,
 		newPluginServiceCreateToolArgs,
@@ -254,6 +261,24 @@ func newPluginServiceListPluginResult() interface{} {
 	return pluginsvc.NewPluginServiceListPluginResult()
 }
 
+func publishPluginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServicePublishPluginArgs)
+	realResult := result.(*pluginsvc.PluginServicePublishPluginResult)
+	success, err := handler.(pluginsvc.PluginService).PublishPlugin(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newPluginServicePublishPluginArgs() interface{} {
+	return pluginsvc.NewPluginServicePublishPluginArgs()
+}
+
+func newPluginServicePublishPluginResult() interface{} {
+	return pluginsvc.NewPluginServicePublishPluginResult()
+}
+
 func createToolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*pluginsvc.PluginServiceCreateToolArgs)
 	realResult := result.(*pluginsvc.PluginServiceCreateToolResult)
@@ -435,6 +460,16 @@ func (p *kClient) ListPlugin(ctx context.Context, req *pluginsvc.ListPluginReq) 
 	_args.Req = req
 	var _result pluginsvc.PluginServiceListPluginResult
 	if err = p.c.Call(ctx, "ListPlugin", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) PublishPlugin(ctx context.Context, req *base.IDReq) (r *base.Empty, err error) {
+	var _args pluginsvc.PluginServicePublishPluginArgs
+	_args.Req = req
+	var _result pluginsvc.PluginServicePublishPluginResult
+	if err = p.c.Call(ctx, "PublishPlugin", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

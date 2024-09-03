@@ -17,3 +17,11 @@ struct PaginationResp {
 struct IDReq {
     1: required i64 id
 }
+
+struct Time {
+    1: required i64 timestamp
+}
+
+struct Duration {
+    1: required i64 milliseconds
+}

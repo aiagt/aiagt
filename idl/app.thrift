@@ -20,9 +20,9 @@ struct App {
     13: required string logo
     14: required user.User author
     15: required list<string> labels
-    16: required i64 created_at
-    17: required i64 updated_at
-    18: required i64 published_at
+    16: required base.Time created_at
+    17: required base.Time updated_at
+    18: optional base.Time published_at
 }
 
 struct CreateAppReq {
@@ -38,7 +38,8 @@ struct CreateAppReq {
     10: required list<string> preset_questions
     11: required list<i64> plugin_ids
     12: required string logo
-    13: required list<string> labels
+    13: required list<i64> label_ids
+    14: required list<string> new_label_texts
 }
 
 struct UpdateAppReq {
@@ -55,7 +56,8 @@ struct UpdateAppReq {
     11: required list<string> preset_questions
     12: required list<i64> plugin_ids
     13: required string logo
-    14: required list<string> labels
+    14: required list<i64> label_ids
+    15: required list<string> new_label_texts
 }
 
 struct ListAppReq {
@@ -71,10 +73,30 @@ struct ListAppResp {
     2: required list<App> plugins
 }
 
+struct AppLabel {
+    1: required i64 id
+    2: required string text
+    3: required base.Time created_at
+}
+
+struct ListAppLabelReq {
+    1: required base.PaginationReq pagination
+    2: required string text
+}
+
+struct ListAppLabelResp {
+    1: required base.PaginationResp pagination
+    2: required list<AppLabel> labels
+}
+
 service AppService {
     base.Empty CreateApp(1: CreateAppReq req)
     base.Empty UpdateApp(1: UpdateAppReq req)
     base.Empty DeleteApp(1: base.IDReq req)
     App GetAppByID(1: base.IDReq req)
     ListAppResp ListApp(1: ListAppReq req)
+
+    base.Empty PublishApp(1: base.IDReq req)
+
+    ListAppLabelResp ListAppLabel(1: ListAppLabelReq req)
 }

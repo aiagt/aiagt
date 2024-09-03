@@ -8,7 +8,13 @@ enum MessageType {
     FILE
 }
 
-union MessaegContent {
+enum MessageRole {
+    USER
+    ASSISTANT
+    SYSTEM
+}
+
+union MessageContent {
     1: MessageContentText text
     2: MessageContentImage image
     3: MessageContentFile file
@@ -29,43 +35,81 @@ struct MessageContentFile {
     3: required string type
 }
 
-struct ChatMessage {
+struct MessageItem {
     1: required MessageType type
-    2: required MessaegContent content
+    2: required MessageContent content
 }
 
 struct ChatReq {
     1: required i64 conversation_id  // 为空时自动创建 conversation
     2: required i64 app_id
-    3: required list<ChatMessage> messages
+    3: required list<MessageItem> message
     4: required bool stream
-    // 每个token都具有额度限制，每个user&app都有对应的长期token，此外有些临时使用的token，token应该在后端生成和存储
-    // TODO: call_token 应该在 ModelChat 接口中使用，所以应该在这里的 Chat 接口内生成再传递到 ModelChat，而不是接收外部参数
-    // 5: required string call_token
 }
 
 struct ChatResp {
-    1: required i64 conversation
-    2: required ChatMessage message
+    1: required list<MessageItem> message
+    2: required i64 conversation_id
 }
 
-// TODO: message & conversation manager
+struct Conversation {
+    1: required i64 id
+    2: required i64 user_id
+    3: required i64 app_id
+    4: required string title
+    5: required base.Time created_at
+    6: required base.Time updated_at
+}
 
-struct Message {}
+struct Message {
+    1: required i64 id
+    2: required i64 conversation_id
+    3: required MessageRole role
+    4: required list<MessageItem> message
+    5: required base.Time created_at
+    6: required base.Time updated_at
+}
 
-struct CreateMessageReq {}
+struct UpdateMessageReq {
+    1: required i64 id
+    2: required list<MessageItem> message
+}
 
-struct UpdateMessageReq {}
+struct ListMessageReq {
+    1: required base.PaginationReq pagination
+    2: required i64 conversation_id
+}
 
-struct ListMessageReq {}
+struct ListMessageResp {
+    1: required base.PaginationResp pagination
+    2: required list<Message> messages
+}
 
-struct ListMessageResp {}
+struct UpdateConversationReq {
+    1: required i64 id
+    2: required string title
+}
+
+struct ListConversationReq {
+    1: required base.PaginationReq pagination
+    2: required i64 user_id
+    3: required i64 app_id
+}
+
+struct ListConversationResp {
+    1: required base.PaginationResp pagination
+    2: required list<Conversation> conversations
+}
 
 service ChatService {
     ChatResp Chat(1: ChatReq req) (streaming.mode="server")
 
-//    base.Empty CreateMessage(1: CreateMessageReq req)  // create 应该对外吗？
-//    base.Empty UpdateMessage(1: UpdateMessageReq req)  // 支持 update 吗？应该对外吗？
+    base.Empty UpdateMessage(1: UpdateMessageReq req)
     base.Empty DeleteMessage(1: base.IDReq req)
     ListMessageResp ListMessage(1: ListMessageReq req)
+
+    base.Empty UpdateConversation(1: UpdateConversationReq req)
+    base.Empty DeleteConversation(1: base.IDReq req)
+    Conversation GetConversationByID(1: base.IDReq req)
+    ListConversationResp ListConversation(1: ListConversationReq req)
 }

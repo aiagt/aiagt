@@ -26,9 +26,9 @@ type Plugin struct {
 	Labels        []string        `thrift:"labels,11,required" frugal:"11,required,list<string>" json:"labels"`
 	Tools         []*PluginTool   `thrift:"tools,12,required" frugal:"12,required,list<PluginTool>" json:"tools"`
 	Logo          string          `thrift:"logo,13,required" frugal:"13,required,string" json:"logo"`
-	CreatedAt     int64           `thrift:"created_at,14,required" frugal:"14,required,i64" json:"created_at"`
-	UpdatedAt     int64           `thrift:"updated_at,15,required" frugal:"15,required,i64" json:"updated_at"`
-	PublishedAt   int64           `thrift:"published_at,16,required" frugal:"16,required,i64" json:"published_at"`
+	CreatedAt     *base.Time      `thrift:"created_at,14,required" frugal:"14,required,base.Time" json:"created_at"`
+	UpdatedAt     *base.Time      `thrift:"updated_at,15,required" frugal:"15,required,base.Time" json:"updated_at"`
+	PublishedAt   *base.Time      `thrift:"published_at,16,optional" frugal:"16,optional,base.Time" json:"published_at,omitempty"`
 }
 
 func NewPlugin() *Plugin {
@@ -95,15 +95,30 @@ func (p *Plugin) GetLogo() (v string) {
 	return p.Logo
 }
 
-func (p *Plugin) GetCreatedAt() (v int64) {
+var Plugin_CreatedAt_DEFAULT *base.Time
+
+func (p *Plugin) GetCreatedAt() (v *base.Time) {
+	if !p.IsSetCreatedAt() {
+		return Plugin_CreatedAt_DEFAULT
+	}
 	return p.CreatedAt
 }
 
-func (p *Plugin) GetUpdatedAt() (v int64) {
+var Plugin_UpdatedAt_DEFAULT *base.Time
+
+func (p *Plugin) GetUpdatedAt() (v *base.Time) {
+	if !p.IsSetUpdatedAt() {
+		return Plugin_UpdatedAt_DEFAULT
+	}
 	return p.UpdatedAt
 }
 
-func (p *Plugin) GetPublishedAt() (v int64) {
+var Plugin_PublishedAt_DEFAULT *base.Time
+
+func (p *Plugin) GetPublishedAt() (v *base.Time) {
+	if !p.IsSetPublishedAt() {
+		return Plugin_PublishedAt_DEFAULT
+	}
 	return p.PublishedAt
 }
 func (p *Plugin) SetId(val int64) {
@@ -145,13 +160,13 @@ func (p *Plugin) SetTools(val []*PluginTool) {
 func (p *Plugin) SetLogo(val string) {
 	p.Logo = val
 }
-func (p *Plugin) SetCreatedAt(val int64) {
+func (p *Plugin) SetCreatedAt(val *base.Time) {
 	p.CreatedAt = val
 }
-func (p *Plugin) SetUpdatedAt(val int64) {
+func (p *Plugin) SetUpdatedAt(val *base.Time) {
 	p.UpdatedAt = val
 }
-func (p *Plugin) SetPublishedAt(val int64) {
+func (p *Plugin) SetPublishedAt(val *base.Time) {
 	p.PublishedAt = val
 }
 
@@ -178,6 +193,18 @@ func (p *Plugin) IsSetAuthor() bool {
 	return p.Author != nil
 }
 
+func (p *Plugin) IsSetCreatedAt() bool {
+	return p.CreatedAt != nil
+}
+
+func (p *Plugin) IsSetUpdatedAt() bool {
+	return p.UpdatedAt != nil
+}
+
+func (p *Plugin) IsSetPublishedAt() bool {
+	return p.PublishedAt != nil
+}
+
 func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
@@ -197,7 +224,6 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 	var issetLogo bool = false
 	var issetCreatedAt bool = false
 	var issetUpdatedAt bool = false
-	var issetPublishedAt bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -331,7 +357,7 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 14:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField14(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -340,7 +366,7 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 15:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField15(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -349,11 +375,10 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 16:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField16(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPublishedAt = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -442,11 +467,6 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetUpdatedAt {
 		fieldId = 15
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetPublishedAt {
-		fieldId = 16
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -644,34 +664,25 @@ func (p *Plugin) ReadField13(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *Plugin) ReadField14(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
 	p.CreatedAt = _field
 	return nil
 }
 func (p *Plugin) ReadField15(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
 	p.UpdatedAt = _field
 	return nil
 }
 func (p *Plugin) ReadField16(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
 	p.PublishedAt = _field
 	return nil
@@ -1011,10 +1022,10 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField14(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("created_at", thrift.I64, 14); err != nil {
+	if err = oprot.WriteFieldBegin("created_at", thrift.STRUCT, 14); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.CreatedAt); err != nil {
+	if err := p.CreatedAt.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1028,10 +1039,10 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField15(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("updated_at", thrift.I64, 15); err != nil {
+	if err = oprot.WriteFieldBegin("updated_at", thrift.STRUCT, 15); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.UpdatedAt); err != nil {
+	if err := p.UpdatedAt.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1045,14 +1056,16 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField16(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("published_at", thrift.I64, 16); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.PublishedAt); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetPublishedAt() {
+		if err = oprot.WriteFieldBegin("published_at", thrift.STRUCT, 16); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.PublishedAt.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -1235,23 +1248,23 @@ func (p *Plugin) Field13DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *Plugin) Field14DeepEqual(src int64) bool {
+func (p *Plugin) Field14DeepEqual(src *base.Time) bool {
 
-	if p.CreatedAt != src {
+	if !p.CreatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field15DeepEqual(src int64) bool {
+func (p *Plugin) Field15DeepEqual(src *base.Time) bool {
 
-	if p.UpdatedAt != src {
+	if !p.UpdatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field16DeepEqual(src int64) bool {
+func (p *Plugin) Field16DeepEqual(src *base.Time) bool {
 
-	if p.PublishedAt != src {
+	if !p.PublishedAt.DeepEqual(src) {
 		return false
 	}
 	return true
@@ -1627,17 +1640,17 @@ func (p *PluginSecret) Field4DeepEqual(src string) bool {
 }
 
 type PluginTool struct {
-	Id            int64  `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
-	Name          string `thrift:"name,2,required" frugal:"2,required,string" json:"name"`
-	Description   string `thrift:"description,3,required" frugal:"3,required,string" json:"description"`
-	PluginId      int64  `thrift:"plugin_id,4,required" frugal:"4,required,i64" json:"plugin_id"`
-	RequestType   string `thrift:"request_type,5,required" frugal:"5,required,string" json:"request_type"`
-	ResponseType  string `thrift:"response_type,6,required" frugal:"6,required,string" json:"response_type"`
-	Api           string `thrift:"api,7,required" frugal:"7,required,string" json:"api"`
-	ImportModelId *int64 `thrift:"import_model_id,8,optional" frugal:"8,optional,i64" json:"import_model_id,omitempty"`
-	CreatedAt     int64  `thrift:"created_at,9,required" frugal:"9,required,i64" json:"created_at"`
-	UpdatedAt     int64  `thrift:"updated_at,10,required" frugal:"10,required,i64" json:"updated_at"`
-	TestedAt      int64  `thrift:"tested_at,11,required" frugal:"11,required,i64" json:"tested_at"`
+	Id            int64      `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Name          string     `thrift:"name,2,required" frugal:"2,required,string" json:"name"`
+	Description   string     `thrift:"description,3,required" frugal:"3,required,string" json:"description"`
+	PluginId      int64      `thrift:"plugin_id,4,required" frugal:"4,required,i64" json:"plugin_id"`
+	RequestType   string     `thrift:"request_type,5,required" frugal:"5,required,string" json:"request_type"`
+	ResponseType  string     `thrift:"response_type,6,required" frugal:"6,required,string" json:"response_type"`
+	Api           string     `thrift:"api,7,required" frugal:"7,required,string" json:"api"`
+	ImportModelId *int64     `thrift:"import_model_id,8,optional" frugal:"8,optional,i64" json:"import_model_id,omitempty"`
+	CreatedAt     *base.Time `thrift:"created_at,9,required" frugal:"9,required,base.Time" json:"created_at"`
+	UpdatedAt     *base.Time `thrift:"updated_at,10,required" frugal:"10,required,base.Time" json:"updated_at"`
+	TestedAt      *base.Time `thrift:"tested_at,11,optional" frugal:"11,optional,base.Time" json:"tested_at,omitempty"`
 }
 
 func NewPluginTool() *PluginTool {
@@ -1684,15 +1697,30 @@ func (p *PluginTool) GetImportModelId() (v int64) {
 	return *p.ImportModelId
 }
 
-func (p *PluginTool) GetCreatedAt() (v int64) {
+var PluginTool_CreatedAt_DEFAULT *base.Time
+
+func (p *PluginTool) GetCreatedAt() (v *base.Time) {
+	if !p.IsSetCreatedAt() {
+		return PluginTool_CreatedAt_DEFAULT
+	}
 	return p.CreatedAt
 }
 
-func (p *PluginTool) GetUpdatedAt() (v int64) {
+var PluginTool_UpdatedAt_DEFAULT *base.Time
+
+func (p *PluginTool) GetUpdatedAt() (v *base.Time) {
+	if !p.IsSetUpdatedAt() {
+		return PluginTool_UpdatedAt_DEFAULT
+	}
 	return p.UpdatedAt
 }
 
-func (p *PluginTool) GetTestedAt() (v int64) {
+var PluginTool_TestedAt_DEFAULT *base.Time
+
+func (p *PluginTool) GetTestedAt() (v *base.Time) {
+	if !p.IsSetTestedAt() {
+		return PluginTool_TestedAt_DEFAULT
+	}
 	return p.TestedAt
 }
 func (p *PluginTool) SetId(val int64) {
@@ -1719,13 +1747,13 @@ func (p *PluginTool) SetApi(val string) {
 func (p *PluginTool) SetImportModelId(val *int64) {
 	p.ImportModelId = val
 }
-func (p *PluginTool) SetCreatedAt(val int64) {
+func (p *PluginTool) SetCreatedAt(val *base.Time) {
 	p.CreatedAt = val
 }
-func (p *PluginTool) SetUpdatedAt(val int64) {
+func (p *PluginTool) SetUpdatedAt(val *base.Time) {
 	p.UpdatedAt = val
 }
-func (p *PluginTool) SetTestedAt(val int64) {
+func (p *PluginTool) SetTestedAt(val *base.Time) {
 	p.TestedAt = val
 }
 
@@ -1747,6 +1775,18 @@ func (p *PluginTool) IsSetImportModelId() bool {
 	return p.ImportModelId != nil
 }
 
+func (p *PluginTool) IsSetCreatedAt() bool {
+	return p.CreatedAt != nil
+}
+
+func (p *PluginTool) IsSetUpdatedAt() bool {
+	return p.UpdatedAt != nil
+}
+
+func (p *PluginTool) IsSetTestedAt() bool {
+	return p.TestedAt != nil
+}
+
 func (p *PluginTool) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
@@ -1760,7 +1800,6 @@ func (p *PluginTool) Read(iprot thrift.TProtocol) (err error) {
 	var issetApi bool = false
 	var issetCreatedAt bool = false
 	var issetUpdatedAt bool = false
-	var issetTestedAt bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1848,7 +1887,7 @@ func (p *PluginTool) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 9:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField9(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -1857,7 +1896,7 @@ func (p *PluginTool) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 10:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -1866,11 +1905,10 @@ func (p *PluginTool) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 11:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField11(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetTestedAt = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -1929,11 +1967,6 @@ func (p *PluginTool) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetUpdatedAt {
 		fieldId = 10
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetTestedAt {
-		fieldId = 11
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -2043,34 +2076,25 @@ func (p *PluginTool) ReadField8(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *PluginTool) ReadField9(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
 	p.CreatedAt = _field
 	return nil
 }
 func (p *PluginTool) ReadField10(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
 	p.UpdatedAt = _field
 	return nil
 }
 func (p *PluginTool) ReadField11(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
 	p.TestedAt = _field
 	return nil
@@ -2283,10 +2307,10 @@ WriteFieldEndError:
 }
 
 func (p *PluginTool) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("created_at", thrift.I64, 9); err != nil {
+	if err = oprot.WriteFieldBegin("created_at", thrift.STRUCT, 9); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.CreatedAt); err != nil {
+	if err := p.CreatedAt.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2300,10 +2324,10 @@ WriteFieldEndError:
 }
 
 func (p *PluginTool) writeField10(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("updated_at", thrift.I64, 10); err != nil {
+	if err = oprot.WriteFieldBegin("updated_at", thrift.STRUCT, 10); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.UpdatedAt); err != nil {
+	if err := p.UpdatedAt.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2317,14 +2341,16 @@ WriteFieldEndError:
 }
 
 func (p *PluginTool) writeField11(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("tested_at", thrift.I64, 11); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.TestedAt); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetTestedAt() {
+		if err = oprot.WriteFieldBegin("tested_at", thrift.STRUCT, 11); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.TestedAt.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -2444,23 +2470,23 @@ func (p *PluginTool) Field8DeepEqual(src *int64) bool {
 	}
 	return true
 }
-func (p *PluginTool) Field9DeepEqual(src int64) bool {
+func (p *PluginTool) Field9DeepEqual(src *base.Time) bool {
 
-	if p.CreatedAt != src {
+	if !p.CreatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field10DeepEqual(src int64) bool {
+func (p *PluginTool) Field10DeepEqual(src *base.Time) bool {
 
-	if p.UpdatedAt != src {
+	if !p.UpdatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field11DeepEqual(src int64) bool {
+func (p *PluginTool) Field11DeepEqual(src *base.Time) bool {
 
-	if p.TestedAt != src {
+	if !p.TestedAt.DeepEqual(src) {
 		return false
 	}
 	return true
@@ -7956,6 +7982,8 @@ type PluginService interface {
 
 	ListPlugin(ctx context.Context, req *ListPluginReq) (r *ListPluginResp, err error)
 
+	PublishPlugin(ctx context.Context, req *base.IDReq) (r *base.Empty, err error)
+
 	CreateTool(ctx context.Context, req *CreatePluginToolReq) (r *base.Empty, err error)
 
 	UpdateTool(ctx context.Context, req *UpdatePluginToolReq) (r *base.Empty, err error)
@@ -9664,6 +9692,346 @@ func (p *PluginServiceListPluginResult) DeepEqual(ano *PluginServiceListPluginRe
 }
 
 func (p *PluginServiceListPluginResult) Field0DeepEqual(src *ListPluginResp) bool {
+
+	if !p.Success.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type PluginServicePublishPluginArgs struct {
+	Req *base.IDReq `thrift:"req,1" frugal:"1,default,base.IDReq" json:"req"`
+}
+
+func NewPluginServicePublishPluginArgs() *PluginServicePublishPluginArgs {
+	return &PluginServicePublishPluginArgs{}
+}
+
+func (p *PluginServicePublishPluginArgs) InitDefault() {
+}
+
+var PluginServicePublishPluginArgs_Req_DEFAULT *base.IDReq
+
+func (p *PluginServicePublishPluginArgs) GetReq() (v *base.IDReq) {
+	if !p.IsSetReq() {
+		return PluginServicePublishPluginArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *PluginServicePublishPluginArgs) SetReq(val *base.IDReq) {
+	p.Req = val
+}
+
+var fieldIDToName_PluginServicePublishPluginArgs = map[int16]string{
+	1: "req",
+}
+
+func (p *PluginServicePublishPluginArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *PluginServicePublishPluginArgs) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PluginServicePublishPluginArgs[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *PluginServicePublishPluginArgs) ReadField1(iprot thrift.TProtocol) error {
+	_field := base.NewIDReq()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Req = _field
+	return nil
+}
+
+func (p *PluginServicePublishPluginArgs) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("PublishPlugin_args"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *PluginServicePublishPluginArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Req.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *PluginServicePublishPluginArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PluginServicePublishPluginArgs(%+v)", *p)
+
+}
+
+func (p *PluginServicePublishPluginArgs) DeepEqual(ano *PluginServicePublishPluginArgs) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Req) {
+		return false
+	}
+	return true
+}
+
+func (p *PluginServicePublishPluginArgs) Field1DeepEqual(src *base.IDReq) bool {
+
+	if !p.Req.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type PluginServicePublishPluginResult struct {
+	Success *base.Empty `thrift:"success,0,optional" frugal:"0,optional,base.Empty" json:"success,omitempty"`
+}
+
+func NewPluginServicePublishPluginResult() *PluginServicePublishPluginResult {
+	return &PluginServicePublishPluginResult{}
+}
+
+func (p *PluginServicePublishPluginResult) InitDefault() {
+}
+
+var PluginServicePublishPluginResult_Success_DEFAULT *base.Empty
+
+func (p *PluginServicePublishPluginResult) GetSuccess() (v *base.Empty) {
+	if !p.IsSetSuccess() {
+		return PluginServicePublishPluginResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *PluginServicePublishPluginResult) SetSuccess(x interface{}) {
+	p.Success = x.(*base.Empty)
+}
+
+var fieldIDToName_PluginServicePublishPluginResult = map[int16]string{
+	0: "success",
+}
+
+func (p *PluginServicePublishPluginResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *PluginServicePublishPluginResult) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 0:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField0(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PluginServicePublishPluginResult[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *PluginServicePublishPluginResult) ReadField0(iprot thrift.TProtocol) error {
+	_field := base.NewEmpty()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Success = _field
+	return nil
+}
+
+func (p *PluginServicePublishPluginResult) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("PublishPlugin_result"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField0(oprot); err != nil {
+			fieldId = 0
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *PluginServicePublishPluginResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Success.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
+}
+
+func (p *PluginServicePublishPluginResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PluginServicePublishPluginResult(%+v)", *p)
+
+}
+
+func (p *PluginServicePublishPluginResult) DeepEqual(ano *PluginServicePublishPluginResult) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field0DeepEqual(ano.Success) {
+		return false
+	}
+	return true
+}
+
+func (p *PluginServicePublishPluginResult) Field0DeepEqual(src *base.Empty) bool {
 
 	if !p.Success.DeepEqual(src) {
 		return false

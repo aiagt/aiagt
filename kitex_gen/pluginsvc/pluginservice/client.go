@@ -17,6 +17,7 @@ type Client interface {
 	DeletePlugin(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	GetPluginByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *pluginsvc.Plugin, err error)
 	ListPlugin(ctx context.Context, req *pluginsvc.ListPluginReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginResp, err error)
+	PublishPlugin(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	CreateTool(ctx context.Context, req *pluginsvc.CreatePluginToolReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	UpdateTool(ctx context.Context, req *pluginsvc.UpdatePluginToolReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	DeleteTool(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
@@ -78,6 +79,11 @@ func (p *kPluginServiceClient) GetPluginByID(ctx context.Context, req *base.IDRe
 func (p *kPluginServiceClient) ListPlugin(ctx context.Context, req *pluginsvc.ListPluginReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.ListPlugin(ctx, req)
+}
+
+func (p *kPluginServiceClient) PublishPlugin(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.PublishPlugin(ctx, req)
 }
 
 func (p *kPluginServiceClient) CreateTool(ctx context.Context, req *pluginsvc.CreatePluginToolReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
