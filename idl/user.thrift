@@ -12,8 +12,9 @@ struct User {
     7: required string homepage
     8: required string description_md
     9: required string github
-    10: required i64 created_at
-    11: required i64 updated_at
+    10: required string avatar
+    11: required i64 created_at
+    12: required i64 updated_at
 }
 
 struct Secret {
@@ -58,6 +59,7 @@ struct UpdateUserReq {
     7: required string homepage
     8: required string description_md
     9: required string github
+    10: required string avatar
 }
 
 struct ForgotPasswordReq {
@@ -89,6 +91,8 @@ struct UpdateSecretReq {
 struct ListSecretReq {
     1: required base.PaginationReq pagination
     2: optional i64 plugin_id
+    3: optional i64 user_id
+    4: optional string name
 }
 
 struct ListSecretResp {

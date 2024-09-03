@@ -9,32 +9,32 @@ import (
 // PluginServiceImpl implements the last service interface defined in the IDL.
 type PluginServiceImpl struct{}
 
-// Create implements the PluginServiceImpl interface.
-func (s *PluginServiceImpl) Create(ctx context.Context, req *pluginsvc.CreatePluginReq) (resp *base.Empty, err error) {
+// CreatePlugin implements the PluginServiceImpl interface.
+func (s *PluginServiceImpl) CreatePlugin(ctx context.Context, req *pluginsvc.CreatePluginReq) (resp *base.Empty, err error) {
 	// TODO: Your code here...
 	return
 }
 
-// Update implements the PluginServiceImpl interface.
-func (s *PluginServiceImpl) Update(ctx context.Context, req *pluginsvc.UpdatePluginReq) (resp *base.Empty, err error) {
+// UpdatePlugin implements the PluginServiceImpl interface.
+func (s *PluginServiceImpl) UpdatePlugin(ctx context.Context, req *pluginsvc.UpdatePluginReq) (resp *base.Empty, err error) {
 	// TODO: Your code here...
 	return
 }
 
-// List implements the PluginServiceImpl interface.
-func (s *PluginServiceImpl) List(ctx context.Context, req *base.PaginationReq) (resp *pluginsvc.ListPluginResp, err error) {
+// DeletePlugin implements the PluginServiceImpl interface.
+func (s *PluginServiceImpl) DeletePlugin(ctx context.Context, req *base.IDReq) (resp *base.Empty, err error) {
 	// TODO: Your code here...
 	return
 }
 
-// GetByID implements the PluginServiceImpl interface.
-func (s *PluginServiceImpl) GetByID(ctx context.Context, req *base.IDReq) (resp *pluginsvc.Plugin, err error) {
+// GetPluginByID implements the PluginServiceImpl interface.
+func (s *PluginServiceImpl) GetPluginByID(ctx context.Context, req *base.IDReq) (resp *pluginsvc.Plugin, err error) {
 	// TODO: Your code here...
 	return
 }
 
-// Delete implements the PluginServiceImpl interface.
-func (s *PluginServiceImpl) Delete(ctx context.Context, req *base.IDReq) (resp *base.Empty, err error) {
+// ListPlugin implements the PluginServiceImpl interface.
+func (s *PluginServiceImpl) ListPlugin(ctx context.Context, req *pluginsvc.ListPluginReq) (resp *pluginsvc.ListPluginResp, err error) {
 	// TODO: Your code here...
 	return
 }
@@ -51,8 +51,8 @@ func (s *PluginServiceImpl) UpdateTool(ctx context.Context, req *pluginsvc.Updat
 	return
 }
 
-// ListTool implements the PluginServiceImpl interface.
-func (s *PluginServiceImpl) ListTool(ctx context.Context, req *base.IDReq) (resp *pluginsvc.ListPluginToolResp, err error) {
+// DeleteTool implements the PluginServiceImpl interface.
+func (s *PluginServiceImpl) DeleteTool(ctx context.Context, req *base.IDReq) (resp *base.Empty, err error) {
 	// TODO: Your code here...
 	return
 }
@@ -63,8 +63,8 @@ func (s *PluginServiceImpl) GetToolByID(ctx context.Context, req *base.IDReq) (r
 	return
 }
 
-// DeleteTool implements the PluginServiceImpl interface.
-func (s *PluginServiceImpl) DeleteTool(ctx context.Context, req *base.IDReq) (resp *base.Empty, err error) {
+// ListTool implements the PluginServiceImpl interface.
+func (s *PluginServiceImpl) ListTool(ctx context.Context, req *pluginsvc.ListPluginToolReq) (resp *pluginsvc.ListPluginToolResp, err error) {
 	// TODO: Your code here...
 	return
 }
