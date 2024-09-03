@@ -28,18 +28,18 @@ struct App {
 }
 
 struct ModelConfig {
-  1: optional double temperature
-  2: optional double top_p
-  3: optional i32 n = 1
-  4: optional bool stream = true
-  5: optional double presence_penalty
-  6: optional openai.ChatCompletionResponseFormat response_format
-  7: optional i32 seed
-  8: optional double frequency_penalty
-  9: optional map<string, i32> logit_bias
-  10: optional bool logprobs
-  11: optional i32 top_logprobs
-  12: optional openai.StreamOptions stream_options
+    1: optional double temperature
+    2: optional double top_p
+    3: optional i32 n = 1
+    4: optional bool stream = true
+    5: optional double presence_penalty
+    6: optional openai.ChatCompletionResponseFormat response_format
+    7: optional i32 seed
+    8: optional double frequency_penalty
+    9: optional map<string, i32> logit_bias
+    10: optional bool logprobs
+    11: optional i32 top_logprobs
+    12: optional openai.StreamOptions stream_options
 }
 
 struct CreateAppReq {
