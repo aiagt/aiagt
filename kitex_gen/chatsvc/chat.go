@@ -1065,7 +1065,6 @@ type ChatReq struct {
 	ConversationId int64          `thrift:"conversation_id,1,required" frugal:"1,required,i64" json:"conversation_id"`
 	AppId          int64          `thrift:"app_id,2,required" frugal:"2,required,i64" json:"app_id"`
 	Message        []*MessageItem `thrift:"message,3,required" frugal:"3,required,list<MessageItem>" json:"message"`
-	Stream         bool           `thrift:"stream,4,required" frugal:"4,required,bool" json:"stream"`
 }
 
 func NewChatReq() *ChatReq {
@@ -1086,10 +1085,6 @@ func (p *ChatReq) GetAppId() (v int64) {
 func (p *ChatReq) GetMessage() (v []*MessageItem) {
 	return p.Message
 }
-
-func (p *ChatReq) GetStream() (v bool) {
-	return p.Stream
-}
 func (p *ChatReq) SetConversationId(val int64) {
 	p.ConversationId = val
 }
@@ -1099,15 +1094,11 @@ func (p *ChatReq) SetAppId(val int64) {
 func (p *ChatReq) SetMessage(val []*MessageItem) {
 	p.Message = val
 }
-func (p *ChatReq) SetStream(val bool) {
-	p.Stream = val
-}
 
 var fieldIDToName_ChatReq = map[int16]string{
 	1: "conversation_id",
 	2: "app_id",
 	3: "message",
-	4: "stream",
 }
 
 func (p *ChatReq) Read(iprot thrift.TProtocol) (err error) {
@@ -1117,7 +1108,6 @@ func (p *ChatReq) Read(iprot thrift.TProtocol) (err error) {
 	var issetConversationId bool = false
 	var issetAppId bool = false
 	var issetMessage bool = false
-	var issetStream bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1160,15 +1150,6 @@ func (p *ChatReq) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 4:
-			if fieldTypeId == thrift.BOOL {
-				if err = p.ReadField4(iprot); err != nil {
-					goto ReadFieldError
-				}
-				issetStream = true
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -1194,11 +1175,6 @@ func (p *ChatReq) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetMessage {
 		fieldId = 3
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetStream {
-		fieldId = 4
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -1264,17 +1240,6 @@ func (p *ChatReq) ReadField3(iprot thrift.TProtocol) error {
 	p.Message = _field
 	return nil
 }
-func (p *ChatReq) ReadField4(iprot thrift.TProtocol) error {
-
-	var _field bool
-	if v, err := iprot.ReadBool(); err != nil {
-		return err
-	} else {
-		_field = v
-	}
-	p.Stream = _field
-	return nil
-}
 
 func (p *ChatReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -1292,10 +1257,6 @@ func (p *ChatReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
-			goto WriteFieldError
-		}
-		if err = p.writeField4(oprot); err != nil {
-			fieldId = 4
 			goto WriteFieldError
 		}
 	}
@@ -1375,23 +1336,6 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
-func (p *ChatReq) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("stream", thrift.BOOL, 4); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteBool(p.Stream); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
-}
-
 func (p *ChatReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1413,9 +1357,6 @@ func (p *ChatReq) DeepEqual(ano *ChatReq) bool {
 		return false
 	}
 	if !p.Field3DeepEqual(ano.Message) {
-		return false
-	}
-	if !p.Field4DeepEqual(ano.Stream) {
 		return false
 	}
 	return true
@@ -1445,13 +1386,6 @@ func (p *ChatReq) Field3DeepEqual(src []*MessageItem) bool {
 		if !v.DeepEqual(_src) {
 			return false
 		}
-	}
-	return true
-}
-func (p *ChatReq) Field4DeepEqual(src bool) bool {
-
-	if p.Stream != src {
-		return false
 	}
 	return true
 }

@@ -805,7 +805,6 @@ func (p *ChatReq) FastRead(buf []byte) (int, error) {
 	var issetConversationId bool = false
 	var issetAppId bool = false
 	var issetMessage bool = false
-	var issetStream bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -867,21 +866,6 @@ func (p *ChatReq) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
-		case 4:
-			if fieldTypeId == thrift.BOOL {
-				l, err = p.FastReadField4(buf[offset:])
-				offset += l
-				if err != nil {
-					goto ReadFieldError
-				}
-				issetStream = true
-			} else {
-				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
-				offset += l
-				if err != nil {
-					goto SkipFieldError
-				}
-			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -914,11 +898,6 @@ func (p *ChatReq) FastRead(buf []byte) (int, error) {
 
 	if !issetMessage {
 		fieldId = 3
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetStream {
-		fieldId = 4
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -1000,22 +979,6 @@ func (p *ChatReq) FastReadField3(buf []byte) (int, error) {
 	return offset, nil
 }
 
-func (p *ChatReq) FastReadField4(buf []byte) (int, error) {
-	offset := 0
-
-	var _field bool
-	if v, l, err := bthrift.Binary.ReadBool(buf[offset:]); err != nil {
-		return offset, err
-	} else {
-		offset += l
-
-		_field = v
-
-	}
-	p.Stream = _field
-	return offset, nil
-}
-
 // for compatibility
 func (p *ChatReq) FastWrite(buf []byte) int {
 	return 0
@@ -1027,7 +990,6 @@ func (p *ChatReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter)
 	if p != nil {
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
-		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
@@ -1042,7 +1004,6 @@ func (p *ChatReq) BLength() int {
 		l += p.field1Length()
 		l += p.field2Length()
 		l += p.field3Length()
-		l += p.field4Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -1081,14 +1042,6 @@ func (p *ChatReq) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryWriter)
 	return offset
 }
 
-func (p *ChatReq) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWriter) int {
-	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "stream", thrift.BOOL, 4)
-	offset += bthrift.Binary.WriteBool(buf[offset:], p.Stream)
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
-	return offset
-}
-
 func (p *ChatReq) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("conversation_id", thrift.I64, 1)
@@ -1113,14 +1066,6 @@ func (p *ChatReq) field3Length() int {
 		l += v.BLength()
 	}
 	l += bthrift.Binary.ListEndLength()
-	l += bthrift.Binary.FieldEndLength()
-	return l
-}
-
-func (p *ChatReq) field4Length() int {
-	l := 0
-	l += bthrift.Binary.FieldBeginLength("stream", thrift.BOOL, 4)
-	l += bthrift.Binary.BoolLength(p.Stream)
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
