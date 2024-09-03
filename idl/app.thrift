@@ -3,6 +3,7 @@ namespace go appsvc
 include './base.thrift'
 include './plugin.thrift'
 include './user.thrift'
+include './openai.thrift'
 
 struct App {
     1: required i64 id
@@ -20,9 +21,25 @@ struct App {
     13: required string logo
     14: required user.User author
     15: required list<string> labels
-    16: required base.Time created_at
-    17: required base.Time updated_at
-    18: optional base.Time published_at
+    16: required ModelConfig model_config
+    17: required base.Time created_at
+    18: required base.Time updated_at
+    19: optional base.Time published_at
+}
+
+struct ModelConfig {
+  1: optional double temperature
+  2: optional double top_p
+  3: optional i32 n = 1
+  4: optional bool stream = true
+  5: optional double presence_penalty
+  6: optional openai.ChatCompletionResponseFormat response_format
+  7: optional i32 seed
+  8: optional double frequency_penalty
+  9: optional map<string, i32> logit_bias
+  10: optional bool logprobs
+  11: optional i32 top_logprobs
+  12: optional openai.StreamOptions stream_options
 }
 
 struct CreateAppReq {
@@ -40,6 +57,7 @@ struct CreateAppReq {
     12: required string logo
     13: required list<i64> label_ids
     14: required list<string> new_label_texts
+    15: required ModelConfig model_config
 }
 
 struct UpdateAppReq {
@@ -58,6 +76,7 @@ struct UpdateAppReq {
     13: required string logo
     14: required list<i64> label_ids
     15: required list<string> new_label_texts
+    16: required ModelConfig model_config
 }
 
 struct ListAppReq {
