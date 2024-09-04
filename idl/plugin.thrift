@@ -53,7 +53,7 @@ struct CreatePluginReq {
     7: required string enable_secret
     8: required list<PluginSecret> secrets
     9: required list<string> labels
-    10: required list<i64> tool_ids  // 工具列表（主要用于插件复制）
+    10: required list<i64> tool_ids  // Tool list (mainly used for plug-in copying)
     11: required string logo
 }
 

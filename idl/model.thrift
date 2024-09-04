@@ -3,9 +3,12 @@ namespace go modelsvc
 include './base.thrift'
 include './openai.thrift'
 
-// 无论内部还是外部都是通过临时token来调用，但是内部可以直接在内部生成token，对外无感知，外部则需要把临时token给用户
-// 内部直接通过RPC来调用接口，token直接在后台生成，不需要对外开放HTTP接口
-// 网关注意做接口隔离，对外只能开放临时访问的接口，每次的接口路由都是不一样的，并且token一定是具有时效性的
+// Both internal and external calls are made using temporary tokens, but internally, the tokens can be generated directly without external awareness, whereas externally, the temporary token needs to be provided to the user.
+//
+// Internally, interfaces are called directly through RPC, and tokens are generated in the background without needing to expose HTTP interfaces externally.
+//
+// For external access, make sure to isolate the interfaces properly. Only temporary access interfaces should be exposed externally, with each interface route being different each time. Additionally, the token must always have an expiration time.
+
 
 struct ChatReq {
     1: required string token

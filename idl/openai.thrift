@@ -146,7 +146,7 @@ struct ChatCompletionRequest {
   15: optional i32 top_logprobs,
   16: optional string user,
   17: optional list<FunctionDefinition> functions,
-  18: optional string function_call, // Thrift doesn't have `any` type, so keeping as string
+  18: optional string function_call, // JSON Schema
   19: optional list<Tool> tools,
   20: optional ToolChoice tool_choice,
   21: optional StreamOptions stream_options,

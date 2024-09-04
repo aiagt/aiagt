@@ -41,7 +41,7 @@ struct MessageItem {
 }
 
 struct ChatReq {
-    1: required i64 conversation_id  // 为空时自动创建 conversation
+    1: required i64 conversation_id  // Automatically create conversation when empty
     2: required i64 app_id
     3: required list<MessageItem> message
 }
