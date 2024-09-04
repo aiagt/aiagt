@@ -17,3 +17,12 @@ struct PaginationResp {
 struct IDReq {
     1: required i64 id
 }
+
+// The Time type is encapsulated to encapsulate unified time processing logic
+struct Time {
+    1: required i64 timestamp
+}
+
+struct Duration {
+    1: required i64 milliseconds
+}

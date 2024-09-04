@@ -14,38 +14,45 @@ import (
 var errInvalidMessageType = errors.New("invalid message type for service method handler")
 
 var serviceMethods = map[string]kitex.MethodInfo{
-	"Create": kitex.NewMethodInfo(
-		createHandler,
-		newPluginServiceCreateArgs,
-		newPluginServiceCreateResult,
+	"CreatePlugin": kitex.NewMethodInfo(
+		createPluginHandler,
+		newPluginServiceCreatePluginArgs,
+		newPluginServiceCreatePluginResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"Update": kitex.NewMethodInfo(
-		updateHandler,
-		newPluginServiceUpdateArgs,
-		newPluginServiceUpdateResult,
+	"UpdatePlugin": kitex.NewMethodInfo(
+		updatePluginHandler,
+		newPluginServiceUpdatePluginArgs,
+		newPluginServiceUpdatePluginResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"List": kitex.NewMethodInfo(
-		listHandler,
-		newPluginServiceListArgs,
-		newPluginServiceListResult,
+	"DeletePlugin": kitex.NewMethodInfo(
+		deletePluginHandler,
+		newPluginServiceDeletePluginArgs,
+		newPluginServiceDeletePluginResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"GetByID": kitex.NewMethodInfo(
-		getByIDHandler,
-		newPluginServiceGetByIDArgs,
-		newPluginServiceGetByIDResult,
+	"GetPluginByID": kitex.NewMethodInfo(
+		getPluginByIDHandler,
+		newPluginServiceGetPluginByIDArgs,
+		newPluginServiceGetPluginByIDResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"Delete": kitex.NewMethodInfo(
-		deleteHandler,
-		newPluginServiceDeleteArgs,
-		newPluginServiceDeleteResult,
+	"ListPlugin": kitex.NewMethodInfo(
+		listPluginHandler,
+		newPluginServiceListPluginArgs,
+		newPluginServiceListPluginResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"PublishPlugin": kitex.NewMethodInfo(
+		publishPluginHandler,
+		newPluginServicePublishPluginArgs,
+		newPluginServicePublishPluginResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -63,10 +70,10 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"ListTool": kitex.NewMethodInfo(
-		listToolHandler,
-		newPluginServiceListToolArgs,
-		newPluginServiceListToolResult,
+	"DeleteTool": kitex.NewMethodInfo(
+		deleteToolHandler,
+		newPluginServiceDeleteToolArgs,
+		newPluginServiceDeleteToolResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -77,10 +84,10 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"DeleteTool": kitex.NewMethodInfo(
-		deleteToolHandler,
-		newPluginServiceDeleteToolArgs,
-		newPluginServiceDeleteToolResult,
+	"ListTool": kitex.NewMethodInfo(
+		listToolHandler,
+		newPluginServiceListToolArgs,
+		newPluginServiceListToolResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -164,94 +171,112 @@ func newServiceInfo(hasStreaming bool, keepStreamingMethods bool, keepNonStreami
 	return svcInfo
 }
 
-func createHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*pluginsvc.PluginServiceCreateArgs)
-	realResult := result.(*pluginsvc.PluginServiceCreateResult)
-	success, err := handler.(pluginsvc.PluginService).Create(ctx, realArg.Req)
+func createPluginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceCreatePluginArgs)
+	realResult := result.(*pluginsvc.PluginServiceCreatePluginResult)
+	success, err := handler.(pluginsvc.PluginService).CreatePlugin(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newPluginServiceCreateArgs() interface{} {
-	return pluginsvc.NewPluginServiceCreateArgs()
+func newPluginServiceCreatePluginArgs() interface{} {
+	return pluginsvc.NewPluginServiceCreatePluginArgs()
 }
 
-func newPluginServiceCreateResult() interface{} {
-	return pluginsvc.NewPluginServiceCreateResult()
+func newPluginServiceCreatePluginResult() interface{} {
+	return pluginsvc.NewPluginServiceCreatePluginResult()
 }
 
-func updateHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*pluginsvc.PluginServiceUpdateArgs)
-	realResult := result.(*pluginsvc.PluginServiceUpdateResult)
-	success, err := handler.(pluginsvc.PluginService).Update(ctx, realArg.Req)
+func updatePluginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceUpdatePluginArgs)
+	realResult := result.(*pluginsvc.PluginServiceUpdatePluginResult)
+	success, err := handler.(pluginsvc.PluginService).UpdatePlugin(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newPluginServiceUpdateArgs() interface{} {
-	return pluginsvc.NewPluginServiceUpdateArgs()
+func newPluginServiceUpdatePluginArgs() interface{} {
+	return pluginsvc.NewPluginServiceUpdatePluginArgs()
 }
 
-func newPluginServiceUpdateResult() interface{} {
-	return pluginsvc.NewPluginServiceUpdateResult()
+func newPluginServiceUpdatePluginResult() interface{} {
+	return pluginsvc.NewPluginServiceUpdatePluginResult()
 }
 
-func listHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*pluginsvc.PluginServiceListArgs)
-	realResult := result.(*pluginsvc.PluginServiceListResult)
-	success, err := handler.(pluginsvc.PluginService).List(ctx, realArg.Req)
+func deletePluginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceDeletePluginArgs)
+	realResult := result.(*pluginsvc.PluginServiceDeletePluginResult)
+	success, err := handler.(pluginsvc.PluginService).DeletePlugin(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newPluginServiceListArgs() interface{} {
-	return pluginsvc.NewPluginServiceListArgs()
+func newPluginServiceDeletePluginArgs() interface{} {
+	return pluginsvc.NewPluginServiceDeletePluginArgs()
 }
 
-func newPluginServiceListResult() interface{} {
-	return pluginsvc.NewPluginServiceListResult()
+func newPluginServiceDeletePluginResult() interface{} {
+	return pluginsvc.NewPluginServiceDeletePluginResult()
 }
 
-func getByIDHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*pluginsvc.PluginServiceGetByIDArgs)
-	realResult := result.(*pluginsvc.PluginServiceGetByIDResult)
-	success, err := handler.(pluginsvc.PluginService).GetByID(ctx, realArg.Req)
+func getPluginByIDHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceGetPluginByIDArgs)
+	realResult := result.(*pluginsvc.PluginServiceGetPluginByIDResult)
+	success, err := handler.(pluginsvc.PluginService).GetPluginByID(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newPluginServiceGetByIDArgs() interface{} {
-	return pluginsvc.NewPluginServiceGetByIDArgs()
+func newPluginServiceGetPluginByIDArgs() interface{} {
+	return pluginsvc.NewPluginServiceGetPluginByIDArgs()
 }
 
-func newPluginServiceGetByIDResult() interface{} {
-	return pluginsvc.NewPluginServiceGetByIDResult()
+func newPluginServiceGetPluginByIDResult() interface{} {
+	return pluginsvc.NewPluginServiceGetPluginByIDResult()
 }
 
-func deleteHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*pluginsvc.PluginServiceDeleteArgs)
-	realResult := result.(*pluginsvc.PluginServiceDeleteResult)
-	success, err := handler.(pluginsvc.PluginService).Delete(ctx, realArg.Req)
+func listPluginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceListPluginArgs)
+	realResult := result.(*pluginsvc.PluginServiceListPluginResult)
+	success, err := handler.(pluginsvc.PluginService).ListPlugin(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newPluginServiceDeleteArgs() interface{} {
-	return pluginsvc.NewPluginServiceDeleteArgs()
+func newPluginServiceListPluginArgs() interface{} {
+	return pluginsvc.NewPluginServiceListPluginArgs()
 }
 
-func newPluginServiceDeleteResult() interface{} {
-	return pluginsvc.NewPluginServiceDeleteResult()
+func newPluginServiceListPluginResult() interface{} {
+	return pluginsvc.NewPluginServiceListPluginResult()
+}
+
+func publishPluginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServicePublishPluginArgs)
+	realResult := result.(*pluginsvc.PluginServicePublishPluginResult)
+	success, err := handler.(pluginsvc.PluginService).PublishPlugin(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newPluginServicePublishPluginArgs() interface{} {
+	return pluginsvc.NewPluginServicePublishPluginArgs()
+}
+
+func newPluginServicePublishPluginResult() interface{} {
+	return pluginsvc.NewPluginServicePublishPluginResult()
 }
 
 func createToolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -290,22 +315,22 @@ func newPluginServiceUpdateToolResult() interface{} {
 	return pluginsvc.NewPluginServiceUpdateToolResult()
 }
 
-func listToolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*pluginsvc.PluginServiceListToolArgs)
-	realResult := result.(*pluginsvc.PluginServiceListToolResult)
-	success, err := handler.(pluginsvc.PluginService).ListTool(ctx, realArg.Req)
+func deleteToolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceDeleteToolArgs)
+	realResult := result.(*pluginsvc.PluginServiceDeleteToolResult)
+	success, err := handler.(pluginsvc.PluginService).DeleteTool(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newPluginServiceListToolArgs() interface{} {
-	return pluginsvc.NewPluginServiceListToolArgs()
+func newPluginServiceDeleteToolArgs() interface{} {
+	return pluginsvc.NewPluginServiceDeleteToolArgs()
 }
 
-func newPluginServiceListToolResult() interface{} {
-	return pluginsvc.NewPluginServiceListToolResult()
+func newPluginServiceDeleteToolResult() interface{} {
+	return pluginsvc.NewPluginServiceDeleteToolResult()
 }
 
 func getToolByIDHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -326,22 +351,22 @@ func newPluginServiceGetToolByIDResult() interface{} {
 	return pluginsvc.NewPluginServiceGetToolByIDResult()
 }
 
-func deleteToolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*pluginsvc.PluginServiceDeleteToolArgs)
-	realResult := result.(*pluginsvc.PluginServiceDeleteToolResult)
-	success, err := handler.(pluginsvc.PluginService).DeleteTool(ctx, realArg.Req)
+func listToolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceListToolArgs)
+	realResult := result.(*pluginsvc.PluginServiceListToolResult)
+	success, err := handler.(pluginsvc.PluginService).ListTool(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newPluginServiceDeleteToolArgs() interface{} {
-	return pluginsvc.NewPluginServiceDeleteToolArgs()
+func newPluginServiceListToolArgs() interface{} {
+	return pluginsvc.NewPluginServiceListToolArgs()
 }
 
-func newPluginServiceDeleteToolResult() interface{} {
-	return pluginsvc.NewPluginServiceDeleteToolResult()
+func newPluginServiceListToolResult() interface{} {
+	return pluginsvc.NewPluginServiceListToolResult()
 }
 
 func callPluginToolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -390,51 +415,61 @@ func newServiceClient(c client.Client) *kClient {
 	}
 }
 
-func (p *kClient) Create(ctx context.Context, req *pluginsvc.CreatePluginReq) (r *base.Empty, err error) {
-	var _args pluginsvc.PluginServiceCreateArgs
+func (p *kClient) CreatePlugin(ctx context.Context, req *pluginsvc.CreatePluginReq) (r *base.Empty, err error) {
+	var _args pluginsvc.PluginServiceCreatePluginArgs
 	_args.Req = req
-	var _result pluginsvc.PluginServiceCreateResult
-	if err = p.c.Call(ctx, "Create", &_args, &_result); err != nil {
+	var _result pluginsvc.PluginServiceCreatePluginResult
+	if err = p.c.Call(ctx, "CreatePlugin", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) Update(ctx context.Context, req *pluginsvc.UpdatePluginReq) (r *base.Empty, err error) {
-	var _args pluginsvc.PluginServiceUpdateArgs
+func (p *kClient) UpdatePlugin(ctx context.Context, req *pluginsvc.UpdatePluginReq) (r *base.Empty, err error) {
+	var _args pluginsvc.PluginServiceUpdatePluginArgs
 	_args.Req = req
-	var _result pluginsvc.PluginServiceUpdateResult
-	if err = p.c.Call(ctx, "Update", &_args, &_result); err != nil {
+	var _result pluginsvc.PluginServiceUpdatePluginResult
+	if err = p.c.Call(ctx, "UpdatePlugin", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) List(ctx context.Context, req *base.PaginationReq) (r *pluginsvc.ListPluginResp, err error) {
-	var _args pluginsvc.PluginServiceListArgs
+func (p *kClient) DeletePlugin(ctx context.Context, req *base.IDReq) (r *base.Empty, err error) {
+	var _args pluginsvc.PluginServiceDeletePluginArgs
 	_args.Req = req
-	var _result pluginsvc.PluginServiceListResult
-	if err = p.c.Call(ctx, "List", &_args, &_result); err != nil {
+	var _result pluginsvc.PluginServiceDeletePluginResult
+	if err = p.c.Call(ctx, "DeletePlugin", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) GetByID(ctx context.Context, req *base.IDReq) (r *pluginsvc.Plugin, err error) {
-	var _args pluginsvc.PluginServiceGetByIDArgs
+func (p *kClient) GetPluginByID(ctx context.Context, req *base.IDReq) (r *pluginsvc.Plugin, err error) {
+	var _args pluginsvc.PluginServiceGetPluginByIDArgs
 	_args.Req = req
-	var _result pluginsvc.PluginServiceGetByIDResult
-	if err = p.c.Call(ctx, "GetByID", &_args, &_result); err != nil {
+	var _result pluginsvc.PluginServiceGetPluginByIDResult
+	if err = p.c.Call(ctx, "GetPluginByID", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) Delete(ctx context.Context, req *base.IDReq) (r *base.Empty, err error) {
-	var _args pluginsvc.PluginServiceDeleteArgs
+func (p *kClient) ListPlugin(ctx context.Context, req *pluginsvc.ListPluginReq) (r *pluginsvc.ListPluginResp, err error) {
+	var _args pluginsvc.PluginServiceListPluginArgs
 	_args.Req = req
-	var _result pluginsvc.PluginServiceDeleteResult
-	if err = p.c.Call(ctx, "Delete", &_args, &_result); err != nil {
+	var _result pluginsvc.PluginServiceListPluginResult
+	if err = p.c.Call(ctx, "ListPlugin", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) PublishPlugin(ctx context.Context, req *base.IDReq) (r *base.Empty, err error) {
+	var _args pluginsvc.PluginServicePublishPluginArgs
+	_args.Req = req
+	var _result pluginsvc.PluginServicePublishPluginResult
+	if err = p.c.Call(ctx, "PublishPlugin", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
@@ -460,11 +495,11 @@ func (p *kClient) UpdateTool(ctx context.Context, req *pluginsvc.UpdatePluginToo
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) ListTool(ctx context.Context, req *base.IDReq) (r *pluginsvc.ListPluginToolResp, err error) {
-	var _args pluginsvc.PluginServiceListToolArgs
+func (p *kClient) DeleteTool(ctx context.Context, req *base.IDReq) (r *base.Empty, err error) {
+	var _args pluginsvc.PluginServiceDeleteToolArgs
 	_args.Req = req
-	var _result pluginsvc.PluginServiceListToolResult
-	if err = p.c.Call(ctx, "ListTool", &_args, &_result); err != nil {
+	var _result pluginsvc.PluginServiceDeleteToolResult
+	if err = p.c.Call(ctx, "DeleteTool", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
@@ -480,11 +515,11 @@ func (p *kClient) GetToolByID(ctx context.Context, req *base.IDReq) (r *pluginsv
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) DeleteTool(ctx context.Context, req *base.IDReq) (r *base.Empty, err error) {
-	var _args pluginsvc.PluginServiceDeleteToolArgs
+func (p *kClient) ListTool(ctx context.Context, req *pluginsvc.ListPluginToolReq) (r *pluginsvc.ListPluginToolResp, err error) {
+	var _args pluginsvc.PluginServiceListToolArgs
 	_args.Req = req
-	var _result pluginsvc.PluginServiceDeleteToolResult
-	if err = p.c.Call(ctx, "DeleteTool", &_args, &_result); err != nil {
+	var _result pluginsvc.PluginServiceListToolResult
+	if err = p.c.Call(ctx, "ListTool", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

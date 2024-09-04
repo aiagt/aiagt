@@ -11,17 +11,18 @@ import (
 )
 
 type User struct {
-	Id            int64  `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
-	Username      string `thrift:"username,2,required" frugal:"2,required,string" json:"username"`
-	Password      string `thrift:"password,3,required" frugal:"3,required,string" json:"password"`
-	Email         string `thrift:"email,4,required" frugal:"4,required,string" json:"email"`
-	PhoneNumber   string `thrift:"phone_number,5,required" frugal:"5,required,string" json:"phone_number"`
-	Signature     string `thrift:"signature,6,required" frugal:"6,required,string" json:"signature"`
-	Homepage      string `thrift:"homepage,7,required" frugal:"7,required,string" json:"homepage"`
-	DescriptionMd string `thrift:"description_md,8,required" frugal:"8,required,string" json:"description_md"`
-	Github        string `thrift:"github,9,required" frugal:"9,required,string" json:"github"`
-	CreatedAt     int64  `thrift:"created_at,10,required" frugal:"10,required,i64" json:"created_at"`
-	UpdatedAt     int64  `thrift:"updated_at,11,required" frugal:"11,required,i64" json:"updated_at"`
+	Id            int64      `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Username      string     `thrift:"username,2,required" frugal:"2,required,string" json:"username"`
+	Password      string     `thrift:"password,3,required" frugal:"3,required,string" json:"password"`
+	Email         string     `thrift:"email,4,required" frugal:"4,required,string" json:"email"`
+	PhoneNumber   string     `thrift:"phone_number,5,required" frugal:"5,required,string" json:"phone_number"`
+	Signature     string     `thrift:"signature,6,required" frugal:"6,required,string" json:"signature"`
+	Homepage      string     `thrift:"homepage,7,required" frugal:"7,required,string" json:"homepage"`
+	DescriptionMd string     `thrift:"description_md,8,required" frugal:"8,required,string" json:"description_md"`
+	Github        string     `thrift:"github,9,required" frugal:"9,required,string" json:"github"`
+	Avatar        string     `thrift:"avatar,10,required" frugal:"10,required,string" json:"avatar"`
+	CreatedAt     *base.Time `thrift:"created_at,11,required" frugal:"11,required,base.Time" json:"created_at"`
+	UpdatedAt     *base.Time `thrift:"updated_at,12,required" frugal:"12,required,base.Time" json:"updated_at"`
 }
 
 func NewUser() *User {
@@ -67,11 +68,25 @@ func (p *User) GetGithub() (v string) {
 	return p.Github
 }
 
-func (p *User) GetCreatedAt() (v int64) {
+func (p *User) GetAvatar() (v string) {
+	return p.Avatar
+}
+
+var User_CreatedAt_DEFAULT *base.Time
+
+func (p *User) GetCreatedAt() (v *base.Time) {
+	if !p.IsSetCreatedAt() {
+		return User_CreatedAt_DEFAULT
+	}
 	return p.CreatedAt
 }
 
-func (p *User) GetUpdatedAt() (v int64) {
+var User_UpdatedAt_DEFAULT *base.Time
+
+func (p *User) GetUpdatedAt() (v *base.Time) {
+	if !p.IsSetUpdatedAt() {
+		return User_UpdatedAt_DEFAULT
+	}
 	return p.UpdatedAt
 }
 func (p *User) SetId(val int64) {
@@ -101,10 +116,13 @@ func (p *User) SetDescriptionMd(val string) {
 func (p *User) SetGithub(val string) {
 	p.Github = val
 }
-func (p *User) SetCreatedAt(val int64) {
+func (p *User) SetAvatar(val string) {
+	p.Avatar = val
+}
+func (p *User) SetCreatedAt(val *base.Time) {
 	p.CreatedAt = val
 }
-func (p *User) SetUpdatedAt(val int64) {
+func (p *User) SetUpdatedAt(val *base.Time) {
 	p.UpdatedAt = val
 }
 
@@ -118,8 +136,17 @@ var fieldIDToName_User = map[int16]string{
 	7:  "homepage",
 	8:  "description_md",
 	9:  "github",
-	10: "created_at",
-	11: "updated_at",
+	10: "avatar",
+	11: "created_at",
+	12: "updated_at",
+}
+
+func (p *User) IsSetCreatedAt() bool {
+	return p.CreatedAt != nil
+}
+
+func (p *User) IsSetUpdatedAt() bool {
+	return p.UpdatedAt != nil
 }
 
 func (p *User) Read(iprot thrift.TProtocol) (err error) {
@@ -135,6 +162,7 @@ func (p *User) Read(iprot thrift.TProtocol) (err error) {
 	var issetHomepage bool = false
 	var issetDescriptionMd bool = false
 	var issetGithub bool = false
+	var issetAvatar bool = false
 	var issetCreatedAt bool = false
 	var issetUpdatedAt bool = false
 
@@ -234,17 +262,26 @@ func (p *User) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 10:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField10(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetAvatar = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 11:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField11(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetCreatedAt = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 11:
-			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField11(iprot); err != nil {
+		case 12:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField12(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetUpdatedAt = true
@@ -309,13 +346,18 @@ func (p *User) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetCreatedAt {
+	if !issetAvatar {
 		fieldId = 10
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetUpdatedAt {
+	if !issetCreatedAt {
 		fieldId = 11
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUpdatedAt {
+		fieldId = 12
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -437,22 +479,27 @@ func (p *User) ReadField9(iprot thrift.TProtocol) error {
 }
 func (p *User) ReadField10(iprot thrift.TProtocol) error {
 
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
 		_field = v
 	}
-	p.CreatedAt = _field
+	p.Avatar = _field
 	return nil
 }
 func (p *User) ReadField11(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
+	}
+	p.CreatedAt = _field
+	return nil
+}
+func (p *User) ReadField12(iprot thrift.TProtocol) error {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
+		return err
 	}
 	p.UpdatedAt = _field
 	return nil
@@ -506,6 +553,10 @@ func (p *User) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField11(oprot); err != nil {
 			fieldId = 11
+			goto WriteFieldError
+		}
+		if err = p.writeField12(oprot); err != nil {
+			fieldId = 12
 			goto WriteFieldError
 		}
 	}
@@ -680,10 +731,10 @@ WriteFieldEndError:
 }
 
 func (p *User) writeField10(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("created_at", thrift.I64, 10); err != nil {
+	if err = oprot.WriteFieldBegin("avatar", thrift.STRING, 10); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.CreatedAt); err != nil {
+	if err := oprot.WriteString(p.Avatar); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -697,10 +748,10 @@ WriteFieldEndError:
 }
 
 func (p *User) writeField11(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("updated_at", thrift.I64, 11); err != nil {
+	if err = oprot.WriteFieldBegin("created_at", thrift.STRUCT, 11); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.UpdatedAt); err != nil {
+	if err := p.CreatedAt.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -711,6 +762,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 11 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 11 end error: ", p), err)
+}
+
+func (p *User) writeField12(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("updated_at", thrift.STRUCT, 12); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.UpdatedAt.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 end error: ", p), err)
 }
 
 func (p *User) String() string {
@@ -754,10 +822,13 @@ func (p *User) DeepEqual(ano *User) bool {
 	if !p.Field9DeepEqual(ano.Github) {
 		return false
 	}
-	if !p.Field10DeepEqual(ano.CreatedAt) {
+	if !p.Field10DeepEqual(ano.Avatar) {
 		return false
 	}
-	if !p.Field11DeepEqual(ano.UpdatedAt) {
+	if !p.Field11DeepEqual(ano.CreatedAt) {
+		return false
+	}
+	if !p.Field12DeepEqual(ano.UpdatedAt) {
 		return false
 	}
 	return true
@@ -826,29 +897,36 @@ func (p *User) Field9DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *User) Field10DeepEqual(src int64) bool {
+func (p *User) Field10DeepEqual(src string) bool {
 
-	if p.CreatedAt != src {
+	if strings.Compare(p.Avatar, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *User) Field11DeepEqual(src int64) bool {
+func (p *User) Field11DeepEqual(src *base.Time) bool {
 
-	if p.UpdatedAt != src {
+	if !p.CreatedAt.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+func (p *User) Field12DeepEqual(src *base.Time) bool {
+
+	if !p.UpdatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
 
 type Secret struct {
-	Id        int64 `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
-	UserId    int64 `thrift:"user_id,2,required" frugal:"2,required,i64" json:"user_id"`
-	PluginId  int64 `thrift:"plugin_id,3,required" frugal:"3,required,i64" json:"plugin_id"`
-	Name      int64 `thrift:"name,4,required" frugal:"4,required,i64" json:"name"`
-	Value     int64 `thrift:"value,5,required" frugal:"5,required,i64" json:"value"`
-	CreatedAt int64 `thrift:"created_at,6,required" frugal:"6,required,i64" json:"created_at"`
-	UpdatedAt int64 `thrift:"updated_at,7,required" frugal:"7,required,i64" json:"updated_at"`
+	Id        int64      `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	UserId    int64      `thrift:"user_id,2,required" frugal:"2,required,i64" json:"user_id"`
+	PluginId  int64      `thrift:"plugin_id,3,required" frugal:"3,required,i64" json:"plugin_id"`
+	Name      int64      `thrift:"name,4,required" frugal:"4,required,i64" json:"name"`
+	Value     int64      `thrift:"value,5,required" frugal:"5,required,i64" json:"value"`
+	CreatedAt *base.Time `thrift:"created_at,6,required" frugal:"6,required,base.Time" json:"created_at"`
+	UpdatedAt *base.Time `thrift:"updated_at,7,required" frugal:"7,required,base.Time" json:"updated_at"`
 }
 
 func NewSecret() *Secret {
@@ -878,11 +956,21 @@ func (p *Secret) GetValue() (v int64) {
 	return p.Value
 }
 
-func (p *Secret) GetCreatedAt() (v int64) {
+var Secret_CreatedAt_DEFAULT *base.Time
+
+func (p *Secret) GetCreatedAt() (v *base.Time) {
+	if !p.IsSetCreatedAt() {
+		return Secret_CreatedAt_DEFAULT
+	}
 	return p.CreatedAt
 }
 
-func (p *Secret) GetUpdatedAt() (v int64) {
+var Secret_UpdatedAt_DEFAULT *base.Time
+
+func (p *Secret) GetUpdatedAt() (v *base.Time) {
+	if !p.IsSetUpdatedAt() {
+		return Secret_UpdatedAt_DEFAULT
+	}
 	return p.UpdatedAt
 }
 func (p *Secret) SetId(val int64) {
@@ -900,10 +988,10 @@ func (p *Secret) SetName(val int64) {
 func (p *Secret) SetValue(val int64) {
 	p.Value = val
 }
-func (p *Secret) SetCreatedAt(val int64) {
+func (p *Secret) SetCreatedAt(val *base.Time) {
 	p.CreatedAt = val
 }
-func (p *Secret) SetUpdatedAt(val int64) {
+func (p *Secret) SetUpdatedAt(val *base.Time) {
 	p.UpdatedAt = val
 }
 
@@ -915,6 +1003,14 @@ var fieldIDToName_Secret = map[int16]string{
 	5: "value",
 	6: "created_at",
 	7: "updated_at",
+}
+
+func (p *Secret) IsSetCreatedAt() bool {
+	return p.CreatedAt != nil
+}
+
+func (p *Secret) IsSetUpdatedAt() bool {
+	return p.UpdatedAt != nil
 }
 
 func (p *Secret) Read(iprot thrift.TProtocol) (err error) {
@@ -989,7 +1085,7 @@ func (p *Secret) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 6:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -998,7 +1094,7 @@ func (p *Secret) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 7:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -1127,23 +1223,17 @@ func (p *Secret) ReadField5(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *Secret) ReadField6(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
 	p.CreatedAt = _field
 	return nil
 }
 func (p *Secret) ReadField7(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
 	p.UpdatedAt = _field
 	return nil
@@ -1287,10 +1377,10 @@ WriteFieldEndError:
 }
 
 func (p *Secret) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("created_at", thrift.I64, 6); err != nil {
+	if err = oprot.WriteFieldBegin("created_at", thrift.STRUCT, 6); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.CreatedAt); err != nil {
+	if err := p.CreatedAt.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1304,10 +1394,10 @@ WriteFieldEndError:
 }
 
 func (p *Secret) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("updated_at", thrift.I64, 7); err != nil {
+	if err = oprot.WriteFieldBegin("updated_at", thrift.STRUCT, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.UpdatedAt); err != nil {
+	if err := p.UpdatedAt.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1393,16 +1483,16 @@ func (p *Secret) Field5DeepEqual(src int64) bool {
 	}
 	return true
 }
-func (p *Secret) Field6DeepEqual(src int64) bool {
+func (p *Secret) Field6DeepEqual(src *base.Time) bool {
 
-	if p.CreatedAt != src {
+	if !p.CreatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *Secret) Field7DeepEqual(src int64) bool {
+func (p *Secret) Field7DeepEqual(src *base.Time) bool {
 
-	if p.UpdatedAt != src {
+	if !p.UpdatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
@@ -2498,6 +2588,7 @@ type UpdateUserReq struct {
 	Homepage      string `thrift:"homepage,7,required" frugal:"7,required,string" json:"homepage"`
 	DescriptionMd string `thrift:"description_md,8,required" frugal:"8,required,string" json:"description_md"`
 	Github        string `thrift:"github,9,required" frugal:"9,required,string" json:"github"`
+	Avatar        string `thrift:"avatar,10,required" frugal:"10,required,string" json:"avatar"`
 }
 
 func NewUpdateUserReq() *UpdateUserReq {
@@ -2542,6 +2633,10 @@ func (p *UpdateUserReq) GetDescriptionMd() (v string) {
 func (p *UpdateUserReq) GetGithub() (v string) {
 	return p.Github
 }
+
+func (p *UpdateUserReq) GetAvatar() (v string) {
+	return p.Avatar
+}
 func (p *UpdateUserReq) SetId(val int64) {
 	p.Id = val
 }
@@ -2569,17 +2664,21 @@ func (p *UpdateUserReq) SetDescriptionMd(val string) {
 func (p *UpdateUserReq) SetGithub(val string) {
 	p.Github = val
 }
+func (p *UpdateUserReq) SetAvatar(val string) {
+	p.Avatar = val
+}
 
 var fieldIDToName_UpdateUserReq = map[int16]string{
-	1: "id",
-	2: "username",
-	3: "password",
-	4: "email",
-	5: "phone_number",
-	6: "signature",
-	7: "homepage",
-	8: "description_md",
-	9: "github",
+	1:  "id",
+	2:  "username",
+	3:  "password",
+	4:  "email",
+	5:  "phone_number",
+	6:  "signature",
+	7:  "homepage",
+	8:  "description_md",
+	9:  "github",
+	10: "avatar",
 }
 
 func (p *UpdateUserReq) Read(iprot thrift.TProtocol) (err error) {
@@ -2595,6 +2694,7 @@ func (p *UpdateUserReq) Read(iprot thrift.TProtocol) (err error) {
 	var issetHomepage bool = false
 	var issetDescriptionMd bool = false
 	var issetGithub bool = false
+	var issetAvatar bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -2691,6 +2791,15 @@ func (p *UpdateUserReq) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 10:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField10(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetAvatar = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -2746,6 +2855,11 @@ func (p *UpdateUserReq) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetGithub {
 		fieldId = 9
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetAvatar {
+		fieldId = 10
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -2865,6 +2979,17 @@ func (p *UpdateUserReq) ReadField9(iprot thrift.TProtocol) error {
 	p.Github = _field
 	return nil
 }
+func (p *UpdateUserReq) ReadField10(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Avatar = _field
+	return nil
+}
 
 func (p *UpdateUserReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -2906,6 +3031,10 @@ func (p *UpdateUserReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField9(oprot); err != nil {
 			fieldId = 9
+			goto WriteFieldError
+		}
+		if err = p.writeField10(oprot); err != nil {
+			fieldId = 10
 			goto WriteFieldError
 		}
 	}
@@ -3079,6 +3208,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
 }
 
+func (p *UpdateUserReq) writeField10(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("avatar", thrift.STRING, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Avatar); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
 func (p *UpdateUserReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -3118,6 +3264,9 @@ func (p *UpdateUserReq) DeepEqual(ano *UpdateUserReq) bool {
 		return false
 	}
 	if !p.Field9DeepEqual(ano.Github) {
+		return false
+	}
+	if !p.Field10DeepEqual(ano.Avatar) {
 		return false
 	}
 	return true
@@ -3182,6 +3331,13 @@ func (p *UpdateUserReq) Field8DeepEqual(src string) bool {
 func (p *UpdateUserReq) Field9DeepEqual(src string) bool {
 
 	if strings.Compare(p.Github, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UpdateUserReq) Field10DeepEqual(src string) bool {
+
+	if strings.Compare(p.Avatar, src) != 0 {
 		return false
 	}
 	return true
@@ -4534,6 +4690,8 @@ func (p *UpdateSecretReq) Field5DeepEqual(src int64) bool {
 type ListSecretReq struct {
 	Pagination *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
 	PluginId   *int64              `thrift:"plugin_id,2,optional" frugal:"2,optional,i64" json:"plugin_id,omitempty"`
+	UserId     *int64              `thrift:"user_id,3,optional" frugal:"3,optional,i64" json:"user_id,omitempty"`
+	Name       *string             `thrift:"name,4,optional" frugal:"4,optional,string" json:"name,omitempty"`
 }
 
 func NewListSecretReq() *ListSecretReq {
@@ -4560,16 +4718,42 @@ func (p *ListSecretReq) GetPluginId() (v int64) {
 	}
 	return *p.PluginId
 }
+
+var ListSecretReq_UserId_DEFAULT int64
+
+func (p *ListSecretReq) GetUserId() (v int64) {
+	if !p.IsSetUserId() {
+		return ListSecretReq_UserId_DEFAULT
+	}
+	return *p.UserId
+}
+
+var ListSecretReq_Name_DEFAULT string
+
+func (p *ListSecretReq) GetName() (v string) {
+	if !p.IsSetName() {
+		return ListSecretReq_Name_DEFAULT
+	}
+	return *p.Name
+}
 func (p *ListSecretReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
 }
 func (p *ListSecretReq) SetPluginId(val *int64) {
 	p.PluginId = val
 }
+func (p *ListSecretReq) SetUserId(val *int64) {
+	p.UserId = val
+}
+func (p *ListSecretReq) SetName(val *string) {
+	p.Name = val
+}
 
 var fieldIDToName_ListSecretReq = map[int16]string{
 	1: "pagination",
 	2: "plugin_id",
+	3: "user_id",
+	4: "name",
 }
 
 func (p *ListSecretReq) IsSetPagination() bool {
@@ -4578,6 +4762,14 @@ func (p *ListSecretReq) IsSetPagination() bool {
 
 func (p *ListSecretReq) IsSetPluginId() bool {
 	return p.PluginId != nil
+}
+
+func (p *ListSecretReq) IsSetUserId() bool {
+	return p.UserId != nil
+}
+
+func (p *ListSecretReq) IsSetName() bool {
+	return p.Name != nil
 }
 
 func (p *ListSecretReq) Read(iprot thrift.TProtocol) (err error) {
@@ -4612,6 +4804,22 @@ func (p *ListSecretReq) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 4:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -4671,6 +4879,28 @@ func (p *ListSecretReq) ReadField2(iprot thrift.TProtocol) error {
 	p.PluginId = _field
 	return nil
 }
+func (p *ListSecretReq) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field *int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.UserId = _field
+	return nil
+}
+func (p *ListSecretReq) ReadField4(iprot thrift.TProtocol) error {
+
+	var _field *string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.Name = _field
+	return nil
+}
 
 func (p *ListSecretReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -4684,6 +4914,14 @@ func (p *ListSecretReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 	}
@@ -4740,6 +4978,44 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
+func (p *ListSecretReq) writeField3(oprot thrift.TProtocol) (err error) {
+	if p.IsSetUserId() {
+		if err = oprot.WriteFieldBegin("user_id", thrift.I64, 3); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteI64(*p.UserId); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *ListSecretReq) writeField4(oprot thrift.TProtocol) (err error) {
+	if p.IsSetName() {
+		if err = oprot.WriteFieldBegin("name", thrift.STRING, 4); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Name); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
 func (p *ListSecretReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -4760,6 +5036,12 @@ func (p *ListSecretReq) DeepEqual(ano *ListSecretReq) bool {
 	if !p.Field2DeepEqual(ano.PluginId) {
 		return false
 	}
+	if !p.Field3DeepEqual(ano.UserId) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.Name) {
+		return false
+	}
 	return true
 }
 
@@ -4778,6 +5060,30 @@ func (p *ListSecretReq) Field2DeepEqual(src *int64) bool {
 		return false
 	}
 	if *p.PluginId != *src {
+		return false
+	}
+	return true
+}
+func (p *ListSecretReq) Field3DeepEqual(src *int64) bool {
+
+	if p.UserId == src {
+		return true
+	} else if p.UserId == nil || src == nil {
+		return false
+	}
+	if *p.UserId != *src {
+		return false
+	}
+	return true
+}
+func (p *ListSecretReq) Field4DeepEqual(src *string) bool {
+
+	if p.Name == src {
+		return true
+	} else if p.Name == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Name, *src) != 0 {
 		return false
 	}
 	return true

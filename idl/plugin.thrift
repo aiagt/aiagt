@@ -1,26 +1,32 @@
 namespace go pluginsvc
 
 include './base.thrift'
+include './user.thrift'
 
 struct Plugin {
     1: required i64 id
-    2: required string name
-    3: required string description
-    4: required i64 author_id
-    5: required bool is_private
-    6: required string home_page
-    7: required string enable_secret
-    8: required list<PluginSecret> secrets
-    9: required list<string> labels
-    10: required list<PluginTool> tools
-    11: required i64 created_at
-    12: required i64 updated_at
-    13: required i64 published_at
+    2: required string key
+    3: required string name
+    4: required string description
+    5: required string description_md
+    6: required user.User author
+    7: required bool is_private
+    8: required string home_page
+    9: required string enable_secret
+    10: required list<PluginSecret> secrets
+    11: required list<string> labels
+    12: required list<PluginTool> tools
+    13: required string logo
+    14: required base.Time created_at
+    15: required base.Time updated_at
+    16: optional base.Time published_at
 }
 
 struct PluginSecret {
     1: required string name
     2: required string description
+    3: required string acquire_method
+    4: required string link
 }
 
 struct PluginTool {
@@ -32,32 +38,38 @@ struct PluginTool {
     6: required string response_type
     7: required string api
     8: optional i64 import_model_id
-    9: required i64 created_at
-    10: required i64 updated_at
-    11: required i64 tested_at
+    9: required base.Time created_at
+    10: required base.Time updated_at
+    11: optional base.Time tested_at
 }
 
 struct CreatePluginReq {
-    1: required string name
-    2: required string description
-    3: required bool is_private
-    4: required string home_page
-    5: required string enable_secret
-    6: required list<PluginSecret> secrets
-    7: required list<string> labels
-    8: required list<i64> tool_ids  // 工具列表（主要用于插件复制）
+    1: required i64 key
+    2: required string name
+    3: required string description
+    4: required string description_md
+    5: required bool is_private
+    6: required string home_page
+    7: required string enable_secret
+    8: required list<PluginSecret> secrets
+    9: required list<string> labels
+    10: required list<i64> tool_ids  // Tool list (mainly used for plug-in copying)
+    11: required string logo
 }
 
 struct UpdatePluginReq {
     1: required i64 id
-    2: required string name
-    3: required string description
-    4: required bool is_private
-    5: required string home_page
-    6: required string enable_secret
-    7: required list<PluginSecret> secrets
-    8: required list<string> labels
-    9: required list<i64> tool_ids  // 工具列表（主要用于插件复制）
+    2: required i64 key
+    3: required string name
+    4: required string description
+    5: required string description_md
+    6: required bool is_private
+    7: required string home_page
+    8: required string enable_secret
+    9: required list<PluginSecret> secrets
+    10: required list<string> labels
+    11: required list<i64> tool_ids
+    12: required string logo
 }
 
 struct ListPluginReq {
@@ -65,11 +77,12 @@ struct ListPluginReq {
     2: optional i64 author_id
     3: optional string name
     4: optional string description
+    5: optional list<string> labels
 }
 
 struct ListPluginResp {
-    1: required list<Plugin> plugins
-    2: required base.PaginationResp pagination
+    1: required base.PaginationResp pagination
+    2: required list<Plugin> plugins
 }
 
 struct CreatePluginToolReq {
@@ -91,6 +104,12 @@ struct UpdatePluginToolReq {
     6: required string response_type
     7: required string api
     8: optional i64 import_model_id
+}
+
+struct ListPluginToolReq {
+    1: required base.PaginationReq pagination;
+    2: optional i64 plugin_id;
+    3: optional i64 author_id;
 }
 
 struct ListPluginToolResp {
@@ -118,17 +137,19 @@ struct TestPluginToolResp {
 }
 
 service PluginService {
-    base.Empty Create(1: CreatePluginReq req)
-    base.Empty Update(1: UpdatePluginReq req)
-    ListPluginResp List(1: base.PaginationReq req)
-    Plugin GetByID(1: base.IDReq req)
-    base.Empty Delete(1: base.IDReq req)
+    base.Empty CreatePlugin(1: CreatePluginReq req)
+    base.Empty UpdatePlugin(1: UpdatePluginReq req)
+    base.Empty DeletePlugin(1: base.IDReq req)
+    Plugin GetPluginByID(1: base.IDReq req)
+    ListPluginResp ListPlugin(1: ListPluginReq req)
+
+    base.Empty PublishPlugin(1: base.IDReq req)
 
     base.Empty CreateTool(1: CreatePluginToolReq req)
     base.Empty UpdateTool(1: UpdatePluginToolReq req)
-    ListPluginToolResp ListTool(1: base.IDReq req)
-    PluginTool GetToolByID(1: base.IDReq req)
     base.Empty DeleteTool(1: base.IDReq req)
+    PluginTool GetToolByID(1: base.IDReq req)
+    ListPluginToolResp ListTool(1: ListPluginToolReq req)
 
     CallPluginToolResp CallPluginTool(1: CallPluginToolReq req)
     TestPluginToolResp TestPluginTool(1: CallPluginToolReq req)
