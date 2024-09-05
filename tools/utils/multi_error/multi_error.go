@@ -1,6 +1,6 @@
 package multi_error
 
-import "github.com/bytedance/gopkg/util/logger"
+import "github.com/aiagt/aiagt/tools/utils/logger"
 
 type RunError struct {
 	err error
