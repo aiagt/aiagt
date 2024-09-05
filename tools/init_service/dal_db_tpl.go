@@ -26,7 +26,6 @@ func (d *{{ .CamelServiceName }}Dao[T]) GetByID(ctx context.Context, id int64) (
 
 	return &m, nil
 }
-
 `
 
 var DaoDBTpl = template.Must(template.New("db.go").Parse(daoDBTpl))
