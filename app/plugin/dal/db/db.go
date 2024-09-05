@@ -7,19 +7,29 @@ import (
 	"gorm.io/gorm"
 )
 
-func db(ctx context.Context) *gorm.DB {
+type PluginDao[T any] struct {
+	m *T
+}
+
+func NewPluginDao[T any](m *T) *PluginDao[T] {
+	return &PluginDao[T]{m: m}
+}
+
+func (dao *PluginDao[T]) db(ctx context.Context) *gorm.DB {
 	return ktdb.DBCtx(ctx)
 }
 
-type PluginDao[T any] struct{}
+func (dao *PluginDao[T]) mdb(ctx context.Context) *gorm.DB {
+	return dao.db(ctx).Model(dao.m)
+}
 
-func (d *PluginDao[T]) GetByID(ctx context.Context, id int64) (*T, error) {
-	var m T
+func (dao *PluginDao[T]) GetByID(ctx context.Context, id int64) (*T, error) {
+	var result T
 
-	if err := db(ctx).Model(&m).Where("id = ?", id).First(&m).Error; err != nil {
+	err := dao.mdb(ctx).Where("id = ?", id).First(&result).Error
+	if err != nil {
 		return nil, err
 	}
 
-	return &m, nil
+	return &result, nil
 }
-
