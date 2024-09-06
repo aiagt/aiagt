@@ -12,7 +12,7 @@ struct Plugin {
     6: required user.User author
     7: required bool is_private
     8: required string home_page
-    9: required string enable_secret
+    9: required bool enable_secret
     10: required list<PluginSecret> secrets
     11: required list<string> labels
     12: required list<PluginTool> tools
@@ -50,7 +50,7 @@ struct CreatePluginReq {
     4: required string description_md
     5: required bool is_private
     6: required string home_page
-    7: required string enable_secret
+    7: required bool enable_secret
     8: required list<PluginSecret> secrets
     9: required list<string> labels
     10: required list<i64> tool_ids  // Tool list (mainly used for plug-in copying)
@@ -65,7 +65,7 @@ struct UpdatePluginReq {
     5: required string description_md
     6: required bool is_private
     7: required string home_page
-    8: required string enable_secret
+    8: required bool enable_secret
     9: required list<PluginSecret> secrets
     10: required list<string> labels
     11: required list<i64> tool_ids
@@ -77,7 +77,7 @@ struct ListPluginReq {
     2: optional i64 author_id
     3: optional string name
     4: optional string description
-    5: optional list<string> labels
+    5: optional list<i64> labels
 }
 
 struct ListPluginResp {

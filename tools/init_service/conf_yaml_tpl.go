@@ -1,9 +1,5 @@
 package main
 
-import (
-	"text/template"
-)
-
 const confYamlTpl = `server:
   name: {{ .ServiceName }}
   address: ":8888"
@@ -22,4 +18,4 @@ redis:
   address: "127.0.0.1:26379"
 `
 
-var ConfYamlTpl = template.Must(template.New("conf.yaml").Parse(confYamlTpl))
+var ConfYamlTpl = NewTemplate("conf.yaml", confYamlTpl, false)

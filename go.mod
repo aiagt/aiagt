@@ -5,9 +5,8 @@ go 1.21.6
 replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
 
 require (
-	github.com/aiagt/kitextool v0.0.1
+	github.com/aiagt/kitextool v0.0.2
 	github.com/apache/thrift v0.16.0
-	github.com/bytedance/gopkg v0.0.0-20240514070511-01b2cbcf35e1
 	github.com/cloudwego/kitex v0.10.3
 	github.com/iancoleman/strcase v0.2.0
 	github.com/pkg/errors v0.9.1
@@ -17,6 +16,7 @@ require (
 require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
+	github.com/bytedance/gopkg v0.0.0-20240514070511-01b2cbcf35e1 // indirect
 	github.com/bytedance/sonic v1.11.8 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect

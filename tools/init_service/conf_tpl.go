@@ -1,7 +1,5 @@
 package main
 
-import "text/template"
-
 const confTpl = `package conf
 
 import (
@@ -19,4 +17,4 @@ type ServerConf struct {
 }
 `
 
-var ConfTpl = template.Must(template.New("conf.go").Parse(confTpl))
+var ConfTpl = NewTemplate("conf", confTpl, false)

@@ -188,7 +188,7 @@ func (p *Plugin) FastRead(buf []byte) (int, error) {
 				}
 			}
 		case 9:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.BOOL {
 				l, err = p.FastReadField9(buf[offset:])
 				offset += l
 				if err != nil {
@@ -544,8 +544,8 @@ func (p *Plugin) FastReadField8(buf []byte) (int, error) {
 func (p *Plugin) FastReadField9(buf []byte) (int, error) {
 	offset := 0
 
-	var _field string
-	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+	var _field bool
+	if v, l, err := bthrift.Binary.ReadBool(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
@@ -711,13 +711,13 @@ func (p *Plugin) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter) 
 	if p != nil {
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField7(buf[offset:], binaryWriter)
+		offset += p.fastWriteField9(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 		offset += p.fastWriteField5(buf[offset:], binaryWriter)
 		offset += p.fastWriteField6(buf[offset:], binaryWriter)
 		offset += p.fastWriteField8(buf[offset:], binaryWriter)
-		offset += p.fastWriteField9(buf[offset:], binaryWriter)
 		offset += p.fastWriteField10(buf[offset:], binaryWriter)
 		offset += p.fastWriteField11(buf[offset:], binaryWriter)
 		offset += p.fastWriteField12(buf[offset:], binaryWriter)
@@ -823,8 +823,8 @@ func (p *Plugin) fastWriteField8(buf []byte, binaryWriter bthrift.BinaryWriter) 
 
 func (p *Plugin) fastWriteField9(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "enable_secret", thrift.STRING, 9)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.EnableSecret)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "enable_secret", thrift.BOOL, 9)
+	offset += bthrift.Binary.WriteBool(buf[offset:], p.EnableSecret)
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
@@ -977,8 +977,8 @@ func (p *Plugin) field8Length() int {
 
 func (p *Plugin) field9Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("enable_secret", thrift.STRING, 9)
-	l += bthrift.Binary.StringLengthNocopy(p.EnableSecret)
+	l += bthrift.Binary.FieldBeginLength("enable_secret", thrift.BOOL, 9)
+	l += bthrift.Binary.BoolLength(p.EnableSecret)
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
@@ -2149,7 +2149,7 @@ func (p *CreatePluginReq) FastRead(buf []byte) (int, error) {
 				}
 			}
 		case 7:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.BOOL {
 				l, err = p.FastReadField7(buf[offset:])
 				offset += l
 				if err != nil {
@@ -2413,8 +2413,8 @@ func (p *CreatePluginReq) FastReadField6(buf []byte) (int, error) {
 func (p *CreatePluginReq) FastReadField7(buf []byte) (int, error) {
 	offset := 0
 
-	var _field string
-	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+	var _field bool
+	if v, l, err := bthrift.Binary.ReadBool(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
@@ -2545,11 +2545,11 @@ func (p *CreatePluginReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.Binar
 	if p != nil {
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField5(buf[offset:], binaryWriter)
+		offset += p.fastWriteField7(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 		offset += p.fastWriteField6(buf[offset:], binaryWriter)
-		offset += p.fastWriteField7(buf[offset:], binaryWriter)
 		offset += p.fastWriteField8(buf[offset:], binaryWriter)
 		offset += p.fastWriteField9(buf[offset:], binaryWriter)
 		offset += p.fastWriteField10(buf[offset:], binaryWriter)
@@ -2631,8 +2631,8 @@ func (p *CreatePluginReq) fastWriteField6(buf []byte, binaryWriter bthrift.Binar
 
 func (p *CreatePluginReq) fastWriteField7(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "enable_secret", thrift.STRING, 7)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.EnableSecret)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "enable_secret", thrift.BOOL, 7)
+	offset += bthrift.Binary.WriteBool(buf[offset:], p.EnableSecret)
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
@@ -2743,8 +2743,8 @@ func (p *CreatePluginReq) field6Length() int {
 
 func (p *CreatePluginReq) field7Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("enable_secret", thrift.STRING, 7)
-	l += bthrift.Binary.StringLengthNocopy(p.EnableSecret)
+	l += bthrift.Binary.FieldBeginLength("enable_secret", thrift.BOOL, 7)
+	l += bthrift.Binary.BoolLength(p.EnableSecret)
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
@@ -2932,7 +2932,7 @@ func (p *UpdatePluginReq) FastRead(buf []byte) (int, error) {
 				}
 			}
 		case 8:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.BOOL {
 				l, err = p.FastReadField8(buf[offset:])
 				offset += l
 				if err != nil {
@@ -3217,8 +3217,8 @@ func (p *UpdatePluginReq) FastReadField7(buf []byte) (int, error) {
 func (p *UpdatePluginReq) FastReadField8(buf []byte) (int, error) {
 	offset := 0
 
-	var _field string
-	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+	var _field bool
+	if v, l, err := bthrift.Binary.ReadBool(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
@@ -3350,11 +3350,11 @@ func (p *UpdatePluginReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.Binar
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField6(buf[offset:], binaryWriter)
+		offset += p.fastWriteField8(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 		offset += p.fastWriteField5(buf[offset:], binaryWriter)
 		offset += p.fastWriteField7(buf[offset:], binaryWriter)
-		offset += p.fastWriteField8(buf[offset:], binaryWriter)
 		offset += p.fastWriteField9(buf[offset:], binaryWriter)
 		offset += p.fastWriteField10(buf[offset:], binaryWriter)
 		offset += p.fastWriteField11(buf[offset:], binaryWriter)
@@ -3445,8 +3445,8 @@ func (p *UpdatePluginReq) fastWriteField7(buf []byte, binaryWriter bthrift.Binar
 
 func (p *UpdatePluginReq) fastWriteField8(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "enable_secret", thrift.STRING, 8)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.EnableSecret)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "enable_secret", thrift.BOOL, 8)
+	offset += bthrift.Binary.WriteBool(buf[offset:], p.EnableSecret)
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
@@ -3565,8 +3565,8 @@ func (p *UpdatePluginReq) field7Length() int {
 
 func (p *UpdatePluginReq) field8Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("enable_secret", thrift.STRING, 8)
-	l += bthrift.Binary.StringLengthNocopy(p.EnableSecret)
+	l += bthrift.Binary.FieldBeginLength("enable_secret", thrift.BOOL, 8)
+	l += bthrift.Binary.BoolLength(p.EnableSecret)
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
@@ -3814,10 +3814,10 @@ func (p *ListPluginReq) FastReadField5(buf []byte) (int, error) {
 	if err != nil {
 		return offset, err
 	}
-	_field := make([]string, 0, size)
+	_field := make([]int64, 0, size)
 	for i := 0; i < size; i++ {
-		var _elem string
-		if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		var _elem int64
+		if v, l, err := bthrift.Binary.ReadI64(buf[offset:]); err != nil {
 			return offset, err
 		} else {
 			offset += l
@@ -3915,13 +3915,13 @@ func (p *ListPluginReq) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryW
 	if p.IsSetLabels() {
 		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "labels", thrift.LIST, 5)
 		listBeginOffset := offset
-		offset += bthrift.Binary.ListBeginLength(thrift.STRING, 0)
+		offset += bthrift.Binary.ListBeginLength(thrift.I64, 0)
 		var length int
 		for _, v := range p.Labels {
 			length++
-			offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, v)
+			offset += bthrift.Binary.WriteI64(buf[offset:], v)
 		}
-		bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.STRING, length)
+		bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.I64, length)
 		offset += bthrift.Binary.WriteListEnd(buf[offset:])
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
@@ -3970,10 +3970,9 @@ func (p *ListPluginReq) field5Length() int {
 	l := 0
 	if p.IsSetLabels() {
 		l += bthrift.Binary.FieldBeginLength("labels", thrift.LIST, 5)
-		l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.Labels))
-		for _, v := range p.Labels {
-			l += bthrift.Binary.StringLengthNocopy(v)
-		}
+		l += bthrift.Binary.ListBeginLength(thrift.I64, len(p.Labels))
+		var tmpV int64
+		l += bthrift.Binary.I64Length(int64(tmpV)) * len(p.Labels)
 		l += bthrift.Binary.ListEndLength()
 		l += bthrift.Binary.FieldEndLength()
 	}

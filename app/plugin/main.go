@@ -1,16 +1,34 @@
 package main
 
 import (
+	"github.com/aiagt/aiagt/app/plugin/conf"
+	"github.com/aiagt/aiagt/app/plugin/dal/db"
+	"github.com/aiagt/aiagt/app/plugin/model"
+	ktdb "github.com/aiagt/kitextool/option/server/db"
+	ktserver "github.com/aiagt/kitextool/suite/server"
+	"github.com/cloudwego/kitex/server"
+	"github.com/cloudwego/kitex/transport"
+	"log"
+
 	"github.com/aiagt/aiagt/app/plugin/handler"
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc/pluginservice"
-	"log"
 )
 
 func main() {
-	svr := pluginsvc.NewServer(new(handler.PluginServiceImpl))
+	handle := handler.NewPluginService(db.NewPluginDao())
+
+	svr := pluginsvc.NewServer(handle,
+		server.WithSuite(ktserver.NewKitexToolSuite(
+			conf.Conf(),
+			ktserver.WithTransport(transport.TTHeaderFramed),
+			ktdb.WithDB(ktdb.NewMySQLDial()),
+		)))
+
+	if err := ktdb.DB().AutoMigrate(new(model.Plugin)); err != nil {
+		panic(err)
+	}
 
 	err := svr.Run()
-
 	if err != nil {
 		log.Println(err.Error())
 	}

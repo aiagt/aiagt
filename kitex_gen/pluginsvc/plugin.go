@@ -21,7 +21,7 @@ type Plugin struct {
 	Author        *usersvc.User   `thrift:"author,6,required" frugal:"6,required,usersvc.User" json:"author"`
 	IsPrivate     bool            `thrift:"is_private,7,required" frugal:"7,required,bool" json:"is_private"`
 	HomePage      string          `thrift:"home_page,8,required" frugal:"8,required,string" json:"home_page"`
-	EnableSecret  string          `thrift:"enable_secret,9,required" frugal:"9,required,string" json:"enable_secret"`
+	EnableSecret  bool            `thrift:"enable_secret,9,required" frugal:"9,required,bool" json:"enable_secret"`
 	Secrets       []*PluginSecret `thrift:"secrets,10,required" frugal:"10,required,list<PluginSecret>" json:"secrets"`
 	Labels        []string        `thrift:"labels,11,required" frugal:"11,required,list<string>" json:"labels"`
 	Tools         []*PluginTool   `thrift:"tools,12,required" frugal:"12,required,list<PluginTool>" json:"tools"`
@@ -75,7 +75,7 @@ func (p *Plugin) GetHomePage() (v string) {
 	return p.HomePage
 }
 
-func (p *Plugin) GetEnableSecret() (v string) {
+func (p *Plugin) GetEnableSecret() (v bool) {
 	return p.EnableSecret
 }
 
@@ -145,7 +145,7 @@ func (p *Plugin) SetIsPrivate(val bool) {
 func (p *Plugin) SetHomePage(val string) {
 	p.HomePage = val
 }
-func (p *Plugin) SetEnableSecret(val string) {
+func (p *Plugin) SetEnableSecret(val bool) {
 	p.EnableSecret = val
 }
 func (p *Plugin) SetSecrets(val []*PluginSecret) {
@@ -312,7 +312,7 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 9:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.BOOL {
 				if err = p.ReadField9(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -574,8 +574,8 @@ func (p *Plugin) ReadField8(iprot thrift.TProtocol) error {
 }
 func (p *Plugin) ReadField9(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field bool
+	if v, err := iprot.ReadBool(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -913,10 +913,10 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("enable_secret", thrift.STRING, 9); err != nil {
+	if err = oprot.WriteFieldBegin("enable_secret", thrift.BOOL, 9); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.EnableSecret); err != nil {
+	if err := oprot.WriteBool(p.EnableSecret); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1195,9 +1195,9 @@ func (p *Plugin) Field8DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *Plugin) Field9DeepEqual(src string) bool {
+func (p *Plugin) Field9DeepEqual(src bool) bool {
 
-	if strings.Compare(p.EnableSecret, src) != 0 {
+	if p.EnableSecret != src {
 		return false
 	}
 	return true
@@ -2499,7 +2499,7 @@ type CreatePluginReq struct {
 	DescriptionMd string          `thrift:"description_md,4,required" frugal:"4,required,string" json:"description_md"`
 	IsPrivate     bool            `thrift:"is_private,5,required" frugal:"5,required,bool" json:"is_private"`
 	HomePage      string          `thrift:"home_page,6,required" frugal:"6,required,string" json:"home_page"`
-	EnableSecret  string          `thrift:"enable_secret,7,required" frugal:"7,required,string" json:"enable_secret"`
+	EnableSecret  bool            `thrift:"enable_secret,7,required" frugal:"7,required,bool" json:"enable_secret"`
 	Secrets       []*PluginSecret `thrift:"secrets,8,required" frugal:"8,required,list<PluginSecret>" json:"secrets"`
 	Labels        []string        `thrift:"labels,9,required" frugal:"9,required,list<string>" json:"labels"`
 	ToolIds       []int64         `thrift:"tool_ids,10,required" frugal:"10,required,list<i64>" json:"tool_ids"`
@@ -2537,7 +2537,7 @@ func (p *CreatePluginReq) GetHomePage() (v string) {
 	return p.HomePage
 }
 
-func (p *CreatePluginReq) GetEnableSecret() (v string) {
+func (p *CreatePluginReq) GetEnableSecret() (v bool) {
 	return p.EnableSecret
 }
 
@@ -2574,7 +2574,7 @@ func (p *CreatePluginReq) SetIsPrivate(val bool) {
 func (p *CreatePluginReq) SetHomePage(val string) {
 	p.HomePage = val
 }
-func (p *CreatePluginReq) SetEnableSecret(val string) {
+func (p *CreatePluginReq) SetEnableSecret(val bool) {
 	p.EnableSecret = val
 }
 func (p *CreatePluginReq) SetSecrets(val []*PluginSecret) {
@@ -2689,7 +2689,7 @@ func (p *CreatePluginReq) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 7:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.BOOL {
 				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -2886,8 +2886,8 @@ func (p *CreatePluginReq) ReadField6(iprot thrift.TProtocol) error {
 }
 func (p *CreatePluginReq) ReadField7(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field bool
+	if v, err := iprot.ReadBool(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -3147,10 +3147,10 @@ WriteFieldEndError:
 }
 
 func (p *CreatePluginReq) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("enable_secret", thrift.STRING, 7); err != nil {
+	if err = oprot.WriteFieldBegin("enable_secret", thrift.BOOL, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.EnableSecret); err != nil {
+	if err := oprot.WriteBool(p.EnableSecret); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -3347,9 +3347,9 @@ func (p *CreatePluginReq) Field6DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *CreatePluginReq) Field7DeepEqual(src string) bool {
+func (p *CreatePluginReq) Field7DeepEqual(src bool) bool {
 
-	if strings.Compare(p.EnableSecret, src) != 0 {
+	if p.EnableSecret != src {
 		return false
 	}
 	return true
@@ -3409,7 +3409,7 @@ type UpdatePluginReq struct {
 	DescriptionMd string          `thrift:"description_md,5,required" frugal:"5,required,string" json:"description_md"`
 	IsPrivate     bool            `thrift:"is_private,6,required" frugal:"6,required,bool" json:"is_private"`
 	HomePage      string          `thrift:"home_page,7,required" frugal:"7,required,string" json:"home_page"`
-	EnableSecret  string          `thrift:"enable_secret,8,required" frugal:"8,required,string" json:"enable_secret"`
+	EnableSecret  bool            `thrift:"enable_secret,8,required" frugal:"8,required,bool" json:"enable_secret"`
 	Secrets       []*PluginSecret `thrift:"secrets,9,required" frugal:"9,required,list<PluginSecret>" json:"secrets"`
 	Labels        []string        `thrift:"labels,10,required" frugal:"10,required,list<string>" json:"labels"`
 	ToolIds       []int64         `thrift:"tool_ids,11,required" frugal:"11,required,list<i64>" json:"tool_ids"`
@@ -3451,7 +3451,7 @@ func (p *UpdatePluginReq) GetHomePage() (v string) {
 	return p.HomePage
 }
 
-func (p *UpdatePluginReq) GetEnableSecret() (v string) {
+func (p *UpdatePluginReq) GetEnableSecret() (v bool) {
 	return p.EnableSecret
 }
 
@@ -3491,7 +3491,7 @@ func (p *UpdatePluginReq) SetIsPrivate(val bool) {
 func (p *UpdatePluginReq) SetHomePage(val string) {
 	p.HomePage = val
 }
-func (p *UpdatePluginReq) SetEnableSecret(val string) {
+func (p *UpdatePluginReq) SetEnableSecret(val bool) {
 	p.EnableSecret = val
 }
 func (p *UpdatePluginReq) SetSecrets(val []*PluginSecret) {
@@ -3617,7 +3617,7 @@ func (p *UpdatePluginReq) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 8:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.BOOL {
 				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -3830,8 +3830,8 @@ func (p *UpdatePluginReq) ReadField7(iprot thrift.TProtocol) error {
 }
 func (p *UpdatePluginReq) ReadField8(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field bool
+	if v, err := iprot.ReadBool(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -4112,10 +4112,10 @@ WriteFieldEndError:
 }
 
 func (p *UpdatePluginReq) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("enable_secret", thrift.STRING, 8); err != nil {
+	if err = oprot.WriteFieldBegin("enable_secret", thrift.BOOL, 8); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.EnableSecret); err != nil {
+	if err := oprot.WriteBool(p.EnableSecret); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -4322,9 +4322,9 @@ func (p *UpdatePluginReq) Field7DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field8DeepEqual(src string) bool {
+func (p *UpdatePluginReq) Field8DeepEqual(src bool) bool {
 
-	if strings.Compare(p.EnableSecret, src) != 0 {
+	if p.EnableSecret != src {
 		return false
 	}
 	return true
@@ -4381,7 +4381,7 @@ type ListPluginReq struct {
 	AuthorId    *int64              `thrift:"author_id,2,optional" frugal:"2,optional,i64" json:"author_id,omitempty"`
 	Name        *string             `thrift:"name,3,optional" frugal:"3,optional,string" json:"name,omitempty"`
 	Description *string             `thrift:"description,4,optional" frugal:"4,optional,string" json:"description,omitempty"`
-	Labels      []string            `thrift:"labels,5,optional" frugal:"5,optional,list<string>" json:"labels,omitempty"`
+	Labels      []int64             `thrift:"labels,5,optional" frugal:"5,optional,list<i64>" json:"labels,omitempty"`
 }
 
 func NewListPluginReq() *ListPluginReq {
@@ -4427,9 +4427,9 @@ func (p *ListPluginReq) GetDescription() (v string) {
 	return *p.Description
 }
 
-var ListPluginReq_Labels_DEFAULT []string
+var ListPluginReq_Labels_DEFAULT []int64
 
-func (p *ListPluginReq) GetLabels() (v []string) {
+func (p *ListPluginReq) GetLabels() (v []int64) {
 	if !p.IsSetLabels() {
 		return ListPluginReq_Labels_DEFAULT
 	}
@@ -4447,7 +4447,7 @@ func (p *ListPluginReq) SetName(val *string) {
 func (p *ListPluginReq) SetDescription(val *string) {
 	p.Description = val
 }
-func (p *ListPluginReq) SetLabels(val []string) {
+func (p *ListPluginReq) SetLabels(val []int64) {
 	p.Labels = val
 }
 
@@ -4621,11 +4621,11 @@ func (p *ListPluginReq) ReadField5(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	_field := make([]string, 0, size)
+	_field := make([]int64, 0, size)
 	for i := 0; i < size; i++ {
 
-		var _elem string
-		if v, err := iprot.ReadString(); err != nil {
+		var _elem int64
+		if v, err := iprot.ReadI64(); err != nil {
 			return err
 		} else {
 			_elem = v
@@ -4763,11 +4763,11 @@ func (p *ListPluginReq) writeField5(oprot thrift.TProtocol) (err error) {
 		if err = oprot.WriteFieldBegin("labels", thrift.LIST, 5); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteListBegin(thrift.STRING, len(p.Labels)); err != nil {
+		if err := oprot.WriteListBegin(thrift.I64, len(p.Labels)); err != nil {
 			return err
 		}
 		for _, v := range p.Labels {
-			if err := oprot.WriteString(v); err != nil {
+			if err := oprot.WriteI64(v); err != nil {
 				return err
 			}
 		}
@@ -4860,14 +4860,14 @@ func (p *ListPluginReq) Field4DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *ListPluginReq) Field5DeepEqual(src []string) bool {
+func (p *ListPluginReq) Field5DeepEqual(src []int64) bool {
 
 	if len(p.Labels) != len(src) {
 		return false
 	}
 	for i, v := range p.Labels {
 		_src := src[i]
-		if strings.Compare(v, _src) != 0 {
+		if v != _src {
 			return false
 		}
 	}
