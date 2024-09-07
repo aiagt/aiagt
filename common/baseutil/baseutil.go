@@ -6,9 +6,20 @@ import (
 )
 
 func NewTime(t *base.Time) time.Time {
-	return time.UnixMilli(t.Timestamp)
+	if t == nil || t.Timestamp == nil {
+		return time.Time{}
+	}
+	return time.UnixMilli(*t.Timestamp)
 }
 
 func NewBaseTime(t time.Time) *base.Time {
-	return &base.Time{Timestamp: t.UnixMilli()}
+	timestamp := t.UnixMilli()
+	return &base.Time{Timestamp: &timestamp}
+}
+
+func NewBaseTimeP(t *time.Time) *base.Time {
+	if t == nil {
+		return nil
+	}
+	return NewBaseTime(*t)
 }

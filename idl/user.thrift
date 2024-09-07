@@ -5,24 +5,23 @@ include './base.thrift'
 struct User {
     1: required i64 id
     2: required string username
-    3: required string password
-    4: required string email
-    5: required string phone_number
-    6: required string signature
-    7: required string homepage
-    8: required string description_md
-    9: required string github
-    10: required string avatar
-    11: required base.Time created_at
-    12: required base.Time updated_at
+    3: required string email
+    4: required string phone_number
+    5: required string signature
+    6: required string homepage
+    7: required string description_md
+    8: required string github
+    9: required string avatar
+    10: required base.Time created_at
+    11: required base.Time updated_at
 }
 
 struct Secret {
     1: required i64 id
     2: required i64 user_id
     3: required i64 plugin_id
-    4: required i64 name
-    5: required i64 value
+    4: required string name
+    5: required string value
     6: required base.Time created_at
     7: required base.Time updated_at
 }
@@ -76,16 +75,16 @@ struct ForgotPasswordResp {
 struct CreateSecretReq {
     1: required i64 user_id
     2: required i64 plugin_id
-    3: required i64 name
-    4: required i64 value
+    3: required string name
+    4: required string value
 }
 
 struct UpdateSecretReq {
     1: required i64 id
     2: required i64 user_id
     3: required i64 plugin_id
-    4: required i64 name
-    5: required i64 value
+    4: required string name
+    5: required string value
 }
 
 struct ListSecretReq {
@@ -106,7 +105,9 @@ service UserService {
     ForgotPasswordResp ForgotPassword(1: ForgotPasswordReq req)
 
     base.Empty UpdateUser(1: UpdateUserReq req)
+    User GetUser()
     User GetUserByID(1: base.IDReq req)
+    list<User> GetUserByIds(1: base.IDsReq req)
 
     base.Empty CreateSecret(1: CreateSecretReq req)
     base.Empty UpdateSecret(1: UpdateSecretReq req)

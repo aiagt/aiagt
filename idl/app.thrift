@@ -56,7 +56,7 @@ struct CreateAppReq {
     11: required list<i64> plugin_ids
     12: required string logo
     13: required list<i64> label_ids
-    14: required list<string> new_label_texts
+    14: required list<string> label_texts
     15: required ModelConfig model_config
 }
 
@@ -75,7 +75,7 @@ struct UpdateAppReq {
     12: required list<i64> plugin_ids
     13: required string logo
     14: required list<i64> label_ids
-    15: required list<string> new_label_texts
+    15: required list<string> label_texts
     16: required ModelConfig model_config
 }
 
@@ -100,7 +100,7 @@ struct AppLabel {
 
 struct ListAppLabelReq {
     1: required base.PaginationReq pagination
-    2: required string text
+    2: optional string text
 }
 
 struct ListAppLabelResp {

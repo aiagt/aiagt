@@ -42,10 +42,24 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"GetUser": kitex.NewMethodInfo(
+		getUserHandler,
+		newUserServiceGetUserArgs,
+		newUserServiceGetUserResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 	"GetUserByID": kitex.NewMethodInfo(
 		getUserByIDHandler,
 		newUserServiceGetUserByIDArgs,
 		newUserServiceGetUserByIDResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"GetUserByIds": kitex.NewMethodInfo(
+		getUserByIdsHandler,
+		newUserServiceGetUserByIdsArgs,
+		newUserServiceGetUserByIdsResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -215,6 +229,24 @@ func newUserServiceUpdateUserResult() interface{} {
 	return usersvc.NewUserServiceUpdateUserResult()
 }
 
+func getUserHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	_ = arg.(*usersvc.UserServiceGetUserArgs)
+	realResult := result.(*usersvc.UserServiceGetUserResult)
+	success, err := handler.(usersvc.UserService).GetUser(ctx)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceGetUserArgs() interface{} {
+	return usersvc.NewUserServiceGetUserArgs()
+}
+
+func newUserServiceGetUserResult() interface{} {
+	return usersvc.NewUserServiceGetUserResult()
+}
+
 func getUserByIDHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*usersvc.UserServiceGetUserByIDArgs)
 	realResult := result.(*usersvc.UserServiceGetUserByIDResult)
@@ -231,6 +263,24 @@ func newUserServiceGetUserByIDArgs() interface{} {
 
 func newUserServiceGetUserByIDResult() interface{} {
 	return usersvc.NewUserServiceGetUserByIDResult()
+}
+
+func getUserByIdsHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*usersvc.UserServiceGetUserByIdsArgs)
+	realResult := result.(*usersvc.UserServiceGetUserByIdsResult)
+	success, err := handler.(usersvc.UserService).GetUserByIds(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceGetUserByIdsArgs() interface{} {
+	return usersvc.NewUserServiceGetUserByIdsArgs()
+}
+
+func newUserServiceGetUserByIdsResult() interface{} {
+	return usersvc.NewUserServiceGetUserByIdsResult()
 }
 
 func createSecretHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -355,11 +405,30 @@ func (p *kClient) UpdateUser(ctx context.Context, req *usersvc.UpdateUserReq) (r
 	return _result.GetSuccess(), nil
 }
 
+func (p *kClient) GetUser(ctx context.Context) (r *usersvc.User, err error) {
+	var _args usersvc.UserServiceGetUserArgs
+	var _result usersvc.UserServiceGetUserResult
+	if err = p.c.Call(ctx, "GetUser", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
 func (p *kClient) GetUserByID(ctx context.Context, req *base.IDReq) (r *usersvc.User, err error) {
 	var _args usersvc.UserServiceGetUserByIDArgs
 	_args.Req = req
 	var _result usersvc.UserServiceGetUserByIDResult
 	if err = p.c.Call(ctx, "GetUserByID", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetUserByIds(ctx context.Context, req *base.IDsReq) (r []*usersvc.User, err error) {
+	var _args usersvc.UserServiceGetUserByIdsArgs
+	_args.Req = req
+	var _result usersvc.UserServiceGetUserByIdsResult
+	if err = p.c.Call(ctx, "GetUserByIds", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

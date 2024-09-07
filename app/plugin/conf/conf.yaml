@@ -1,6 +1,6 @@
 server:
   name: plugin
-  address: ":8888"
+  address: ":8932"
 
 config_center:
   port: 8848

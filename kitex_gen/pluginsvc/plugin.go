@@ -14,21 +14,24 @@ import (
 
 type Plugin struct {
 	Id            int64           `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
-	Key           string          `thrift:"key,2,required" frugal:"2,required,string" json:"key"`
+	Key           int64           `thrift:"key,2,required" frugal:"2,required,i64" json:"key"`
 	Name          string          `thrift:"name,3,required" frugal:"3,required,string" json:"name"`
 	Description   string          `thrift:"description,4,required" frugal:"4,required,string" json:"description"`
 	DescriptionMd string          `thrift:"description_md,5,required" frugal:"5,required,string" json:"description_md"`
-	Author        *usersvc.User   `thrift:"author,6,required" frugal:"6,required,usersvc.User" json:"author"`
-	IsPrivate     bool            `thrift:"is_private,7,required" frugal:"7,required,bool" json:"is_private"`
-	HomePage      string          `thrift:"home_page,8,required" frugal:"8,required,string" json:"home_page"`
-	EnableSecret  bool            `thrift:"enable_secret,9,required" frugal:"9,required,bool" json:"enable_secret"`
-	Secrets       []*PluginSecret `thrift:"secrets,10,required" frugal:"10,required,list<PluginSecret>" json:"secrets"`
-	Labels        []string        `thrift:"labels,11,required" frugal:"11,required,list<string>" json:"labels"`
-	Tools         []*PluginTool   `thrift:"tools,12,required" frugal:"12,required,list<PluginTool>" json:"tools"`
-	Logo          string          `thrift:"logo,13,required" frugal:"13,required,string" json:"logo"`
-	CreatedAt     *base.Time      `thrift:"created_at,14,required" frugal:"14,required,base.Time" json:"created_at"`
-	UpdatedAt     *base.Time      `thrift:"updated_at,15,required" frugal:"15,required,base.Time" json:"updated_at"`
-	PublishedAt   *base.Time      `thrift:"published_at,16,optional" frugal:"16,optional,base.Time" json:"published_at,omitempty"`
+	AuthorId      int64           `thrift:"author_id,6,required" frugal:"6,required,i64" json:"author_id"`
+	Author        *usersvc.User   `thrift:"author,7,optional" frugal:"7,optional,usersvc.User" json:"author,omitempty"`
+	IsPrivate     bool            `thrift:"is_private,8,required" frugal:"8,required,bool" json:"is_private"`
+	HomePage      string          `thrift:"home_page,9,required" frugal:"9,required,string" json:"home_page"`
+	EnableSecret  bool            `thrift:"enable_secret,10,required" frugal:"10,required,bool" json:"enable_secret"`
+	Secrets       []*PluginSecret `thrift:"secrets,11,required" frugal:"11,required,list<PluginSecret>" json:"secrets"`
+	LabelIds      []int64         `thrift:"label_ids,12,required" frugal:"12,required,list<i64>" json:"label_ids"`
+	Labels        []*PluginLabel  `thrift:"labels,13,optional" frugal:"13,optional,list<PluginLabel>" json:"labels,omitempty"`
+	ToolIds       []int64         `thrift:"tool_ids,14,required" frugal:"14,required,list<i64>" json:"tool_ids"`
+	Tools         []*PluginTool   `thrift:"tools,15,optional" frugal:"15,optional,list<PluginTool>" json:"tools,omitempty"`
+	Logo          string          `thrift:"logo,16,required" frugal:"16,required,string" json:"logo"`
+	CreatedAt     *base.Time      `thrift:"created_at,17,required" frugal:"17,required,base.Time" json:"created_at"`
+	UpdatedAt     *base.Time      `thrift:"updated_at,18,required" frugal:"18,required,base.Time" json:"updated_at"`
+	PublishedAt   *base.Time      `thrift:"published_at,19,optional" frugal:"19,optional,base.Time" json:"published_at,omitempty"`
 }
 
 func NewPlugin() *Plugin {
@@ -42,7 +45,7 @@ func (p *Plugin) GetId() (v int64) {
 	return p.Id
 }
 
-func (p *Plugin) GetKey() (v string) {
+func (p *Plugin) GetKey() (v int64) {
 	return p.Key
 }
 
@@ -56,6 +59,10 @@ func (p *Plugin) GetDescription() (v string) {
 
 func (p *Plugin) GetDescriptionMd() (v string) {
 	return p.DescriptionMd
+}
+
+func (p *Plugin) GetAuthorId() (v int64) {
+	return p.AuthorId
 }
 
 var Plugin_Author_DEFAULT *usersvc.User
@@ -83,11 +90,29 @@ func (p *Plugin) GetSecrets() (v []*PluginSecret) {
 	return p.Secrets
 }
 
-func (p *Plugin) GetLabels() (v []string) {
+func (p *Plugin) GetLabelIds() (v []int64) {
+	return p.LabelIds
+}
+
+var Plugin_Labels_DEFAULT []*PluginLabel
+
+func (p *Plugin) GetLabels() (v []*PluginLabel) {
+	if !p.IsSetLabels() {
+		return Plugin_Labels_DEFAULT
+	}
 	return p.Labels
 }
 
+func (p *Plugin) GetToolIds() (v []int64) {
+	return p.ToolIds
+}
+
+var Plugin_Tools_DEFAULT []*PluginTool
+
 func (p *Plugin) GetTools() (v []*PluginTool) {
+	if !p.IsSetTools() {
+		return Plugin_Tools_DEFAULT
+	}
 	return p.Tools
 }
 
@@ -124,7 +149,7 @@ func (p *Plugin) GetPublishedAt() (v *base.Time) {
 func (p *Plugin) SetId(val int64) {
 	p.Id = val
 }
-func (p *Plugin) SetKey(val string) {
+func (p *Plugin) SetKey(val int64) {
 	p.Key = val
 }
 func (p *Plugin) SetName(val string) {
@@ -135,6 +160,9 @@ func (p *Plugin) SetDescription(val string) {
 }
 func (p *Plugin) SetDescriptionMd(val string) {
 	p.DescriptionMd = val
+}
+func (p *Plugin) SetAuthorId(val int64) {
+	p.AuthorId = val
 }
 func (p *Plugin) SetAuthor(val *usersvc.User) {
 	p.Author = val
@@ -151,8 +179,14 @@ func (p *Plugin) SetEnableSecret(val bool) {
 func (p *Plugin) SetSecrets(val []*PluginSecret) {
 	p.Secrets = val
 }
-func (p *Plugin) SetLabels(val []string) {
+func (p *Plugin) SetLabelIds(val []int64) {
+	p.LabelIds = val
+}
+func (p *Plugin) SetLabels(val []*PluginLabel) {
 	p.Labels = val
+}
+func (p *Plugin) SetToolIds(val []int64) {
+	p.ToolIds = val
 }
 func (p *Plugin) SetTools(val []*PluginTool) {
 	p.Tools = val
@@ -176,21 +210,32 @@ var fieldIDToName_Plugin = map[int16]string{
 	3:  "name",
 	4:  "description",
 	5:  "description_md",
-	6:  "author",
-	7:  "is_private",
-	8:  "home_page",
-	9:  "enable_secret",
-	10: "secrets",
-	11: "labels",
-	12: "tools",
-	13: "logo",
-	14: "created_at",
-	15: "updated_at",
-	16: "published_at",
+	6:  "author_id",
+	7:  "author",
+	8:  "is_private",
+	9:  "home_page",
+	10: "enable_secret",
+	11: "secrets",
+	12: "label_ids",
+	13: "labels",
+	14: "tool_ids",
+	15: "tools",
+	16: "logo",
+	17: "created_at",
+	18: "updated_at",
+	19: "published_at",
 }
 
 func (p *Plugin) IsSetAuthor() bool {
 	return p.Author != nil
+}
+
+func (p *Plugin) IsSetLabels() bool {
+	return p.Labels != nil
+}
+
+func (p *Plugin) IsSetTools() bool {
+	return p.Tools != nil
 }
 
 func (p *Plugin) IsSetCreatedAt() bool {
@@ -214,13 +259,13 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 	var issetName bool = false
 	var issetDescription bool = false
 	var issetDescriptionMd bool = false
-	var issetAuthor bool = false
+	var issetAuthorId bool = false
 	var issetIsPrivate bool = false
 	var issetHomePage bool = false
 	var issetEnableSecret bool = false
 	var issetSecrets bool = false
-	var issetLabels bool = false
-	var issetTools bool = false
+	var issetLabelIds bool = false
+	var issetToolIds bool = false
 	var issetLogo bool = false
 	var issetCreatedAt bool = false
 	var issetUpdatedAt bool = false
@@ -249,7 +294,7 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 2:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -285,47 +330,46 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 6:
-			if fieldTypeId == thrift.STRUCT {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetAuthor = true
+				issetAuthorId = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 7:
-			if fieldTypeId == thrift.BOOL {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField7(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 8:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetIsPrivate = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 8:
+		case 9:
 			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField8(iprot); err != nil {
+				if err = p.ReadField9(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetHomePage = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 9:
-			if fieldTypeId == thrift.BOOL {
-				if err = p.ReadField9(iprot); err != nil {
-					goto ReadFieldError
-				}
-				issetEnableSecret = true
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
 		case 10:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.BOOL {
 				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetSecrets = true
+				issetEnableSecret = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -334,7 +378,7 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField11(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetLabels = true
+				issetSecrets = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -343,40 +387,65 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField12(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetTools = true
+				issetLabelIds = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 13:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.LIST {
 				if err = p.ReadField13(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 14:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField14(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetToolIds = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 15:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField15(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 16:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField16(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetLogo = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 14:
+		case 17:
 			if fieldTypeId == thrift.STRUCT {
-				if err = p.ReadField14(iprot); err != nil {
+				if err = p.ReadField17(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetCreatedAt = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 15:
+		case 18:
 			if fieldTypeId == thrift.STRUCT {
-				if err = p.ReadField15(iprot); err != nil {
+				if err = p.ReadField18(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetUpdatedAt = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 16:
+		case 19:
 			if fieldTypeId == thrift.STRUCT {
-				if err = p.ReadField16(iprot); err != nil {
+				if err = p.ReadField19(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -420,53 +489,53 @@ func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetAuthor {
+	if !issetAuthorId {
 		fieldId = 6
 		goto RequiredFieldNotSetError
 	}
 
 	if !issetIsPrivate {
-		fieldId = 7
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetHomePage {
 		fieldId = 8
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetEnableSecret {
+	if !issetHomePage {
 		fieldId = 9
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetSecrets {
+	if !issetEnableSecret {
 		fieldId = 10
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetLabels {
+	if !issetSecrets {
 		fieldId = 11
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetTools {
+	if !issetLabelIds {
 		fieldId = 12
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetLogo {
-		fieldId = 13
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetCreatedAt {
+	if !issetToolIds {
 		fieldId = 14
 		goto RequiredFieldNotSetError
 	}
 
+	if !issetLogo {
+		fieldId = 16
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCreatedAt {
+		fieldId = 17
+		goto RequiredFieldNotSetError
+	}
+
 	if !issetUpdatedAt {
-		fieldId = 15
+		fieldId = 18
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -500,8 +569,8 @@ func (p *Plugin) ReadField1(iprot thrift.TProtocol) error {
 }
 func (p *Plugin) ReadField2(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -543,6 +612,17 @@ func (p *Plugin) ReadField5(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *Plugin) ReadField6(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.AuthorId = _field
+	return nil
+}
+func (p *Plugin) ReadField7(iprot thrift.TProtocol) error {
 	_field := usersvc.NewUser()
 	if err := _field.Read(iprot); err != nil {
 		return err
@@ -550,7 +630,7 @@ func (p *Plugin) ReadField6(iprot thrift.TProtocol) error {
 	p.Author = _field
 	return nil
 }
-func (p *Plugin) ReadField7(iprot thrift.TProtocol) error {
+func (p *Plugin) ReadField8(iprot thrift.TProtocol) error {
 
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
@@ -561,7 +641,7 @@ func (p *Plugin) ReadField7(iprot thrift.TProtocol) error {
 	p.IsPrivate = _field
 	return nil
 }
-func (p *Plugin) ReadField8(iprot thrift.TProtocol) error {
+func (p *Plugin) ReadField9(iprot thrift.TProtocol) error {
 
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
@@ -572,7 +652,7 @@ func (p *Plugin) ReadField8(iprot thrift.TProtocol) error {
 	p.HomePage = _field
 	return nil
 }
-func (p *Plugin) ReadField9(iprot thrift.TProtocol) error {
+func (p *Plugin) ReadField10(iprot thrift.TProtocol) error {
 
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
@@ -583,7 +663,7 @@ func (p *Plugin) ReadField9(iprot thrift.TProtocol) error {
 	p.EnableSecret = _field
 	return nil
 }
-func (p *Plugin) ReadField10(iprot thrift.TProtocol) error {
+func (p *Plugin) ReadField11(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -606,16 +686,16 @@ func (p *Plugin) ReadField10(iprot thrift.TProtocol) error {
 	p.Secrets = _field
 	return nil
 }
-func (p *Plugin) ReadField11(iprot thrift.TProtocol) error {
+func (p *Plugin) ReadField12(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
 	}
-	_field := make([]string, 0, size)
+	_field := make([]int64, 0, size)
 	for i := 0; i < size; i++ {
 
-		var _elem string
-		if v, err := iprot.ReadString(); err != nil {
+		var _elem int64
+		if v, err := iprot.ReadI64(); err != nil {
 			return err
 		} else {
 			_elem = v
@@ -626,10 +706,56 @@ func (p *Plugin) ReadField11(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
+	p.LabelIds = _field
+	return nil
+}
+func (p *Plugin) ReadField13(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	_field := make([]*PluginLabel, 0, size)
+	values := make([]PluginLabel, size)
+	for i := 0; i < size; i++ {
+		_elem := &values[i]
+		_elem.InitDefault()
+
+		if err := _elem.Read(iprot); err != nil {
+			return err
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
 	p.Labels = _field
 	return nil
 }
-func (p *Plugin) ReadField12(iprot thrift.TProtocol) error {
+func (p *Plugin) ReadField14(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	_field := make([]int64, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.ToolIds = _field
+	return nil
+}
+func (p *Plugin) ReadField15(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -652,7 +778,7 @@ func (p *Plugin) ReadField12(iprot thrift.TProtocol) error {
 	p.Tools = _field
 	return nil
 }
-func (p *Plugin) ReadField13(iprot thrift.TProtocol) error {
+func (p *Plugin) ReadField16(iprot thrift.TProtocol) error {
 
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
@@ -663,7 +789,7 @@ func (p *Plugin) ReadField13(iprot thrift.TProtocol) error {
 	p.Logo = _field
 	return nil
 }
-func (p *Plugin) ReadField14(iprot thrift.TProtocol) error {
+func (p *Plugin) ReadField17(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
 		return err
@@ -671,7 +797,7 @@ func (p *Plugin) ReadField14(iprot thrift.TProtocol) error {
 	p.CreatedAt = _field
 	return nil
 }
-func (p *Plugin) ReadField15(iprot thrift.TProtocol) error {
+func (p *Plugin) ReadField18(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
 		return err
@@ -679,7 +805,7 @@ func (p *Plugin) ReadField15(iprot thrift.TProtocol) error {
 	p.UpdatedAt = _field
 	return nil
 }
-func (p *Plugin) ReadField16(iprot thrift.TProtocol) error {
+func (p *Plugin) ReadField19(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
 		return err
@@ -758,6 +884,18 @@ func (p *Plugin) Write(oprot thrift.TProtocol) (err error) {
 			fieldId = 16
 			goto WriteFieldError
 		}
+		if err = p.writeField17(oprot); err != nil {
+			fieldId = 17
+			goto WriteFieldError
+		}
+		if err = p.writeField18(oprot); err != nil {
+			fieldId = 18
+			goto WriteFieldError
+		}
+		if err = p.writeField19(oprot); err != nil {
+			fieldId = 19
+			goto WriteFieldError
+		}
 	}
 	if err = oprot.WriteFieldStop(); err != nil {
 		goto WriteFieldStopError
@@ -794,10 +932,10 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("key", thrift.STRING, 2); err != nil {
+	if err = oprot.WriteFieldBegin("key", thrift.I64, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Key); err != nil {
+	if err := oprot.WriteI64(p.Key); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -862,10 +1000,10 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("author", thrift.STRUCT, 6); err != nil {
+	if err = oprot.WriteFieldBegin("author_id", thrift.I64, 6); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := p.Author.Write(oprot); err != nil {
+	if err := oprot.WriteI64(p.AuthorId); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -879,14 +1017,16 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("is_private", thrift.BOOL, 7); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteBool(p.IsPrivate); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetAuthor() {
+		if err = oprot.WriteFieldBegin("author", thrift.STRUCT, 7); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Author.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -896,10 +1036,10 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("home_page", thrift.STRING, 8); err != nil {
+	if err = oprot.WriteFieldBegin("is_private", thrift.BOOL, 8); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.HomePage); err != nil {
+	if err := oprot.WriteBool(p.IsPrivate); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -913,10 +1053,10 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("enable_secret", thrift.BOOL, 9); err != nil {
+	if err = oprot.WriteFieldBegin("home_page", thrift.STRING, 9); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteBool(p.EnableSecret); err != nil {
+	if err := oprot.WriteString(p.HomePage); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -930,7 +1070,24 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField10(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("secrets", thrift.LIST, 10); err != nil {
+	if err = oprot.WriteFieldBegin("enable_secret", thrift.BOOL, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteBool(p.EnableSecret); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
+func (p *Plugin) writeField11(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("secrets", thrift.LIST, 11); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Secrets)); err != nil {
@@ -949,45 +1106,20 @@ func (p *Plugin) writeField10(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
-}
-
-func (p *Plugin) writeField11(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("labels", thrift.LIST, 11); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.Labels)); err != nil {
-		return err
-	}
-	for _, v := range p.Labels {
-		if err := oprot.WriteString(v); err != nil {
-			return err
-		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 11 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 11 end error: ", p), err)
 }
 
 func (p *Plugin) writeField12(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("tools", thrift.LIST, 12); err != nil {
+	if err = oprot.WriteFieldBegin("label_ids", thrift.LIST, 12); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Tools)); err != nil {
+	if err := oprot.WriteListBegin(thrift.I64, len(p.LabelIds)); err != nil {
 		return err
 	}
-	for _, v := range p.Tools {
-		if err := v.Write(oprot); err != nil {
+	for _, v := range p.LabelIds {
+		if err := oprot.WriteI64(v); err != nil {
 			return err
 		}
 	}
@@ -1005,14 +1137,24 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField13(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("logo", thrift.STRING, 13); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.Logo); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetLabels() {
+		if err = oprot.WriteFieldBegin("labels", thrift.LIST, 13); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Labels)); err != nil {
+			return err
+		}
+		for _, v := range p.Labels {
+			if err := v.Write(oprot); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -1022,10 +1164,18 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField14(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("created_at", thrift.STRUCT, 14); err != nil {
+	if err = oprot.WriteFieldBegin("tool_ids", thrift.LIST, 14); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := p.CreatedAt.Write(oprot); err != nil {
+	if err := oprot.WriteListBegin(thrift.I64, len(p.ToolIds)); err != nil {
+		return err
+	}
+	for _, v := range p.ToolIds {
+		if err := oprot.WriteI64(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1039,7 +1189,68 @@ WriteFieldEndError:
 }
 
 func (p *Plugin) writeField15(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("updated_at", thrift.STRUCT, 15); err != nil {
+	if p.IsSetTools() {
+		if err = oprot.WriteFieldBegin("tools", thrift.LIST, 15); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Tools)); err != nil {
+			return err
+		}
+		for _, v := range p.Tools {
+			if err := v.Write(oprot); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 15 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 15 end error: ", p), err)
+}
+
+func (p *Plugin) writeField16(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("logo", thrift.STRING, 16); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Logo); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 16 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 16 end error: ", p), err)
+}
+
+func (p *Plugin) writeField17(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("created_at", thrift.STRUCT, 17); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.CreatedAt.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 17 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 17 end error: ", p), err)
+}
+
+func (p *Plugin) writeField18(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("updated_at", thrift.STRUCT, 18); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := p.UpdatedAt.Write(oprot); err != nil {
@@ -1050,14 +1261,14 @@ func (p *Plugin) writeField15(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 15 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 18 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 15 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 18 end error: ", p), err)
 }
 
-func (p *Plugin) writeField16(oprot thrift.TProtocol) (err error) {
+func (p *Plugin) writeField19(oprot thrift.TProtocol) (err error) {
 	if p.IsSetPublishedAt() {
-		if err = oprot.WriteFieldBegin("published_at", thrift.STRUCT, 16); err != nil {
+		if err = oprot.WriteFieldBegin("published_at", thrift.STRUCT, 19); err != nil {
 			goto WriteFieldBeginError
 		}
 		if err := p.PublishedAt.Write(oprot); err != nil {
@@ -1069,9 +1280,9 @@ func (p *Plugin) writeField16(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 16 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 19 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 16 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 19 end error: ", p), err)
 }
 
 func (p *Plugin) String() string {
@@ -1103,37 +1314,46 @@ func (p *Plugin) DeepEqual(ano *Plugin) bool {
 	if !p.Field5DeepEqual(ano.DescriptionMd) {
 		return false
 	}
-	if !p.Field6DeepEqual(ano.Author) {
+	if !p.Field6DeepEqual(ano.AuthorId) {
 		return false
 	}
-	if !p.Field7DeepEqual(ano.IsPrivate) {
+	if !p.Field7DeepEqual(ano.Author) {
 		return false
 	}
-	if !p.Field8DeepEqual(ano.HomePage) {
+	if !p.Field8DeepEqual(ano.IsPrivate) {
 		return false
 	}
-	if !p.Field9DeepEqual(ano.EnableSecret) {
+	if !p.Field9DeepEqual(ano.HomePage) {
 		return false
 	}
-	if !p.Field10DeepEqual(ano.Secrets) {
+	if !p.Field10DeepEqual(ano.EnableSecret) {
 		return false
 	}
-	if !p.Field11DeepEqual(ano.Labels) {
+	if !p.Field11DeepEqual(ano.Secrets) {
 		return false
 	}
-	if !p.Field12DeepEqual(ano.Tools) {
+	if !p.Field12DeepEqual(ano.LabelIds) {
 		return false
 	}
-	if !p.Field13DeepEqual(ano.Logo) {
+	if !p.Field13DeepEqual(ano.Labels) {
 		return false
 	}
-	if !p.Field14DeepEqual(ano.CreatedAt) {
+	if !p.Field14DeepEqual(ano.ToolIds) {
 		return false
 	}
-	if !p.Field15DeepEqual(ano.UpdatedAt) {
+	if !p.Field15DeepEqual(ano.Tools) {
 		return false
 	}
-	if !p.Field16DeepEqual(ano.PublishedAt) {
+	if !p.Field16DeepEqual(ano.Logo) {
+		return false
+	}
+	if !p.Field17DeepEqual(ano.CreatedAt) {
+		return false
+	}
+	if !p.Field18DeepEqual(ano.UpdatedAt) {
+		return false
+	}
+	if !p.Field19DeepEqual(ano.PublishedAt) {
 		return false
 	}
 	return true
@@ -1146,9 +1366,9 @@ func (p *Plugin) Field1DeepEqual(src int64) bool {
 	}
 	return true
 }
-func (p *Plugin) Field2DeepEqual(src string) bool {
+func (p *Plugin) Field2DeepEqual(src int64) bool {
 
-	if strings.Compare(p.Key, src) != 0 {
+	if p.Key != src {
 		return false
 	}
 	return true
@@ -1174,35 +1394,42 @@ func (p *Plugin) Field5DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *Plugin) Field6DeepEqual(src *usersvc.User) bool {
+func (p *Plugin) Field6DeepEqual(src int64) bool {
+
+	if p.AuthorId != src {
+		return false
+	}
+	return true
+}
+func (p *Plugin) Field7DeepEqual(src *usersvc.User) bool {
 
 	if !p.Author.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field7DeepEqual(src bool) bool {
+func (p *Plugin) Field8DeepEqual(src bool) bool {
 
 	if p.IsPrivate != src {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field8DeepEqual(src string) bool {
+func (p *Plugin) Field9DeepEqual(src string) bool {
 
 	if strings.Compare(p.HomePage, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field9DeepEqual(src bool) bool {
+func (p *Plugin) Field10DeepEqual(src bool) bool {
 
 	if p.EnableSecret != src {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field10DeepEqual(src []*PluginSecret) bool {
+func (p *Plugin) Field11DeepEqual(src []*PluginSecret) bool {
 
 	if len(p.Secrets) != len(src) {
 		return false
@@ -1215,20 +1442,46 @@ func (p *Plugin) Field10DeepEqual(src []*PluginSecret) bool {
 	}
 	return true
 }
-func (p *Plugin) Field11DeepEqual(src []string) bool {
+func (p *Plugin) Field12DeepEqual(src []int64) bool {
+
+	if len(p.LabelIds) != len(src) {
+		return false
+	}
+	for i, v := range p.LabelIds {
+		_src := src[i]
+		if v != _src {
+			return false
+		}
+	}
+	return true
+}
+func (p *Plugin) Field13DeepEqual(src []*PluginLabel) bool {
 
 	if len(p.Labels) != len(src) {
 		return false
 	}
 	for i, v := range p.Labels {
 		_src := src[i]
-		if strings.Compare(v, _src) != 0 {
+		if !v.DeepEqual(_src) {
 			return false
 		}
 	}
 	return true
 }
-func (p *Plugin) Field12DeepEqual(src []*PluginTool) bool {
+func (p *Plugin) Field14DeepEqual(src []int64) bool {
+
+	if len(p.ToolIds) != len(src) {
+		return false
+	}
+	for i, v := range p.ToolIds {
+		_src := src[i]
+		if v != _src {
+			return false
+		}
+	}
+	return true
+}
+func (p *Plugin) Field15DeepEqual(src []*PluginTool) bool {
 
 	if len(p.Tools) != len(src) {
 		return false
@@ -1241,28 +1494,28 @@ func (p *Plugin) Field12DeepEqual(src []*PluginTool) bool {
 	}
 	return true
 }
-func (p *Plugin) Field13DeepEqual(src string) bool {
+func (p *Plugin) Field16DeepEqual(src string) bool {
 
 	if strings.Compare(p.Logo, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field14DeepEqual(src *base.Time) bool {
+func (p *Plugin) Field17DeepEqual(src *base.Time) bool {
 
 	if !p.CreatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field15DeepEqual(src *base.Time) bool {
+func (p *Plugin) Field18DeepEqual(src *base.Time) bool {
 
 	if !p.UpdatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field16DeepEqual(src *base.Time) bool {
+func (p *Plugin) Field19DeepEqual(src *base.Time) bool {
 
 	if !p.PublishedAt.DeepEqual(src) {
 		return false
@@ -1646,7 +1899,7 @@ type PluginTool struct {
 	PluginId      int64      `thrift:"plugin_id,4,required" frugal:"4,required,i64" json:"plugin_id"`
 	RequestType   string     `thrift:"request_type,5,required" frugal:"5,required,string" json:"request_type"`
 	ResponseType  string     `thrift:"response_type,6,required" frugal:"6,required,string" json:"response_type"`
-	Api           string     `thrift:"api,7,required" frugal:"7,required,string" json:"api"`
+	ApiUrl        string     `thrift:"api_url,7,required" frugal:"7,required,string" json:"api_url"`
 	ImportModelId *int64     `thrift:"import_model_id,8,optional" frugal:"8,optional,i64" json:"import_model_id,omitempty"`
 	CreatedAt     *base.Time `thrift:"created_at,9,required" frugal:"9,required,base.Time" json:"created_at"`
 	UpdatedAt     *base.Time `thrift:"updated_at,10,required" frugal:"10,required,base.Time" json:"updated_at"`
@@ -1684,8 +1937,8 @@ func (p *PluginTool) GetResponseType() (v string) {
 	return p.ResponseType
 }
 
-func (p *PluginTool) GetApi() (v string) {
-	return p.Api
+func (p *PluginTool) GetApiUrl() (v string) {
+	return p.ApiUrl
 }
 
 var PluginTool_ImportModelId_DEFAULT int64
@@ -1741,8 +1994,8 @@ func (p *PluginTool) SetRequestType(val string) {
 func (p *PluginTool) SetResponseType(val string) {
 	p.ResponseType = val
 }
-func (p *PluginTool) SetApi(val string) {
-	p.Api = val
+func (p *PluginTool) SetApiUrl(val string) {
+	p.ApiUrl = val
 }
 func (p *PluginTool) SetImportModelId(val *int64) {
 	p.ImportModelId = val
@@ -1764,7 +2017,7 @@ var fieldIDToName_PluginTool = map[int16]string{
 	4:  "plugin_id",
 	5:  "request_type",
 	6:  "response_type",
-	7:  "api",
+	7:  "api_url",
 	8:  "import_model_id",
 	9:  "created_at",
 	10: "updated_at",
@@ -1797,7 +2050,7 @@ func (p *PluginTool) Read(iprot thrift.TProtocol) (err error) {
 	var issetPluginId bool = false
 	var issetRequestType bool = false
 	var issetResponseType bool = false
-	var issetApi bool = false
+	var issetApiUrl bool = false
 	var issetCreatedAt bool = false
 	var issetUpdatedAt bool = false
 
@@ -1874,7 +2127,7 @@ func (p *PluginTool) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetApi = true
+				issetApiUrl = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -1955,7 +2208,7 @@ func (p *PluginTool) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetApi {
+	if !issetApiUrl {
 		fieldId = 7
 		goto RequiredFieldNotSetError
 	}
@@ -2061,7 +2314,7 @@ func (p *PluginTool) ReadField7(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.Api = _field
+	p.ApiUrl = _field
 	return nil
 }
 func (p *PluginTool) ReadField8(iprot thrift.TProtocol) error {
@@ -2271,10 +2524,10 @@ WriteFieldEndError:
 }
 
 func (p *PluginTool) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("api", thrift.STRING, 7); err != nil {
+	if err = oprot.WriteFieldBegin("api_url", thrift.STRING, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Api); err != nil {
+	if err := oprot.WriteString(p.ApiUrl); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2391,7 +2644,7 @@ func (p *PluginTool) DeepEqual(ano *PluginTool) bool {
 	if !p.Field6DeepEqual(ano.ResponseType) {
 		return false
 	}
-	if !p.Field7DeepEqual(ano.Api) {
+	if !p.Field7DeepEqual(ano.ApiUrl) {
 		return false
 	}
 	if !p.Field8DeepEqual(ano.ImportModelId) {
@@ -2453,7 +2706,7 @@ func (p *PluginTool) Field6DeepEqual(src string) bool {
 }
 func (p *PluginTool) Field7DeepEqual(src string) bool {
 
-	if strings.Compare(p.Api, src) != 0 {
+	if strings.Compare(p.ApiUrl, src) != 0 {
 		return false
 	}
 	return true
@@ -2492,6 +2745,836 @@ func (p *PluginTool) Field11DeepEqual(src *base.Time) bool {
 	return true
 }
 
+type PluginLabel struct {
+	Id        int64      `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Text      string     `thrift:"text,2,required" frugal:"2,required,string" json:"text"`
+	CreatedAt *base.Time `thrift:"created_at,3,required" frugal:"3,required,base.Time" json:"created_at"`
+}
+
+func NewPluginLabel() *PluginLabel {
+	return &PluginLabel{}
+}
+
+func (p *PluginLabel) InitDefault() {
+}
+
+func (p *PluginLabel) GetId() (v int64) {
+	return p.Id
+}
+
+func (p *PluginLabel) GetText() (v string) {
+	return p.Text
+}
+
+var PluginLabel_CreatedAt_DEFAULT *base.Time
+
+func (p *PluginLabel) GetCreatedAt() (v *base.Time) {
+	if !p.IsSetCreatedAt() {
+		return PluginLabel_CreatedAt_DEFAULT
+	}
+	return p.CreatedAt
+}
+func (p *PluginLabel) SetId(val int64) {
+	p.Id = val
+}
+func (p *PluginLabel) SetText(val string) {
+	p.Text = val
+}
+func (p *PluginLabel) SetCreatedAt(val *base.Time) {
+	p.CreatedAt = val
+}
+
+var fieldIDToName_PluginLabel = map[int16]string{
+	1: "id",
+	2: "text",
+	3: "created_at",
+}
+
+func (p *PluginLabel) IsSetCreatedAt() bool {
+	return p.CreatedAt != nil
+}
+
+func (p *PluginLabel) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetId bool = false
+	var issetText bool = false
+	var issetCreatedAt bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetId = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetText = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetCreatedAt = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetId {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetText {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCreatedAt {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PluginLabel[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_PluginLabel[fieldId]))
+}
+
+func (p *PluginLabel) ReadField1(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Id = _field
+	return nil
+}
+func (p *PluginLabel) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Text = _field
+	return nil
+}
+func (p *PluginLabel) ReadField3(iprot thrift.TProtocol) error {
+	_field := base.NewTime()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.CreatedAt = _field
+	return nil
+}
+
+func (p *PluginLabel) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("PluginLabel"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *PluginLabel) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("id", thrift.I64, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Id); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *PluginLabel) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("text", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Text); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *PluginLabel) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("created_at", thrift.STRUCT, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.CreatedAt.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *PluginLabel) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PluginLabel(%+v)", *p)
+
+}
+
+func (p *PluginLabel) DeepEqual(ano *PluginLabel) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Id) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.Text) {
+		return false
+	}
+	if !p.Field3DeepEqual(ano.CreatedAt) {
+		return false
+	}
+	return true
+}
+
+func (p *PluginLabel) Field1DeepEqual(src int64) bool {
+
+	if p.Id != src {
+		return false
+	}
+	return true
+}
+func (p *PluginLabel) Field2DeepEqual(src string) bool {
+
+	if strings.Compare(p.Text, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *PluginLabel) Field3DeepEqual(src *base.Time) bool {
+
+	if !p.CreatedAt.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type ListPluginLabelReq struct {
+	Pagination *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
+	Text       *string             `thrift:"text,2,optional" frugal:"2,optional,string" json:"text,omitempty"`
+}
+
+func NewListPluginLabelReq() *ListPluginLabelReq {
+	return &ListPluginLabelReq{}
+}
+
+func (p *ListPluginLabelReq) InitDefault() {
+}
+
+var ListPluginLabelReq_Pagination_DEFAULT *base.PaginationReq
+
+func (p *ListPluginLabelReq) GetPagination() (v *base.PaginationReq) {
+	if !p.IsSetPagination() {
+		return ListPluginLabelReq_Pagination_DEFAULT
+	}
+	return p.Pagination
+}
+
+var ListPluginLabelReq_Text_DEFAULT string
+
+func (p *ListPluginLabelReq) GetText() (v string) {
+	if !p.IsSetText() {
+		return ListPluginLabelReq_Text_DEFAULT
+	}
+	return *p.Text
+}
+func (p *ListPluginLabelReq) SetPagination(val *base.PaginationReq) {
+	p.Pagination = val
+}
+func (p *ListPluginLabelReq) SetText(val *string) {
+	p.Text = val
+}
+
+var fieldIDToName_ListPluginLabelReq = map[int16]string{
+	1: "pagination",
+	2: "text",
+}
+
+func (p *ListPluginLabelReq) IsSetPagination() bool {
+	return p.Pagination != nil
+}
+
+func (p *ListPluginLabelReq) IsSetText() bool {
+	return p.Text != nil
+}
+
+func (p *ListPluginLabelReq) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetPagination bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetPagination = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetPagination {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ListPluginLabelReq[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ListPluginLabelReq[fieldId]))
+}
+
+func (p *ListPluginLabelReq) ReadField1(iprot thrift.TProtocol) error {
+	_field := base.NewPaginationReq()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Pagination = _field
+	return nil
+}
+func (p *ListPluginLabelReq) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field *string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.Text = _field
+	return nil
+}
+
+func (p *ListPluginLabelReq) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ListPluginLabelReq"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ListPluginLabelReq) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("pagination", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Pagination.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *ListPluginLabelReq) writeField2(oprot thrift.TProtocol) (err error) {
+	if p.IsSetText() {
+		if err = oprot.WriteFieldBegin("text", thrift.STRING, 2); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Text); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *ListPluginLabelReq) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ListPluginLabelReq(%+v)", *p)
+
+}
+
+func (p *ListPluginLabelReq) DeepEqual(ano *ListPluginLabelReq) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Pagination) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.Text) {
+		return false
+	}
+	return true
+}
+
+func (p *ListPluginLabelReq) Field1DeepEqual(src *base.PaginationReq) bool {
+
+	if !p.Pagination.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+func (p *ListPluginLabelReq) Field2DeepEqual(src *string) bool {
+
+	if p.Text == src {
+		return true
+	} else if p.Text == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Text, *src) != 0 {
+		return false
+	}
+	return true
+}
+
+type ListPluginLabelResp struct {
+	Pagination *base.PaginationResp `thrift:"pagination,1,required" frugal:"1,required,base.PaginationResp" json:"pagination"`
+	Labels     []*PluginLabel       `thrift:"labels,2,required" frugal:"2,required,list<PluginLabel>" json:"labels"`
+}
+
+func NewListPluginLabelResp() *ListPluginLabelResp {
+	return &ListPluginLabelResp{}
+}
+
+func (p *ListPluginLabelResp) InitDefault() {
+}
+
+var ListPluginLabelResp_Pagination_DEFAULT *base.PaginationResp
+
+func (p *ListPluginLabelResp) GetPagination() (v *base.PaginationResp) {
+	if !p.IsSetPagination() {
+		return ListPluginLabelResp_Pagination_DEFAULT
+	}
+	return p.Pagination
+}
+
+func (p *ListPluginLabelResp) GetLabels() (v []*PluginLabel) {
+	return p.Labels
+}
+func (p *ListPluginLabelResp) SetPagination(val *base.PaginationResp) {
+	p.Pagination = val
+}
+func (p *ListPluginLabelResp) SetLabels(val []*PluginLabel) {
+	p.Labels = val
+}
+
+var fieldIDToName_ListPluginLabelResp = map[int16]string{
+	1: "pagination",
+	2: "labels",
+}
+
+func (p *ListPluginLabelResp) IsSetPagination() bool {
+	return p.Pagination != nil
+}
+
+func (p *ListPluginLabelResp) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetPagination bool = false
+	var issetLabels bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetPagination = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetLabels = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetPagination {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetLabels {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ListPluginLabelResp[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ListPluginLabelResp[fieldId]))
+}
+
+func (p *ListPluginLabelResp) ReadField1(iprot thrift.TProtocol) error {
+	_field := base.NewPaginationResp()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Pagination = _field
+	return nil
+}
+func (p *ListPluginLabelResp) ReadField2(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	_field := make([]*PluginLabel, 0, size)
+	values := make([]PluginLabel, size)
+	for i := 0; i < size; i++ {
+		_elem := &values[i]
+		_elem.InitDefault()
+
+		if err := _elem.Read(iprot); err != nil {
+			return err
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.Labels = _field
+	return nil
+}
+
+func (p *ListPluginLabelResp) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ListPluginLabelResp"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ListPluginLabelResp) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("pagination", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Pagination.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *ListPluginLabelResp) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("labels", thrift.LIST, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Labels)); err != nil {
+		return err
+	}
+	for _, v := range p.Labels {
+		if err := v.Write(oprot); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *ListPluginLabelResp) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ListPluginLabelResp(%+v)", *p)
+
+}
+
+func (p *ListPluginLabelResp) DeepEqual(ano *ListPluginLabelResp) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Pagination) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.Labels) {
+		return false
+	}
+	return true
+}
+
+func (p *ListPluginLabelResp) Field1DeepEqual(src *base.PaginationResp) bool {
+
+	if !p.Pagination.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+func (p *ListPluginLabelResp) Field2DeepEqual(src []*PluginLabel) bool {
+
+	if len(p.Labels) != len(src) {
+		return false
+	}
+	for i, v := range p.Labels {
+		_src := src[i]
+		if !v.DeepEqual(_src) {
+			return false
+		}
+	}
+	return true
+}
+
 type CreatePluginReq struct {
 	Key           int64           `thrift:"key,1,required" frugal:"1,required,i64" json:"key"`
 	Name          string          `thrift:"name,2,required" frugal:"2,required,string" json:"name"`
@@ -2501,9 +3584,10 @@ type CreatePluginReq struct {
 	HomePage      string          `thrift:"home_page,6,required" frugal:"6,required,string" json:"home_page"`
 	EnableSecret  bool            `thrift:"enable_secret,7,required" frugal:"7,required,bool" json:"enable_secret"`
 	Secrets       []*PluginSecret `thrift:"secrets,8,required" frugal:"8,required,list<PluginSecret>" json:"secrets"`
-	Labels        []string        `thrift:"labels,9,required" frugal:"9,required,list<string>" json:"labels"`
-	ToolIds       []int64         `thrift:"tool_ids,10,required" frugal:"10,required,list<i64>" json:"tool_ids"`
-	Logo          string          `thrift:"logo,11,required" frugal:"11,required,string" json:"logo"`
+	LabelIds      []int64         `thrift:"label_ids,9,required" frugal:"9,required,list<i64>" json:"label_ids"`
+	LabelTexts    []string        `thrift:"label_texts,10,required" frugal:"10,required,list<string>" json:"label_texts"`
+	ToolIds       []int64         `thrift:"tool_ids,11,required" frugal:"11,required,list<i64>" json:"tool_ids"`
+	Logo          string          `thrift:"logo,12,required" frugal:"12,required,string" json:"logo"`
 }
 
 func NewCreatePluginReq() *CreatePluginReq {
@@ -2545,8 +3629,12 @@ func (p *CreatePluginReq) GetSecrets() (v []*PluginSecret) {
 	return p.Secrets
 }
 
-func (p *CreatePluginReq) GetLabels() (v []string) {
-	return p.Labels
+func (p *CreatePluginReq) GetLabelIds() (v []int64) {
+	return p.LabelIds
+}
+
+func (p *CreatePluginReq) GetLabelTexts() (v []string) {
+	return p.LabelTexts
 }
 
 func (p *CreatePluginReq) GetToolIds() (v []int64) {
@@ -2580,8 +3668,11 @@ func (p *CreatePluginReq) SetEnableSecret(val bool) {
 func (p *CreatePluginReq) SetSecrets(val []*PluginSecret) {
 	p.Secrets = val
 }
-func (p *CreatePluginReq) SetLabels(val []string) {
-	p.Labels = val
+func (p *CreatePluginReq) SetLabelIds(val []int64) {
+	p.LabelIds = val
+}
+func (p *CreatePluginReq) SetLabelTexts(val []string) {
+	p.LabelTexts = val
 }
 func (p *CreatePluginReq) SetToolIds(val []int64) {
 	p.ToolIds = val
@@ -2599,9 +3690,10 @@ var fieldIDToName_CreatePluginReq = map[int16]string{
 	6:  "home_page",
 	7:  "enable_secret",
 	8:  "secrets",
-	9:  "labels",
-	10: "tool_ids",
-	11: "logo",
+	9:  "label_ids",
+	10: "label_texts",
+	11: "tool_ids",
+	12: "logo",
 }
 
 func (p *CreatePluginReq) Read(iprot thrift.TProtocol) (err error) {
@@ -2616,7 +3708,8 @@ func (p *CreatePluginReq) Read(iprot thrift.TProtocol) (err error) {
 	var issetHomePage bool = false
 	var issetEnableSecret bool = false
 	var issetSecrets bool = false
-	var issetLabels bool = false
+	var issetLabelIds bool = false
+	var issetLabelTexts bool = false
 	var issetToolIds bool = false
 	var issetLogo bool = false
 
@@ -2711,7 +3804,7 @@ func (p *CreatePluginReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField9(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetLabels = true
+				issetLabelIds = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -2720,13 +3813,22 @@ func (p *CreatePluginReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetToolIds = true
+				issetLabelTexts = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 11:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.LIST {
 				if err = p.ReadField11(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetToolIds = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 12:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField12(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetLogo = true
@@ -2786,18 +3888,23 @@ func (p *CreatePluginReq) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetLabels {
+	if !issetLabelIds {
 		fieldId = 9
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetToolIds {
+	if !issetLabelTexts {
 		fieldId = 10
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetLogo {
+	if !issetToolIds {
 		fieldId = 11
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetLogo {
+		fieldId = 12
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -2923,6 +4030,29 @@ func (p *CreatePluginReq) ReadField9(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
+	_field := make([]int64, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.LabelIds = _field
+	return nil
+}
+func (p *CreatePluginReq) ReadField10(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
 	_field := make([]string, 0, size)
 	for i := 0; i < size; i++ {
 
@@ -2938,10 +4068,10 @@ func (p *CreatePluginReq) ReadField9(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.Labels = _field
+	p.LabelTexts = _field
 	return nil
 }
-func (p *CreatePluginReq) ReadField10(iprot thrift.TProtocol) error {
+func (p *CreatePluginReq) ReadField11(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -2964,7 +4094,7 @@ func (p *CreatePluginReq) ReadField10(iprot thrift.TProtocol) error {
 	p.ToolIds = _field
 	return nil
 }
-func (p *CreatePluginReq) ReadField11(iprot thrift.TProtocol) error {
+func (p *CreatePluginReq) ReadField12(iprot thrift.TProtocol) error {
 
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
@@ -3024,6 +4154,10 @@ func (p *CreatePluginReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField11(oprot); err != nil {
 			fieldId = 11
+			goto WriteFieldError
+		}
+		if err = p.writeField12(oprot); err != nil {
+			fieldId = 12
 			goto WriteFieldError
 		}
 	}
@@ -3189,14 +4323,14 @@ WriteFieldEndError:
 }
 
 func (p *CreatePluginReq) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("labels", thrift.LIST, 9); err != nil {
+	if err = oprot.WriteFieldBegin("label_ids", thrift.LIST, 9); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.Labels)); err != nil {
+	if err := oprot.WriteListBegin(thrift.I64, len(p.LabelIds)); err != nil {
 		return err
 	}
-	for _, v := range p.Labels {
-		if err := oprot.WriteString(v); err != nil {
+	for _, v := range p.LabelIds {
+		if err := oprot.WriteI64(v); err != nil {
 			return err
 		}
 	}
@@ -3214,7 +4348,32 @@ WriteFieldEndError:
 }
 
 func (p *CreatePluginReq) writeField10(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("tool_ids", thrift.LIST, 10); err != nil {
+	if err = oprot.WriteFieldBegin("label_texts", thrift.LIST, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.STRING, len(p.LabelTexts)); err != nil {
+		return err
+	}
+	for _, v := range p.LabelTexts {
+		if err := oprot.WriteString(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
+func (p *CreatePluginReq) writeField11(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("tool_ids", thrift.LIST, 11); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteListBegin(thrift.I64, len(p.ToolIds)); err != nil {
@@ -3233,13 +4392,13 @@ func (p *CreatePluginReq) writeField10(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 11 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 11 end error: ", p), err)
 }
 
-func (p *CreatePluginReq) writeField11(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("logo", thrift.STRING, 11); err != nil {
+func (p *CreatePluginReq) writeField12(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("logo", thrift.STRING, 12); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteString(p.Logo); err != nil {
@@ -3250,9 +4409,9 @@ func (p *CreatePluginReq) writeField11(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 11 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 11 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 end error: ", p), err)
 }
 
 func (p *CreatePluginReq) String() string {
@@ -3293,13 +4452,16 @@ func (p *CreatePluginReq) DeepEqual(ano *CreatePluginReq) bool {
 	if !p.Field8DeepEqual(ano.Secrets) {
 		return false
 	}
-	if !p.Field9DeepEqual(ano.Labels) {
+	if !p.Field9DeepEqual(ano.LabelIds) {
 		return false
 	}
-	if !p.Field10DeepEqual(ano.ToolIds) {
+	if !p.Field10DeepEqual(ano.LabelTexts) {
 		return false
 	}
-	if !p.Field11DeepEqual(ano.Logo) {
+	if !p.Field11DeepEqual(ano.ToolIds) {
+		return false
+	}
+	if !p.Field12DeepEqual(ano.Logo) {
 		return false
 	}
 	return true
@@ -3367,12 +4529,25 @@ func (p *CreatePluginReq) Field8DeepEqual(src []*PluginSecret) bool {
 	}
 	return true
 }
-func (p *CreatePluginReq) Field9DeepEqual(src []string) bool {
+func (p *CreatePluginReq) Field9DeepEqual(src []int64) bool {
 
-	if len(p.Labels) != len(src) {
+	if len(p.LabelIds) != len(src) {
 		return false
 	}
-	for i, v := range p.Labels {
+	for i, v := range p.LabelIds {
+		_src := src[i]
+		if v != _src {
+			return false
+		}
+	}
+	return true
+}
+func (p *CreatePluginReq) Field10DeepEqual(src []string) bool {
+
+	if len(p.LabelTexts) != len(src) {
+		return false
+	}
+	for i, v := range p.LabelTexts {
 		_src := src[i]
 		if strings.Compare(v, _src) != 0 {
 			return false
@@ -3380,7 +4555,7 @@ func (p *CreatePluginReq) Field9DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *CreatePluginReq) Field10DeepEqual(src []int64) bool {
+func (p *CreatePluginReq) Field11DeepEqual(src []int64) bool {
 
 	if len(p.ToolIds) != len(src) {
 		return false
@@ -3393,7 +4568,7 @@ func (p *CreatePluginReq) Field10DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *CreatePluginReq) Field11DeepEqual(src string) bool {
+func (p *CreatePluginReq) Field12DeepEqual(src string) bool {
 
 	if strings.Compare(p.Logo, src) != 0 {
 		return false
@@ -3411,9 +4586,10 @@ type UpdatePluginReq struct {
 	HomePage      string          `thrift:"home_page,7,required" frugal:"7,required,string" json:"home_page"`
 	EnableSecret  bool            `thrift:"enable_secret,8,required" frugal:"8,required,bool" json:"enable_secret"`
 	Secrets       []*PluginSecret `thrift:"secrets,9,required" frugal:"9,required,list<PluginSecret>" json:"secrets"`
-	Labels        []string        `thrift:"labels,10,required" frugal:"10,required,list<string>" json:"labels"`
-	ToolIds       []int64         `thrift:"tool_ids,11,required" frugal:"11,required,list<i64>" json:"tool_ids"`
-	Logo          string          `thrift:"logo,12,required" frugal:"12,required,string" json:"logo"`
+	LabelIds      []int64         `thrift:"label_ids,10,required" frugal:"10,required,list<i64>" json:"label_ids"`
+	LabelTexts    []string        `thrift:"label_texts,11,required" frugal:"11,required,list<string>" json:"label_texts"`
+	ToolIds       []int64         `thrift:"tool_ids,12,required" frugal:"12,required,list<i64>" json:"tool_ids"`
+	Logo          string          `thrift:"logo,13,required" frugal:"13,required,string" json:"logo"`
 }
 
 func NewUpdatePluginReq() *UpdatePluginReq {
@@ -3459,8 +4635,12 @@ func (p *UpdatePluginReq) GetSecrets() (v []*PluginSecret) {
 	return p.Secrets
 }
 
-func (p *UpdatePluginReq) GetLabels() (v []string) {
-	return p.Labels
+func (p *UpdatePluginReq) GetLabelIds() (v []int64) {
+	return p.LabelIds
+}
+
+func (p *UpdatePluginReq) GetLabelTexts() (v []string) {
+	return p.LabelTexts
 }
 
 func (p *UpdatePluginReq) GetToolIds() (v []int64) {
@@ -3497,8 +4677,11 @@ func (p *UpdatePluginReq) SetEnableSecret(val bool) {
 func (p *UpdatePluginReq) SetSecrets(val []*PluginSecret) {
 	p.Secrets = val
 }
-func (p *UpdatePluginReq) SetLabels(val []string) {
-	p.Labels = val
+func (p *UpdatePluginReq) SetLabelIds(val []int64) {
+	p.LabelIds = val
+}
+func (p *UpdatePluginReq) SetLabelTexts(val []string) {
+	p.LabelTexts = val
 }
 func (p *UpdatePluginReq) SetToolIds(val []int64) {
 	p.ToolIds = val
@@ -3517,9 +4700,10 @@ var fieldIDToName_UpdatePluginReq = map[int16]string{
 	7:  "home_page",
 	8:  "enable_secret",
 	9:  "secrets",
-	10: "labels",
-	11: "tool_ids",
-	12: "logo",
+	10: "label_ids",
+	11: "label_texts",
+	12: "tool_ids",
+	13: "logo",
 }
 
 func (p *UpdatePluginReq) Read(iprot thrift.TProtocol) (err error) {
@@ -3535,7 +4719,8 @@ func (p *UpdatePluginReq) Read(iprot thrift.TProtocol) (err error) {
 	var issetHomePage bool = false
 	var issetEnableSecret bool = false
 	var issetSecrets bool = false
-	var issetLabels bool = false
+	var issetLabelIds bool = false
+	var issetLabelTexts bool = false
 	var issetToolIds bool = false
 	var issetLogo bool = false
 
@@ -3639,7 +4824,7 @@ func (p *UpdatePluginReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetLabels = true
+				issetLabelIds = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3648,13 +4833,22 @@ func (p *UpdatePluginReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField11(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetToolIds = true
+				issetLabelTexts = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 12:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.LIST {
 				if err = p.ReadField12(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetToolIds = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 13:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField13(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetLogo = true
@@ -3719,18 +4913,23 @@ func (p *UpdatePluginReq) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetLabels {
+	if !issetLabelIds {
 		fieldId = 10
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetToolIds {
+	if !issetLabelTexts {
 		fieldId = 11
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetLogo {
+	if !issetToolIds {
 		fieldId = 12
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetLogo {
+		fieldId = 13
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -3867,6 +5066,29 @@ func (p *UpdatePluginReq) ReadField10(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
+	_field := make([]int64, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.LabelIds = _field
+	return nil
+}
+func (p *UpdatePluginReq) ReadField11(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
 	_field := make([]string, 0, size)
 	for i := 0; i < size; i++ {
 
@@ -3882,10 +5104,10 @@ func (p *UpdatePluginReq) ReadField10(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.Labels = _field
+	p.LabelTexts = _field
 	return nil
 }
-func (p *UpdatePluginReq) ReadField11(iprot thrift.TProtocol) error {
+func (p *UpdatePluginReq) ReadField12(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -3908,7 +5130,7 @@ func (p *UpdatePluginReq) ReadField11(iprot thrift.TProtocol) error {
 	p.ToolIds = _field
 	return nil
 }
-func (p *UpdatePluginReq) ReadField12(iprot thrift.TProtocol) error {
+func (p *UpdatePluginReq) ReadField13(iprot thrift.TProtocol) error {
 
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
@@ -3972,6 +5194,10 @@ func (p *UpdatePluginReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField12(oprot); err != nil {
 			fieldId = 12
+			goto WriteFieldError
+		}
+		if err = p.writeField13(oprot); err != nil {
+			fieldId = 13
 			goto WriteFieldError
 		}
 	}
@@ -4154,14 +5380,14 @@ WriteFieldEndError:
 }
 
 func (p *UpdatePluginReq) writeField10(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("labels", thrift.LIST, 10); err != nil {
+	if err = oprot.WriteFieldBegin("label_ids", thrift.LIST, 10); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.Labels)); err != nil {
+	if err := oprot.WriteListBegin(thrift.I64, len(p.LabelIds)); err != nil {
 		return err
 	}
-	for _, v := range p.Labels {
-		if err := oprot.WriteString(v); err != nil {
+	for _, v := range p.LabelIds {
+		if err := oprot.WriteI64(v); err != nil {
 			return err
 		}
 	}
@@ -4179,7 +5405,32 @@ WriteFieldEndError:
 }
 
 func (p *UpdatePluginReq) writeField11(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("tool_ids", thrift.LIST, 11); err != nil {
+	if err = oprot.WriteFieldBegin("label_texts", thrift.LIST, 11); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.STRING, len(p.LabelTexts)); err != nil {
+		return err
+	}
+	for _, v := range p.LabelTexts {
+		if err := oprot.WriteString(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 11 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 11 end error: ", p), err)
+}
+
+func (p *UpdatePluginReq) writeField12(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("tool_ids", thrift.LIST, 12); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteListBegin(thrift.I64, len(p.ToolIds)); err != nil {
@@ -4198,13 +5449,13 @@ func (p *UpdatePluginReq) writeField11(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 11 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 11 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 end error: ", p), err)
 }
 
-func (p *UpdatePluginReq) writeField12(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("logo", thrift.STRING, 12); err != nil {
+func (p *UpdatePluginReq) writeField13(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("logo", thrift.STRING, 13); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteString(p.Logo); err != nil {
@@ -4215,9 +5466,9 @@ func (p *UpdatePluginReq) writeField12(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 12 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 13 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 12 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 13 end error: ", p), err)
 }
 
 func (p *UpdatePluginReq) String() string {
@@ -4261,13 +5512,16 @@ func (p *UpdatePluginReq) DeepEqual(ano *UpdatePluginReq) bool {
 	if !p.Field9DeepEqual(ano.Secrets) {
 		return false
 	}
-	if !p.Field10DeepEqual(ano.Labels) {
+	if !p.Field10DeepEqual(ano.LabelIds) {
 		return false
 	}
-	if !p.Field11DeepEqual(ano.ToolIds) {
+	if !p.Field11DeepEqual(ano.LabelTexts) {
 		return false
 	}
-	if !p.Field12DeepEqual(ano.Logo) {
+	if !p.Field12DeepEqual(ano.ToolIds) {
+		return false
+	}
+	if !p.Field13DeepEqual(ano.Logo) {
 		return false
 	}
 	return true
@@ -4342,12 +5596,25 @@ func (p *UpdatePluginReq) Field9DeepEqual(src []*PluginSecret) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field10DeepEqual(src []string) bool {
+func (p *UpdatePluginReq) Field10DeepEqual(src []int64) bool {
 
-	if len(p.Labels) != len(src) {
+	if len(p.LabelIds) != len(src) {
 		return false
 	}
-	for i, v := range p.Labels {
+	for i, v := range p.LabelIds {
+		_src := src[i]
+		if v != _src {
+			return false
+		}
+	}
+	return true
+}
+func (p *UpdatePluginReq) Field11DeepEqual(src []string) bool {
+
+	if len(p.LabelTexts) != len(src) {
+		return false
+	}
+	for i, v := range p.LabelTexts {
 		_src := src[i]
 		if strings.Compare(v, _src) != 0 {
 			return false
@@ -4355,7 +5622,7 @@ func (p *UpdatePluginReq) Field10DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field11DeepEqual(src []int64) bool {
+func (p *UpdatePluginReq) Field12DeepEqual(src []int64) bool {
 
 	if len(p.ToolIds) != len(src) {
 		return false
@@ -4368,7 +5635,7 @@ func (p *UpdatePluginReq) Field11DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field12DeepEqual(src string) bool {
+func (p *UpdatePluginReq) Field13DeepEqual(src string) bool {
 
 	if strings.Compare(p.Logo, src) != 0 {
 		return false
@@ -5149,7 +6416,7 @@ type CreatePluginToolReq struct {
 	PluginId      int64  `thrift:"plugin_id,3,required" frugal:"3,required,i64" json:"plugin_id"`
 	RequestType   string `thrift:"request_type,4,required" frugal:"4,required,string" json:"request_type"`
 	ResponseType  string `thrift:"response_type,5,required" frugal:"5,required,string" json:"response_type"`
-	Api           string `thrift:"api,6,required" frugal:"6,required,string" json:"api"`
+	ApiUrl        string `thrift:"api_url,6,required" frugal:"6,required,string" json:"api_url"`
 	ImportModelId *int64 `thrift:"import_model_id,7,optional" frugal:"7,optional,i64" json:"import_model_id,omitempty"`
 }
 
@@ -5180,8 +6447,8 @@ func (p *CreatePluginToolReq) GetResponseType() (v string) {
 	return p.ResponseType
 }
 
-func (p *CreatePluginToolReq) GetApi() (v string) {
-	return p.Api
+func (p *CreatePluginToolReq) GetApiUrl() (v string) {
+	return p.ApiUrl
 }
 
 var CreatePluginToolReq_ImportModelId_DEFAULT int64
@@ -5207,8 +6474,8 @@ func (p *CreatePluginToolReq) SetRequestType(val string) {
 func (p *CreatePluginToolReq) SetResponseType(val string) {
 	p.ResponseType = val
 }
-func (p *CreatePluginToolReq) SetApi(val string) {
-	p.Api = val
+func (p *CreatePluginToolReq) SetApiUrl(val string) {
+	p.ApiUrl = val
 }
 func (p *CreatePluginToolReq) SetImportModelId(val *int64) {
 	p.ImportModelId = val
@@ -5220,7 +6487,7 @@ var fieldIDToName_CreatePluginToolReq = map[int16]string{
 	3: "plugin_id",
 	4: "request_type",
 	5: "response_type",
-	6: "api",
+	6: "api_url",
 	7: "import_model_id",
 }
 
@@ -5237,7 +6504,7 @@ func (p *CreatePluginToolReq) Read(iprot thrift.TProtocol) (err error) {
 	var issetPluginId bool = false
 	var issetRequestType bool = false
 	var issetResponseType bool = false
-	var issetApi bool = false
+	var issetApiUrl bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -5303,7 +6570,7 @@ func (p *CreatePluginToolReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetApi = true
+				issetApiUrl = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -5353,7 +6620,7 @@ func (p *CreatePluginToolReq) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetApi {
+	if !issetApiUrl {
 		fieldId = 6
 		goto RequiredFieldNotSetError
 	}
@@ -5438,7 +6705,7 @@ func (p *CreatePluginToolReq) ReadField6(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.Api = _field
+	p.ApiUrl = _field
 	return nil
 }
 func (p *CreatePluginToolReq) ReadField7(iprot thrift.TProtocol) error {
@@ -5591,10 +6858,10 @@ WriteFieldEndError:
 }
 
 func (p *CreatePluginToolReq) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("api", thrift.STRING, 6); err != nil {
+	if err = oprot.WriteFieldBegin("api_url", thrift.STRING, 6); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Api); err != nil {
+	if err := oprot.WriteString(p.ApiUrl); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -5655,7 +6922,7 @@ func (p *CreatePluginToolReq) DeepEqual(ano *CreatePluginToolReq) bool {
 	if !p.Field5DeepEqual(ano.ResponseType) {
 		return false
 	}
-	if !p.Field6DeepEqual(ano.Api) {
+	if !p.Field6DeepEqual(ano.ApiUrl) {
 		return false
 	}
 	if !p.Field7DeepEqual(ano.ImportModelId) {
@@ -5701,7 +6968,7 @@ func (p *CreatePluginToolReq) Field5DeepEqual(src string) bool {
 }
 func (p *CreatePluginToolReq) Field6DeepEqual(src string) bool {
 
-	if strings.Compare(p.Api, src) != 0 {
+	if strings.Compare(p.ApiUrl, src) != 0 {
 		return false
 	}
 	return true
@@ -5726,7 +6993,7 @@ type UpdatePluginToolReq struct {
 	PluginId      int64  `thrift:"plugin_id,4,required" frugal:"4,required,i64" json:"plugin_id"`
 	RequestType   string `thrift:"request_type,5,required" frugal:"5,required,string" json:"request_type"`
 	ResponseType  string `thrift:"response_type,6,required" frugal:"6,required,string" json:"response_type"`
-	Api           string `thrift:"api,7,required" frugal:"7,required,string" json:"api"`
+	ApiUrl        string `thrift:"api_url,7,required" frugal:"7,required,string" json:"api_url"`
 	ImportModelId *int64 `thrift:"import_model_id,8,optional" frugal:"8,optional,i64" json:"import_model_id,omitempty"`
 }
 
@@ -5761,8 +7028,8 @@ func (p *UpdatePluginToolReq) GetResponseType() (v string) {
 	return p.ResponseType
 }
 
-func (p *UpdatePluginToolReq) GetApi() (v string) {
-	return p.Api
+func (p *UpdatePluginToolReq) GetApiUrl() (v string) {
+	return p.ApiUrl
 }
 
 var UpdatePluginToolReq_ImportModelId_DEFAULT int64
@@ -5791,8 +7058,8 @@ func (p *UpdatePluginToolReq) SetRequestType(val string) {
 func (p *UpdatePluginToolReq) SetResponseType(val string) {
 	p.ResponseType = val
 }
-func (p *UpdatePluginToolReq) SetApi(val string) {
-	p.Api = val
+func (p *UpdatePluginToolReq) SetApiUrl(val string) {
+	p.ApiUrl = val
 }
 func (p *UpdatePluginToolReq) SetImportModelId(val *int64) {
 	p.ImportModelId = val
@@ -5805,7 +7072,7 @@ var fieldIDToName_UpdatePluginToolReq = map[int16]string{
 	4: "plugin_id",
 	5: "request_type",
 	6: "response_type",
-	7: "api",
+	7: "api_url",
 	8: "import_model_id",
 }
 
@@ -5823,7 +7090,7 @@ func (p *UpdatePluginToolReq) Read(iprot thrift.TProtocol) (err error) {
 	var issetPluginId bool = false
 	var issetRequestType bool = false
 	var issetResponseType bool = false
-	var issetApi bool = false
+	var issetApiUrl bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -5898,7 +7165,7 @@ func (p *UpdatePluginToolReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetApi = true
+				issetApiUrl = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -5953,7 +7220,7 @@ func (p *UpdatePluginToolReq) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetApi {
+	if !issetApiUrl {
 		fieldId = 7
 		goto RequiredFieldNotSetError
 	}
@@ -6049,7 +7316,7 @@ func (p *UpdatePluginToolReq) ReadField7(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.Api = _field
+	p.ApiUrl = _field
 	return nil
 }
 func (p *UpdatePluginToolReq) ReadField8(iprot thrift.TProtocol) error {
@@ -6223,10 +7490,10 @@ WriteFieldEndError:
 }
 
 func (p *UpdatePluginToolReq) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("api", thrift.STRING, 7); err != nil {
+	if err = oprot.WriteFieldBegin("api_url", thrift.STRING, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Api); err != nil {
+	if err := oprot.WriteString(p.ApiUrl); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -6290,7 +7557,7 @@ func (p *UpdatePluginToolReq) DeepEqual(ano *UpdatePluginToolReq) bool {
 	if !p.Field6DeepEqual(ano.ResponseType) {
 		return false
 	}
-	if !p.Field7DeepEqual(ano.Api) {
+	if !p.Field7DeepEqual(ano.ApiUrl) {
 		return false
 	}
 	if !p.Field8DeepEqual(ano.ImportModelId) {
@@ -6343,7 +7610,7 @@ func (p *UpdatePluginToolReq) Field6DeepEqual(src string) bool {
 }
 func (p *UpdatePluginToolReq) Field7DeepEqual(src string) bool {
 
-	if strings.Compare(p.Api, src) != 0 {
+	if strings.Compare(p.ApiUrl, src) != 0 {
 		return false
 	}
 	return true
@@ -6689,7 +7956,7 @@ func (p *ListPluginToolReq) Field3DeepEqual(src *int64) bool {
 }
 
 type ListPluginToolResp struct {
-	Plugins    []*Plugin            `thrift:"plugins,1,required" frugal:"1,required,list<Plugin>" json:"plugins"`
+	Plugins    []*PluginTool        `thrift:"plugins,1,required" frugal:"1,required,list<PluginTool>" json:"plugins"`
 	Pagination *base.PaginationResp `thrift:"pagination,2,required" frugal:"2,required,base.PaginationResp" json:"pagination"`
 }
 
@@ -6700,7 +7967,7 @@ func NewListPluginToolResp() *ListPluginToolResp {
 func (p *ListPluginToolResp) InitDefault() {
 }
 
-func (p *ListPluginToolResp) GetPlugins() (v []*Plugin) {
+func (p *ListPluginToolResp) GetPlugins() (v []*PluginTool) {
 	return p.Plugins
 }
 
@@ -6712,7 +7979,7 @@ func (p *ListPluginToolResp) GetPagination() (v *base.PaginationResp) {
 	}
 	return p.Pagination
 }
-func (p *ListPluginToolResp) SetPlugins(val []*Plugin) {
+func (p *ListPluginToolResp) SetPlugins(val []*PluginTool) {
 	p.Plugins = val
 }
 func (p *ListPluginToolResp) SetPagination(val *base.PaginationResp) {
@@ -6812,8 +8079,8 @@ func (p *ListPluginToolResp) ReadField1(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	_field := make([]*Plugin, 0, size)
-	values := make([]Plugin, size)
+	_field := make([]*PluginTool, 0, size)
+	values := make([]PluginTool, size)
 	for i := 0; i < size; i++ {
 		_elem := &values[i]
 		_elem.InitDefault()
@@ -6936,7 +8203,7 @@ func (p *ListPluginToolResp) DeepEqual(ano *ListPluginToolResp) bool {
 	return true
 }
 
-func (p *ListPluginToolResp) Field1DeepEqual(src []*Plugin) bool {
+func (p *ListPluginToolResp) Field1DeepEqual(src []*PluginTool) bool {
 
 	if len(p.Plugins) != len(src) {
 		return false
@@ -7992,7 +9259,9 @@ type PluginService interface {
 
 	GetToolByID(ctx context.Context, req *base.IDReq) (r *PluginTool, err error)
 
-	ListTool(ctx context.Context, req *ListPluginToolReq) (r *ListPluginToolResp, err error)
+	ListPluginTool(ctx context.Context, req *ListPluginToolReq) (r *ListPluginToolResp, err error)
+
+	ListPluginLabel(ctx context.Context, req *ListPluginLabelReq) (r *ListPluginLabelResp, err error)
 
 	CallPluginTool(ctx context.Context, req *CallPluginToolReq) (r *CallPluginToolResp, err error)
 
@@ -11399,38 +12668,38 @@ func (p *PluginServiceGetToolByIDResult) Field0DeepEqual(src *PluginTool) bool {
 	return true
 }
 
-type PluginServiceListToolArgs struct {
+type PluginServiceListPluginToolArgs struct {
 	Req *ListPluginToolReq `thrift:"req,1" frugal:"1,default,ListPluginToolReq" json:"req"`
 }
 
-func NewPluginServiceListToolArgs() *PluginServiceListToolArgs {
-	return &PluginServiceListToolArgs{}
+func NewPluginServiceListPluginToolArgs() *PluginServiceListPluginToolArgs {
+	return &PluginServiceListPluginToolArgs{}
 }
 
-func (p *PluginServiceListToolArgs) InitDefault() {
+func (p *PluginServiceListPluginToolArgs) InitDefault() {
 }
 
-var PluginServiceListToolArgs_Req_DEFAULT *ListPluginToolReq
+var PluginServiceListPluginToolArgs_Req_DEFAULT *ListPluginToolReq
 
-func (p *PluginServiceListToolArgs) GetReq() (v *ListPluginToolReq) {
+func (p *PluginServiceListPluginToolArgs) GetReq() (v *ListPluginToolReq) {
 	if !p.IsSetReq() {
-		return PluginServiceListToolArgs_Req_DEFAULT
+		return PluginServiceListPluginToolArgs_Req_DEFAULT
 	}
 	return p.Req
 }
-func (p *PluginServiceListToolArgs) SetReq(val *ListPluginToolReq) {
+func (p *PluginServiceListPluginToolArgs) SetReq(val *ListPluginToolReq) {
 	p.Req = val
 }
 
-var fieldIDToName_PluginServiceListToolArgs = map[int16]string{
+var fieldIDToName_PluginServiceListPluginToolArgs = map[int16]string{
 	1: "req",
 }
 
-func (p *PluginServiceListToolArgs) IsSetReq() bool {
+func (p *PluginServiceListPluginToolArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-func (p *PluginServiceListToolArgs) Read(iprot thrift.TProtocol) (err error) {
+func (p *PluginServiceListPluginToolArgs) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -11476,7 +12745,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PluginServiceListToolArgs[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PluginServiceListPluginToolArgs[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -11486,7 +12755,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *PluginServiceListToolArgs) ReadField1(iprot thrift.TProtocol) error {
+func (p *PluginServiceListPluginToolArgs) ReadField1(iprot thrift.TProtocol) error {
 	_field := NewListPluginToolReq()
 	if err := _field.Read(iprot); err != nil {
 		return err
@@ -11495,9 +12764,9 @@ func (p *PluginServiceListToolArgs) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *PluginServiceListToolArgs) Write(oprot thrift.TProtocol) (err error) {
+func (p *PluginServiceListPluginToolArgs) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("ListTool_args"); err != nil {
+	if err = oprot.WriteStructBegin("ListPluginTool_args"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -11523,7 +12792,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *PluginServiceListToolArgs) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *PluginServiceListPluginToolArgs) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -11540,15 +12809,15 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *PluginServiceListToolArgs) String() string {
+func (p *PluginServiceListPluginToolArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("PluginServiceListToolArgs(%+v)", *p)
+	return fmt.Sprintf("PluginServiceListPluginToolArgs(%+v)", *p)
 
 }
 
-func (p *PluginServiceListToolArgs) DeepEqual(ano *PluginServiceListToolArgs) bool {
+func (p *PluginServiceListPluginToolArgs) DeepEqual(ano *PluginServiceListPluginToolArgs) bool {
 	if p == ano {
 		return true
 	} else if p == nil || ano == nil {
@@ -11560,7 +12829,7 @@ func (p *PluginServiceListToolArgs) DeepEqual(ano *PluginServiceListToolArgs) bo
 	return true
 }
 
-func (p *PluginServiceListToolArgs) Field1DeepEqual(src *ListPluginToolReq) bool {
+func (p *PluginServiceListPluginToolArgs) Field1DeepEqual(src *ListPluginToolReq) bool {
 
 	if !p.Req.DeepEqual(src) {
 		return false
@@ -11568,38 +12837,38 @@ func (p *PluginServiceListToolArgs) Field1DeepEqual(src *ListPluginToolReq) bool
 	return true
 }
 
-type PluginServiceListToolResult struct {
+type PluginServiceListPluginToolResult struct {
 	Success *ListPluginToolResp `thrift:"success,0,optional" frugal:"0,optional,ListPluginToolResp" json:"success,omitempty"`
 }
 
-func NewPluginServiceListToolResult() *PluginServiceListToolResult {
-	return &PluginServiceListToolResult{}
+func NewPluginServiceListPluginToolResult() *PluginServiceListPluginToolResult {
+	return &PluginServiceListPluginToolResult{}
 }
 
-func (p *PluginServiceListToolResult) InitDefault() {
+func (p *PluginServiceListPluginToolResult) InitDefault() {
 }
 
-var PluginServiceListToolResult_Success_DEFAULT *ListPluginToolResp
+var PluginServiceListPluginToolResult_Success_DEFAULT *ListPluginToolResp
 
-func (p *PluginServiceListToolResult) GetSuccess() (v *ListPluginToolResp) {
+func (p *PluginServiceListPluginToolResult) GetSuccess() (v *ListPluginToolResp) {
 	if !p.IsSetSuccess() {
-		return PluginServiceListToolResult_Success_DEFAULT
+		return PluginServiceListPluginToolResult_Success_DEFAULT
 	}
 	return p.Success
 }
-func (p *PluginServiceListToolResult) SetSuccess(x interface{}) {
+func (p *PluginServiceListPluginToolResult) SetSuccess(x interface{}) {
 	p.Success = x.(*ListPluginToolResp)
 }
 
-var fieldIDToName_PluginServiceListToolResult = map[int16]string{
+var fieldIDToName_PluginServiceListPluginToolResult = map[int16]string{
 	0: "success",
 }
 
-func (p *PluginServiceListToolResult) IsSetSuccess() bool {
+func (p *PluginServiceListPluginToolResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *PluginServiceListToolResult) Read(iprot thrift.TProtocol) (err error) {
+func (p *PluginServiceListPluginToolResult) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -11645,7 +12914,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PluginServiceListToolResult[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PluginServiceListPluginToolResult[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -11655,7 +12924,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *PluginServiceListToolResult) ReadField0(iprot thrift.TProtocol) error {
+func (p *PluginServiceListPluginToolResult) ReadField0(iprot thrift.TProtocol) error {
 	_field := NewListPluginToolResp()
 	if err := _field.Read(iprot); err != nil {
 		return err
@@ -11664,9 +12933,9 @@ func (p *PluginServiceListToolResult) ReadField0(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *PluginServiceListToolResult) Write(oprot thrift.TProtocol) (err error) {
+func (p *PluginServiceListPluginToolResult) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("ListTool_result"); err != nil {
+	if err = oprot.WriteStructBegin("ListPluginTool_result"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -11692,7 +12961,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *PluginServiceListToolResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *PluginServiceListPluginToolResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
 			goto WriteFieldBeginError
@@ -11711,15 +12980,15 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
 }
 
-func (p *PluginServiceListToolResult) String() string {
+func (p *PluginServiceListPluginToolResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("PluginServiceListToolResult(%+v)", *p)
+	return fmt.Sprintf("PluginServiceListPluginToolResult(%+v)", *p)
 
 }
 
-func (p *PluginServiceListToolResult) DeepEqual(ano *PluginServiceListToolResult) bool {
+func (p *PluginServiceListPluginToolResult) DeepEqual(ano *PluginServiceListPluginToolResult) bool {
 	if p == ano {
 		return true
 	} else if p == nil || ano == nil {
@@ -11731,7 +13000,347 @@ func (p *PluginServiceListToolResult) DeepEqual(ano *PluginServiceListToolResult
 	return true
 }
 
-func (p *PluginServiceListToolResult) Field0DeepEqual(src *ListPluginToolResp) bool {
+func (p *PluginServiceListPluginToolResult) Field0DeepEqual(src *ListPluginToolResp) bool {
+
+	if !p.Success.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type PluginServiceListPluginLabelArgs struct {
+	Req *ListPluginLabelReq `thrift:"req,1" frugal:"1,default,ListPluginLabelReq" json:"req"`
+}
+
+func NewPluginServiceListPluginLabelArgs() *PluginServiceListPluginLabelArgs {
+	return &PluginServiceListPluginLabelArgs{}
+}
+
+func (p *PluginServiceListPluginLabelArgs) InitDefault() {
+}
+
+var PluginServiceListPluginLabelArgs_Req_DEFAULT *ListPluginLabelReq
+
+func (p *PluginServiceListPluginLabelArgs) GetReq() (v *ListPluginLabelReq) {
+	if !p.IsSetReq() {
+		return PluginServiceListPluginLabelArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *PluginServiceListPluginLabelArgs) SetReq(val *ListPluginLabelReq) {
+	p.Req = val
+}
+
+var fieldIDToName_PluginServiceListPluginLabelArgs = map[int16]string{
+	1: "req",
+}
+
+func (p *PluginServiceListPluginLabelArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *PluginServiceListPluginLabelArgs) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PluginServiceListPluginLabelArgs[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *PluginServiceListPluginLabelArgs) ReadField1(iprot thrift.TProtocol) error {
+	_field := NewListPluginLabelReq()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Req = _field
+	return nil
+}
+
+func (p *PluginServiceListPluginLabelArgs) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ListPluginLabel_args"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *PluginServiceListPluginLabelArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Req.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *PluginServiceListPluginLabelArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PluginServiceListPluginLabelArgs(%+v)", *p)
+
+}
+
+func (p *PluginServiceListPluginLabelArgs) DeepEqual(ano *PluginServiceListPluginLabelArgs) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Req) {
+		return false
+	}
+	return true
+}
+
+func (p *PluginServiceListPluginLabelArgs) Field1DeepEqual(src *ListPluginLabelReq) bool {
+
+	if !p.Req.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type PluginServiceListPluginLabelResult struct {
+	Success *ListPluginLabelResp `thrift:"success,0,optional" frugal:"0,optional,ListPluginLabelResp" json:"success,omitempty"`
+}
+
+func NewPluginServiceListPluginLabelResult() *PluginServiceListPluginLabelResult {
+	return &PluginServiceListPluginLabelResult{}
+}
+
+func (p *PluginServiceListPluginLabelResult) InitDefault() {
+}
+
+var PluginServiceListPluginLabelResult_Success_DEFAULT *ListPluginLabelResp
+
+func (p *PluginServiceListPluginLabelResult) GetSuccess() (v *ListPluginLabelResp) {
+	if !p.IsSetSuccess() {
+		return PluginServiceListPluginLabelResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *PluginServiceListPluginLabelResult) SetSuccess(x interface{}) {
+	p.Success = x.(*ListPluginLabelResp)
+}
+
+var fieldIDToName_PluginServiceListPluginLabelResult = map[int16]string{
+	0: "success",
+}
+
+func (p *PluginServiceListPluginLabelResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *PluginServiceListPluginLabelResult) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 0:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField0(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PluginServiceListPluginLabelResult[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *PluginServiceListPluginLabelResult) ReadField0(iprot thrift.TProtocol) error {
+	_field := NewListPluginLabelResp()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Success = _field
+	return nil
+}
+
+func (p *PluginServiceListPluginLabelResult) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ListPluginLabel_result"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField0(oprot); err != nil {
+			fieldId = 0
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *PluginServiceListPluginLabelResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Success.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
+}
+
+func (p *PluginServiceListPluginLabelResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PluginServiceListPluginLabelResult(%+v)", *p)
+
+}
+
+func (p *PluginServiceListPluginLabelResult) DeepEqual(ano *PluginServiceListPluginLabelResult) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field0DeepEqual(ano.Success) {
+		return false
+	}
+	return true
+}
+
+func (p *PluginServiceListPluginLabelResult) Field0DeepEqual(src *ListPluginLabelResp) bool {
 
 	if !p.Success.DeepEqual(src) {
 		return false

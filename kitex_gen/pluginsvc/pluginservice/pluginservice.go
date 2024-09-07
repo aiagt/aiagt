@@ -84,10 +84,17 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"ListTool": kitex.NewMethodInfo(
-		listToolHandler,
-		newPluginServiceListToolArgs,
-		newPluginServiceListToolResult,
+	"ListPluginTool": kitex.NewMethodInfo(
+		listPluginToolHandler,
+		newPluginServiceListPluginToolArgs,
+		newPluginServiceListPluginToolResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"ListPluginLabel": kitex.NewMethodInfo(
+		listPluginLabelHandler,
+		newPluginServiceListPluginLabelArgs,
+		newPluginServiceListPluginLabelResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -351,22 +358,40 @@ func newPluginServiceGetToolByIDResult() interface{} {
 	return pluginsvc.NewPluginServiceGetToolByIDResult()
 }
 
-func listToolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*pluginsvc.PluginServiceListToolArgs)
-	realResult := result.(*pluginsvc.PluginServiceListToolResult)
-	success, err := handler.(pluginsvc.PluginService).ListTool(ctx, realArg.Req)
+func listPluginToolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceListPluginToolArgs)
+	realResult := result.(*pluginsvc.PluginServiceListPluginToolResult)
+	success, err := handler.(pluginsvc.PluginService).ListPluginTool(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newPluginServiceListToolArgs() interface{} {
-	return pluginsvc.NewPluginServiceListToolArgs()
+func newPluginServiceListPluginToolArgs() interface{} {
+	return pluginsvc.NewPluginServiceListPluginToolArgs()
 }
 
-func newPluginServiceListToolResult() interface{} {
-	return pluginsvc.NewPluginServiceListToolResult()
+func newPluginServiceListPluginToolResult() interface{} {
+	return pluginsvc.NewPluginServiceListPluginToolResult()
+}
+
+func listPluginLabelHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceListPluginLabelArgs)
+	realResult := result.(*pluginsvc.PluginServiceListPluginLabelResult)
+	success, err := handler.(pluginsvc.PluginService).ListPluginLabel(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newPluginServiceListPluginLabelArgs() interface{} {
+	return pluginsvc.NewPluginServiceListPluginLabelArgs()
+}
+
+func newPluginServiceListPluginLabelResult() interface{} {
+	return pluginsvc.NewPluginServiceListPluginLabelResult()
 }
 
 func callPluginToolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -515,11 +540,21 @@ func (p *kClient) GetToolByID(ctx context.Context, req *base.IDReq) (r *pluginsv
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) ListTool(ctx context.Context, req *pluginsvc.ListPluginToolReq) (r *pluginsvc.ListPluginToolResp, err error) {
-	var _args pluginsvc.PluginServiceListToolArgs
+func (p *kClient) ListPluginTool(ctx context.Context, req *pluginsvc.ListPluginToolReq) (r *pluginsvc.ListPluginToolResp, err error) {
+	var _args pluginsvc.PluginServiceListPluginToolArgs
 	_args.Req = req
-	var _result pluginsvc.PluginServiceListToolResult
-	if err = p.c.Call(ctx, "ListTool", &_args, &_result); err != nil {
+	var _result pluginsvc.PluginServiceListPluginToolResult
+	if err = p.c.Call(ctx, "ListPluginTool", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) ListPluginLabel(ctx context.Context, req *pluginsvc.ListPluginLabelReq) (r *pluginsvc.ListPluginLabelResp, err error) {
+	var _args pluginsvc.PluginServiceListPluginLabelArgs
+	_args.Req = req
+	var _result pluginsvc.PluginServiceListPluginLabelResult
+	if err = p.c.Call(ctx, "ListPluginLabel", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

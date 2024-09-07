@@ -1,13 +1,13 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"time"
 )
 
 type Plugin struct {
-	ID            int64           `gorm:"column:id;primarykey"`
-	Key           string          `gorm:"column:key;unique"`
+	Base
+
+	Key           int64           `gorm:"column:key;unique"`
 	Name          string          `gorm:"column:name"`
 	Description   string          `gorm:"column:description"`
 	DescriptionMd string          `gorm:"column:description_md;type:text"`
@@ -16,13 +16,19 @@ type Plugin struct {
 	HomePage      string          `gorm:"column:home_page"`
 	EnableSecret  bool            `gorm:"column:enable_secret"`
 	Secrets       []*PluginSecret `gorm:"column:secrets;serializer:json;type:json"`
-	LabelIDs      []string        `gorm:"column:label_ids;serializer:json;type:json"`
+	LabelIDs      []int64         `gorm:"column:label_ids;serializer:json;type:json"`
 	ToolIDs       []int64         `gorm:"column:tool_ids;serializer:json;type:json"`
 	Logo          string          `gorm:"column:logo"`
-	PublishedAt   time.Time       `gorm:"column:published_at"`
-	CreatedAt     time.Time       `gorm:"column:created_at"`
-	UpdatedAt     time.Time       `gorm:"column:updated_at"`
-	DeletedAt     gorm.DeletedAt  `gorm:"column:deleted_at;index"`
+	PublishedAt   *time.Time      `gorm:"column:published_at"`
+}
+
+func (p *Plugin) HashKey(key string) int64 {
+	switch key {
+	case "author_id":
+		return p.AuthorID
+	default:
+		return 0
+	}
 }
 
 type PluginSecret struct {
@@ -30,4 +36,13 @@ type PluginSecret struct {
 	Description   string `json:"description,omitempty"`
 	AcquireMethod string `json:"acquire_method,omitempty"`
 	Link          string `json:"link,omitempty"`
+}
+
+func (p *PluginSecret) HashKey(key string) string {
+	switch key {
+	case "secret_name":
+		return p.Name
+	default:
+		return ""
+	}
 }

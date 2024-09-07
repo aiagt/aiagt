@@ -5,35 +5,37 @@ import "github.com/aiagt/aiagt/common/bizerr"
 const (
 	ServiceName = "plugin"
 
-	bizCodeCallPluginTool = 0
-	bizCodeCreatePlugin   = 1
-	bizCodeCreateTool     = 2
-	bizCodeDeletePlugin   = 3
-	bizCodeDeleteTool     = 4
-	bizCodeGetPluginByID  = 5
-	bizCodeGetToolByID    = 6
-	bizCodeListPlugin     = 7
-	bizCodeListTool       = 8
-	bizCodePublishPlugin  = 9
-	bizCodeTestPluginTool = 10
-	bizCodeUpdatePlugin   = 11
-	bizCodeUpdateTool     = 12
+	bizCodeCallPluginTool  = 0
+	bizCodeCreatePlugin    = 1
+	bizCodeCreateTool      = 2
+	bizCodeDeletePlugin    = 3
+	bizCodeDeleteTool      = 4
+	bizCodeGetPluginByID   = 5
+	bizCodeGetToolByID     = 6
+	bizCodeListPlugin      = 7
+	bizCodeListPluginLabel = 8
+	bizCodeListPluginTool  = 9
+	bizCodePublishPlugin   = 10
+	bizCodeTestPluginTool  = 11
+	bizCodeUpdatePlugin    = 12
+	bizCodeUpdateTool      = 13
 )
 
 var (
-	bizCallPluginTool *bizerr.Biz
-	bizCreatePlugin   *bizerr.Biz
-	bizCreateTool     *bizerr.Biz
-	bizDeletePlugin   *bizerr.Biz
-	bizDeleteTool     *bizerr.Biz
-	bizGetPluginByID  *bizerr.Biz
-	bizGetToolByID    *bizerr.Biz
-	bizListPlugin     *bizerr.Biz
-	bizListTool       *bizerr.Biz
-	bizPublishPlugin  *bizerr.Biz
-	bizTestPluginTool *bizerr.Biz
-	bizUpdatePlugin   *bizerr.Biz
-	bizUpdateTool     *bizerr.Biz
+	bizCallPluginTool  *bizerr.Biz
+	bizCreatePlugin    *bizerr.Biz
+	bizCreateTool      *bizerr.Biz
+	bizDeletePlugin    *bizerr.Biz
+	bizDeleteTool      *bizerr.Biz
+	bizGetPluginByID   *bizerr.Biz
+	bizGetToolByID     *bizerr.Biz
+	bizListPlugin      *bizerr.Biz
+	bizListPluginLabel *bizerr.Biz
+	bizListPluginTool  *bizerr.Biz
+	bizPublishPlugin   *bizerr.Biz
+	bizTestPluginTool  *bizerr.Biz
+	bizUpdatePlugin    *bizerr.Biz
+	bizUpdateTool      *bizerr.Biz
 )
 
 func initServiceBusiness(serviceCode int) {
@@ -47,7 +49,8 @@ func initServiceBusiness(serviceCode int) {
 	bizGetPluginByID = bizerr.NewBiz(ServiceName, "GetPluginByID", baseCode+bizCodeGetPluginByID)
 	bizGetToolByID = bizerr.NewBiz(ServiceName, "GetToolByID", baseCode+bizCodeGetToolByID)
 	bizListPlugin = bizerr.NewBiz(ServiceName, "ListPlugin", baseCode+bizCodeListPlugin)
-	bizListTool = bizerr.NewBiz(ServiceName, "ListTool", baseCode+bizCodeListTool)
+	bizListPluginLabel = bizerr.NewBiz(ServiceName, "ListPluginLabel", baseCode+bizCodeListPluginLabel)
+	bizListPluginTool = bizerr.NewBiz(ServiceName, "ListPluginTool", baseCode+bizCodeListPluginTool)
 	bizPublishPlugin = bizerr.NewBiz(ServiceName, "PublishPlugin", baseCode+bizCodePublishPlugin)
 	bizTestPluginTool = bizerr.NewBiz(ServiceName, "TestPluginTool", baseCode+bizCodeTestPluginTool)
 	bizUpdatePlugin = bizerr.NewBiz(ServiceName, "UpdatePlugin", baseCode+bizCodeUpdatePlugin)

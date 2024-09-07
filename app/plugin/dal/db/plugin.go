@@ -4,12 +4,13 @@ import (
 	"context"
 	"fmt"
 	"github.com/aiagt/aiagt/app/plugin/model"
+	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc"
 	"github.com/pkg/errors"
+	"math"
 	"strings"
 
-	ktdb "github.com/aiagt/kitextool/option/server/db"
 	"gorm.io/gorm"
 )
 
@@ -23,7 +24,7 @@ func NewPluginDao() *PluginDao {
 }
 
 func (d *PluginDao) db(ctx context.Context) *gorm.DB {
-	return ktdb.DBCtx(ctx)
+	return ctxutil.Tx(ctx)
 }
 
 // GetByID get plugin by id
@@ -39,7 +40,7 @@ func (d *PluginDao) GetByID(ctx context.Context, id int64) (*model.Plugin, error
 }
 
 // List get plugin list
-func (d *PluginDao) List(ctx context.Context, req *pluginsvc.ListPluginReq) ([]*model.Plugin, *base.PaginationResp, error) {
+func (d *PluginDao) List(ctx context.Context, req *pluginsvc.ListPluginReq, userID int64) ([]*model.Plugin, *base.PaginationResp, error) {
 	var (
 		list   []*model.Plugin
 		total  int64
@@ -49,6 +50,9 @@ func (d *PluginDao) List(ctx context.Context, req *pluginsvc.ListPluginReq) ([]*
 	)
 
 	err := d.db(ctx).Model(d.m).Scopes(func(db *gorm.DB) *gorm.DB {
+		if req.AuthorId == nil || *req.AuthorId != userID {
+			db = db.Where("is_private = ?", false)
+		}
 		if req.AuthorId != nil {
 			db = db.Where("author_id = ?", req.AuthorId)
 		}
@@ -63,12 +67,14 @@ func (d *PluginDao) List(ctx context.Context, req *pluginsvc.ListPluginReq) ([]*
 			db = db.Where("JSON_OVERLAPS(label_ids, ?)", labels)
 		}
 		return db
-	}).Offset(offset).Limit(limit).Find(&list).Count(&total).Error
+	}).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "plugin dao get page error")
 	}
 
-	pageResp := &base.PaginationResp{Page: page.Page, PageSize: page.PageSize, Total: int32(total), PageTotal: int32(total) / page.PageSize}
+	pageTotal := int32(math.Ceil(float64(total) / float64(page.PageSize)))
+	pageResp := &base.PaginationResp{Page: page.Page, PageSize: page.PageSize, Total: int32(total), PageTotal: pageTotal}
+
 	return list, pageResp, nil
 }
 
@@ -82,7 +88,7 @@ func (d *PluginDao) Create(ctx context.Context, m *model.Plugin) error {
 	return nil
 }
 
-// Update update plugin by id
+// Update plugin by id
 func (d *PluginDao) Update(ctx context.Context, id int64, m *model.Plugin) error {
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).Updates(m).Error
 	if err != nil {

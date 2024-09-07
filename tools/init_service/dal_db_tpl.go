@@ -4,6 +4,7 @@ const dalDBTpl = `package db
 
 import (
 	"context"
+	"math"
 
 	"github.com/aiagt/aiagt/app/{{ .ServiceName }}/model"
 	"github.com/aiagt/aiagt/kitex_gen/base"
@@ -38,6 +39,18 @@ func (d *{{ .CamelServiceName }}Dao) GetByID(ctx context.Context, id int64) (*mo
 	return &result, nil
 }
 
+// GetByIDs get {{ .Service.Name }} list by ids
+func (d *{{ .Service.Camel }}Dao) GetByIDs(ctx context.Context, ids []int64) ([]*model.{{ .Service.Camel }}, error) {
+	var result []*model.{{ .Service.Camel }}
+
+	err := d.db(ctx).Model(d.m).Where("id in ?", ids).Find(&result).Error
+	if err != nil {
+		return nil, errors.Wrap(err, "{{ .Service.Name }} dao get by ids error")
+	}
+
+	return result, nil
+}
+
 // List get {{ .SnakeServiceName }} list
 func (d *{{ .CamelServiceName }}Dao) List(ctx context.Context, page *base.PaginationReq) ([]*model.{{ .CamelServiceName }}, *base.PaginationResp, error) {
 	var (
@@ -48,12 +61,14 @@ func (d *{{ .CamelServiceName }}Dao) List(ctx context.Context, page *base.Pagina
 	)
 
 
-	err := d.db(ctx).Model(d.m).Offset(offset).Limit(limit).Find(&list).Count(&total).Error
+	err := d.db(ctx).Model(d.m).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "{{ .SnakeServiceName }} dao get page error")
 	}
 
-	pageResp := &base.PaginationResp{Page: page.Page, PageSize: page.PageSize, Total: int32(total), PageTotal: int32(total) / page.PageSize}
+	pageTotal := int32(math.Ceil(float64(total) / float64(page.PageSize)))
+	pageResp := &base.PaginationResp{Page: page.Page, PageSize: page.PageSize, Total: int32(total), PageTotal: pageTotal}
+
 	return list, pageResp, nil
 }
 
@@ -67,7 +82,7 @@ func (d *{{ .CamelServiceName }}Dao) Create(ctx context.Context, m *model.{{ .Ca
 	return nil
 }
 
-// Update update {{ .SnakeServiceName }} by id
+// Update {{ .SnakeServiceName }} by id
 func (d *{{ .CamelServiceName }}Dao) Update(ctx context.Context, id int64, m *model.{{ .CamelServiceName }}) error {
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).Updates(m).Error
 	if err != nil {
