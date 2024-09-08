@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"encoding/json"
+
 	"github.com/aiagt/aiagt/app/plugin/model"
 	"github.com/aiagt/aiagt/app/plugin/pkg/call"
 	"github.com/aiagt/aiagt/common/baseutil"
@@ -147,6 +148,7 @@ func NewModelCreatePlugin(plugin *pluginsvc.CreatePluginReq, userID int64, label
 		Logo:          plugin.Logo,
 	}
 }
+
 func NewModelUpdatePlugin(plugin *pluginsvc.UpdatePluginReq, labelIDs []int64) *model.PluginOptional {
 	return &model.PluginOptional{
 		Name:          plugin.Name,

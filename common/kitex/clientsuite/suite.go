@@ -14,6 +14,6 @@ func (s *ClientSuite) Options() []client.Option {
 
 func NewClientSuite() *ClientSuite {
 	var opts []client.Option
-	//opts = append(opts, client.WithMiddleware(middleware.Auth))
+	// opts = append(opts, client.WithMiddleware(middleware.Auth))
 	return &ClientSuite{opts: opts}
 }

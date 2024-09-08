@@ -79,7 +79,6 @@ func ParseGoFilesInDir(dir string) (map[string]*StructMethod, error) {
 		}
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

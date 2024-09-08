@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 	"github.com/aiagt/aiagt/rpc"
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -10,8 +11,8 @@ import (
 func main() {
 	ctx := context.Background()
 
-	//logger(SendCaptcha(ctx))
-	//logger(Register(ctx))
+	// logger(SendCaptcha(ctx))
+	// logger(Register(ctx))
 	logger(Login(ctx))
 }
 

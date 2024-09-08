@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/pkg/errors"
 	"go/ast"
 	"go/format"
 	"go/parser"
@@ -11,6 +10,8 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/pkg/errors"
 
 	"github.com/iancoleman/strcase"
 )

@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"github.com/aiagt/aiagt/common/closer"
-	"github.com/pkg/errors"
 	"io"
 	"net/http"
+
+	"github.com/aiagt/aiagt/common/closer"
+	"github.com/pkg/errors"
 )
 
 type RequestBody struct {

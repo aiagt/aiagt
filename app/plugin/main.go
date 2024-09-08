@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/aiagt/aiagt/app/plugin/conf"
 	"github.com/aiagt/aiagt/app/plugin/dal/db"
 	"github.com/aiagt/aiagt/app/plugin/model"
@@ -11,7 +13,6 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/cloudwego/kitex/transport"
 	"gorm.io/gorm"
-	"log"
 
 	"github.com/aiagt/aiagt/app/plugin/handler"
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc/pluginservice"

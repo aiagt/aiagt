@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 	"github.com/redis/go-redis/v9"
-	"time"
 
 	ktrdb "github.com/aiagt/kitextool/option/server/redis"
 )

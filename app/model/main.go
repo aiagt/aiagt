@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"log"
+
 	"github.com/aiagt/aiagt/app/model/conf"
 	"github.com/aiagt/aiagt/app/model/handler"
 	modelsvc "github.com/aiagt/aiagt/kitex_gen/modelsvc/modelservice"
@@ -10,7 +12,6 @@ import (
 	"github.com/cloudwego/kitex/pkg/kerrors"
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
-	"log"
 )
 
 type suite struct{}
@@ -34,7 +35,6 @@ func main() {
 	)
 
 	err := svr.Run()
-
 	if err != nil {
 		log.Println(err.Error())
 	}

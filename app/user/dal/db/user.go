@@ -2,8 +2,9 @@ package db
 
 import (
 	"context"
-	"github.com/aiagt/aiagt/common/ctxutil"
 	"math"
+
+	"github.com/aiagt/aiagt/common/ctxutil"
 
 	"github.com/aiagt/aiagt/app/user/model"
 	"github.com/aiagt/aiagt/kitex_gen/base"

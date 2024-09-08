@@ -2,10 +2,11 @@ package handler
 
 import (
 	"context"
+	"regexp"
+
 	"github.com/aiagt/aiagt/app/user/mapper"
 	"github.com/aiagt/aiagt/app/user/pkg/jwt"
 	"github.com/aiagt/aiagt/common/baseutil"
-	"regexp"
 
 	"github.com/aiagt/aiagt/app/user/dal/cache"
 
@@ -63,8 +64,7 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *usersvc.RegisterReq
 }
 
 func validateEmail(email string) bool {
-
-	var re = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+	re := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 	return re.MatchString(email)
 }
 

@@ -2,9 +2,10 @@ package jwt
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/aiagt/aiagt/app/user/conf"
 	"github.com/google/uuid"
-	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )

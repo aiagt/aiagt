@@ -3,6 +3,7 @@ package encrypt
 import (
 	"crypto/sha256"
 	"encoding/hex"
+
 	"github.com/aiagt/aiagt/app/user/conf"
 )
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"github.com/aiagt/aiagt/kitex_gen/modelsvc"
 	modelservice "github.com/aiagt/aiagt/kitex_gen/modelsvc/modelservice"
 	"github.com/cloudwego/kitex/client"

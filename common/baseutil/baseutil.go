@@ -1,8 +1,9 @@
 package baseutil
 
 import (
-	"github.com/aiagt/aiagt/kitex_gen/base"
 	"time"
+
+	"github.com/aiagt/aiagt/kitex_gen/base"
 )
 
 func NewTime(t *base.Time) time.Time {

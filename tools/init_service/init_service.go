@@ -3,15 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+
 	"github.com/aiagt/aiagt/common/closer"
 	"github.com/aiagt/aiagt/tools/utils/goparser"
 	"github.com/aiagt/aiagt/tools/utils/logger"
 	"github.com/aiagt/aiagt/tools/utils/multi_error"
 	"github.com/iancoleman/strcase"
 	"github.com/pkg/errors"
-	"os"
-	"os/exec"
-	"path/filepath"
 )
 
 func main() {

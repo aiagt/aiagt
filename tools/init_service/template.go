@@ -17,9 +17,7 @@ func NewTemplate(name, tpl string, rewrite bool) *Template {
 
 type symbol [2]string
 
-var (
-	BackQuote = symbol{"$0$", "`"}
-)
+var BackQuote = symbol{"$0$", "`"}
 
 func buildSymbol(tpl string) string {
 	tpl = strings.ReplaceAll(tpl, BackQuote[0], BackQuote[1])

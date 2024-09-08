@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/aiagt/aiagt/app/user/conf"
 	"github.com/aiagt/aiagt/app/user/dal/cache"
 	"github.com/aiagt/aiagt/app/user/dal/db"
@@ -14,7 +16,6 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/cloudwego/kitex/transport"
 	"gorm.io/gorm"
-	"log"
 )
 
 func main() {

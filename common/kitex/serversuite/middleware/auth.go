@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+
 	"github.com/aiagt/aiagt/app/user/pkg/jwt"
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"

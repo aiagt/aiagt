@@ -4,5 +4,4 @@ type App struct {
 	Base
 }
 
-type AppOptional struct {
-}
+type AppOptional struct{}

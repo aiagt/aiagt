@@ -3,13 +3,14 @@ package db
 import (
 	"context"
 	"fmt"
+	"math"
+
 	"github.com/aiagt/aiagt/app/plugin/model"
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
-	"math"
 )
 
 type LabelDao struct {

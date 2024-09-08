@@ -2,9 +2,10 @@ package email
 
 import (
 	"fmt"
+	"net/smtp"
+
 	"github.com/aiagt/aiagt/app/user/conf"
 	"github.com/jordan-wright/email"
-	"net/smtp"
 )
 
 func Send(subject, html string, toEmails ...string) error {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
@@ -13,8 +14,8 @@ import (
 func main() {
 	ctx := context.Background()
 
-	//token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FpYWd0LmNuIiwic3ViIjoiYXV0aC03IiwiYXVkIjpbImh0dHBzOi8vYWlhZ3QuY24iXSwiZXhwIjoxNzI4Mzk3MTU1LCJpYXQiOjE3MjU4MDUxNTUsImp0aSI6Ijk5MGI0MmQzLTk0M2YtNGQwYS05MmYzLWRmZGQ0NzEwMWFhMSIsIklEIjo3fQ.iyACtTnJRypm7tu0BKCAiVhzgHXiSQm18_WZXTHSNb8"
-	//token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FpYWd0LmNuIiwic3ViIjoiYXV0aC03IiwiYXVkIjpbImh0dHBzOi8vYWlhZ3QuY24iXSwiZXhwIjoxNzI4Mzk3OTIzLCJpYXQiOjE3MjU4MDU5MjMsImp0aSI6ImIwYWU5YjVhLTZjYmYtNGE5Zi04MDM1LTQxZWM5ODU1YmFiYyIsIklEIjo3fQ.p6T0C-UpU7WjShUIfjDvs_fXkR6LgVWHuxY1hiIqvOw"
+	// token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FpYWd0LmNuIiwic3ViIjoiYXV0aC03IiwiYXVkIjpbImh0dHBzOi8vYWlhZ3QuY24iXSwiZXhwIjoxNzI4Mzk3MTU1LCJpYXQiOjE3MjU4MDUxNTUsImp0aSI6Ijk5MGI0MmQzLTk0M2YtNGQwYS05MmYzLWRmZGQ0NzEwMWFhMSIsIklEIjo3fQ.iyACtTnJRypm7tu0BKCAiVhzgHXiSQm18_WZXTHSNb8"
+	// token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FpYWd0LmNuIiwic3ViIjoiYXV0aC03IiwiYXVkIjpbImh0dHBzOi8vYWlhZ3QuY24iXSwiZXhwIjoxNzI4Mzk3OTIzLCJpYXQiOjE3MjU4MDU5MjMsImp0aSI6ImIwYWU5YjVhLTZjYmYtNGE5Zi04MDM1LTQxZWM5ODU1YmFiYyIsIklEIjo3fQ.p6T0C-UpU7WjShUIfjDvs_fXkR6LgVWHuxY1hiIqvOw"
 	password := "au199108"
 	resp, err := rpc.UserCli.Login(ctx, &usersvc.LoginReq{Email: "ahao_study@163.com", Password: &password})
 	if err != nil {
@@ -25,7 +26,7 @@ func main() {
 	ctx = ctxutil.WithToken(ctx, resp.Token)
 
 	getPlugin(ctx)
-	//updatePlugin(ctx)
+	// updatePlugin(ctx)
 }
 
 func listPlugin(ctx context.Context) {

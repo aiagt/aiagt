@@ -3,12 +3,13 @@ package call
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 const addr = "localhost:34378"

@@ -1,9 +1,10 @@
 package snowflake
 
 import (
+	"sync"
+
 	"github.com/aiagt/aiagt/app/user/conf"
 	"github.com/bwmarrin/snowflake"
-	"sync"
 )
 
 var (
