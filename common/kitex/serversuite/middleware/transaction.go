@@ -21,7 +21,7 @@ func (m *Middleware) Transaction(next endpoint.Endpoint) endpoint.Endpoint {
 
 		err = tx.Commit().Error
 		if err != nil {
-			return errors.Wrap(err, "transaction commit failed")
+			return ReturnBizErr(ctx, errors.Wrap(err, "transaction commit failed"))
 		}
 
 		return

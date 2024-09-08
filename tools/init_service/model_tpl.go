@@ -2,8 +2,11 @@ package main
 
 const modelTpl = `package model
 
-type {{ .CamelServiceName }} struct {
+type {{ .Model.Camel }} struct {
 	Base
+}
+
+type {{ .Model.Camel }}Optional struct {
 }
 `
 

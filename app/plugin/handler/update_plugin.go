@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 
-	"github.com/aiagt/aiagt/app/plugin/mapping"
+	"github.com/aiagt/aiagt/app/plugin/mapper"
 	"github.com/aiagt/aiagt/common/bizerr"
 
 	"github.com/aiagt/aiagt/common/ctxutil"
@@ -19,8 +19,7 @@ func (s *PluginServiceImpl) UpdatePlugin(ctx context.Context, req *pluginsvc.Upd
 		return nil, bizUpdatePlugin.NewErr(err)
 	}
 
-	user := ctxutil.User(ctx)
-	if user.Id != plugin.AuthorID {
+	if ctxutil.Forbidden(ctx, plugin.AuthorID) {
 		return nil, bizUpdatePlugin.CodeErr(bizerr.ErrCodeForbidden)
 	}
 
@@ -29,7 +28,7 @@ func (s *PluginServiceImpl) UpdatePlugin(ctx context.Context, req *pluginsvc.Upd
 		return nil, bizUpdatePlugin.NewErr(err)
 	}
 
-	newPlugin := mapping.NewModelUpdatePlugin(req, user, labelIDs)
+	newPlugin := mapper.NewModelUpdatePlugin(req, labelIDs)
 
 	if err = s.pluginDao.Update(ctx, req.Id, newPlugin); err != nil {
 		return nil, bizUpdatePlugin.NewErr(err)

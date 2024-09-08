@@ -50,11 +50,10 @@ func (d *PluginDao) List(ctx context.Context, req *pluginsvc.ListPluginReq, user
 	)
 
 	err := d.db(ctx).Model(d.m).Scopes(func(db *gorm.DB) *gorm.DB {
-		if req.AuthorId == nil || *req.AuthorId != userID {
+		if req.AuthorId == nil {
+			db = db.Where("is_private = ? OR author_id = ?", false, userID)
+		} else if *req.AuthorId != userID {
 			db = db.Where("is_private = ?", false)
-		}
-		if req.AuthorId != nil {
-			db = db.Where("author_id = ?", req.AuthorId)
 		}
 		if req.Name != nil {
 			db = db.Where("name LIKE ?", fmt.Sprintf("%%%s%%", *req.Name))
@@ -89,7 +88,7 @@ func (d *PluginDao) Create(ctx context.Context, m *model.Plugin) error {
 }
 
 // Update plugin by id
-func (d *PluginDao) Update(ctx context.Context, id int64, m *model.Plugin) error {
+func (d *PluginDao) Update(ctx context.Context, id int64, m *model.PluginOptional) error {
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).Updates(m).Error
 	if err != nil {
 		return errors.Wrap(err, "plugin dao update error")

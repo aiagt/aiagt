@@ -3,10 +3,8 @@ package handler
 import (
 	"context"
 
+	"github.com/aiagt/aiagt/app/plugin/mapper"
 	"github.com/aiagt/aiagt/common/bizerr"
-	"github.com/aiagt/aiagt/common/ctxutil"
-
-	"github.com/aiagt/aiagt/app/plugin/mapping"
 
 	base "github.com/aiagt/aiagt/kitex_gen/base"
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc"
@@ -19,7 +17,11 @@ func (s *PluginServiceImpl) GetPluginByID(ctx context.Context, req *base.IDReq) 
 		return nil, bizGetPluginByID.NewErr(err)
 	}
 
-	user := ctxutil.User(ctx)
+	user, err := s.userCli.GetUser(ctx)
+	if err != nil {
+		return nil, bizGetPluginByID.CallErr(err)
+	}
+
 	if plugin.IsPrivate && plugin.AuthorID != user.Id {
 		return nil, bizGetPluginByID.CodeErr(bizerr.ErrCodeForbidden)
 	}
@@ -34,11 +36,11 @@ func (s *PluginServiceImpl) GetPluginByID(ctx context.Context, req *base.IDReq) 
 		return nil, bizGetPluginByID.NewErr(err)
 	}
 
-	resp = mapping.NewGenPlugin(
+	resp = mapper.NewGenPlugin(
 		plugin,
 		user,
-		mapping.NewGenListPluginLabel(labels),
-		mapping.NewGenListPluginTool(tools),
+		mapper.NewGenListPluginLabel(labels),
+		mapper.NewGenListPluginTool(tools),
 	)
 
 	return

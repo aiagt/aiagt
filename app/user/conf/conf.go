@@ -2,6 +2,7 @@ package conf
 
 import (
 	"path/filepath"
+	"time"
 
 	ktconf "github.com/aiagt/kitextool/conf"
 )
@@ -21,4 +22,22 @@ func Conf() *ServerConf {
 
 type ServerConf struct {
 	ktconf.ServerConf
+
+	Email Email `yaml:"email"`
+	Auth  Auth  `yaml:"auth"`
+}
+
+type Email struct {
+	SmtpAddr     string `yaml:"smtp_addr"`
+	SmtpHost     string `yaml:"smtp_host"`
+	EmailFrom    string `yaml:"email_from"`
+	EmailAddress string `yaml:"email_address"`
+	Auth         string `yaml:"auth"`
+}
+
+type Auth struct {
+	EncryptSalt   string        `yaml:"encrypt_salt"`
+	SnowflakeNode int           `yaml:"snowflake_node"`
+	JWTKey        string        `yaml:"jwt_key"`
+	JWTExpire     time.Duration `yaml:"jwt_expire"`
 }

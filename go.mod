@@ -7,10 +7,15 @@ replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
 require (
 	github.com/aiagt/kitextool v0.0.2
 	github.com/apache/thrift v0.16.0
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/cloudwego/hertz v0.9.3
 	github.com/cloudwego/kitex v0.10.3
+	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/google/uuid v1.1.2
 	github.com/iancoleman/strcase v0.2.0
+	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/pkg/errors v0.9.1
+	github.com/redis/go-redis/v9 v9.5.3
 	github.com/stretchr/testify v1.8.4
 	gorm.io/gorm v1.25.11
 )
@@ -22,6 +27,7 @@ require (
 	github.com/bytedance/gopkg v0.1.0 // indirect
 	github.com/bytedance/sonic v1.12.0 // indirect
 	github.com/bytedance/sonic/loader v0.2.0 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/configmanager v0.2.2 // indirect
 	github.com/cloudwego/dynamicgo v0.2.9 // indirect
@@ -33,6 +39,7 @@ require (
 	github.com/cloudwego/runtimex v0.1.0 // indirect
 	github.com/cloudwego/thriftgo v0.3.15 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-errors/errors v1.0.1 // indirect

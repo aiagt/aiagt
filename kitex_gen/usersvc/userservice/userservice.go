@@ -28,10 +28,17 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"ForgotPassword": kitex.NewMethodInfo(
-		forgotPasswordHandler,
-		newUserServiceForgotPasswordArgs,
-		newUserServiceForgotPasswordResult,
+	"ResetPassword": kitex.NewMethodInfo(
+		resetPasswordHandler,
+		newUserServiceResetPasswordArgs,
+		newUserServiceResetPasswordResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"SendCaptcha": kitex.NewMethodInfo(
+		sendCaptchaHandler,
+		newUserServiceSendCaptchaArgs,
+		newUserServiceSendCaptchaResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -193,22 +200,40 @@ func newUserServiceLoginResult() interface{} {
 	return usersvc.NewUserServiceLoginResult()
 }
 
-func forgotPasswordHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*usersvc.UserServiceForgotPasswordArgs)
-	realResult := result.(*usersvc.UserServiceForgotPasswordResult)
-	success, err := handler.(usersvc.UserService).ForgotPassword(ctx, realArg.Req)
+func resetPasswordHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*usersvc.UserServiceResetPasswordArgs)
+	realResult := result.(*usersvc.UserServiceResetPasswordResult)
+	success, err := handler.(usersvc.UserService).ResetPassword(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newUserServiceForgotPasswordArgs() interface{} {
-	return usersvc.NewUserServiceForgotPasswordArgs()
+func newUserServiceResetPasswordArgs() interface{} {
+	return usersvc.NewUserServiceResetPasswordArgs()
 }
 
-func newUserServiceForgotPasswordResult() interface{} {
-	return usersvc.NewUserServiceForgotPasswordResult()
+func newUserServiceResetPasswordResult() interface{} {
+	return usersvc.NewUserServiceResetPasswordResult()
+}
+
+func sendCaptchaHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*usersvc.UserServiceSendCaptchaArgs)
+	realResult := result.(*usersvc.UserServiceSendCaptchaResult)
+	success, err := handler.(usersvc.UserService).SendCaptcha(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceSendCaptchaArgs() interface{} {
+	return usersvc.NewUserServiceSendCaptchaArgs()
+}
+
+func newUserServiceSendCaptchaResult() interface{} {
+	return usersvc.NewUserServiceSendCaptchaResult()
 }
 
 func updateUserHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -385,11 +410,21 @@ func (p *kClient) Login(ctx context.Context, req *usersvc.LoginReq) (r *usersvc.
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) ForgotPassword(ctx context.Context, req *usersvc.ForgotPasswordReq) (r *usersvc.ForgotPasswordResp, err error) {
-	var _args usersvc.UserServiceForgotPasswordArgs
+func (p *kClient) ResetPassword(ctx context.Context, req *usersvc.ResetPasswordReq) (r *base.Empty, err error) {
+	var _args usersvc.UserServiceResetPasswordArgs
 	_args.Req = req
-	var _result usersvc.UserServiceForgotPasswordResult
-	if err = p.c.Call(ctx, "ForgotPassword", &_args, &_result); err != nil {
+	var _result usersvc.UserServiceResetPasswordResult
+	if err = p.c.Call(ctx, "ResetPassword", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) SendCaptcha(ctx context.Context, req *usersvc.SendCaptchaReq) (r *usersvc.SendCaptchaResp, err error) {
+	var _args usersvc.UserServiceSendCaptchaArgs
+	_args.Req = req
+	var _result usersvc.UserServiceSendCaptchaResult
+	if err = p.c.Call(ctx, "SendCaptcha", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 
-	"github.com/aiagt/aiagt/app/user/mapping"
+	"github.com/aiagt/aiagt/app/user/mapper"
 
 	base "github.com/aiagt/aiagt/kitex_gen/base"
 	usersvc "github.com/aiagt/aiagt/kitex_gen/usersvc"
@@ -13,10 +13,10 @@ import (
 func (s *UserServiceImpl) GetUserByIds(ctx context.Context, req *base.IDsReq) (resp []*usersvc.User, err error) {
 	users, err := s.userDao.GetByIDs(ctx, req.Ids)
 	if err != nil {
-		return nil, bizGetUserByIDs.NewCodeErr(1, err)
+		return nil, bizGetUserByIds.NewCodeErr(1, err)
 	}
 
-	resp = mapping.NewGenListUser(users)
+	resp = mapper.NewGenListUser(users)
 
 	return
 }

@@ -104,6 +104,10 @@ func (d *LabelDao) Delete(ctx context.Context, id int64) error {
 }
 
 func (d *LabelDao) UpdateLabels(ctx context.Context, labelIDs []int64, labelTexts []string) ([]int64, error) {
+	if labelTexts == nil {
+		return labelIDs, nil
+	}
+
 	labels := make([]*model.PluginLabel, len(labelTexts))
 	for i, text := range labelTexts {
 		labels[i] = &model.PluginLabel{Text: text}

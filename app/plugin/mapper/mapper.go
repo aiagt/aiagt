@@ -1,4 +1,4 @@
-package mapping
+package mapper
 
 import (
 	"encoding/json"
@@ -132,12 +132,12 @@ func NewModelListPluginSecret(list []*pluginsvc.PluginSecret) []*model.PluginSec
 	return result
 }
 
-func NewModelCreatePlugin(plugin *pluginsvc.CreatePluginReq, user *usersvc.User, labelIDs []int64) *model.Plugin {
+func NewModelCreatePlugin(plugin *pluginsvc.CreatePluginReq, userID int64, labelIDs []int64) *model.Plugin {
 	return &model.Plugin{
 		Name:          plugin.Name,
 		Description:   plugin.Description,
 		DescriptionMd: plugin.DescriptionMd,
-		AuthorID:      user.Id,
+		AuthorID:      userID,
 		IsPrivate:     plugin.IsPrivate,
 		HomePage:      plugin.HomePage,
 		EnableSecret:  plugin.EnableSecret,
@@ -147,12 +147,11 @@ func NewModelCreatePlugin(plugin *pluginsvc.CreatePluginReq, user *usersvc.User,
 		Logo:          plugin.Logo,
 	}
 }
-func NewModelUpdatePlugin(plugin *pluginsvc.UpdatePluginReq, user *usersvc.User, labelIDs []int64) *model.Plugin {
-	return &model.Plugin{
+func NewModelUpdatePlugin(plugin *pluginsvc.UpdatePluginReq, labelIDs []int64) *model.PluginOptional {
+	return &model.PluginOptional{
 		Name:          plugin.Name,
 		Description:   plugin.Description,
 		DescriptionMd: plugin.DescriptionMd,
-		AuthorID:      user.Id,
 		IsPrivate:     plugin.IsPrivate,
 		HomePage:      plugin.HomePage,
 		EnableSecret:  plugin.EnableSecret,
@@ -190,28 +189,33 @@ func NewModelCreatePluginTool(tool *pluginsvc.CreatePluginToolReq) *model.Plugin
 	}
 }
 
-func NewModelUpdatePluginTool(tool *pluginsvc.UpdatePluginToolReq) *model.PluginTool {
+func NewModelUpdatePluginTool(tool *pluginsvc.UpdatePluginToolReq) *model.PluginToolOptional {
 	var (
-		requestType  call.RequestType
-		responseType call.ResponseType
+		requestType  *call.RequestType
+		responseType *call.ResponseType
 	)
 
-	err := json.Unmarshal([]byte(tool.RequestType), &requestType)
-	if err != nil {
-		logger.Warnf("plugin tool request type unmarshaling error: %s", err.Error())
+	if tool.RequestType != nil {
+		requestType = new(call.RequestType)
+		err := json.Unmarshal([]byte(*tool.RequestType), requestType)
+		if err != nil {
+			logger.Warnf("plugin tool request type unmarshaling error: %s", err.Error())
+		}
 	}
 
-	err = json.Unmarshal([]byte(tool.ResponseType), &responseType)
-	if err != nil {
-		logger.Warnf("plugin tool response type unmarshaling error: %s", err.Error())
+	if tool.ResponseType != nil {
+		err := json.Unmarshal([]byte(*tool.ResponseType), &responseType)
+		if err != nil {
+			logger.Warnf("plugin tool response type unmarshaling error: %s", err.Error())
+		}
 	}
 
-	return &model.PluginTool{
+	return &model.PluginToolOptional{
 		Name:          tool.Name,
 		Description:   tool.Description,
 		PluginID:      tool.PluginId,
-		RequestType:   &requestType,
-		ResponseType:  &responseType,
+		RequestType:   requestType,
+		ResponseType:  responseType,
 		ApiURL:        tool.ApiUrl,
 		ImportModelID: tool.ImportModelId,
 	}

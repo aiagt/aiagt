@@ -71,21 +71,8 @@ func (d *ToolDao) List(ctx context.Context, req *pluginsvc.ListPluginToolReq, us
 	)
 
 	err := d.db(ctx).Model(d.m).Scopes(func(db *gorm.DB) *gorm.DB {
-		if req.AuthorId == nil || *req.AuthorId != userID {
-			db = db.Joins("LEFT JOIN plugins ON plugin_id = plugins.id")
-			db = db.Where("plugins.is_private = ?", false)
-		}
-
-		if req.AuthorId != nil {
-			db.Where("author_id = ?", req.AuthorId)
-		}
-
-		if req.PluginId != nil {
-			db = db.Where("plugin_id = ?", req.PluginId)
-		}
-		if req.AuthorId != nil {
-			db = db.Where("author_id = ?", req.AuthorId)
-		}
+		db = db.Joins("LEFT JOIN plugins ON plugin_id = plugins.id").
+			Where("plugin_id = ? AND plugins.author_id = ?", req.PluginId, userID)
 		return db
 	}).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
 	if err != nil {
@@ -109,7 +96,7 @@ func (d *ToolDao) Create(ctx context.Context, m *model.PluginTool) error {
 }
 
 // Update plugin tool by id
-func (d *ToolDao) Update(ctx context.Context, id int64, m *model.PluginTool) error {
+func (d *ToolDao) Update(ctx context.Context, id int64, m *model.PluginToolOptional) error {
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).Updates(m).Error
 	if err != nil {
 		return errors.Wrap(err, "plugin tool dao update error")

@@ -6,7 +6,7 @@ import (
 	"github.com/aiagt/aiagt/common/bizerr"
 	"github.com/aiagt/aiagt/common/ctxutil"
 
-	"github.com/aiagt/aiagt/app/plugin/mapping"
+	"github.com/aiagt/aiagt/app/plugin/mapper"
 
 	base "github.com/aiagt/aiagt/kitex_gen/base"
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc"
@@ -23,7 +23,7 @@ func (s *PluginServiceImpl) CreateTool(ctx context.Context, req *pluginsvc.Creat
 		return nil, bizCreateTool.NewErr(bizerr.ErrForbidden)
 	}
 
-	tool := mapping.NewModelCreatePluginTool(req)
+	tool := mapper.NewModelCreatePluginTool(req)
 
 	err = s.toolDao.Create(ctx, tool)
 	if err != nil {

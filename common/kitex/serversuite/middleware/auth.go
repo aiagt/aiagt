@@ -2,12 +2,13 @@ package middleware
 
 import (
 	"context"
+	"github.com/aiagt/aiagt/app/user/pkg/jwt"
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 	"github.com/cloudwego/kitex/client/callopt"
 	"github.com/cloudwego/kitex/pkg/endpoint"
+	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/pkg/utils/kitexutil"
-	"github.com/pkg/errors"
 )
 
 type AuthService interface {
@@ -16,22 +17,27 @@ type AuthService interface {
 
 func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 	return func(ctx context.Context, req, resp interface{}) (err error) {
-		serviceName, _ := kitexutil.GetCaller(ctx)
-		methodName, _ := kitexutil.GetMethod(ctx)
+		var (
+			serviceName   string
+			methodName, _ = kitexutil.GetMethod(ctx)
+		)
+
+		ri := rpcinfo.GetRPCInfo(ctx)
+		if ri.To() != nil {
+			serviceName = ri.To().ServiceName()
+		}
 
 		switch serviceName {
 		case "user":
 			switch methodName {
-			case "login", "register":
+			case "Login", "Register", "SendCaptcha":
 				return next(ctx, req, resp)
 			}
 		}
 
-		user, err := m.authSvc.GetUser(ctx)
-		if err != nil {
-			return errors.Wrap(err, "auth")
-		}
+		token := ctxutil.Token(ctx)
+		id, err := jwt.ParseToken(token)
 
-		return next(ctxutil.WithUser(ctx, user), req, resp)
+		return next(ctxutil.WithUserID(ctx, id), req, resp)
 	}
 }

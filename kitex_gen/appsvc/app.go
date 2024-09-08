@@ -2503,7 +2503,7 @@ type CreateAppReq struct {
 	PluginIds       []int64      `thrift:"plugin_ids,11,required" frugal:"11,required,list<i64>" json:"plugin_ids"`
 	Logo            string       `thrift:"logo,12,required" frugal:"12,required,string" json:"logo"`
 	LabelIds        []int64      `thrift:"label_ids,13,required" frugal:"13,required,list<i64>" json:"label_ids"`
-	NewLabelTexts_  []string     `thrift:"new_label_texts,14,required" frugal:"14,required,list<string>" json:"new_label_texts"`
+	LabelTexts      []string     `thrift:"label_texts,14,required" frugal:"14,required,list<string>" json:"label_texts"`
 	ModelConfig     *ModelConfig `thrift:"model_config,15,required" frugal:"15,required,ModelConfig" json:"model_config"`
 }
 
@@ -2566,8 +2566,8 @@ func (p *CreateAppReq) GetLabelIds() (v []int64) {
 	return p.LabelIds
 }
 
-func (p *CreateAppReq) GetNewLabelTexts_() (v []string) {
-	return p.NewLabelTexts_
+func (p *CreateAppReq) GetLabelTexts() (v []string) {
+	return p.LabelTexts
 }
 
 var CreateAppReq_ModelConfig_DEFAULT *ModelConfig
@@ -2617,8 +2617,8 @@ func (p *CreateAppReq) SetLogo(val string) {
 func (p *CreateAppReq) SetLabelIds(val []int64) {
 	p.LabelIds = val
 }
-func (p *CreateAppReq) SetNewLabelTexts_(val []string) {
-	p.NewLabelTexts_ = val
+func (p *CreateAppReq) SetLabelTexts(val []string) {
+	p.LabelTexts = val
 }
 func (p *CreateAppReq) SetModelConfig(val *ModelConfig) {
 	p.ModelConfig = val
@@ -2638,7 +2638,7 @@ var fieldIDToName_CreateAppReq = map[int16]string{
 	11: "plugin_ids",
 	12: "logo",
 	13: "label_ids",
-	14: "new_label_texts",
+	14: "label_texts",
 	15: "model_config",
 }
 
@@ -2663,7 +2663,7 @@ func (p *CreateAppReq) Read(iprot thrift.TProtocol) (err error) {
 	var issetPluginIds bool = false
 	var issetLogo bool = false
 	var issetLabelIds bool = false
-	var issetNewLabelTexts_ bool = false
+	var issetLabelTexts bool = false
 	var issetModelConfig bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
@@ -2802,7 +2802,7 @@ func (p *CreateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField14(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetNewLabelTexts_ = true
+				issetLabelTexts = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -2893,7 +2893,7 @@ func (p *CreateAppReq) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetNewLabelTexts_ {
+	if !issetLabelTexts {
 		fieldId = 14
 		goto RequiredFieldNotSetError
 	}
@@ -3119,7 +3119,7 @@ func (p *CreateAppReq) ReadField14(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.NewLabelTexts_ = _field
+	p.LabelTexts = _field
 	return nil
 }
 func (p *CreateAppReq) ReadField15(iprot thrift.TProtocol) error {
@@ -3461,13 +3461,13 @@ WriteFieldEndError:
 }
 
 func (p *CreateAppReq) writeField14(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("new_label_texts", thrift.LIST, 14); err != nil {
+	if err = oprot.WriteFieldBegin("label_texts", thrift.LIST, 14); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.NewLabelTexts_)); err != nil {
+	if err := oprot.WriteListBegin(thrift.STRING, len(p.LabelTexts)); err != nil {
 		return err
 	}
-	for _, v := range p.NewLabelTexts_ {
+	for _, v := range p.LabelTexts {
 		if err := oprot.WriteString(v); err != nil {
 			return err
 		}
@@ -3555,7 +3555,7 @@ func (p *CreateAppReq) DeepEqual(ano *CreateAppReq) bool {
 	if !p.Field13DeepEqual(ano.LabelIds) {
 		return false
 	}
-	if !p.Field14DeepEqual(ano.NewLabelTexts_) {
+	if !p.Field14DeepEqual(ano.LabelTexts) {
 		return false
 	}
 	if !p.Field15DeepEqual(ano.ModelConfig) {
@@ -3675,10 +3675,10 @@ func (p *CreateAppReq) Field13DeepEqual(src []int64) bool {
 }
 func (p *CreateAppReq) Field14DeepEqual(src []string) bool {
 
-	if len(p.NewLabelTexts_) != len(src) {
+	if len(p.LabelTexts) != len(src) {
 		return false
 	}
-	for i, v := range p.NewLabelTexts_ {
+	for i, v := range p.LabelTexts {
 		_src := src[i]
 		if strings.Compare(v, _src) != 0 {
 			return false
@@ -3696,21 +3696,21 @@ func (p *CreateAppReq) Field15DeepEqual(src *ModelConfig) bool {
 
 type UpdateAppReq struct {
 	Id              int64        `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
-	Name            string       `thrift:"name,2,required" frugal:"2,required,string" json:"name"`
-	Description     string       `thrift:"description,3,required" frugal:"3,required,string" json:"description"`
-	DescriptionMd   string       `thrift:"description_md,4,required" frugal:"4,required,string" json:"description_md"`
-	ModelId         int64        `thrift:"model_id,5,required" frugal:"5,required,i64" json:"model_id"`
-	EnableImage     bool         `thrift:"enable_image,6,required" frugal:"6,required,bool" json:"enable_image"`
-	EnableFile      bool         `thrift:"enable_file,7,required" frugal:"7,required,bool" json:"enable_file"`
-	Version         string       `thrift:"version,8,required" frugal:"8,required,string" json:"version"`
-	IsPrivate       bool         `thrift:"is_private,9,required" frugal:"9,required,bool" json:"is_private"`
-	HomePage        string       `thrift:"home_page,10,required" frugal:"10,required,string" json:"home_page"`
-	PresetQuestions []string     `thrift:"preset_questions,11,required" frugal:"11,required,list<string>" json:"preset_questions"`
-	PluginIds       []int64      `thrift:"plugin_ids,12,required" frugal:"12,required,list<i64>" json:"plugin_ids"`
-	Logo            string       `thrift:"logo,13,required" frugal:"13,required,string" json:"logo"`
-	LabelIds        []int64      `thrift:"label_ids,14,required" frugal:"14,required,list<i64>" json:"label_ids"`
-	NewLabelTexts_  []string     `thrift:"new_label_texts,15,required" frugal:"15,required,list<string>" json:"new_label_texts"`
-	ModelConfig     *ModelConfig `thrift:"model_config,16,required" frugal:"16,required,ModelConfig" json:"model_config"`
+	Name            *string      `thrift:"name,2,optional" frugal:"2,optional,string" json:"name,omitempty"`
+	Description     *string      `thrift:"description,3,optional" frugal:"3,optional,string" json:"description,omitempty"`
+	DescriptionMd   *string      `thrift:"description_md,4,optional" frugal:"4,optional,string" json:"description_md,omitempty"`
+	ModelId         *int64       `thrift:"model_id,5,optional" frugal:"5,optional,i64" json:"model_id,omitempty"`
+	EnableImage     *bool        `thrift:"enable_image,6,optional" frugal:"6,optional,bool" json:"enable_image,omitempty"`
+	EnableFile      *bool        `thrift:"enable_file,7,optional" frugal:"7,optional,bool" json:"enable_file,omitempty"`
+	Version         *string      `thrift:"version,8,optional" frugal:"8,optional,string" json:"version,omitempty"`
+	IsPrivate       *bool        `thrift:"is_private,9,optional" frugal:"9,optional,bool" json:"is_private,omitempty"`
+	HomePage        *string      `thrift:"home_page,10,optional" frugal:"10,optional,string" json:"home_page,omitempty"`
+	PresetQuestions []string     `thrift:"preset_questions,11,optional" frugal:"11,optional,list<string>" json:"preset_questions,omitempty"`
+	PluginIds       []int64      `thrift:"plugin_ids,12,optional" frugal:"12,optional,list<i64>" json:"plugin_ids,omitempty"`
+	Logo            *string      `thrift:"logo,13,optional" frugal:"13,optional,string" json:"logo,omitempty"`
+	LabelIds        []int64      `thrift:"label_ids,14,optional" frugal:"14,optional,list<i64>" json:"label_ids,omitempty"`
+	LabelTexts      []string     `thrift:"label_texts,15,optional" frugal:"15,optional,list<string>" json:"label_texts,omitempty"`
+	ModelConfig     *ModelConfig `thrift:"model_config,16,optional" frugal:"16,optional,ModelConfig" json:"model_config,omitempty"`
 }
 
 func NewUpdateAppReq() *UpdateAppReq {
@@ -3724,60 +3724,130 @@ func (p *UpdateAppReq) GetId() (v int64) {
 	return p.Id
 }
 
+var UpdateAppReq_Name_DEFAULT string
+
 func (p *UpdateAppReq) GetName() (v string) {
-	return p.Name
+	if !p.IsSetName() {
+		return UpdateAppReq_Name_DEFAULT
+	}
+	return *p.Name
 }
+
+var UpdateAppReq_Description_DEFAULT string
 
 func (p *UpdateAppReq) GetDescription() (v string) {
-	return p.Description
+	if !p.IsSetDescription() {
+		return UpdateAppReq_Description_DEFAULT
+	}
+	return *p.Description
 }
+
+var UpdateAppReq_DescriptionMd_DEFAULT string
 
 func (p *UpdateAppReq) GetDescriptionMd() (v string) {
-	return p.DescriptionMd
+	if !p.IsSetDescriptionMd() {
+		return UpdateAppReq_DescriptionMd_DEFAULT
+	}
+	return *p.DescriptionMd
 }
+
+var UpdateAppReq_ModelId_DEFAULT int64
 
 func (p *UpdateAppReq) GetModelId() (v int64) {
-	return p.ModelId
+	if !p.IsSetModelId() {
+		return UpdateAppReq_ModelId_DEFAULT
+	}
+	return *p.ModelId
 }
+
+var UpdateAppReq_EnableImage_DEFAULT bool
 
 func (p *UpdateAppReq) GetEnableImage() (v bool) {
-	return p.EnableImage
+	if !p.IsSetEnableImage() {
+		return UpdateAppReq_EnableImage_DEFAULT
+	}
+	return *p.EnableImage
 }
+
+var UpdateAppReq_EnableFile_DEFAULT bool
 
 func (p *UpdateAppReq) GetEnableFile() (v bool) {
-	return p.EnableFile
+	if !p.IsSetEnableFile() {
+		return UpdateAppReq_EnableFile_DEFAULT
+	}
+	return *p.EnableFile
 }
+
+var UpdateAppReq_Version_DEFAULT string
 
 func (p *UpdateAppReq) GetVersion() (v string) {
-	return p.Version
+	if !p.IsSetVersion() {
+		return UpdateAppReq_Version_DEFAULT
+	}
+	return *p.Version
 }
+
+var UpdateAppReq_IsPrivate_DEFAULT bool
 
 func (p *UpdateAppReq) GetIsPrivate() (v bool) {
-	return p.IsPrivate
+	if !p.IsSetIsPrivate() {
+		return UpdateAppReq_IsPrivate_DEFAULT
+	}
+	return *p.IsPrivate
 }
+
+var UpdateAppReq_HomePage_DEFAULT string
 
 func (p *UpdateAppReq) GetHomePage() (v string) {
-	return p.HomePage
+	if !p.IsSetHomePage() {
+		return UpdateAppReq_HomePage_DEFAULT
+	}
+	return *p.HomePage
 }
 
+var UpdateAppReq_PresetQuestions_DEFAULT []string
+
 func (p *UpdateAppReq) GetPresetQuestions() (v []string) {
+	if !p.IsSetPresetQuestions() {
+		return UpdateAppReq_PresetQuestions_DEFAULT
+	}
 	return p.PresetQuestions
 }
 
+var UpdateAppReq_PluginIds_DEFAULT []int64
+
 func (p *UpdateAppReq) GetPluginIds() (v []int64) {
+	if !p.IsSetPluginIds() {
+		return UpdateAppReq_PluginIds_DEFAULT
+	}
 	return p.PluginIds
 }
 
+var UpdateAppReq_Logo_DEFAULT string
+
 func (p *UpdateAppReq) GetLogo() (v string) {
-	return p.Logo
+	if !p.IsSetLogo() {
+		return UpdateAppReq_Logo_DEFAULT
+	}
+	return *p.Logo
 }
 
+var UpdateAppReq_LabelIds_DEFAULT []int64
+
 func (p *UpdateAppReq) GetLabelIds() (v []int64) {
+	if !p.IsSetLabelIds() {
+		return UpdateAppReq_LabelIds_DEFAULT
+	}
 	return p.LabelIds
 }
 
-func (p *UpdateAppReq) GetNewLabelTexts_() (v []string) {
-	return p.NewLabelTexts_
+var UpdateAppReq_LabelTexts_DEFAULT []string
+
+func (p *UpdateAppReq) GetLabelTexts() (v []string) {
+	if !p.IsSetLabelTexts() {
+		return UpdateAppReq_LabelTexts_DEFAULT
+	}
+	return p.LabelTexts
 }
 
 var UpdateAppReq_ModelConfig_DEFAULT *ModelConfig
@@ -3791,31 +3861,31 @@ func (p *UpdateAppReq) GetModelConfig() (v *ModelConfig) {
 func (p *UpdateAppReq) SetId(val int64) {
 	p.Id = val
 }
-func (p *UpdateAppReq) SetName(val string) {
+func (p *UpdateAppReq) SetName(val *string) {
 	p.Name = val
 }
-func (p *UpdateAppReq) SetDescription(val string) {
+func (p *UpdateAppReq) SetDescription(val *string) {
 	p.Description = val
 }
-func (p *UpdateAppReq) SetDescriptionMd(val string) {
+func (p *UpdateAppReq) SetDescriptionMd(val *string) {
 	p.DescriptionMd = val
 }
-func (p *UpdateAppReq) SetModelId(val int64) {
+func (p *UpdateAppReq) SetModelId(val *int64) {
 	p.ModelId = val
 }
-func (p *UpdateAppReq) SetEnableImage(val bool) {
+func (p *UpdateAppReq) SetEnableImage(val *bool) {
 	p.EnableImage = val
 }
-func (p *UpdateAppReq) SetEnableFile(val bool) {
+func (p *UpdateAppReq) SetEnableFile(val *bool) {
 	p.EnableFile = val
 }
-func (p *UpdateAppReq) SetVersion(val string) {
+func (p *UpdateAppReq) SetVersion(val *string) {
 	p.Version = val
 }
-func (p *UpdateAppReq) SetIsPrivate(val bool) {
+func (p *UpdateAppReq) SetIsPrivate(val *bool) {
 	p.IsPrivate = val
 }
-func (p *UpdateAppReq) SetHomePage(val string) {
+func (p *UpdateAppReq) SetHomePage(val *string) {
 	p.HomePage = val
 }
 func (p *UpdateAppReq) SetPresetQuestions(val []string) {
@@ -3824,14 +3894,14 @@ func (p *UpdateAppReq) SetPresetQuestions(val []string) {
 func (p *UpdateAppReq) SetPluginIds(val []int64) {
 	p.PluginIds = val
 }
-func (p *UpdateAppReq) SetLogo(val string) {
+func (p *UpdateAppReq) SetLogo(val *string) {
 	p.Logo = val
 }
 func (p *UpdateAppReq) SetLabelIds(val []int64) {
 	p.LabelIds = val
 }
-func (p *UpdateAppReq) SetNewLabelTexts_(val []string) {
-	p.NewLabelTexts_ = val
+func (p *UpdateAppReq) SetLabelTexts(val []string) {
+	p.LabelTexts = val
 }
 func (p *UpdateAppReq) SetModelConfig(val *ModelConfig) {
 	p.ModelConfig = val
@@ -3852,8 +3922,64 @@ var fieldIDToName_UpdateAppReq = map[int16]string{
 	12: "plugin_ids",
 	13: "logo",
 	14: "label_ids",
-	15: "new_label_texts",
+	15: "label_texts",
 	16: "model_config",
+}
+
+func (p *UpdateAppReq) IsSetName() bool {
+	return p.Name != nil
+}
+
+func (p *UpdateAppReq) IsSetDescription() bool {
+	return p.Description != nil
+}
+
+func (p *UpdateAppReq) IsSetDescriptionMd() bool {
+	return p.DescriptionMd != nil
+}
+
+func (p *UpdateAppReq) IsSetModelId() bool {
+	return p.ModelId != nil
+}
+
+func (p *UpdateAppReq) IsSetEnableImage() bool {
+	return p.EnableImage != nil
+}
+
+func (p *UpdateAppReq) IsSetEnableFile() bool {
+	return p.EnableFile != nil
+}
+
+func (p *UpdateAppReq) IsSetVersion() bool {
+	return p.Version != nil
+}
+
+func (p *UpdateAppReq) IsSetIsPrivate() bool {
+	return p.IsPrivate != nil
+}
+
+func (p *UpdateAppReq) IsSetHomePage() bool {
+	return p.HomePage != nil
+}
+
+func (p *UpdateAppReq) IsSetPresetQuestions() bool {
+	return p.PresetQuestions != nil
+}
+
+func (p *UpdateAppReq) IsSetPluginIds() bool {
+	return p.PluginIds != nil
+}
+
+func (p *UpdateAppReq) IsSetLogo() bool {
+	return p.Logo != nil
+}
+
+func (p *UpdateAppReq) IsSetLabelIds() bool {
+	return p.LabelIds != nil
+}
+
+func (p *UpdateAppReq) IsSetLabelTexts() bool {
+	return p.LabelTexts != nil
 }
 
 func (p *UpdateAppReq) IsSetModelConfig() bool {
@@ -3865,21 +3991,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
-	var issetName bool = false
-	var issetDescription bool = false
-	var issetDescriptionMd bool = false
-	var issetModelId bool = false
-	var issetEnableImage bool = false
-	var issetEnableFile bool = false
-	var issetVersion bool = false
-	var issetIsPrivate bool = false
-	var issetHomePage bool = false
-	var issetPresetQuestions bool = false
-	var issetPluginIds bool = false
-	var issetLogo bool = false
-	var issetLabelIds bool = false
-	var issetNewLabelTexts_ bool = false
-	var issetModelConfig bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -3909,7 +4020,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetName = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3918,7 +4028,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetDescription = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3927,7 +4036,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetDescriptionMd = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3936,7 +4044,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetModelId = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3945,7 +4052,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetEnableImage = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3954,7 +4060,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetEnableFile = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3963,7 +4068,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetVersion = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3972,7 +4076,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField9(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetIsPrivate = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3981,7 +4084,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetHomePage = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3990,7 +4092,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField11(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPresetQuestions = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3999,7 +4100,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField12(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPluginIds = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -4008,7 +4108,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField13(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetLogo = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -4017,7 +4116,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField14(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetLabelIds = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -4026,7 +4124,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField15(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetNewLabelTexts_ = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -4035,7 +4132,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField16(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetModelConfig = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -4054,81 +4150,6 @@ func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetId {
 		fieldId = 1
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetName {
-		fieldId = 2
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetDescription {
-		fieldId = 3
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetDescriptionMd {
-		fieldId = 4
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetModelId {
-		fieldId = 5
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetEnableImage {
-		fieldId = 6
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetEnableFile {
-		fieldId = 7
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetVersion {
-		fieldId = 8
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetIsPrivate {
-		fieldId = 9
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetHomePage {
-		fieldId = 10
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetPresetQuestions {
-		fieldId = 11
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetPluginIds {
-		fieldId = 12
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetLogo {
-		fieldId = 13
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetLabelIds {
-		fieldId = 14
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetNewLabelTexts_ {
-		fieldId = 15
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetModelConfig {
-		fieldId = 16
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -4162,99 +4183,99 @@ func (p *UpdateAppReq) ReadField1(iprot thrift.TProtocol) error {
 }
 func (p *UpdateAppReq) ReadField2(iprot thrift.TProtocol) error {
 
-	var _field string
+	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.Name = _field
 	return nil
 }
 func (p *UpdateAppReq) ReadField3(iprot thrift.TProtocol) error {
 
-	var _field string
+	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.Description = _field
 	return nil
 }
 func (p *UpdateAppReq) ReadField4(iprot thrift.TProtocol) error {
 
-	var _field string
+	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.DescriptionMd = _field
 	return nil
 }
 func (p *UpdateAppReq) ReadField5(iprot thrift.TProtocol) error {
 
-	var _field int64
+	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.ModelId = _field
 	return nil
 }
 func (p *UpdateAppReq) ReadField6(iprot thrift.TProtocol) error {
 
-	var _field bool
+	var _field *bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.EnableImage = _field
 	return nil
 }
 func (p *UpdateAppReq) ReadField7(iprot thrift.TProtocol) error {
 
-	var _field bool
+	var _field *bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.EnableFile = _field
 	return nil
 }
 func (p *UpdateAppReq) ReadField8(iprot thrift.TProtocol) error {
 
-	var _field string
+	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.Version = _field
 	return nil
 }
 func (p *UpdateAppReq) ReadField9(iprot thrift.TProtocol) error {
 
-	var _field bool
+	var _field *bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.IsPrivate = _field
 	return nil
 }
 func (p *UpdateAppReq) ReadField10(iprot thrift.TProtocol) error {
 
-	var _field string
+	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.HomePage = _field
 	return nil
@@ -4307,11 +4328,11 @@ func (p *UpdateAppReq) ReadField12(iprot thrift.TProtocol) error {
 }
 func (p *UpdateAppReq) ReadField13(iprot thrift.TProtocol) error {
 
-	var _field string
+	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.Logo = _field
 	return nil
@@ -4359,7 +4380,7 @@ func (p *UpdateAppReq) ReadField15(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.NewLabelTexts_ = _field
+	p.LabelTexts = _field
 	return nil
 }
 func (p *UpdateAppReq) ReadField16(iprot thrift.TProtocol) error {
@@ -4477,14 +4498,16 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("name", thrift.STRING, 2); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.Name); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetName() {
+		if err = oprot.WriteFieldBegin("name", thrift.STRING, 2); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Name); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4494,14 +4517,16 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("description", thrift.STRING, 3); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.Description); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetDescription() {
+		if err = oprot.WriteFieldBegin("description", thrift.STRING, 3); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Description); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4511,14 +4536,16 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("description_md", thrift.STRING, 4); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.DescriptionMd); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetDescriptionMd() {
+		if err = oprot.WriteFieldBegin("description_md", thrift.STRING, 4); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.DescriptionMd); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4528,14 +4555,16 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("model_id", thrift.I64, 5); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.ModelId); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetModelId() {
+		if err = oprot.WriteFieldBegin("model_id", thrift.I64, 5); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteI64(*p.ModelId); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4545,14 +4574,16 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("enable_image", thrift.BOOL, 6); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteBool(p.EnableImage); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetEnableImage() {
+		if err = oprot.WriteFieldBegin("enable_image", thrift.BOOL, 6); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteBool(*p.EnableImage); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4562,14 +4593,16 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("enable_file", thrift.BOOL, 7); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteBool(p.EnableFile); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetEnableFile() {
+		if err = oprot.WriteFieldBegin("enable_file", thrift.BOOL, 7); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteBool(*p.EnableFile); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4579,14 +4612,16 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("version", thrift.STRING, 8); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.Version); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetVersion() {
+		if err = oprot.WriteFieldBegin("version", thrift.STRING, 8); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Version); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4596,14 +4631,16 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("is_private", thrift.BOOL, 9); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteBool(p.IsPrivate); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetIsPrivate() {
+		if err = oprot.WriteFieldBegin("is_private", thrift.BOOL, 9); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteBool(*p.IsPrivate); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4613,14 +4650,16 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField10(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("home_page", thrift.STRING, 10); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.HomePage); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetHomePage() {
+		if err = oprot.WriteFieldBegin("home_page", thrift.STRING, 10); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.HomePage); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4630,22 +4669,24 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField11(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("preset_questions", thrift.LIST, 11); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.PresetQuestions)); err != nil {
-		return err
-	}
-	for _, v := range p.PresetQuestions {
-		if err := oprot.WriteString(v); err != nil {
+	if p.IsSetPresetQuestions() {
+		if err = oprot.WriteFieldBegin("preset_questions", thrift.LIST, 11); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteListBegin(thrift.STRING, len(p.PresetQuestions)); err != nil {
 			return err
 		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+		for _, v := range p.PresetQuestions {
+			if err := oprot.WriteString(v); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4655,22 +4696,24 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField12(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("plugin_ids", thrift.LIST, 12); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteListBegin(thrift.I64, len(p.PluginIds)); err != nil {
-		return err
-	}
-	for _, v := range p.PluginIds {
-		if err := oprot.WriteI64(v); err != nil {
+	if p.IsSetPluginIds() {
+		if err = oprot.WriteFieldBegin("plugin_ids", thrift.LIST, 12); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteListBegin(thrift.I64, len(p.PluginIds)); err != nil {
 			return err
 		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+		for _, v := range p.PluginIds {
+			if err := oprot.WriteI64(v); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4680,14 +4723,16 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField13(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("logo", thrift.STRING, 13); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.Logo); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetLogo() {
+		if err = oprot.WriteFieldBegin("logo", thrift.STRING, 13); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Logo); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4697,22 +4742,24 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField14(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("label_ids", thrift.LIST, 14); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteListBegin(thrift.I64, len(p.LabelIds)); err != nil {
-		return err
-	}
-	for _, v := range p.LabelIds {
-		if err := oprot.WriteI64(v); err != nil {
+	if p.IsSetLabelIds() {
+		if err = oprot.WriteFieldBegin("label_ids", thrift.LIST, 14); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteListBegin(thrift.I64, len(p.LabelIds)); err != nil {
 			return err
 		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+		for _, v := range p.LabelIds {
+			if err := oprot.WriteI64(v); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4722,22 +4769,24 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField15(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("new_label_texts", thrift.LIST, 15); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.NewLabelTexts_)); err != nil {
-		return err
-	}
-	for _, v := range p.NewLabelTexts_ {
-		if err := oprot.WriteString(v); err != nil {
+	if p.IsSetLabelTexts() {
+		if err = oprot.WriteFieldBegin("label_texts", thrift.LIST, 15); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteListBegin(thrift.STRING, len(p.LabelTexts)); err != nil {
 			return err
 		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+		for _, v := range p.LabelTexts {
+			if err := oprot.WriteString(v); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4747,14 +4796,16 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField16(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("model_config", thrift.STRUCT, 16); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := p.ModelConfig.Write(oprot); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetModelConfig() {
+		if err = oprot.WriteFieldBegin("model_config", thrift.STRUCT, 16); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.ModelConfig.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -4819,7 +4870,7 @@ func (p *UpdateAppReq) DeepEqual(ano *UpdateAppReq) bool {
 	if !p.Field14DeepEqual(ano.LabelIds) {
 		return false
 	}
-	if !p.Field15DeepEqual(ano.NewLabelTexts_) {
+	if !p.Field15DeepEqual(ano.LabelTexts) {
 		return false
 	}
 	if !p.Field16DeepEqual(ano.ModelConfig) {
@@ -4835,65 +4886,110 @@ func (p *UpdateAppReq) Field1DeepEqual(src int64) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field2DeepEqual(src string) bool {
+func (p *UpdateAppReq) Field2DeepEqual(src *string) bool {
 
-	if strings.Compare(p.Name, src) != 0 {
+	if p.Name == src {
+		return true
+	} else if p.Name == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Name, *src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *UpdateAppReq) Field3DeepEqual(src string) bool {
+func (p *UpdateAppReq) Field3DeepEqual(src *string) bool {
 
-	if strings.Compare(p.Description, src) != 0 {
+	if p.Description == src {
+		return true
+	} else if p.Description == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Description, *src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *UpdateAppReq) Field4DeepEqual(src string) bool {
+func (p *UpdateAppReq) Field4DeepEqual(src *string) bool {
 
-	if strings.Compare(p.DescriptionMd, src) != 0 {
+	if p.DescriptionMd == src {
+		return true
+	} else if p.DescriptionMd == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.DescriptionMd, *src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *UpdateAppReq) Field5DeepEqual(src int64) bool {
+func (p *UpdateAppReq) Field5DeepEqual(src *int64) bool {
 
-	if p.ModelId != src {
+	if p.ModelId == src {
+		return true
+	} else if p.ModelId == nil || src == nil {
+		return false
+	}
+	if *p.ModelId != *src {
 		return false
 	}
 	return true
 }
-func (p *UpdateAppReq) Field6DeepEqual(src bool) bool {
+func (p *UpdateAppReq) Field6DeepEqual(src *bool) bool {
 
-	if p.EnableImage != src {
+	if p.EnableImage == src {
+		return true
+	} else if p.EnableImage == nil || src == nil {
+		return false
+	}
+	if *p.EnableImage != *src {
 		return false
 	}
 	return true
 }
-func (p *UpdateAppReq) Field7DeepEqual(src bool) bool {
+func (p *UpdateAppReq) Field7DeepEqual(src *bool) bool {
 
-	if p.EnableFile != src {
+	if p.EnableFile == src {
+		return true
+	} else if p.EnableFile == nil || src == nil {
+		return false
+	}
+	if *p.EnableFile != *src {
 		return false
 	}
 	return true
 }
-func (p *UpdateAppReq) Field8DeepEqual(src string) bool {
+func (p *UpdateAppReq) Field8DeepEqual(src *string) bool {
 
-	if strings.Compare(p.Version, src) != 0 {
+	if p.Version == src {
+		return true
+	} else if p.Version == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Version, *src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *UpdateAppReq) Field9DeepEqual(src bool) bool {
+func (p *UpdateAppReq) Field9DeepEqual(src *bool) bool {
 
-	if p.IsPrivate != src {
+	if p.IsPrivate == src {
+		return true
+	} else if p.IsPrivate == nil || src == nil {
+		return false
+	}
+	if *p.IsPrivate != *src {
 		return false
 	}
 	return true
 }
-func (p *UpdateAppReq) Field10DeepEqual(src string) bool {
+func (p *UpdateAppReq) Field10DeepEqual(src *string) bool {
 
-	if strings.Compare(p.HomePage, src) != 0 {
+	if p.HomePage == src {
+		return true
+	} else if p.HomePage == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.HomePage, *src) != 0 {
 		return false
 	}
 	return true
@@ -4924,9 +5020,14 @@ func (p *UpdateAppReq) Field12DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field13DeepEqual(src string) bool {
+func (p *UpdateAppReq) Field13DeepEqual(src *string) bool {
 
-	if strings.Compare(p.Logo, src) != 0 {
+	if p.Logo == src {
+		return true
+	} else if p.Logo == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Logo, *src) != 0 {
 		return false
 	}
 	return true
@@ -4946,10 +5047,10 @@ func (p *UpdateAppReq) Field14DeepEqual(src []int64) bool {
 }
 func (p *UpdateAppReq) Field15DeepEqual(src []string) bool {
 
-	if len(p.NewLabelTexts_) != len(src) {
+	if len(p.LabelTexts) != len(src) {
 		return false
 	}
-	for i, v := range p.NewLabelTexts_ {
+	for i, v := range p.LabelTexts {
 		_src := src[i]
 		if strings.Compare(v, _src) != 0 {
 			return false
@@ -6043,7 +6144,7 @@ func (p *AppLabel) Field3DeepEqual(src *base.Time) bool {
 
 type ListAppLabelReq struct {
 	Pagination *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
-	Text       string              `thrift:"text,2,required" frugal:"2,required,string" json:"text"`
+	Text       *string             `thrift:"text,2,optional" frugal:"2,optional,string" json:"text,omitempty"`
 }
 
 func NewListAppLabelReq() *ListAppLabelReq {
@@ -6062,13 +6163,18 @@ func (p *ListAppLabelReq) GetPagination() (v *base.PaginationReq) {
 	return p.Pagination
 }
 
+var ListAppLabelReq_Text_DEFAULT string
+
 func (p *ListAppLabelReq) GetText() (v string) {
-	return p.Text
+	if !p.IsSetText() {
+		return ListAppLabelReq_Text_DEFAULT
+	}
+	return *p.Text
 }
 func (p *ListAppLabelReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
 }
-func (p *ListAppLabelReq) SetText(val string) {
+func (p *ListAppLabelReq) SetText(val *string) {
 	p.Text = val
 }
 
@@ -6081,12 +6187,15 @@ func (p *ListAppLabelReq) IsSetPagination() bool {
 	return p.Pagination != nil
 }
 
+func (p *ListAppLabelReq) IsSetText() bool {
+	return p.Text != nil
+}
+
 func (p *ListAppLabelReq) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
-	var issetText bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -6116,7 +6225,6 @@ func (p *ListAppLabelReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetText = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -6135,11 +6243,6 @@ func (p *ListAppLabelReq) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetPagination {
 		fieldId = 1
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetText {
-		fieldId = 2
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -6170,11 +6273,11 @@ func (p *ListAppLabelReq) ReadField1(iprot thrift.TProtocol) error {
 }
 func (p *ListAppLabelReq) ReadField2(iprot thrift.TProtocol) error {
 
-	var _field string
+	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.Text = _field
 	return nil
@@ -6230,14 +6333,16 @@ WriteFieldEndError:
 }
 
 func (p *ListAppLabelReq) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("text", thrift.STRING, 2); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.Text); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetText() {
+		if err = oprot.WriteFieldBegin("text", thrift.STRING, 2); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Text); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -6276,9 +6381,14 @@ func (p *ListAppLabelReq) Field1DeepEqual(src *base.PaginationReq) bool {
 	}
 	return true
 }
-func (p *ListAppLabelReq) Field2DeepEqual(src string) bool {
+func (p *ListAppLabelReq) Field2DeepEqual(src *string) bool {
 
-	if strings.Compare(p.Text, src) != 0 {
+	if p.Text == src {
+		return true
+	} else if p.Text == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Text, *src) != 0 {
 		return false
 	}
 	return true

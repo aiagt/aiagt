@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 
-	"github.com/aiagt/aiagt/app/plugin/mapping"
+	"github.com/aiagt/aiagt/app/plugin/mapper"
 
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc"
 )
@@ -16,7 +16,7 @@ func (s *PluginServiceImpl) ListPluginLabel(ctx context.Context, req *pluginsvc.
 	}
 
 	resp = &pluginsvc.ListPluginLabelResp{
-		Labels:     mapping.NewGenListPluginLabel(list),
+		Labels:     mapper.NewGenListPluginLabel(list),
 		Pagination: page,
 	}
 

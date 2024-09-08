@@ -10,6 +10,7 @@ import (
 	ktserver "github.com/aiagt/kitextool/suite/server"
 	"github.com/cloudwego/kitex/server"
 	"github.com/cloudwego/kitex/transport"
+	"gorm.io/gorm"
 	"log"
 
 	"github.com/aiagt/aiagt/app/plugin/handler"
@@ -23,7 +24,7 @@ func main() {
 		server.WithSuite(ktserver.NewKitexToolSuite(
 			conf.Conf(),
 			ktserver.WithTransport(transport.TTHeaderFramed),
-			ktdb.WithDB(ktdb.NewMySQLDial()),
+			ktdb.WithDB(ktdb.NewMySQLDial(), ktdb.WithGormConf(&gorm.Config{TranslateError: true})),
 		)),
 		server.WithSuite(serversuite.NewServerSuite(rpc.UserCli)))
 

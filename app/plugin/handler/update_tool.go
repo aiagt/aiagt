@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 
-	"github.com/aiagt/aiagt/app/plugin/mapping"
+	"github.com/aiagt/aiagt/app/plugin/mapper"
 	"github.com/aiagt/aiagt/common/bizerr"
 	"github.com/aiagt/aiagt/common/ctxutil"
 
@@ -27,7 +27,7 @@ func (s *PluginServiceImpl) UpdateTool(ctx context.Context, req *pluginsvc.Updat
 		return nil, bizUpdateTool.CodeErr(bizerr.ErrCodeForbidden)
 	}
 
-	newTool := mapping.NewModelUpdatePluginTool(req)
+	newTool := mapper.NewModelUpdatePluginTool(req)
 
 	err = s.toolDao.Update(ctx, req.Id, newTool)
 	if err != nil {

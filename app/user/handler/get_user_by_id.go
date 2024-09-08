@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 
-	"github.com/aiagt/aiagt/app/user/mapping"
+	"github.com/aiagt/aiagt/app/user/mapper"
 
 	base "github.com/aiagt/aiagt/kitex_gen/base"
 	usersvc "github.com/aiagt/aiagt/kitex_gen/usersvc"
@@ -12,7 +12,11 @@ import (
 // GetUserByID implements the UserServiceImpl interface.
 func (s *UserServiceImpl) GetUserByID(ctx context.Context, req *base.IDReq) (resp *usersvc.User, err error) {
 	user, err := s.userDao.GetByID(ctx, req.Id)
-	resp = mapping.NewGenUser(user)
+	if err != nil {
+		return nil, bizGetUserByID.NewErr(err)
+	}
+
+	resp = mapper.NewGenUser(user)
 
 	return
 }

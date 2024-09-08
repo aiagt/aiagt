@@ -1,7 +1,7 @@
 package main
 
 const confYamlTpl = `server:
-  name: {{ .ServiceName }}
+  name: {{ .Service.Name }}
   address: ":8888"
 
 config_center:

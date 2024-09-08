@@ -5,7 +5,7 @@ import (
 
 	"github.com/aiagt/aiagt/common/ctxutil"
 
-	"github.com/aiagt/aiagt/app/plugin/mapping"
+	"github.com/aiagt/aiagt/app/plugin/mapper"
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc"
 )
 
@@ -19,7 +19,7 @@ func (s *PluginServiceImpl) ListPlugin(ctx context.Context, req *pluginsvc.ListP
 	}
 
 	resp = &pluginsvc.ListPluginResp{
-		Plugins:    mapping.NewGenListPlugin(plugins),
+		Plugins:    mapper.NewGenListPlugin(plugins),
 		Pagination: page,
 	}
 

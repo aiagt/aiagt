@@ -46,3 +46,18 @@ func (p *PluginSecret) HashKey(key string) string {
 		return ""
 	}
 }
+
+type PluginOptional struct {
+	Name          *string         `gorm:"column:name"`
+	Description   *string         `gorm:"column:description"`
+	DescriptionMd *string         `gorm:"column:description_md;type:text"`
+	AuthorID      *int64          `gorm:"column:author_id;index"`
+	IsPrivate     *bool           `gorm:"column:is_private"`
+	HomePage      *string         `gorm:"column:home_page"`
+	EnableSecret  *bool           `gorm:"column:enable_secret"`
+	Secrets       []*PluginSecret `gorm:"column:secrets;serializer:json;type:json"`
+	LabelIDs      []int64         `gorm:"column:label_ids;serializer:json;type:json"`
+	ToolIDs       []int64         `gorm:"column:tool_ids;serializer:json;type:json"`
+	Logo          *string         `gorm:"column:logo"`
+	PublishedAt   *time.Time      `gorm:"column:published_at"`
+}

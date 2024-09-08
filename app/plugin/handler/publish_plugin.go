@@ -38,7 +38,7 @@ func (s *PluginServiceImpl) PublishPlugin(ctx context.Context, req *base.IDReq) 
 
 	now := time.Now()
 
-	err = s.pluginDao.Update(ctx, req.Id, &model.Plugin{PublishedAt: &now})
+	err = s.pluginDao.Update(ctx, req.Id, &model.PluginOptional{PublishedAt: &now})
 	if err != nil {
 		return nil, bizPublishPlugin.NewErr(err)
 	}

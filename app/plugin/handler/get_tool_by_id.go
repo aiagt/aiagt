@@ -6,7 +6,7 @@ import (
 	"github.com/aiagt/aiagt/common/bizerr"
 	"github.com/aiagt/aiagt/common/ctxutil"
 
-	"github.com/aiagt/aiagt/app/plugin/mapping"
+	"github.com/aiagt/aiagt/app/plugin/mapper"
 
 	base "github.com/aiagt/aiagt/kitex_gen/base"
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc"
@@ -28,7 +28,7 @@ func (s *PluginServiceImpl) GetToolByID(ctx context.Context, req *base.IDReq) (r
 		return nil, bizGetToolByID.CodeErr(bizerr.ErrCodeForbidden)
 	}
 
-	resp = mapping.NewGenPluginTool(tool)
+	resp = mapper.NewGenPluginTool(tool)
 
 	return
 }

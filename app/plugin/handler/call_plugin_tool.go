@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+
 	"github.com/aiagt/aiagt/app/plugin/pkg/call"
 	"github.com/aiagt/aiagt/common/bizerr"
 	"github.com/aiagt/aiagt/common/ctxutil"
@@ -28,7 +29,11 @@ func (s *PluginServiceImpl) CallPluginTool(ctx context.Context, req *pluginsvc.C
 		return nil, bizDeleteTool.NewErr(err)
 	}
 
-	userID := ctxutil.UserID(ctx)
+	userID, ok := ctxutil.GetUserID(ctx)
+	if !ok {
+		return nil, bizDeleteTool.NewErr(err)
+	}
+
 	if plugin.AuthorID != userID {
 		return nil, bizDeleteTool.CodeErr(bizerr.ErrCodeForbidden)
 	}
@@ -38,7 +43,6 @@ func (s *PluginServiceImpl) CallPluginTool(ctx context.Context, req *pluginsvc.C
 			PageSize: int32(len(plugin.Secrets)),
 		},
 		PluginId: &req.PluginId,
-		UserId:   &userID,
 	})
 	if err != nil {
 		return nil, bizDeleteTool.NewErr(err)

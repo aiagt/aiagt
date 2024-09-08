@@ -22,8 +22,10 @@ func NewBiz(serviceName, interfaceName string, codePrefix int) *Biz {
 
 func (i *Biz) NewCodeErr(code ErrCode, err error) *BizError {
 	return &BizError{
-		Code: i.Code + code,
-		Err:  fmt.Errorf("service: %s, interface: %s, error: %w", i.ServiceName, i.InterfaceName, err),
+		Code:          i.Code + code,
+		ServiceName:   i.ServiceName,
+		InterfaceName: i.InterfaceName,
+		Err:           err,
 	}
 }
 
@@ -33,6 +35,15 @@ func (i *Biz) CodeErr(code ErrCode) *BizError {
 		err = errors.New("unknown error")
 	}
 	return i.NewCodeErr(code, err)
+}
+
+func (i *Biz) CallErr(err error) *BizError {
+	be := new(BizError)
+	ok := errors.As(err, &be)
+	if ok {
+		return be
+	}
+	return i.NewErr(err)
 }
 
 func (i *Biz) NewErr(err error) *BizError {
@@ -45,12 +56,30 @@ func (i *Biz) NewErr(err error) *BizError {
 }
 
 type BizError struct {
-	Code ErrCode
-	Err  error
+	Code          ErrCode
+	Err           error
+	ServiceName   string
+	InterfaceName string
+}
+
+func (e *BizError) BizStatusCode() int32 {
+	return int32(e.Code)
+}
+
+func (e *BizError) BizMessage() string {
+	return e.Err.Error()
+}
+
+func (e *BizError) BizExtra() map[string]string {
+	return map[string]string{
+		"service_name":   e.ServiceName,
+		"interface_name": e.InterfaceName,
+		"error":          e.Err.Error(),
+	}
 }
 
 func (e *BizError) Error() string {
-	return fmt.Sprintf("[BizErr] Code: %d, Msg: %s", e.Code, e.Err.Error())
+	return fmt.Sprintf("[bizerr] service_name: %s, interface_name: %s, code: %d, error: %s", e.ServiceName, e.InterfaceName, e.Code, e.Err.Error())
 }
 
 type ErrCode int
@@ -63,6 +92,7 @@ const (
 	ErrCodeForbidden     ErrCode = 42
 	ErrCodeNotExists     ErrCode = 43
 	ErrCodeAlreadyExists ErrCode = 44
+	ErrCodeWrongAuth     ErrCode = 45
 )
 
 var (
@@ -71,6 +101,7 @@ var (
 	ErrForbidden     = errors.New("forbidden")
 	ErrNotExists     = errors.New("not exists")
 	ErrAlreadyExists = errors.New("already exists")
+	ErrWrongAuth     = errors.New("validation information does not match")
 
 	ErrMap = map[ErrCode]error{
 		ErrCodeBadRequest:    ErrBadRequest,
@@ -78,5 +109,6 @@ var (
 		ErrCodeForbidden:     ErrForbidden,
 		ErrCodeNotExists:     ErrNotExists,
 		ErrCodeAlreadyExists: ErrAlreadyExists,
+		ErrCodeWrongAuth:     ErrWrongAuth,
 	}
 )

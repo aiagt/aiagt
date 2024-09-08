@@ -18,15 +18,19 @@ func main() {
 	var (
 		serviceName string
 		servicePath string
+		models      flagSlice[string]
 	)
 
 	flag.StringVar(&serviceName, "service_name", "", "service name")
 	flag.StringVar(&servicePath, "service_path", "", "path to service directory")
+	flag.Var(&models, "model", "model name")
 	flag.Parse()
 
 	if serviceName == "" {
 		serviceName = filepath.Base(servicePath)
 	}
+
+	models = append(models, serviceName)
 
 	handlers, err := ParseHandlers(servicePath, serviceName)
 	if err != nil {
@@ -42,29 +46,26 @@ func main() {
 	m := multi_error.NewMultiError2[string, *Template]()
 	m.Run(render.RenderTemplate, path("conf/conf.go"), ConfTpl).Expect("Render conf error")
 	m.Run(render.RenderTemplate, path("conf/conf.yaml"), ConfYamlTpl).Expect("Render conf.yaml error")
-	m.Run(render.RenderTemplate, path("dal/db/%s.go", render.SnakeServiceName), DalDBTpl).Expect("Render dal.db error")
 	m.Run(render.RenderTemplate, path("model/base.go"), ModelBaseTpl).Expect("Render model.base error")
-	m.Run(render.RenderTemplate, path("model/%s.go", render.SnakeServiceName), ModelTpl).Expect("Render model error")
 	m.Run(render.RenderTemplate, path("handler/handler_bizerr.go"), HandlerBizerrTpl).Expect("Render handler.bizerr error")
+
+	for _, model := range models {
+		render.Model = NewName(model)
+		m.Run(render.RenderTemplate, path("dal/db/%s.go", model), DalDBTpl).Expect("Render dal.db error")
+		m.Run(render.RenderTemplate, path("model/%s.go", model), ModelTpl).Expect("Render model error")
+	}
 }
 
 type Render struct {
-	ServiceName           string
-	CamelServiceName      string
-	LowerCamelServiceName string
-	SnakeServiceName      string
-	Service               *Name
-	Handlers              []*Name
+	Service  *Name
+	Model    *Name
+	Handlers []*Name
 }
 
 func NewRender(serviceName string, handlers []string) *Render {
 	return &Render{
-		ServiceName:           serviceName,
-		CamelServiceName:      strcase.ToCamel(serviceName),
-		LowerCamelServiceName: strcase.ToLowerCamel(serviceName),
-		SnakeServiceName:      strcase.ToSnake(serviceName),
-		Service:               NewName(serviceName),
-		Handlers:              NewNames(handlers),
+		Service:  NewName(serviceName),
+		Handlers: NewNames(handlers),
 	}
 }
 
@@ -96,7 +97,9 @@ func (t *Render) RenderTemplate(path string, tpl *Template) error {
 		return errors.Wrap(err, "tpl.Execute error")
 	}
 
-	FormatGoFile(path)
+	if filepath.Ext(path) == ".go" {
+		FormatGoFile(path)
+	}
 
 	return nil
 }
@@ -179,4 +182,15 @@ func FormatGoFile(file string) {
 	if err != nil {
 		logger.Warnf("format go file %s error: %v", file, err)
 	}
+}
+
+type flagSlice[T any] []T
+
+func (s *flagSlice[T]) Set(value T) error {
+	*s = append(*s, value)
+	return nil
+}
+
+func (s *flagSlice[T]) String() string {
+	return fmt.Sprint(*s)
 }

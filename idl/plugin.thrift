@@ -79,18 +79,18 @@ struct CreatePluginReq {
 
 struct UpdatePluginReq {
     1: required i64 id
-    2: required i64 key
-    3: required string name
-    4: required string description
-    5: required string description_md
-    6: required bool is_private
-    7: required string home_page
-    8: required bool enable_secret
-    9: required list<PluginSecret> secrets
-    10: required list<i64> label_ids
-    11: required list<string> label_texts
-    12: required list<i64> tool_ids
-    13: required string logo
+    2: optional i64 key
+    3: optional string name
+    4: optional string description
+    5: optional string description_md
+    6: optional bool is_private
+    7: optional string home_page
+    8: optional bool enable_secret
+    9: optional list<PluginSecret> secrets
+    10: optional list<i64> label_ids
+    11: optional list<string> label_texts
+    12: optional list<i64> tool_ids
+    13: optional string logo
 }
 
 struct ListPluginReq {
@@ -118,19 +118,18 @@ struct CreatePluginToolReq {
 
 struct UpdatePluginToolReq {
     1: required i64 id
-    2: required string name
-    3: required string description
-    4: required i64 plugin_id
-    5: required string request_type
-    6: required string response_type
-    7: required string api_url
+    2: optional string name
+    3: optional string description
+    4: optional i64 plugin_id
+    5: optional string request_type
+    6: optional string response_type
+    7: optional string api_url
     8: optional i64 import_model_id
 }
 
 struct ListPluginToolReq {
     1: required base.PaginationReq pagination;
-    2: optional i64 plugin_id;
-    3: optional i64 author_id;
+    2: required i64 plugin_id;
 }
 
 struct ListPluginToolResp {

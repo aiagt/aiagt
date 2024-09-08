@@ -12,7 +12,9 @@ gen-rpc:
 	kitex -module github.com/aiagt/aiagt -service ${svc}service -use github.com/aiagt/aiagt/kitex_gen -I ../../idl/ ../../idl/${svc}.thrift && \
 	gen_handler --service_path=. --remove_handler=true
 
+model_list = $(foreach model,$(models),-model $(model))
+
 init-rpc:
 	@cd app/${svc} && \
 	gen_handler --service_path=. --remove_handler=true && \
-	init_service --service_path=. --service_name=${svc}
+	init_service --service_path=. --service_name=${svc} ${model_list}

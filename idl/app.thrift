@@ -62,21 +62,21 @@ struct CreateAppReq {
 
 struct UpdateAppReq {
     1: required i64 id
-    2: required string name
-    3: required string description
-    4: required string description_md
-    5: required i64 model_id
-    6: required bool enable_image
-    7: required bool enable_file
-    8: required string version
-    9: required bool is_private
-    10: required string home_page
-    11: required list<string> preset_questions
-    12: required list<i64> plugin_ids
-    13: required string logo
-    14: required list<i64> label_ids
-    15: required list<string> label_texts
-    16: required ModelConfig model_config
+    2: optional string name
+    3: optional string description
+    4: optional string description_md
+    5: optional i64 model_id
+    6: optional bool enable_image
+    7: optional bool enable_file
+    8: optional string version
+    9: optional bool is_private
+    10: optional string home_page
+    11: optional list<string> preset_questions
+    12: optional list<i64> plugin_ids
+    13: optional string logo
+    14: optional list<i64> label_ids
+    15: optional list<string> label_texts
+    16: optional ModelConfig model_config
 }
 
 struct ListAppReq {

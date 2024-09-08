@@ -6,7 +6,7 @@ import (
 	"context"
 	"math"
 
-	"github.com/aiagt/aiagt/app/{{ .ServiceName }}/model"
+	"github.com/aiagt/aiagt/app/{{ .Service.Name }}/model"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/pkg/errors"
 
@@ -14,47 +14,47 @@ import (
 	"gorm.io/gorm"
 )
 
-type {{ .CamelServiceName }}Dao struct {
-	m *model.{{ .CamelServiceName }}
+type {{ .Model.Camel }}Dao struct {
+	m *model.{{ .Model.Camel }}
 }
 
-// New{{ .CamelServiceName }}Dao make {{ .SnakeServiceName }} dao
-func New{{ .CamelServiceName }}Dao() *{{ .CamelServiceName }}Dao {
-	return &{{ .CamelServiceName }}Dao{m: new(model.{{ .CamelServiceName }})}
+// New{{ .Model.Camel }}Dao make {{ .Model.Camel }} dao
+func New{{ .Model.Camel }}Dao() *{{ .Model.Camel }}Dao {
+	return &{{ .Model.Camel }}Dao{m: new(model.{{ .Model.Camel }})}
 }
 
-func (d *{{ .CamelServiceName }}Dao) db(ctx context.Context) *gorm.DB {
+func (d *{{ .Model.Camel }}Dao) db(ctx context.Context) *gorm.DB {
 	return ktdb.DBCtx(ctx)
 }
 
-// GetByID get {{ .SnakeServiceName }} by id
-func (d *{{ .CamelServiceName }}Dao) GetByID(ctx context.Context, id int64) (*model.{{ .CamelServiceName }}, error) {
-	var result model.{{ .CamelServiceName }}
+// GetByID get {{ .Model.Snake }} by id
+func (d *{{ .Model.Camel }}Dao) GetByID(ctx context.Context, id int64) (*model.{{ .Model.Camel }}, error) {
+	var result model.{{ .Model.Camel }}
 
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).First(&result).Error
 	if err != nil {
-		return nil, errors.Wrap(err, "{{ .SnakeServiceName }} dao get by id error")
+		return nil, errors.Wrap(err, "{{ .Model.Snake }} dao get by id error")
 	}
 
 	return &result, nil
 }
 
-// GetByIDs get {{ .Service.Name }} list by ids
-func (d *{{ .Service.Camel }}Dao) GetByIDs(ctx context.Context, ids []int64) ([]*model.{{ .Service.Camel }}, error) {
-	var result []*model.{{ .Service.Camel }}
+// GetByIDs get {{ .Model.Snake }} list by ids
+func (d *{{ .Model.Camel }}Dao) GetByIDs(ctx context.Context, ids []int64) ([]*model.{{ .Model.Camel }}, error) {
+	var result []*model.{{ .Model.Camel }}
 
 	err := d.db(ctx).Model(d.m).Where("id in ?", ids).Find(&result).Error
 	if err != nil {
-		return nil, errors.Wrap(err, "{{ .Service.Name }} dao get by ids error")
+		return nil, errors.Wrap(err, "{{ .Model.Snake }} dao get by ids error")
 	}
 
 	return result, nil
 }
 
-// List get {{ .SnakeServiceName }} list
-func (d *{{ .CamelServiceName }}Dao) List(ctx context.Context, page *base.PaginationReq) ([]*model.{{ .CamelServiceName }}, *base.PaginationResp, error) {
+// List get {{ .Model.Snake }} list
+func (d *{{ .Model.Camel }}Dao) List(ctx context.Context, page *base.PaginationReq) ([]*model.{{ .Model.Camel }}, *base.PaginationResp, error) {
 	var (
-		list   []*model.{{ .CamelServiceName }}
+		list   []*model.{{ .Model.Camel }}
 		total  int64
 		offset = int((page.Page-1)*page.PageSize)
 		limit  = int(page.PageSize)
@@ -63,7 +63,7 @@ func (d *{{ .CamelServiceName }}Dao) List(ctx context.Context, page *base.Pagina
 
 	err := d.db(ctx).Model(d.m).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
 	if err != nil {
-		return nil, nil, errors.Wrap(err, "{{ .SnakeServiceName }} dao get page error")
+		return nil, nil, errors.Wrap(err, "{{ .Model.Snake }} dao get page error")
 	}
 
 	pageTotal := int32(math.Ceil(float64(total) / float64(page.PageSize)))
@@ -72,31 +72,31 @@ func (d *{{ .CamelServiceName }}Dao) List(ctx context.Context, page *base.Pagina
 	return list, pageResp, nil
 }
 
-// Create insert a {{ .SnakeServiceName }} record
-func (d *{{ .CamelServiceName }}Dao) Create(ctx context.Context, m *model.{{ .CamelServiceName }}) error {
+// Create insert a {{ .Model.Snake }} record
+func (d *{{ .Model.Camel }}Dao) Create(ctx context.Context, m *model.{{ .Model.Camel }}) error {
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
-		return errors.Wrap(err, "{{ .SnakeServiceName }} dao create error")
+		return errors.Wrap(err, "{{ .Model.Snake }} dao create error")
 	}
 
 	return nil
 }
 
-// Update {{ .SnakeServiceName }} by id
-func (d *{{ .CamelServiceName }}Dao) Update(ctx context.Context, id int64, m *model.{{ .CamelServiceName }}) error {
+// Update {{ .Model.Snake }} by id
+func (d *{{ .Model.Camel }}Dao) Update(ctx context.Context, id int64, m *model.{{ .Model.Camel }}Optional) error {
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).Updates(m).Error
 	if err != nil {
-		return errors.Wrap(err, "{{ .SnakeServiceName }} dao update error")
+		return errors.Wrap(err, "{{ .Model.Snake }} dao update error")
 	}
 
 	return nil
 }
 
-// Delete delete {{ .SnakeServiceName }} by id
-func (d *{{ .CamelServiceName }}Dao) Delete(ctx context.Context, id int64) error {
+// Delete delete {{ .Model.Snake }} by id
+func (d *{{ .Model.Camel }}Dao) Delete(ctx context.Context, id int64) error {
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).Delete(d.m).Error
 	if err != nil {
-		return errors.Wrap(err, "{{ .SnakeServiceName }} dao delete error")
+		return errors.Wrap(err, "{{ .Model.Snake }} dao delete error")
 	}
 
 	return nil

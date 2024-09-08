@@ -28,81 +28,90 @@ struct Secret {
 
 struct RegisterReq {
     1: required string email
-    2: required string password
-    3: required i32 captcha
+    2: required string captcha
+    3: required string username
+    4: required string password
 }
 
 struct RegisterResp {
     1: required string token
-    2: required i64 id
+    2: required base.Time expire
+    3: required User user
 }
 
 struct LoginReq {
     1: required string email
-    2: required string password
-    3: required i32 captcha
+    2: optional string password
+    3: optional string captcha
 }
 
 struct LoginResp {
     1: required string token
-    2: required string id
+    2: required base.Time expire
+    3: required User user
 }
 
 struct UpdateUserReq {
     1: required i64 id
-    2: required string username
-    3: required string password
-    4: required string email
-    5: required string phone_number
-    6: required string signature
-    7: required string homepage
-    8: required string description_md
-    9: required string github
-    10: required string avatar
+    2: optional string username
+    3: optional string email
+    4: optional string phone_number
+    5: optional string signature
+    6: optional string homepage
+    7: optional string description_md
+    8: optional string github
+    9: optional string avatar
 }
 
-struct ForgotPasswordReq {
+struct ResetPasswordReq {
     1: required string email
-    2: required i32 captcha
-    3: required string new_password
-}
-
-struct ForgotPasswordResp {
-    1: required string token
-    2: required i64 id
+    2: required string captcha
+    3: required string password
 }
 
 struct CreateSecretReq {
-    1: required i64 user_id
-    2: required i64 plugin_id
-    3: required string name
-    4: required string value
+    1: required i64 plugin_id
+    2: required string name
+    3: required string value
 }
 
 struct UpdateSecretReq {
     1: required i64 id
-    2: required i64 user_id
-    3: required i64 plugin_id
-    4: required string name
-    5: required string value
+    2: optional i64 plugin_id
+    3: optional string name
+    4: optional string value
 }
 
 struct ListSecretReq {
     1: required base.PaginationReq pagination
     2: optional i64 plugin_id
-    3: optional i64 user_id
-    4: optional string name
+    3: optional string name
 }
 
 struct ListSecretResp {
     1: required base.PaginationResp pagination
-    2: required list<Secret> secrets;
+    2: required list<Secret> secrets
+}
+
+enum CaptchaType {
+    AUTH
+    RESET
+}
+
+struct SendCaptchaReq {
+    1: required string email
+    2: required CaptchaType type
+}
+
+struct SendCaptchaResp {
+    1: required bool exists
 }
 
 service UserService {
     RegisterResp Register(1: RegisterReq req)
     LoginResp Login(1: LoginReq req)
-    ForgotPasswordResp ForgotPassword(1: ForgotPasswordReq req)
+    base.Empty ResetPassword(1: ResetPasswordReq req)
+    SendCaptchaResp SendCaptcha(1: SendCaptchaReq req)
 
     base.Empty UpdateUser(1: UpdateUserReq req)
     User GetUser()

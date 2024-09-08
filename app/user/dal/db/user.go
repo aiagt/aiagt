@@ -2,13 +2,13 @@ package db
 
 import (
 	"context"
+	"github.com/aiagt/aiagt/common/ctxutil"
 	"math"
 
 	"github.com/aiagt/aiagt/app/user/model"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/pkg/errors"
 
-	ktdb "github.com/aiagt/kitextool/option/server/db"
 	"gorm.io/gorm"
 )
 
@@ -22,7 +22,7 @@ func NewUserDao() *UserDao {
 }
 
 func (d *UserDao) db(ctx context.Context) *gorm.DB {
-	return ktdb.DBCtx(ctx)
+	return ctxutil.Tx(ctx)
 }
 
 // GetByID get user by id
@@ -80,7 +80,7 @@ func (d *UserDao) Create(ctx context.Context, m *model.User) error {
 }
 
 // Update user by id
-func (d *UserDao) Update(ctx context.Context, id int64, m *model.User) error {
+func (d *UserDao) Update(ctx context.Context, id int64, m *model.UserOptional) error {
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).Updates(m).Error
 	if err != nil {
 		return errors.Wrap(err, "user dao update error")
@@ -97,4 +97,15 @@ func (d *UserDao) Delete(ctx context.Context, id int64) error {
 	}
 
 	return nil
+}
+
+func (d *UserDao) GetByEmail(ctx context.Context, email string) (*model.User, error) {
+	var result model.User
+
+	err := d.db(ctx).Model(d.m).Where("email = ?", email).First(&result).Error
+	if err != nil {
+		return nil, errors.Wrap(err, "user dao get by email error")
+	}
+
+	return &result, nil
 }
