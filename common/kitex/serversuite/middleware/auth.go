@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"github.com/aiagt/aiagt/common/bizerr"
 
 	"github.com/aiagt/aiagt/app/user/pkg/jwt"
 	"github.com/aiagt/aiagt/common/ctxutil"
@@ -38,6 +39,10 @@ func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 
 		token := ctxutil.Token(ctx)
 		id, err := jwt.ParseToken(token)
+		if err != nil {
+			biz := bizerr.NewBiz("auth", "auth", 4000000)
+			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized))
+		}
 
 		return next(ctxutil.WithUserID(ctx, id), req, resp)
 	}

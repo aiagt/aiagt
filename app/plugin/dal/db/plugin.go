@@ -52,9 +52,13 @@ func (d *PluginDao) List(ctx context.Context, req *pluginsvc.ListPluginReq, user
 
 	err := d.db(ctx).Model(d.m).Scopes(func(db *gorm.DB) *gorm.DB {
 		if req.AuthorId == nil {
-			db = db.Where("is_private = ? OR author_id = ?", false, userID)
-		} else if *req.AuthorId != userID {
-			db = db.Where("is_private = ?", false)
+			db = db.Where("author_id = ? OR is_private = ?", userID, false)
+		} else {
+			if *req.AuthorId != userID {
+				db = db.Where("author_id = ? AND is_private = ?", *req.AuthorId, false)
+			} else {
+				db = db.Where("author_id = ?", *req.AuthorId)
+			}
 		}
 		if req.Name != nil {
 			db = db.Where("name LIKE ?", fmt.Sprintf("%%%s%%", *req.Name))
