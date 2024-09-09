@@ -17,7 +17,7 @@ struct App {
     9: required bool is_private
     10: required string home_page
     11: required list<string> preset_questions
-    12: required list<plugin.Plugin> plugins
+    12: required list<plugin.PluginTool> tools
     13: required string logo
     14: required user.User author
     15: required list<string> labels
@@ -53,7 +53,7 @@ struct CreateAppReq {
     8: required bool is_private
     9: required string home_page
     10: required list<string> preset_questions
-    11: required list<i64> plugin_ids
+    11: required list<i64> tool_ids
     12: required string logo
     13: required list<i64> label_ids
     14: required list<string> label_texts
@@ -72,7 +72,7 @@ struct UpdateAppReq {
     9: optional bool is_private
     10: optional string home_page
     11: optional list<string> preset_questions
-    12: optional list<i64> plugin_ids
+    12: optional list<i64> tool_ids
     13: optional string logo
     14: optional list<i64> label_ids
     15: optional list<string> label_texts

@@ -8,6 +8,7 @@ require (
 	github.com/aiagt/kitextool v0.0.2
 	github.com/apache/thrift v0.16.0
 	github.com/bwmarrin/snowflake v0.3.0
+	github.com/bytedance/gopkg v0.1.0
 	github.com/cloudwego/hertz v0.9.3
 	github.com/cloudwego/kitex v0.10.3
 	github.com/golang-jwt/jwt/v5 v5.2.1
@@ -17,14 +18,15 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.5.3
 	github.com/stretchr/testify v1.8.4
+	gorm.io/datatypes v1.2.1
 	gorm.io/gorm v1.25.11
 )
 
 require (
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/bytedance/go-tagexpr/v2 v2.9.2 // indirect
-	github.com/bytedance/gopkg v0.1.0 // indirect
 	github.com/bytedance/sonic v1.12.0 // indirect
 	github.com/bytedance/sonic/loader v0.2.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
@@ -43,7 +45,7 @@ require (
 	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-errors/errors v1.0.1 // indirect
-	github.com/go-sql-driver/mysql v1.7.0 // indirect
+	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/pprof v0.0.0-20230509042627-b1315fad0c5a // indirect
 	github.com/henrylee2cn/ameda v1.4.10 // indirect

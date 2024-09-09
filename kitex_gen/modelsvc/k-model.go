@@ -415,8 +415,6 @@ func (p *GenTokenReq) FastRead(buf []byte) (int, error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetAppId bool = false
-	var issetUserId bool = false
-	var issetPluginId bool = false
 	var issetConversationId bool = false
 	var issetCallLimit bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
@@ -457,7 +455,6 @@ func (p *GenTokenReq) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
-				issetUserId = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -472,21 +469,6 @@ func (p *GenTokenReq) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
-				issetPluginId = true
-			} else {
-				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
-				offset += l
-				if err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 4:
-			if fieldTypeId == thrift.I64 {
-				l, err = p.FastReadField4(buf[offset:])
-				offset += l
-				if err != nil {
-					goto ReadFieldError
-				}
 				issetConversationId = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
@@ -495,9 +477,9 @@ func (p *GenTokenReq) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
-		case 5:
+		case 4:
 			if fieldTypeId == thrift.I32 {
-				l, err = p.FastReadField5(buf[offset:])
+				l, err = p.FastReadField4(buf[offset:])
 				offset += l
 				if err != nil {
 					goto ReadFieldError
@@ -535,23 +517,13 @@ func (p *GenTokenReq) FastRead(buf []byte) (int, error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetUserId {
-		fieldId = 2
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetPluginId {
+	if !issetConversationId {
 		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetConversationId {
-		fieldId = 4
-		goto RequiredFieldNotSetError
-	}
-
 	if !issetCallLimit {
-		fieldId = 5
+		fieldId = 4
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -590,16 +562,15 @@ func (p *GenTokenReq) FastReadField1(buf []byte) (int, error) {
 func (p *GenTokenReq) FastReadField2(buf []byte) (int, error) {
 	offset := 0
 
-	var _field int64
+	var _field *int64
 	if v, l, err := bthrift.Binary.ReadI64(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
-
-		_field = v
+		_field = &v
 
 	}
-	p.UserId = _field
+	p.PluginId = _field
 	return offset, nil
 }
 
@@ -615,27 +586,11 @@ func (p *GenTokenReq) FastReadField3(buf []byte) (int, error) {
 		_field = v
 
 	}
-	p.PluginId = _field
-	return offset, nil
-}
-
-func (p *GenTokenReq) FastReadField4(buf []byte) (int, error) {
-	offset := 0
-
-	var _field int64
-	if v, l, err := bthrift.Binary.ReadI64(buf[offset:]); err != nil {
-		return offset, err
-	} else {
-		offset += l
-
-		_field = v
-
-	}
 	p.ConversationId = _field
 	return offset, nil
 }
 
-func (p *GenTokenReq) FastReadField5(buf []byte) (int, error) {
+func (p *GenTokenReq) FastReadField4(buf []byte) (int, error) {
 	offset := 0
 
 	var _field int32
@@ -664,7 +619,6 @@ func (p *GenTokenReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWri
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
-		offset += p.fastWriteField5(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -679,7 +633,6 @@ func (p *GenTokenReq) BLength() int {
 		l += p.field2Length()
 		l += p.field3Length()
 		l += p.field4Length()
-		l += p.field5Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -696,31 +649,25 @@ func (p *GenTokenReq) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWri
 
 func (p *GenTokenReq) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "user_id", thrift.I64, 2)
-	offset += bthrift.Binary.WriteI64(buf[offset:], p.UserId)
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	if p.IsSetPluginId() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "plugin_id", thrift.I64, 2)
+		offset += bthrift.Binary.WriteI64(buf[offset:], *p.PluginId)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
 	return offset
 }
 
 func (p *GenTokenReq) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "plugin_id", thrift.I64, 3)
-	offset += bthrift.Binary.WriteI64(buf[offset:], p.PluginId)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "conversation_id", thrift.I64, 3)
+	offset += bthrift.Binary.WriteI64(buf[offset:], p.ConversationId)
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
 
 func (p *GenTokenReq) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "conversation_id", thrift.I64, 4)
-	offset += bthrift.Binary.WriteI64(buf[offset:], p.ConversationId)
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
-	return offset
-}
-
-func (p *GenTokenReq) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryWriter) int {
-	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "call_limit", thrift.I32, 5)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "call_limit", thrift.I32, 4)
 	offset += bthrift.Binary.WriteI32(buf[offset:], p.CallLimit)
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
@@ -736,31 +683,25 @@ func (p *GenTokenReq) field1Length() int {
 
 func (p *GenTokenReq) field2Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("user_id", thrift.I64, 2)
-	l += bthrift.Binary.I64Length(p.UserId)
-	l += bthrift.Binary.FieldEndLength()
+	if p.IsSetPluginId() {
+		l += bthrift.Binary.FieldBeginLength("plugin_id", thrift.I64, 2)
+		l += bthrift.Binary.I64Length(*p.PluginId)
+		l += bthrift.Binary.FieldEndLength()
+	}
 	return l
 }
 
 func (p *GenTokenReq) field3Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("plugin_id", thrift.I64, 3)
-	l += bthrift.Binary.I64Length(p.PluginId)
+	l += bthrift.Binary.FieldBeginLength("conversation_id", thrift.I64, 3)
+	l += bthrift.Binary.I64Length(p.ConversationId)
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
 
 func (p *GenTokenReq) field4Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("conversation_id", thrift.I64, 4)
-	l += bthrift.Binary.I64Length(p.ConversationId)
-	l += bthrift.Binary.FieldEndLength()
-	return l
-}
-
-func (p *GenTokenReq) field5Length() int {
-	l := 0
-	l += bthrift.Binary.FieldBeginLength("call_limit", thrift.I32, 5)
+	l += bthrift.Binary.FieldBeginLength("call_limit", thrift.I32, 4)
 	l += bthrift.Binary.I32Length(p.CallLimit)
 	l += bthrift.Binary.FieldEndLength()
 	return l

@@ -51,7 +51,7 @@ func (p *App) FastRead(buf []byte) (int, error) {
 	var issetIsPrivate bool = false
 	var issetHomePage bool = false
 	var issetPresetQuestions bool = false
-	var issetPlugins bool = false
+	var issetTools bool = false
 	var issetLogo bool = false
 	var issetAuthor bool = false
 	var issetLabels bool = false
@@ -246,7 +246,7 @@ func (p *App) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
-				issetPlugins = true
+				issetTools = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -433,7 +433,7 @@ func (p *App) FastRead(buf []byte) (int, error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetPlugins {
+	if !issetTools {
 		fieldId = 12
 		goto RequiredFieldNotSetError
 	}
@@ -683,8 +683,8 @@ func (p *App) FastReadField12(buf []byte) (int, error) {
 	if err != nil {
 		return offset, err
 	}
-	_field := make([]*pluginsvc.Plugin, 0, size)
-	values := make([]pluginsvc.Plugin, size)
+	_field := make([]*pluginsvc.PluginTool, 0, size)
+	values := make([]pluginsvc.PluginTool, size)
 	for i := 0; i < size; i++ {
 		_elem := &values[i]
 		_elem.InitDefault()
@@ -701,7 +701,7 @@ func (p *App) FastReadField12(buf []byte) (int, error) {
 	} else {
 		offset += l
 	}
-	p.Plugins = _field
+	p.Tools = _field
 	return offset, nil
 }
 
@@ -973,11 +973,11 @@ func (p *App) fastWriteField11(buf []byte, binaryWriter bthrift.BinaryWriter) in
 
 func (p *App) fastWriteField12(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "plugins", thrift.LIST, 12)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "tools", thrift.LIST, 12)
 	listBeginOffset := offset
 	offset += bthrift.Binary.ListBeginLength(thrift.STRUCT, 0)
 	var length int
-	for _, v := range p.Plugins {
+	for _, v := range p.Tools {
 		length++
 		offset += v.FastWriteNocopy(buf[offset:], binaryWriter)
 	}
@@ -1147,9 +1147,9 @@ func (p *App) field11Length() int {
 
 func (p *App) field12Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("plugins", thrift.LIST, 12)
-	l += bthrift.Binary.ListBeginLength(thrift.STRUCT, len(p.Plugins))
-	for _, v := range p.Plugins {
+	l += bthrift.Binary.FieldBeginLength("tools", thrift.LIST, 12)
+	l += bthrift.Binary.ListBeginLength(thrift.STRUCT, len(p.Tools))
+	for _, v := range p.Tools {
 		l += v.BLength()
 	}
 	l += bthrift.Binary.ListEndLength()
@@ -1966,7 +1966,7 @@ func (p *CreateAppReq) FastRead(buf []byte) (int, error) {
 	var issetIsPrivate bool = false
 	var issetHomePage bool = false
 	var issetPresetQuestions bool = false
-	var issetPluginIds bool = false
+	var issetToolIds bool = false
 	var issetLogo bool = false
 	var issetLabelIds bool = false
 	var issetLabelTexts bool = false
@@ -2144,7 +2144,7 @@ func (p *CreateAppReq) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
-				issetPluginIds = true
+				issetToolIds = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2282,7 +2282,7 @@ func (p *CreateAppReq) FastRead(buf []byte) (int, error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetPluginIds {
+	if !issetToolIds {
 		fieldId = 11
 		goto RequiredFieldNotSetError
 	}
@@ -2525,7 +2525,7 @@ func (p *CreateAppReq) FastReadField11(buf []byte) (int, error) {
 	} else {
 		offset += l
 	}
-	p.PluginIds = _field
+	p.ToolIds = _field
 	return offset, nil
 }
 
@@ -2764,11 +2764,11 @@ func (p *CreateAppReq) fastWriteField10(buf []byte, binaryWriter bthrift.BinaryW
 
 func (p *CreateAppReq) fastWriteField11(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "plugin_ids", thrift.LIST, 11)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "tool_ids", thrift.LIST, 11)
 	listBeginOffset := offset
 	offset += bthrift.Binary.ListBeginLength(thrift.I64, 0)
 	var length int
-	for _, v := range p.PluginIds {
+	for _, v := range p.ToolIds {
 		length++
 		offset += bthrift.Binary.WriteI64(buf[offset:], v)
 	}
@@ -2912,10 +2912,10 @@ func (p *CreateAppReq) field10Length() int {
 
 func (p *CreateAppReq) field11Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("plugin_ids", thrift.LIST, 11)
-	l += bthrift.Binary.ListBeginLength(thrift.I64, len(p.PluginIds))
+	l += bthrift.Binary.FieldBeginLength("tool_ids", thrift.LIST, 11)
+	l += bthrift.Binary.ListBeginLength(thrift.I64, len(p.ToolIds))
 	var tmpV int64
-	l += bthrift.Binary.I64Length(int64(tmpV)) * len(p.PluginIds)
+	l += bthrift.Binary.I64Length(int64(tmpV)) * len(p.ToolIds)
 	l += bthrift.Binary.ListEndLength()
 	l += bthrift.Binary.FieldEndLength()
 	return l
@@ -3458,7 +3458,7 @@ func (p *UpdateAppReq) FastReadField12(buf []byte) (int, error) {
 	} else {
 		offset += l
 	}
-	p.PluginIds = _field
+	p.ToolIds = _field
 	return offset, nil
 }
 
@@ -3726,12 +3726,12 @@ func (p *UpdateAppReq) fastWriteField11(buf []byte, binaryWriter bthrift.BinaryW
 
 func (p *UpdateAppReq) fastWriteField12(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetPluginIds() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "plugin_ids", thrift.LIST, 12)
+	if p.IsSetToolIds() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "tool_ids", thrift.LIST, 12)
 		listBeginOffset := offset
 		offset += bthrift.Binary.ListBeginLength(thrift.I64, 0)
 		var length int
-		for _, v := range p.PluginIds {
+		for _, v := range p.ToolIds {
 			length++
 			offset += bthrift.Binary.WriteI64(buf[offset:], v)
 		}
@@ -3912,11 +3912,11 @@ func (p *UpdateAppReq) field11Length() int {
 
 func (p *UpdateAppReq) field12Length() int {
 	l := 0
-	if p.IsSetPluginIds() {
-		l += bthrift.Binary.FieldBeginLength("plugin_ids", thrift.LIST, 12)
-		l += bthrift.Binary.ListBeginLength(thrift.I64, len(p.PluginIds))
+	if p.IsSetToolIds() {
+		l += bthrift.Binary.FieldBeginLength("tool_ids", thrift.LIST, 12)
+		l += bthrift.Binary.ListBeginLength(thrift.I64, len(p.ToolIds))
 		var tmpV int64
-		l += bthrift.Binary.I64Length(int64(tmpV)) * len(p.PluginIds)
+		l += bthrift.Binary.I64Length(int64(tmpV)) * len(p.ToolIds)
 		l += bthrift.Binary.ListEndLength()
 		l += bthrift.Binary.FieldEndLength()
 	}

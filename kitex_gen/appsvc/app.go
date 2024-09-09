@@ -14,25 +14,25 @@ import (
 )
 
 type App struct {
-	Id              int64               `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
-	Name            string              `thrift:"name,2,required" frugal:"2,required,string" json:"name"`
-	Description     string              `thrift:"description,3,required" frugal:"3,required,string" json:"description"`
-	DescriptionMd   string              `thrift:"description_md,4,required" frugal:"4,required,string" json:"description_md"`
-	ModelId         int64               `thrift:"model_id,5,required" frugal:"5,required,i64" json:"model_id"`
-	EnableImage     bool                `thrift:"enable_image,6,required" frugal:"6,required,bool" json:"enable_image"`
-	EnableFile      bool                `thrift:"enable_file,7,required" frugal:"7,required,bool" json:"enable_file"`
-	Version         string              `thrift:"version,8,required" frugal:"8,required,string" json:"version"`
-	IsPrivate       bool                `thrift:"is_private,9,required" frugal:"9,required,bool" json:"is_private"`
-	HomePage        string              `thrift:"home_page,10,required" frugal:"10,required,string" json:"home_page"`
-	PresetQuestions []string            `thrift:"preset_questions,11,required" frugal:"11,required,list<string>" json:"preset_questions"`
-	Plugins         []*pluginsvc.Plugin `thrift:"plugins,12,required" frugal:"12,required,list<pluginsvc.Plugin>" json:"plugins"`
-	Logo            string              `thrift:"logo,13,required" frugal:"13,required,string" json:"logo"`
-	Author          *usersvc.User       `thrift:"author,14,required" frugal:"14,required,usersvc.User" json:"author"`
-	Labels          []string            `thrift:"labels,15,required" frugal:"15,required,list<string>" json:"labels"`
-	ModelConfig     *ModelConfig        `thrift:"model_config,16,required" frugal:"16,required,ModelConfig" json:"model_config"`
-	CreatedAt       *base.Time          `thrift:"created_at,17,required" frugal:"17,required,base.Time" json:"created_at"`
-	UpdatedAt       *base.Time          `thrift:"updated_at,18,required" frugal:"18,required,base.Time" json:"updated_at"`
-	PublishedAt     *base.Time          `thrift:"published_at,19,optional" frugal:"19,optional,base.Time" json:"published_at,omitempty"`
+	Id              int64                   `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Name            string                  `thrift:"name,2,required" frugal:"2,required,string" json:"name"`
+	Description     string                  `thrift:"description,3,required" frugal:"3,required,string" json:"description"`
+	DescriptionMd   string                  `thrift:"description_md,4,required" frugal:"4,required,string" json:"description_md"`
+	ModelId         int64                   `thrift:"model_id,5,required" frugal:"5,required,i64" json:"model_id"`
+	EnableImage     bool                    `thrift:"enable_image,6,required" frugal:"6,required,bool" json:"enable_image"`
+	EnableFile      bool                    `thrift:"enable_file,7,required" frugal:"7,required,bool" json:"enable_file"`
+	Version         string                  `thrift:"version,8,required" frugal:"8,required,string" json:"version"`
+	IsPrivate       bool                    `thrift:"is_private,9,required" frugal:"9,required,bool" json:"is_private"`
+	HomePage        string                  `thrift:"home_page,10,required" frugal:"10,required,string" json:"home_page"`
+	PresetQuestions []string                `thrift:"preset_questions,11,required" frugal:"11,required,list<string>" json:"preset_questions"`
+	Tools           []*pluginsvc.PluginTool `thrift:"tools,12,required" frugal:"12,required,list<pluginsvc.PluginTool>" json:"tools"`
+	Logo            string                  `thrift:"logo,13,required" frugal:"13,required,string" json:"logo"`
+	Author          *usersvc.User           `thrift:"author,14,required" frugal:"14,required,usersvc.User" json:"author"`
+	Labels          []string                `thrift:"labels,15,required" frugal:"15,required,list<string>" json:"labels"`
+	ModelConfig     *ModelConfig            `thrift:"model_config,16,required" frugal:"16,required,ModelConfig" json:"model_config"`
+	CreatedAt       *base.Time              `thrift:"created_at,17,required" frugal:"17,required,base.Time" json:"created_at"`
+	UpdatedAt       *base.Time              `thrift:"updated_at,18,required" frugal:"18,required,base.Time" json:"updated_at"`
+	PublishedAt     *base.Time              `thrift:"published_at,19,optional" frugal:"19,optional,base.Time" json:"published_at,omitempty"`
 }
 
 func NewApp() *App {
@@ -86,8 +86,8 @@ func (p *App) GetPresetQuestions() (v []string) {
 	return p.PresetQuestions
 }
 
-func (p *App) GetPlugins() (v []*pluginsvc.Plugin) {
-	return p.Plugins
+func (p *App) GetTools() (v []*pluginsvc.PluginTool) {
+	return p.Tools
 }
 
 func (p *App) GetLogo() (v string) {
@@ -175,8 +175,8 @@ func (p *App) SetHomePage(val string) {
 func (p *App) SetPresetQuestions(val []string) {
 	p.PresetQuestions = val
 }
-func (p *App) SetPlugins(val []*pluginsvc.Plugin) {
-	p.Plugins = val
+func (p *App) SetTools(val []*pluginsvc.PluginTool) {
+	p.Tools = val
 }
 func (p *App) SetLogo(val string) {
 	p.Logo = val
@@ -212,7 +212,7 @@ var fieldIDToName_App = map[int16]string{
 	9:  "is_private",
 	10: "home_page",
 	11: "preset_questions",
-	12: "plugins",
+	12: "tools",
 	13: "logo",
 	14: "author",
 	15: "labels",
@@ -257,7 +257,7 @@ func (p *App) Read(iprot thrift.TProtocol) (err error) {
 	var issetIsPrivate bool = false
 	var issetHomePage bool = false
 	var issetPresetQuestions bool = false
-	var issetPlugins bool = false
+	var issetTools bool = false
 	var issetLogo bool = false
 	var issetAuthor bool = false
 	var issetLabels bool = false
@@ -383,7 +383,7 @@ func (p *App) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField12(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPlugins = true
+				issetTools = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -517,7 +517,7 @@ func (p *App) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetPlugins {
+	if !issetTools {
 		fieldId = 12
 		goto RequiredFieldNotSetError
 	}
@@ -707,8 +707,8 @@ func (p *App) ReadField12(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	_field := make([]*pluginsvc.Plugin, 0, size)
-	values := make([]pluginsvc.Plugin, size)
+	_field := make([]*pluginsvc.PluginTool, 0, size)
+	values := make([]pluginsvc.PluginTool, size)
 	for i := 0; i < size; i++ {
 		_elem := &values[i]
 		_elem.InitDefault()
@@ -722,7 +722,7 @@ func (p *App) ReadField12(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.Plugins = _field
+	p.Tools = _field
 	return nil
 }
 func (p *App) ReadField13(iprot thrift.TProtocol) error {
@@ -1096,13 +1096,13 @@ WriteFieldEndError:
 }
 
 func (p *App) writeField12(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("plugins", thrift.LIST, 12); err != nil {
+	if err = oprot.WriteFieldBegin("tools", thrift.LIST, 12); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Plugins)); err != nil {
+	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Tools)); err != nil {
 		return err
 	}
-	for _, v := range p.Plugins {
+	for _, v := range p.Tools {
 		if err := v.Write(oprot); err != nil {
 			return err
 		}
@@ -1296,7 +1296,7 @@ func (p *App) DeepEqual(ano *App) bool {
 	if !p.Field11DeepEqual(ano.PresetQuestions) {
 		return false
 	}
-	if !p.Field12DeepEqual(ano.Plugins) {
+	if !p.Field12DeepEqual(ano.Tools) {
 		return false
 	}
 	if !p.Field13DeepEqual(ano.Logo) {
@@ -1406,12 +1406,12 @@ func (p *App) Field11DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *App) Field12DeepEqual(src []*pluginsvc.Plugin) bool {
+func (p *App) Field12DeepEqual(src []*pluginsvc.PluginTool) bool {
 
-	if len(p.Plugins) != len(src) {
+	if len(p.Tools) != len(src) {
 		return false
 	}
-	for i, v := range p.Plugins {
+	for i, v := range p.Tools {
 		_src := src[i]
 		if !v.DeepEqual(_src) {
 			return false
@@ -2500,7 +2500,7 @@ type CreateAppReq struct {
 	IsPrivate       bool         `thrift:"is_private,8,required" frugal:"8,required,bool" json:"is_private"`
 	HomePage        string       `thrift:"home_page,9,required" frugal:"9,required,string" json:"home_page"`
 	PresetQuestions []string     `thrift:"preset_questions,10,required" frugal:"10,required,list<string>" json:"preset_questions"`
-	PluginIds       []int64      `thrift:"plugin_ids,11,required" frugal:"11,required,list<i64>" json:"plugin_ids"`
+	ToolIds         []int64      `thrift:"tool_ids,11,required" frugal:"11,required,list<i64>" json:"tool_ids"`
 	Logo            string       `thrift:"logo,12,required" frugal:"12,required,string" json:"logo"`
 	LabelIds        []int64      `thrift:"label_ids,13,required" frugal:"13,required,list<i64>" json:"label_ids"`
 	LabelTexts      []string     `thrift:"label_texts,14,required" frugal:"14,required,list<string>" json:"label_texts"`
@@ -2554,8 +2554,8 @@ func (p *CreateAppReq) GetPresetQuestions() (v []string) {
 	return p.PresetQuestions
 }
 
-func (p *CreateAppReq) GetPluginIds() (v []int64) {
-	return p.PluginIds
+func (p *CreateAppReq) GetToolIds() (v []int64) {
+	return p.ToolIds
 }
 
 func (p *CreateAppReq) GetLogo() (v string) {
@@ -2608,8 +2608,8 @@ func (p *CreateAppReq) SetHomePage(val string) {
 func (p *CreateAppReq) SetPresetQuestions(val []string) {
 	p.PresetQuestions = val
 }
-func (p *CreateAppReq) SetPluginIds(val []int64) {
-	p.PluginIds = val
+func (p *CreateAppReq) SetToolIds(val []int64) {
+	p.ToolIds = val
 }
 func (p *CreateAppReq) SetLogo(val string) {
 	p.Logo = val
@@ -2635,7 +2635,7 @@ var fieldIDToName_CreateAppReq = map[int16]string{
 	8:  "is_private",
 	9:  "home_page",
 	10: "preset_questions",
-	11: "plugin_ids",
+	11: "tool_ids",
 	12: "logo",
 	13: "label_ids",
 	14: "label_texts",
@@ -2660,7 +2660,7 @@ func (p *CreateAppReq) Read(iprot thrift.TProtocol) (err error) {
 	var issetIsPrivate bool = false
 	var issetHomePage bool = false
 	var issetPresetQuestions bool = false
-	var issetPluginIds bool = false
+	var issetToolIds bool = false
 	var issetLogo bool = false
 	var issetLabelIds bool = false
 	var issetLabelTexts bool = false
@@ -2775,7 +2775,7 @@ func (p *CreateAppReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField11(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPluginIds = true
+				issetToolIds = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -2878,7 +2878,7 @@ func (p *CreateAppReq) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetPluginIds {
+	if !issetToolIds {
 		fieldId = 11
 		goto RequiredFieldNotSetError
 	}
@@ -3062,7 +3062,7 @@ func (p *CreateAppReq) ReadField11(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.PluginIds = _field
+	p.ToolIds = _field
 	return nil
 }
 func (p *CreateAppReq) ReadField12(iprot thrift.TProtocol) error {
@@ -3394,13 +3394,13 @@ WriteFieldEndError:
 }
 
 func (p *CreateAppReq) writeField11(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("plugin_ids", thrift.LIST, 11); err != nil {
+	if err = oprot.WriteFieldBegin("tool_ids", thrift.LIST, 11); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.I64, len(p.PluginIds)); err != nil {
+	if err := oprot.WriteListBegin(thrift.I64, len(p.ToolIds)); err != nil {
 		return err
 	}
-	for _, v := range p.PluginIds {
+	for _, v := range p.ToolIds {
 		if err := oprot.WriteI64(v); err != nil {
 			return err
 		}
@@ -3546,7 +3546,7 @@ func (p *CreateAppReq) DeepEqual(ano *CreateAppReq) bool {
 	if !p.Field10DeepEqual(ano.PresetQuestions) {
 		return false
 	}
-	if !p.Field11DeepEqual(ano.PluginIds) {
+	if !p.Field11DeepEqual(ano.ToolIds) {
 		return false
 	}
 	if !p.Field12DeepEqual(ano.Logo) {
@@ -3642,10 +3642,10 @@ func (p *CreateAppReq) Field10DeepEqual(src []string) bool {
 }
 func (p *CreateAppReq) Field11DeepEqual(src []int64) bool {
 
-	if len(p.PluginIds) != len(src) {
+	if len(p.ToolIds) != len(src) {
 		return false
 	}
-	for i, v := range p.PluginIds {
+	for i, v := range p.ToolIds {
 		_src := src[i]
 		if v != _src {
 			return false
@@ -3706,7 +3706,7 @@ type UpdateAppReq struct {
 	IsPrivate       *bool        `thrift:"is_private,9,optional" frugal:"9,optional,bool" json:"is_private,omitempty"`
 	HomePage        *string      `thrift:"home_page,10,optional" frugal:"10,optional,string" json:"home_page,omitempty"`
 	PresetQuestions []string     `thrift:"preset_questions,11,optional" frugal:"11,optional,list<string>" json:"preset_questions,omitempty"`
-	PluginIds       []int64      `thrift:"plugin_ids,12,optional" frugal:"12,optional,list<i64>" json:"plugin_ids,omitempty"`
+	ToolIds         []int64      `thrift:"tool_ids,12,optional" frugal:"12,optional,list<i64>" json:"tool_ids,omitempty"`
 	Logo            *string      `thrift:"logo,13,optional" frugal:"13,optional,string" json:"logo,omitempty"`
 	LabelIds        []int64      `thrift:"label_ids,14,optional" frugal:"14,optional,list<i64>" json:"label_ids,omitempty"`
 	LabelTexts      []string     `thrift:"label_texts,15,optional" frugal:"15,optional,list<string>" json:"label_texts,omitempty"`
@@ -3814,13 +3814,13 @@ func (p *UpdateAppReq) GetPresetQuestions() (v []string) {
 	return p.PresetQuestions
 }
 
-var UpdateAppReq_PluginIds_DEFAULT []int64
+var UpdateAppReq_ToolIds_DEFAULT []int64
 
-func (p *UpdateAppReq) GetPluginIds() (v []int64) {
-	if !p.IsSetPluginIds() {
-		return UpdateAppReq_PluginIds_DEFAULT
+func (p *UpdateAppReq) GetToolIds() (v []int64) {
+	if !p.IsSetToolIds() {
+		return UpdateAppReq_ToolIds_DEFAULT
 	}
-	return p.PluginIds
+	return p.ToolIds
 }
 
 var UpdateAppReq_Logo_DEFAULT string
@@ -3891,8 +3891,8 @@ func (p *UpdateAppReq) SetHomePage(val *string) {
 func (p *UpdateAppReq) SetPresetQuestions(val []string) {
 	p.PresetQuestions = val
 }
-func (p *UpdateAppReq) SetPluginIds(val []int64) {
-	p.PluginIds = val
+func (p *UpdateAppReq) SetToolIds(val []int64) {
+	p.ToolIds = val
 }
 func (p *UpdateAppReq) SetLogo(val *string) {
 	p.Logo = val
@@ -3919,7 +3919,7 @@ var fieldIDToName_UpdateAppReq = map[int16]string{
 	9:  "is_private",
 	10: "home_page",
 	11: "preset_questions",
-	12: "plugin_ids",
+	12: "tool_ids",
 	13: "logo",
 	14: "label_ids",
 	15: "label_texts",
@@ -3966,8 +3966,8 @@ func (p *UpdateAppReq) IsSetPresetQuestions() bool {
 	return p.PresetQuestions != nil
 }
 
-func (p *UpdateAppReq) IsSetPluginIds() bool {
-	return p.PluginIds != nil
+func (p *UpdateAppReq) IsSetToolIds() bool {
+	return p.ToolIds != nil
 }
 
 func (p *UpdateAppReq) IsSetLogo() bool {
@@ -4323,7 +4323,7 @@ func (p *UpdateAppReq) ReadField12(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.PluginIds = _field
+	p.ToolIds = _field
 	return nil
 }
 func (p *UpdateAppReq) ReadField13(iprot thrift.TProtocol) error {
@@ -4696,14 +4696,14 @@ WriteFieldEndError:
 }
 
 func (p *UpdateAppReq) writeField12(oprot thrift.TProtocol) (err error) {
-	if p.IsSetPluginIds() {
-		if err = oprot.WriteFieldBegin("plugin_ids", thrift.LIST, 12); err != nil {
+	if p.IsSetToolIds() {
+		if err = oprot.WriteFieldBegin("tool_ids", thrift.LIST, 12); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteListBegin(thrift.I64, len(p.PluginIds)); err != nil {
+		if err := oprot.WriteListBegin(thrift.I64, len(p.ToolIds)); err != nil {
 			return err
 		}
-		for _, v := range p.PluginIds {
+		for _, v := range p.ToolIds {
 			if err := oprot.WriteI64(v); err != nil {
 				return err
 			}
@@ -4861,7 +4861,7 @@ func (p *UpdateAppReq) DeepEqual(ano *UpdateAppReq) bool {
 	if !p.Field11DeepEqual(ano.PresetQuestions) {
 		return false
 	}
-	if !p.Field12DeepEqual(ano.PluginIds) {
+	if !p.Field12DeepEqual(ano.ToolIds) {
 		return false
 	}
 	if !p.Field13DeepEqual(ano.Logo) {
@@ -5009,10 +5009,10 @@ func (p *UpdateAppReq) Field11DeepEqual(src []string) bool {
 }
 func (p *UpdateAppReq) Field12DeepEqual(src []int64) bool {
 
-	if len(p.PluginIds) != len(src) {
+	if len(p.ToolIds) != len(src) {
 		return false
 	}
-	for i, v := range p.PluginIds {
+	for i, v := range p.ToolIds {
 		_src := src[i]
 		if v != _src {
 			return false
