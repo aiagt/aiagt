@@ -6,6 +6,7 @@ import (
 
 	"github.com/aiagt/aiagt/app/chat/model"
 	"github.com/aiagt/aiagt/kitex_gen/base"
+	"github.com/aiagt/aiagt/kitex_gen/chatsvc"
 	"github.com/pkg/errors"
 
 	ktdb "github.com/aiagt/kitextool/option/server/db"
@@ -50,15 +51,16 @@ func (d *MessageDao) GetByIDs(ctx context.Context, ids []int64) ([]*model.Messag
 }
 
 // List get message list
-func (d *MessageDao) List(ctx context.Context, page *base.PaginationReq) ([]*model.Message, *base.PaginationResp, error) {
+func (d *MessageDao) List(ctx context.Context, req *chatsvc.ListMessageReq) ([]*model.Message, *base.PaginationResp, error) {
 	var (
 		list   []*model.Message
 		total  int64
+		page   = req.Pagination
 		offset = int((page.Page - 1) * page.PageSize)
 		limit  = int(page.PageSize)
 	)
 
-	err := d.db(ctx).Model(d.m).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
+	err := d.db(ctx).Model(d.m).Where("conversation_id = ?", req.ConversationId).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "message dao get page error")
 	}

@@ -11,6 +11,8 @@ type Message struct {
 
 type MessageOptional struct {
 	Base
+
+	*MessageContent
 }
 
 type MessageRole int
@@ -33,8 +35,8 @@ const (
 )
 
 type MessageContent struct {
-	Type    MessageType         `json:"type"`
-	Content MessageContentValue `json:"content"`
+	Type    MessageType         `gorm:"column:type" json:"type"`
+	Content MessageContentValue `gorm:"column:content;serializer:json;type:json" json:"content"`
 }
 
 type MessageContentValue struct {

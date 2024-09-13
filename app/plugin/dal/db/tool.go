@@ -73,7 +73,13 @@ func (d *ToolDao) List(ctx context.Context, req *pluginsvc.ListPluginToolReq, us
 
 	err := d.db(ctx).Model(d.m).Scopes(func(db *gorm.DB) *gorm.DB {
 		db = db.Joins("LEFT JOIN plugins ON plugin_id = plugins.id").
-			Where("plugin_id = ? AND plugins.author_id = ?", req.PluginId, userID)
+			Where("plugins.author_id = ? OR plugins.is_private = ?", userID, false)
+		if req.PluginId != nil {
+			db = db.Where("plugin_id = ?", req.PluginId)
+		}
+		if req.ToolIds != nil {
+			db = db.Where("plugin_tools.id in ?", req.ToolIds)
+		}
 		return db
 	}).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
 	if err != nil {

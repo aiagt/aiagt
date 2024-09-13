@@ -17,29 +17,35 @@ struct App {
     9: required bool is_private
     10: required string home_page
     11: required list<string> preset_questions
-    12: required list<plugin.PluginTool> tools
-    13: required string logo
-    14: required user.User author
-    15: required list<string> labels
-    16: required ModelConfig model_config
-    17: required base.Time created_at
-    18: required base.Time updated_at
-    19: optional base.Time published_at
+    12: required list<i64> tool_ids
+    13: optional list<plugin.PluginTool> tools
+    14: required string logo
+    15: required i64 author_id
+    16: optional user.User author
+    17: required list<i64> label_ids
+    18: optional list<AppLabel> labels
+    19: required ModelConfig model_config
+    20: required base.Time created_at
+    21: required base.Time updated_at
+    22: optional base.Time published_at
 }
 
 struct ModelConfig {
-    1: optional double temperature
-    2: optional double top_p
-    3: optional i32 n = 1
-    4: optional bool stream = true
-    5: optional double presence_penalty
-    6: optional openai.ChatCompletionResponseFormat response_format
-    7: optional i32 seed
-    8: optional double frequency_penalty
-    9: optional map<string, i32> logit_bias
-    10: optional bool logprobs
-    11: optional i32 top_logprobs
-    12: optional openai.StreamOptions stream_options
+    1: optional i32 max_tokens
+    2: optional double temperature
+    3: optional double top_p
+    4: optional i32 n = 1
+    5: optional bool stream = true
+    6: optional list<string> stop
+    7: optional double presence_penalty
+    8: optional openai.ChatCompletionResponseFormat response_format
+    9: optional i32 seed
+    10: optional double frequency_penalty
+    11: optional map<string, i32> logit_bias
+    12: optional bool logprobs
+    13: optional i32 top_logprobs
+    14: optional string user
+    15: optional openai.StreamOptions stream_options
 }
 
 struct CreateAppReq {
@@ -89,7 +95,12 @@ struct ListAppReq {
 
 struct ListAppResp {
     1: required base.PaginationResp pagination
-    2: required list<App> plugins
+    2: required list<App> apps
+}
+
+struct PublishAppReq {
+    1: required i64 id
+    2: required string version
 }
 
 struct AppLabel {
@@ -115,7 +126,7 @@ service AppService {
     App GetAppByID(1: base.IDReq req)
     ListAppResp ListApp(1: ListAppReq req)
 
-    base.Empty PublishApp(1: base.IDReq req)
+    base.Empty PublishApp(1: PublishAppReq req)
 
     ListAppLabelResp ListAppLabel(1: ListAppLabelReq req)
 }

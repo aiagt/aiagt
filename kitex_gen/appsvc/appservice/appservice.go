@@ -315,7 +315,7 @@ func (p *kClient) ListApp(ctx context.Context, req *appsvc.ListAppReq) (r *appsv
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) PublishApp(ctx context.Context, req *base.IDReq) (r *base.Empty, err error) {
+func (p *kClient) PublishApp(ctx context.Context, req *appsvc.PublishAppReq) (r *base.Empty, err error) {
 	var _args appsvc.AppServicePublishAppArgs
 	_args.Req = req
 	var _result appsvc.AppServicePublishAppResult

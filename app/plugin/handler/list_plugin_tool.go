@@ -19,7 +19,7 @@ func (s *PluginServiceImpl) ListPluginTool(ctx context.Context, req *pluginsvc.L
 	}
 
 	resp = &pluginsvc.ListPluginToolResp{
-		Plugins:    mapper.NewGenListPluginTool(list),
+		Tools:      mapper.NewGenListPluginTool(list),
 		Pagination: page,
 	}
 

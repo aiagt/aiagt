@@ -1,6 +1,6 @@
 server:
   name: app
-  address: ":8888"
+  address: ":8933"
 
 config_center:
   port: 8848

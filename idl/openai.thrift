@@ -32,22 +32,22 @@ enum FinishReason {
 
 struct Hate {
   1: required bool filtered,
-  2: optional string severity
+  2: required string severity
 }
 
 struct SelfHarm {
   1: required bool filtered,
-  2: optional string severity
+  2: required string severity
 }
 
 struct Sexual {
   1: required bool filtered,
-  2: optional string severity
+  2: required string severity
 }
 
 struct Violence {
   1: required bool filtered,
-  2: optional string severity
+  2: required string severity
 }
 
 struct ContentFilterResults {
@@ -99,7 +99,7 @@ struct FunctionDefinition {
   1: required string name,
   2: optional string description,
   3: optional bool strict,
-  4: optional string parameters
+  4: optional binary parameters
 }
 
 struct Tool {
@@ -152,25 +152,79 @@ struct ChatCompletionRequest {
   21: optional StreamOptions stream_options,
   22: optional bool parallel_tool_calls // Simplified, assuming it's a boolean flag
 }
-
-struct ChatCompletionChoice {
-  1: required i32 index,
-  2: required ChatCompletionMessage message,
-  3: optional string finish_reason,
-  4: optional double finish_probability
-}
+//
+//struct TopLogProbs {
+//  1: string token,
+//  2: double logProb,
+//  3: optional binary bytes
+//}
+//
+//struct LogProb {
+//  1: string token,
+//  2: double logProb,
+//  3: optional binary bytes,
+//  4: list<TopLogProbs> topLogProbs
+//}
+//
+//struct LogProbs {
+//  1: list<LogProb> content
+//}
+//
+//struct ChatCompletionChoice {
+//  1: required i32 index,
+//  2: required ChatCompletionMessage message,
+//  3: optional string finish_reason,
+//  4: optional LogProbs log_probs
+//}
+//
+//struct Usage {
+//  1: required i32 prompt_tokens,
+//  2: required i32 completion_tokens,
+//  3: required i32 total_tokens
+//}
+//
+//struct ChatCompletionResponse {
+//  1: required string id,
+//  2: required string object,
+//  3: required i64 created,
+//  4: required string model,
+//  5: required list<ChatCompletionChoice> choices,
+//  6: optional Usage usage
+//}
 
 struct Usage {
-  1: required i32 prompt_tokens,
-  2: required i32 completion_tokens,
-  3: required i32 total_tokens
+    1: i32 prompt_tokens,
+    2: i32 completion_tokens,
+    3: i32 total_tokens
 }
 
-struct ChatCompletionResponse {
-  1: required string id,
-  2: required string object,
-  3: required i64 created,
-  4: required string model,
-  5: required list<ChatCompletionChoice> choices,
-  6: optional Usage usage
+struct ChatCompletionStreamChoiceDelta {
+    1: optional string content,
+    2: optional string role,
+    3: optional FunctionCall function_call,
+    4: optional list<ToolCall> tool_calls
+}
+
+struct ChatCompletionStreamChoice {
+    1: i32 index,
+    2: ChatCompletionStreamChoiceDelta delta,
+    3: string finish_reason,
+    4: optional ContentFilterResults content_filter_results
+}
+
+struct PromptFilterResult {
+    1: i32 index,
+    2: optional ContentFilterResults content_filter_results
+}
+
+struct ChatCompletionStreamResponse {
+    1: string id,
+    2: string object,
+    3: i64 created,
+    4: string model,
+    5: list<ChatCompletionStreamChoice> choices,
+    6: string system_fingerprint,
+    7: optional list<PromptAnnotation> prompt_annotations,
+    8: optional list<PromptFilterResult> prompt_filter_results,
+    9: optional Usage usage
 }

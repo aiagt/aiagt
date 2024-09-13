@@ -322,7 +322,7 @@ func (p *ChatReq) Field3DeepEqual(src *openai.ChatCompletionRequest) bool {
 }
 
 type ChatResp struct {
-	OpenaiResp *openai.ChatCompletionResponse `thrift:"openai_resp,1,required" frugal:"1,required,openai.ChatCompletionResponse" json:"openai_resp"`
+	OpenaiResp *openai.ChatCompletionStreamResponse `thrift:"openai_resp,1,required" frugal:"1,required,openai.ChatCompletionStreamResponse" json:"openai_resp"`
 }
 
 func NewChatResp() *ChatResp {
@@ -332,15 +332,15 @@ func NewChatResp() *ChatResp {
 func (p *ChatResp) InitDefault() {
 }
 
-var ChatResp_OpenaiResp_DEFAULT *openai.ChatCompletionResponse
+var ChatResp_OpenaiResp_DEFAULT *openai.ChatCompletionStreamResponse
 
-func (p *ChatResp) GetOpenaiResp() (v *openai.ChatCompletionResponse) {
+func (p *ChatResp) GetOpenaiResp() (v *openai.ChatCompletionStreamResponse) {
 	if !p.IsSetOpenaiResp() {
 		return ChatResp_OpenaiResp_DEFAULT
 	}
 	return p.OpenaiResp
 }
-func (p *ChatResp) SetOpenaiResp(val *openai.ChatCompletionResponse) {
+func (p *ChatResp) SetOpenaiResp(val *openai.ChatCompletionStreamResponse) {
 	p.OpenaiResp = val
 }
 
@@ -417,7 +417,7 @@ RequiredFieldNotSetError:
 }
 
 func (p *ChatResp) ReadField1(iprot thrift.TProtocol) error {
-	_field := openai.NewChatCompletionResponse()
+	_field := openai.NewChatCompletionStreamResponse()
 	if err := _field.Read(iprot); err != nil {
 		return err
 	}
@@ -490,7 +490,7 @@ func (p *ChatResp) DeepEqual(ano *ChatResp) bool {
 	return true
 }
 
-func (p *ChatResp) Field1DeepEqual(src *openai.ChatCompletionResponse) bool {
+func (p *ChatResp) Field1DeepEqual(src *openai.ChatCompletionStreamResponse) bool {
 
 	if !p.OpenaiResp.DeepEqual(src) {
 		return false

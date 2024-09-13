@@ -13,12 +13,12 @@ import (
 )
 
 type ModelDao struct {
-	m *model.Model
+	m *model.Models
 }
 
-// NewModelDao make Model dao
+// NewModelDao make Models dao
 func NewModelDao() *ModelDao {
-	return &ModelDao{m: new(model.Model)}
+	return &ModelDao{m: new(model.Models)}
 }
 
 func (d *ModelDao) db(ctx context.Context) *gorm.DB {
@@ -26,8 +26,8 @@ func (d *ModelDao) db(ctx context.Context) *gorm.DB {
 }
 
 // GetByID get model by id
-func (d *ModelDao) GetByID(ctx context.Context, id int64) (*model.Model, error) {
-	var result model.Model
+func (d *ModelDao) GetByID(ctx context.Context, id int64) (*model.Models, error) {
+	var result model.Models
 
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).First(&result).Error
 	if err != nil {
@@ -38,8 +38,8 @@ func (d *ModelDao) GetByID(ctx context.Context, id int64) (*model.Model, error) 
 }
 
 // GetByIDs get model list by ids
-func (d *ModelDao) GetByIDs(ctx context.Context, ids []int64) ([]*model.Model, error) {
-	var result []*model.Model
+func (d *ModelDao) GetByIDs(ctx context.Context, ids []int64) ([]*model.Models, error) {
+	var result []*model.Models
 
 	err := d.db(ctx).Model(d.m).Where("id in ?", ids).Find(&result).Error
 	if err != nil {
@@ -50,9 +50,9 @@ func (d *ModelDao) GetByIDs(ctx context.Context, ids []int64) ([]*model.Model, e
 }
 
 // List get model list
-func (d *ModelDao) List(ctx context.Context, page *base.PaginationReq) ([]*model.Model, *base.PaginationResp, error) {
+func (d *ModelDao) List(ctx context.Context, page *base.PaginationReq) ([]*model.Models, *base.PaginationResp, error) {
 	var (
-		list   []*model.Model
+		list   []*model.Models
 		total  int64
 		offset = int((page.Page - 1) * page.PageSize)
 		limit  = int(page.PageSize)
@@ -70,7 +70,7 @@ func (d *ModelDao) List(ctx context.Context, page *base.PaginationReq) ([]*model
 }
 
 // Create insert a model record
-func (d *ModelDao) Create(ctx context.Context, m *model.Model) error {
+func (d *ModelDao) Create(ctx context.Context, m *model.Models) error {
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
 		return errors.Wrap(err, "model dao create error")
@@ -80,7 +80,7 @@ func (d *ModelDao) Create(ctx context.Context, m *model.Model) error {
 }
 
 // Update model by id
-func (d *ModelDao) Update(ctx context.Context, id int64, m *model.ModelOptional) error {
+func (d *ModelDao) Update(ctx context.Context, id int64, m *model.ModelsOptional) error {
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).Updates(m).Error
 	if err != nil {
 		return errors.Wrap(err, "model dao update error")

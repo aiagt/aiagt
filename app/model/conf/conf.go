@@ -21,4 +21,11 @@ func Conf() *ServerConf {
 
 type ServerConf struct {
 	ktconf.ServerConf
+
+	OpenAI OpenAI `yaml:"openai"`
+}
+
+type OpenAI struct {
+	APIKey  string `yaml:"api_key"`
+	BaseURL string `yaml:"base_url"`
 }

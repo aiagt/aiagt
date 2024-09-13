@@ -7772,7 +7772,8 @@ func (p *UpdatePluginToolReq) Field8DeepEqual(src *int64) bool {
 
 type ListPluginToolReq struct {
 	Pagination *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
-	PluginId   int64               `thrift:"plugin_id,2,required" frugal:"2,required,i64" json:"plugin_id"`
+	PluginId   *int64              `thrift:"plugin_id,2,optional" frugal:"2,optional,i64" json:"plugin_id,omitempty"`
+	ToolIds    []int64             `thrift:"tool_ids,3,optional" frugal:"3,optional,list<i64>" json:"tool_ids,omitempty"`
 }
 
 func NewListPluginToolReq() *ListPluginToolReq {
@@ -7791,23 +7792,49 @@ func (p *ListPluginToolReq) GetPagination() (v *base.PaginationReq) {
 	return p.Pagination
 }
 
+var ListPluginToolReq_PluginId_DEFAULT int64
+
 func (p *ListPluginToolReq) GetPluginId() (v int64) {
-	return p.PluginId
+	if !p.IsSetPluginId() {
+		return ListPluginToolReq_PluginId_DEFAULT
+	}
+	return *p.PluginId
+}
+
+var ListPluginToolReq_ToolIds_DEFAULT []int64
+
+func (p *ListPluginToolReq) GetToolIds() (v []int64) {
+	if !p.IsSetToolIds() {
+		return ListPluginToolReq_ToolIds_DEFAULT
+	}
+	return p.ToolIds
 }
 func (p *ListPluginToolReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
 }
-func (p *ListPluginToolReq) SetPluginId(val int64) {
+func (p *ListPluginToolReq) SetPluginId(val *int64) {
 	p.PluginId = val
+}
+func (p *ListPluginToolReq) SetToolIds(val []int64) {
+	p.ToolIds = val
 }
 
 var fieldIDToName_ListPluginToolReq = map[int16]string{
 	1: "pagination",
 	2: "plugin_id",
+	3: "tool_ids",
 }
 
 func (p *ListPluginToolReq) IsSetPagination() bool {
 	return p.Pagination != nil
+}
+
+func (p *ListPluginToolReq) IsSetPluginId() bool {
+	return p.PluginId != nil
+}
+
+func (p *ListPluginToolReq) IsSetToolIds() bool {
+	return p.ToolIds != nil
 }
 
 func (p *ListPluginToolReq) Read(iprot thrift.TProtocol) (err error) {
@@ -7815,7 +7842,6 @@ func (p *ListPluginToolReq) Read(iprot thrift.TProtocol) (err error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
-	var issetPluginId bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -7845,7 +7871,14 @@ func (p *ListPluginToolReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPluginId = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -7864,11 +7897,6 @@ func (p *ListPluginToolReq) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetPagination {
 		fieldId = 1
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetPluginId {
-		fieldId = 2
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -7899,13 +7927,36 @@ func (p *ListPluginToolReq) ReadField1(iprot thrift.TProtocol) error {
 }
 func (p *ListPluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 
-	var _field int64
+	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.PluginId = _field
+	return nil
+}
+func (p *ListPluginToolReq) ReadField3(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	_field := make([]int64, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.ToolIds = _field
 	return nil
 }
 
@@ -7921,6 +7972,10 @@ func (p *ListPluginToolReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -7959,20 +8014,49 @@ WriteFieldEndError:
 }
 
 func (p *ListPluginToolReq) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("plugin_id", thrift.I64, 2); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.PluginId); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetPluginId() {
+		if err = oprot.WriteFieldBegin("plugin_id", thrift.I64, 2); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteI64(*p.PluginId); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *ListPluginToolReq) writeField3(oprot thrift.TProtocol) (err error) {
+	if p.IsSetToolIds() {
+		if err = oprot.WriteFieldBegin("tool_ids", thrift.LIST, 3); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteListBegin(thrift.I64, len(p.ToolIds)); err != nil {
+			return err
+		}
+		for _, v := range p.ToolIds {
+			if err := oprot.WriteI64(v); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *ListPluginToolReq) String() string {
@@ -7995,6 +8079,9 @@ func (p *ListPluginToolReq) DeepEqual(ano *ListPluginToolReq) bool {
 	if !p.Field2DeepEqual(ano.PluginId) {
 		return false
 	}
+	if !p.Field3DeepEqual(ano.ToolIds) {
+		return false
+	}
 	return true
 }
 
@@ -8005,16 +8092,34 @@ func (p *ListPluginToolReq) Field1DeepEqual(src *base.PaginationReq) bool {
 	}
 	return true
 }
-func (p *ListPluginToolReq) Field2DeepEqual(src int64) bool {
+func (p *ListPluginToolReq) Field2DeepEqual(src *int64) bool {
 
-	if p.PluginId != src {
+	if p.PluginId == src {
+		return true
+	} else if p.PluginId == nil || src == nil {
 		return false
+	}
+	if *p.PluginId != *src {
+		return false
+	}
+	return true
+}
+func (p *ListPluginToolReq) Field3DeepEqual(src []int64) bool {
+
+	if len(p.ToolIds) != len(src) {
+		return false
+	}
+	for i, v := range p.ToolIds {
+		_src := src[i]
+		if v != _src {
+			return false
+		}
 	}
 	return true
 }
 
 type ListPluginToolResp struct {
-	Plugins    []*PluginTool        `thrift:"plugins,1,required" frugal:"1,required,list<PluginTool>" json:"plugins"`
+	Tools      []*PluginTool        `thrift:"tools,1,required" frugal:"1,required,list<PluginTool>" json:"tools"`
 	Pagination *base.PaginationResp `thrift:"pagination,2,required" frugal:"2,required,base.PaginationResp" json:"pagination"`
 }
 
@@ -8025,8 +8130,8 @@ func NewListPluginToolResp() *ListPluginToolResp {
 func (p *ListPluginToolResp) InitDefault() {
 }
 
-func (p *ListPluginToolResp) GetPlugins() (v []*PluginTool) {
-	return p.Plugins
+func (p *ListPluginToolResp) GetTools() (v []*PluginTool) {
+	return p.Tools
 }
 
 var ListPluginToolResp_Pagination_DEFAULT *base.PaginationResp
@@ -8037,15 +8142,15 @@ func (p *ListPluginToolResp) GetPagination() (v *base.PaginationResp) {
 	}
 	return p.Pagination
 }
-func (p *ListPluginToolResp) SetPlugins(val []*PluginTool) {
-	p.Plugins = val
+func (p *ListPluginToolResp) SetTools(val []*PluginTool) {
+	p.Tools = val
 }
 func (p *ListPluginToolResp) SetPagination(val *base.PaginationResp) {
 	p.Pagination = val
 }
 
 var fieldIDToName_ListPluginToolResp = map[int16]string{
-	1: "plugins",
+	1: "tools",
 	2: "pagination",
 }
 
@@ -8057,7 +8162,7 @@ func (p *ListPluginToolResp) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
-	var issetPlugins bool = false
+	var issetTools bool = false
 	var issetPagination bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
@@ -8079,7 +8184,7 @@ func (p *ListPluginToolResp) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPlugins = true
+				issetTools = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -8105,7 +8210,7 @@ func (p *ListPluginToolResp) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
-	if !issetPlugins {
+	if !issetTools {
 		fieldId = 1
 		goto RequiredFieldNotSetError
 	}
@@ -8152,7 +8257,7 @@ func (p *ListPluginToolResp) ReadField1(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.Plugins = _field
+	p.Tools = _field
 	return nil
 }
 func (p *ListPluginToolResp) ReadField2(iprot thrift.TProtocol) error {
@@ -8197,13 +8302,13 @@ WriteStructEndError:
 }
 
 func (p *ListPluginToolResp) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("plugins", thrift.LIST, 1); err != nil {
+	if err = oprot.WriteFieldBegin("tools", thrift.LIST, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Plugins)); err != nil {
+	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Tools)); err != nil {
 		return err
 	}
-	for _, v := range p.Plugins {
+	for _, v := range p.Tools {
 		if err := v.Write(oprot); err != nil {
 			return err
 		}
@@ -8252,7 +8357,7 @@ func (p *ListPluginToolResp) DeepEqual(ano *ListPluginToolResp) bool {
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.Plugins) {
+	if !p.Field1DeepEqual(ano.Tools) {
 		return false
 	}
 	if !p.Field2DeepEqual(ano.Pagination) {
@@ -8263,10 +8368,10 @@ func (p *ListPluginToolResp) DeepEqual(ano *ListPluginToolResp) bool {
 
 func (p *ListPluginToolResp) Field1DeepEqual(src []*PluginTool) bool {
 
-	if len(p.Plugins) != len(src) {
+	if len(p.Tools) != len(src) {
 		return false
 	}
-	for i, v := range p.Plugins {
+	for i, v := range p.Tools {
 		_src := src[i]
 		if !v.DeepEqual(_src) {
 			return false

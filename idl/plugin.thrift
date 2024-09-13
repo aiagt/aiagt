@@ -128,12 +128,13 @@ struct UpdatePluginToolReq {
 }
 
 struct ListPluginToolReq {
-    1: required base.PaginationReq pagination;
-    2: required i64 plugin_id;
+    1: required base.PaginationReq pagination
+    2: optional i64 plugin_id
+    3: optional list<i64> tool_ids
 }
 
 struct ListPluginToolResp {
-    1: required list<PluginTool> plugins;
+    1: required list<PluginTool> tools;
     2: required base.PaginationResp pagination;
 }
 

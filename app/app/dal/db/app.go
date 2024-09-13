@@ -2,9 +2,11 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"math"
 
 	"github.com/aiagt/aiagt/app/app/model"
+	"github.com/aiagt/aiagt/kitex_gen/appsvc"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/pkg/errors"
 
@@ -50,15 +52,31 @@ func (d *AppDao) GetByIDs(ctx context.Context, ids []int64) ([]*model.App, error
 }
 
 // List get app list
-func (d *AppDao) List(ctx context.Context, page *base.PaginationReq) ([]*model.App, *base.PaginationResp, error) {
+func (d *AppDao) List(ctx context.Context, req *appsvc.ListAppReq, userID int64) ([]*model.App, *base.PaginationResp, error) {
 	var (
 		list   []*model.App
 		total  int64
+		page   = req.Pagination
 		offset = int((page.Page - 1) * page.PageSize)
 		limit  = int(page.PageSize)
 	)
 
-	err := d.db(ctx).Model(d.m).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
+	err := d.db(ctx).Model(d.m).Scopes(func(db *gorm.DB) *gorm.DB {
+		db = db.Where("author_id = ? OR is_private = ?", userID, false)
+		if req.AuthorId != nil {
+			db = db.Where("author_id = ?", req.AuthorId)
+		}
+		if req.Name != nil {
+			db = db.Where("name LIKE ?", fmt.Sprintf("%%%s%%", *req.Name))
+		}
+		if req.Description != nil {
+			db = db.Where("description LIKE ?", fmt.Sprintf("%%%s%%", *req.Description))
+		}
+		if req.Labels != nil {
+			db = db.Where("label_ids IN ?", req.Labels)
+		}
+		return db
+	}).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "app dao get page error")
 	}

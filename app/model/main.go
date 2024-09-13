@@ -1,38 +1,26 @@
 package main
 
 import (
-	"context"
-	"log"
-
 	"github.com/aiagt/aiagt/app/model/conf"
 	"github.com/aiagt/aiagt/app/model/handler"
+	"github.com/aiagt/aiagt/common/kitex/serversuite"
 	modelsvc "github.com/aiagt/aiagt/kitex_gen/modelsvc/modelservice"
+	"github.com/aiagt/aiagt/rpc"
 	ktserver "github.com/aiagt/kitextool/suite/server"
-	"github.com/cloudwego/kitex/pkg/endpoint"
-	"github.com/cloudwego/kitex/pkg/kerrors"
-	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
+	"github.com/cloudwego/kitex/transport"
+	"log"
 )
 
-type suite struct{}
-
-func (s *suite) Options() []server.Option {
-	opts := []server.Option{
-		server.WithMiddleware(func(next endpoint.Endpoint) endpoint.Endpoint {
-			return func(ctx context.Context, req, resp interface{}) (err error) {
-				return kerrors.NewBizStatusError(1, "hello")
-			}
-		}),
-	}
-	return opts
-}
-
 func main() {
-	svr := modelsvc.NewServer(new(handler.ModelServiceImpl),
-		server.WithMetaHandler(transmeta.ServerTTHeaderHandler),
-		server.WithSuite(ktserver.NewKitexToolSuite(conf.Conf())),
-		server.WithSuite(new(suite)),
-	)
+	handle := handler.NewModelService()
+
+	svr := modelsvc.NewServer(handle,
+		server.WithSuite(ktserver.NewKitexToolSuite(
+			conf.Conf(),
+			ktserver.WithTransport(transport.TTHeaderFramed),
+		)),
+		server.WithSuite(serversuite.NewServerSuite(rpc.UserCli)))
 
 	err := svr.Run()
 	if err != nil {

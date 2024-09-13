@@ -109,8 +109,7 @@ struct UpdateConversationReq {
 
 struct ListConversationReq {
     1: required base.PaginationReq pagination
-    2: required i64 user_id
-    3: required i64 app_id
+    2: required i64 app_id
 }
 
 struct ListConversationResp {

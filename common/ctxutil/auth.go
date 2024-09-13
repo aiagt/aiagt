@@ -2,13 +2,12 @@ package ctxutil
 
 import (
 	"context"
-
 	"github.com/bytedance/gopkg/cloud/metainfo"
 )
 
 const (
-	Authorization       = "Authorization"
-	AuthorizationUserID = "AuthorizationUserID"
+	Authorization       = "AUTHORIZATION"
+	AuthorizationUserID = "AUTHORIZATION_USER_ID"
 )
 
 func WithToken(ctx context.Context, token string) context.Context {

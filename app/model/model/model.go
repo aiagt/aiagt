@@ -1,7 +1,8 @@
 package model
 
-type Model struct {
+type Models struct {
 	Base
 }
 
-type ModelOptional struct{}
+type ModelsOptional struct {
+}

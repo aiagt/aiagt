@@ -4288,8 +4288,7 @@ func (p *UpdateConversationReq) Field2DeepEqual(src string) bool {
 
 type ListConversationReq struct {
 	Pagination *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
-	UserId     int64               `thrift:"user_id,2,required" frugal:"2,required,i64" json:"user_id"`
-	AppId      int64               `thrift:"app_id,3,required" frugal:"3,required,i64" json:"app_id"`
+	AppId      int64               `thrift:"app_id,2,required" frugal:"2,required,i64" json:"app_id"`
 }
 
 func NewListConversationReq() *ListConversationReq {
@@ -4308,18 +4307,11 @@ func (p *ListConversationReq) GetPagination() (v *base.PaginationReq) {
 	return p.Pagination
 }
 
-func (p *ListConversationReq) GetUserId() (v int64) {
-	return p.UserId
-}
-
 func (p *ListConversationReq) GetAppId() (v int64) {
 	return p.AppId
 }
 func (p *ListConversationReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
-}
-func (p *ListConversationReq) SetUserId(val int64) {
-	p.UserId = val
 }
 func (p *ListConversationReq) SetAppId(val int64) {
 	p.AppId = val
@@ -4327,8 +4319,7 @@ func (p *ListConversationReq) SetAppId(val int64) {
 
 var fieldIDToName_ListConversationReq = map[int16]string{
 	1: "pagination",
-	2: "user_id",
-	3: "app_id",
+	2: "app_id",
 }
 
 func (p *ListConversationReq) IsSetPagination() bool {
@@ -4340,7 +4331,6 @@ func (p *ListConversationReq) Read(iprot thrift.TProtocol) (err error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
-	var issetUserId bool = false
 	var issetAppId bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
@@ -4371,15 +4361,6 @@ func (p *ListConversationReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetUserId = true
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 3:
-			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField3(iprot); err != nil {
-					goto ReadFieldError
-				}
 				issetAppId = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -4402,13 +4383,8 @@ func (p *ListConversationReq) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetUserId {
-		fieldId = 2
-		goto RequiredFieldNotSetError
-	}
-
 	if !issetAppId {
-		fieldId = 3
+		fieldId = 2
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -4445,17 +4421,6 @@ func (p *ListConversationReq) ReadField2(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.UserId = _field
-	return nil
-}
-func (p *ListConversationReq) ReadField3(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
-		return err
-	} else {
-		_field = v
-	}
 	p.AppId = _field
 	return nil
 }
@@ -4472,10 +4437,6 @@ func (p *ListConversationReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
-			goto WriteFieldError
-		}
-		if err = p.writeField3(oprot); err != nil {
-			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -4514,24 +4475,7 @@ WriteFieldEndError:
 }
 
 func (p *ListConversationReq) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 2); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.UserId); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
-}
-
-func (p *ListConversationReq) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("app_id", thrift.I64, 3); err != nil {
+	if err = oprot.WriteFieldBegin("app_id", thrift.I64, 2); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI64(p.AppId); err != nil {
@@ -4542,9 +4486,9 @@ func (p *ListConversationReq) writeField3(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
 func (p *ListConversationReq) String() string {
@@ -4564,10 +4508,7 @@ func (p *ListConversationReq) DeepEqual(ano *ListConversationReq) bool {
 	if !p.Field1DeepEqual(ano.Pagination) {
 		return false
 	}
-	if !p.Field2DeepEqual(ano.UserId) {
-		return false
-	}
-	if !p.Field3DeepEqual(ano.AppId) {
+	if !p.Field2DeepEqual(ano.AppId) {
 		return false
 	}
 	return true
@@ -4581,13 +4522,6 @@ func (p *ListConversationReq) Field1DeepEqual(src *base.PaginationReq) bool {
 	return true
 }
 func (p *ListConversationReq) Field2DeepEqual(src int64) bool {
-
-	if p.UserId != src {
-		return false
-	}
-	return true
-}
-func (p *ListConversationReq) Field3DeepEqual(src int64) bool {
 
 	if p.AppId != src {
 		return false

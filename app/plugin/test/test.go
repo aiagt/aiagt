@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 
+	"github.com/aiagt/aiagt/app/plugin/pkg/call"
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
@@ -18,8 +20,9 @@ func main() {
 		logger(nil, err)
 	}
 
-	logger(GetPlugin(ctx))
-	logger(ListPlugin(ctx))
+	// logger(GetPlugin(ctx))
+	// logger(ListPlugin(ctx))
+	logger(CreatePlugigTool(ctx))
 }
 
 func login(ctx context.Context) (context.Context, error) {
@@ -82,4 +85,23 @@ func GetPlugin(ctx context.Context) (any, error) {
 
 func ListPlugin(ctx context.Context) (any, error) {
 	return rpc.PluginCli.ListPlugin(ctx, &pluginsvc.ListPluginReq{})
+}
+
+func CreatePlugigTool(ctx context.Context) (any, error) {
+	requestType := call.RequestType{
+		ContentType: "application/json",
+		Parameters: call.Object{
+			{Name: "location", Description: "The city and state, e.g. San Francisco, CA", Type: "string"},
+			{Name: "unit", Description: "The unit of the weather information, e.g. Celsius, Fahrenheit", Type: "string"},
+		},
+	}
+	rt, _ := json.Marshal(requestType)
+
+	return rpc.PluginCli.CreateTool(ctx, &pluginsvc.CreatePluginToolReq{
+		PluginId:    1,
+		Name:        "get_current_weather",
+		Description: "Get the current weather in a given location",
+		RequestType: string(rt),
+		ApiUrl:      "https://api.openweathermap.org/data/2.5/weather",
+	})
 }

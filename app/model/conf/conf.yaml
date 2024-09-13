@@ -1,6 +1,6 @@
 server:
   name: model
-  address: ":8889"
+  address: ":8935"
 
 config_center:
   port: 8848
@@ -14,3 +14,7 @@ db:
 
 redis:
   address: "127.0.0.1:6379"
+
+openai:
+  api_key: "sk-yjyY92xs9ivKwPd4B549C9B80eF74809BfF6887159944321"
+  base_url: "https://api.lqqq.ltd/v1"

@@ -3349,7 +3349,6 @@ func (p *ListConversationReq) FastRead(buf []byte) (int, error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
-	var issetUserId bool = false
 	var issetAppId bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
@@ -3389,21 +3388,6 @@ func (p *ListConversationReq) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
-				issetUserId = true
-			} else {
-				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
-				offset += l
-				if err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 3:
-			if fieldTypeId == thrift.I64 {
-				l, err = p.FastReadField3(buf[offset:])
-				offset += l
-				if err != nil {
-					goto ReadFieldError
-				}
 				issetAppId = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
@@ -3437,13 +3421,8 @@ func (p *ListConversationReq) FastRead(buf []byte) (int, error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetUserId {
-		fieldId = 2
-		goto RequiredFieldNotSetError
-	}
-
 	if !issetAppId {
-		fieldId = 3
+		fieldId = 2
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -3487,22 +3466,6 @@ func (p *ListConversationReq) FastReadField2(buf []byte) (int, error) {
 		_field = v
 
 	}
-	p.UserId = _field
-	return offset, nil
-}
-
-func (p *ListConversationReq) FastReadField3(buf []byte) (int, error) {
-	offset := 0
-
-	var _field int64
-	if v, l, err := bthrift.Binary.ReadI64(buf[offset:]); err != nil {
-		return offset, err
-	} else {
-		offset += l
-
-		_field = v
-
-	}
 	p.AppId = _field
 	return offset, nil
 }
@@ -3517,7 +3480,6 @@ func (p *ListConversationReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.B
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "ListConversationReq")
 	if p != nil {
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
-		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
@@ -3531,7 +3493,6 @@ func (p *ListConversationReq) BLength() int {
 	if p != nil {
 		l += p.field1Length()
 		l += p.field2Length()
-		l += p.field3Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -3548,15 +3509,7 @@ func (p *ListConversationReq) fastWriteField1(buf []byte, binaryWriter bthrift.B
 
 func (p *ListConversationReq) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "user_id", thrift.I64, 2)
-	offset += bthrift.Binary.WriteI64(buf[offset:], p.UserId)
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
-	return offset
-}
-
-func (p *ListConversationReq) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryWriter) int {
-	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "app_id", thrift.I64, 3)
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "app_id", thrift.I64, 2)
 	offset += bthrift.Binary.WriteI64(buf[offset:], p.AppId)
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
@@ -3572,15 +3525,7 @@ func (p *ListConversationReq) field1Length() int {
 
 func (p *ListConversationReq) field2Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("user_id", thrift.I64, 2)
-	l += bthrift.Binary.I64Length(p.UserId)
-	l += bthrift.Binary.FieldEndLength()
-	return l
-}
-
-func (p *ListConversationReq) field3Length() int {
-	l := 0
-	l += bthrift.Binary.FieldBeginLength("app_id", thrift.I64, 3)
+	l += bthrift.Binary.FieldBeginLength("app_id", thrift.I64, 2)
 	l += bthrift.Binary.I64Length(p.AppId)
 	l += bthrift.Binary.FieldEndLength()
 	return l

@@ -17,7 +17,7 @@ struct ChatReq {
 }
 
 struct ChatResp {
-    1: required openai.ChatCompletionResponse openai_resp
+    1: required openai.ChatCompletionStreamResponse openai_resp
 }
 
 struct GenTokenReq {

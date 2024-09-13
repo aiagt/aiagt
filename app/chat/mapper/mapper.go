@@ -2,7 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
+
 	"github.com/aiagt/aiagt/app/chat/model"
+	"github.com/aiagt/aiagt/common/baseutil"
 	"github.com/aiagt/aiagt/kitex_gen/chatsvc"
 	"github.com/aiagt/aiagt/kitex_gen/openai"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
@@ -81,7 +83,8 @@ func NewOpenAIMessage(message *model.Message) *openai.ChatCompletionMessage {
 	case model.MessageTypeFile:
 		// TODO: file
 	case model.MessageTypeFunction:
-		// TODO: function
+		result.Name = &message.Content.Func.Name
+		result.Content = &message.Content.Func.Content
 	case model.MessageTypeFunctionCall:
 		result.FunctionCall = &openai.FunctionCall{
 			Name:      &message.Content.FuncCall.Name,
@@ -107,19 +110,6 @@ func NewOpenAIMessageRole(role model.MessageRole) string {
 	return ""
 }
 
-func NewOpenAIMessageImageDetail(detail openai.ImageURLDetail) string {
-	switch detail {
-	case openai.ImageURLDetail_HIGH:
-		return "high"
-	case openai.ImageURLDetail_LOW:
-		return "low"
-	case openai.ImageURLDetail_AUTO:
-		return "auto"
-	}
-
-	return ""
-}
-
 func NewOpenAIListMessage(messages []*model.Message) []*openai.ChatCompletionMessage {
 	result := make([]*openai.ChatCompletionMessage, len(messages))
 	for i, m := range messages {
@@ -132,13 +122,12 @@ func NewOpenAIFunctionDefinition(tool *pluginsvc.PluginTool) *openai.FunctionDef
 	strict := true
 
 	reqTypeBytes, _ := json.Marshal(tool.RequestType)
-	reqTypeStr := string(reqTypeBytes)
 
 	return &openai.FunctionDefinition{
 		Name:        tool.Name,
 		Description: &tool.Description,
 		Strict:      &strict,
-		Parameters:  &reqTypeStr,
+		Parameters:  reqTypeBytes,
 	}
 }
 
@@ -150,4 +139,92 @@ func NewOpenAIListFunctionDefinition(tools []*pluginsvc.PluginTool) []*openai.Fu
 	}
 
 	return result
+}
+func NewGenConversation(conversation *model.Conversation) *chatsvc.Conversation {
+	return &chatsvc.Conversation{
+		Id:     conversation.ID,
+		AppId:  conversation.AppID,
+		UserId: conversation.UserID,
+		Title:  conversation.Title,
+	}
+}
+
+func NewGenListConversation(conversations []*model.Conversation) []*chatsvc.Conversation {
+	result := make([]*chatsvc.Conversation, len(conversations))
+	for i, conversation := range conversations {
+		result[i] = NewGenConversation(conversation)
+	}
+	return result
+}
+
+func NewModelConversation(conversation *chatsvc.Conversation) *model.Conversation {
+	return &model.Conversation{
+		AppID:  conversation.AppId,
+		UserID: conversation.UserId,
+		Title:  conversation.Title,
+	}
+}
+
+func NewGenMessage(message *model.Message) *chatsvc.Message {
+	return &chatsvc.Message{
+		Id:             message.ID,
+		ConversationId: message.ConversationID,
+		Role:           chatsvc.MessageRole(message.Role),
+		Content:        NewGenMessageContent(&message.MessageContent),
+		CreatedAt:      baseutil.NewBaseTime(message.CreatedAt),
+		UpdatedAt:      baseutil.NewBaseTime(message.UpdatedAt),
+	}
+}
+
+func NewGenMessageContent(content *model.MessageContent) *chatsvc.MessageContent {
+	switch content.Type {
+	case model.MessageTypeText:
+		return &chatsvc.MessageContent{
+			Type:    chatsvc.MessageType_TEXT,
+			Content: &chatsvc.MessageContentValue{Text: &chatsvc.MessageContentValueText{Text: content.Content.Text.Text}},
+		}
+	case model.MessageTypeImage:
+		return &chatsvc.MessageContent{
+			Type:    chatsvc.MessageType_IMAGE,
+			Content: &chatsvc.MessageContentValue{Image: &chatsvc.MessageContentValueImage{Url: content.Content.Image.URL}},
+		}
+	case model.MessageTypeFile:
+		return &chatsvc.MessageContent{
+			Type:    chatsvc.MessageType_FILE,
+			Content: &chatsvc.MessageContentValue{File: &chatsvc.MessageContentValueFile{Url: content.Content.File.URL, Type: content.Content.File.Type}},
+		}
+	case model.MessageTypeFunction:
+		return &chatsvc.MessageContent{
+			Type:    chatsvc.MessageType_FUNCTION,
+			Content: &chatsvc.MessageContentValue{Func: &chatsvc.MessageContentValueFunc{Name: content.Content.Func.Name, Content: content.Content.Func.Content}},
+		}
+	case model.MessageTypeFunctionCall:
+		return &chatsvc.MessageContent{
+			Type:    chatsvc.MessageType_FUNCTION_CALL,
+			Content: &chatsvc.MessageContentValue{FuncCall: &chatsvc.MessageContentValueFuncCall{Name: content.Content.FuncCall.Name, Arguments: content.Content.FuncCall.Arguments}},
+		}
+	}
+
+	return nil
+}
+
+func NewGenListMessage(messages []*model.Message) []*chatsvc.Message {
+	result := make([]*chatsvc.Message, len(messages))
+	for i, message := range messages {
+		result[i] = NewGenMessage(message)
+	}
+
+	return result
+}
+
+func NewModelUpdateConversation(conversation *chatsvc.UpdateConversationReq) *model.ConversationOptional {
+	return &model.ConversationOptional{
+		Title: &conversation.Title,
+	}
+}
+
+func NewModelUpdateMessage(message *chatsvc.UpdateMessageReq) *model.MessageOptional {
+	return &model.MessageOptional{
+		MessageContent: NewModelMessageContent(message.Message),
+	}
 }

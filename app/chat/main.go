@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/aiagt/aiagt/app/chat/conf"
 	"github.com/aiagt/aiagt/app/chat/dal/db"
 	"github.com/aiagt/aiagt/app/chat/handler"
 	"github.com/aiagt/aiagt/app/chat/model"
-	"github.com/aiagt/aiagt/app/user/conf"
 	"github.com/aiagt/aiagt/common/kitex/serversuite"
 	chatsvc "github.com/aiagt/aiagt/kitex_gen/chatsvc/chatservice"
 	"github.com/aiagt/aiagt/rpc"
@@ -17,7 +17,7 @@ import (
 )
 
 func main() {
-	handle := handler.NewChatService(db.NewConversationDao(), db.NewMessageDao(), rpc.AppCli, rpc.ModelCli, rpc.ModelStreamCli)
+	handle := handler.NewChatService(db.NewConversationDao(), db.NewMessageDao(), rpc.UserCli, rpc.AppCli, rpc.PluginCli, rpc.ModelCli, rpc.ModelStreamCli)
 
 	svr := chatsvc.NewServer(handle,
 		server.WithSuite(ktserver.NewKitexToolSuite(

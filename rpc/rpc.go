@@ -18,6 +18,7 @@ var (
 	PluginCli      pluginsvc.Client
 	AppCli         appsvc.Client
 	ChatCli        chatsvc.Client
+	ChatStreamCli  chatsvc.StreamClient
 	ModelCli       modelsvc.Client
 	ModelStreamCli modelsvc.StreamClient
 )
@@ -45,6 +46,12 @@ func init() {
 		client.WithHostPorts(":8934"),
 		client.WithSuite(clientsuite.NewClientSuite()),
 		client.WithSuite(ktclient.NewKitexToolSuite(nil, ktclient.WithTransport(transport.TTHeaderFramed))),
+	)
+
+	ChatStreamCli = chatsvc.MustNewStreamClient("app",
+		streamclient.WithHostPorts(":8934"),
+		streamclient.WithSuite(clientsuite.NewClientSuite()),
+		streamclient.WithSuite(ktclient.NewKitexToolSuite(nil, ktclient.WithTransport(transport.TTHeaderFramed))),
 	)
 
 	ModelCli = modelsvc.MustNewClient("model",
