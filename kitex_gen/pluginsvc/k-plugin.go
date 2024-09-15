@@ -1905,13 +1905,13 @@ func (p *PluginTool) FastReadField4(buf []byte) (int, error) {
 func (p *PluginTool) FastReadField5(buf []byte) (int, error) {
 	offset := 0
 
-	var _field string
-	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+	var _field []byte
+	if v, l, err := bthrift.Binary.ReadBinary(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
 
-		_field = v
+		_field = []byte(v)
 
 	}
 	p.RequestType = _field
@@ -1921,13 +1921,13 @@ func (p *PluginTool) FastReadField5(buf []byte) (int, error) {
 func (p *PluginTool) FastReadField6(buf []byte) (int, error) {
 	offset := 0
 
-	var _field string
-	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+	var _field []byte
+	if v, l, err := bthrift.Binary.ReadBinary(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
 
-		_field = v
+		_field = []byte(v)
 
 	}
 	p.ResponseType = _field
@@ -2083,7 +2083,7 @@ func (p *PluginTool) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWrit
 func (p *PluginTool) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
 	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "request_type", thrift.STRING, 5)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.RequestType)
+	offset += bthrift.Binary.WriteBinaryNocopy(buf[offset:], binaryWriter, []byte(p.RequestType))
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
@@ -2091,7 +2091,7 @@ func (p *PluginTool) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryWrit
 func (p *PluginTool) fastWriteField6(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
 	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "response_type", thrift.STRING, 6)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.ResponseType)
+	offset += bthrift.Binary.WriteBinaryNocopy(buf[offset:], binaryWriter, []byte(p.ResponseType))
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
@@ -2175,7 +2175,7 @@ func (p *PluginTool) field4Length() int {
 func (p *PluginTool) field5Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("request_type", thrift.STRING, 5)
-	l += bthrift.Binary.StringLengthNocopy(p.RequestType)
+	l += bthrift.Binary.BinaryLengthNocopy([]byte(p.RequestType))
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
@@ -2183,7 +2183,7 @@ func (p *PluginTool) field5Length() int {
 func (p *PluginTool) field6Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("response_type", thrift.STRING, 6)
-	l += bthrift.Binary.StringLengthNocopy(p.ResponseType)
+	l += bthrift.Binary.BinaryLengthNocopy([]byte(p.ResponseType))
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
@@ -5412,13 +5412,13 @@ func (p *CreatePluginToolReq) FastReadField3(buf []byte) (int, error) {
 func (p *CreatePluginToolReq) FastReadField4(buf []byte) (int, error) {
 	offset := 0
 
-	var _field string
-	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+	var _field []byte
+	if v, l, err := bthrift.Binary.ReadBinary(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
 
-		_field = v
+		_field = []byte(v)
 
 	}
 	p.RequestType = _field
@@ -5428,13 +5428,13 @@ func (p *CreatePluginToolReq) FastReadField4(buf []byte) (int, error) {
 func (p *CreatePluginToolReq) FastReadField5(buf []byte) (int, error) {
 	offset := 0
 
-	var _field string
-	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+	var _field []byte
+	if v, l, err := bthrift.Binary.ReadBinary(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
 
-		_field = v
+		_field = []byte(v)
 
 	}
 	p.ResponseType = _field
@@ -5538,7 +5538,7 @@ func (p *CreatePluginToolReq) fastWriteField3(buf []byte, binaryWriter bthrift.B
 func (p *CreatePluginToolReq) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
 	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "request_type", thrift.STRING, 4)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.RequestType)
+	offset += bthrift.Binary.WriteBinaryNocopy(buf[offset:], binaryWriter, []byte(p.RequestType))
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
@@ -5546,7 +5546,7 @@ func (p *CreatePluginToolReq) fastWriteField4(buf []byte, binaryWriter bthrift.B
 func (p *CreatePluginToolReq) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
 	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "response_type", thrift.STRING, 5)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.ResponseType)
+	offset += bthrift.Binary.WriteBinaryNocopy(buf[offset:], binaryWriter, []byte(p.ResponseType))
 	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
@@ -5596,7 +5596,7 @@ func (p *CreatePluginToolReq) field3Length() int {
 func (p *CreatePluginToolReq) field4Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("request_type", thrift.STRING, 4)
-	l += bthrift.Binary.StringLengthNocopy(p.RequestType)
+	l += bthrift.Binary.BinaryLengthNocopy([]byte(p.RequestType))
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
@@ -5604,7 +5604,7 @@ func (p *CreatePluginToolReq) field4Length() int {
 func (p *CreatePluginToolReq) field5Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("response_type", thrift.STRING, 5)
-	l += bthrift.Binary.StringLengthNocopy(p.ResponseType)
+	l += bthrift.Binary.BinaryLengthNocopy([]byte(p.ResponseType))
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
@@ -5868,12 +5868,13 @@ func (p *UpdatePluginToolReq) FastReadField4(buf []byte) (int, error) {
 func (p *UpdatePluginToolReq) FastReadField5(buf []byte) (int, error) {
 	offset := 0
 
-	var _field *string
-	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+	var _field []byte
+	if v, l, err := bthrift.Binary.ReadBinary(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
-		_field = &v
+
+		_field = []byte(v)
 
 	}
 	p.RequestType = _field
@@ -5883,12 +5884,13 @@ func (p *UpdatePluginToolReq) FastReadField5(buf []byte) (int, error) {
 func (p *UpdatePluginToolReq) FastReadField6(buf []byte) (int, error) {
 	offset := 0
 
-	var _field *string
-	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+	var _field []byte
+	if v, l, err := bthrift.Binary.ReadBinary(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
-		_field = &v
+
+		_field = []byte(v)
 
 	}
 	p.ResponseType = _field
@@ -6008,7 +6010,7 @@ func (p *UpdatePluginToolReq) fastWriteField5(buf []byte, binaryWriter bthrift.B
 	offset := 0
 	if p.IsSetRequestType() {
 		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "request_type", thrift.STRING, 5)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.RequestType)
+		offset += bthrift.Binary.WriteBinaryNocopy(buf[offset:], binaryWriter, []byte(p.RequestType))
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
 	return offset
@@ -6018,7 +6020,7 @@ func (p *UpdatePluginToolReq) fastWriteField6(buf []byte, binaryWriter bthrift.B
 	offset := 0
 	if p.IsSetResponseType() {
 		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "response_type", thrift.STRING, 6)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.ResponseType)
+		offset += bthrift.Binary.WriteBinaryNocopy(buf[offset:], binaryWriter, []byte(p.ResponseType))
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
 	return offset
@@ -6086,7 +6088,7 @@ func (p *UpdatePluginToolReq) field5Length() int {
 	l := 0
 	if p.IsSetRequestType() {
 		l += bthrift.Binary.FieldBeginLength("request_type", thrift.STRING, 5)
-		l += bthrift.Binary.StringLengthNocopy(*p.RequestType)
+		l += bthrift.Binary.BinaryLengthNocopy([]byte(p.RequestType))
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l
@@ -6096,7 +6098,7 @@ func (p *UpdatePluginToolReq) field6Length() int {
 	l := 0
 	if p.IsSetResponseType() {
 		l += bthrift.Binary.FieldBeginLength("response_type", thrift.STRING, 6)
-		l += bthrift.Binary.StringLengthNocopy(*p.ResponseType)
+		l += bthrift.Binary.BinaryLengthNocopy([]byte(p.ResponseType))
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l

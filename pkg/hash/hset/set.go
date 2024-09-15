@@ -1,6 +1,8 @@
 package hset
 
-import "github.com/aiagt/aiagt/common/hash"
+import (
+	"github.com/aiagt/aiagt/pkg/hash"
+)
 
 type Set[T comparable] map[T]struct{}
 

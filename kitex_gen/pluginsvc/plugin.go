@@ -1897,8 +1897,8 @@ type PluginTool struct {
 	Name          string     `thrift:"name,2,required" frugal:"2,required,string" json:"name"`
 	Description   string     `thrift:"description,3,required" frugal:"3,required,string" json:"description"`
 	PluginId      int64      `thrift:"plugin_id,4,required" frugal:"4,required,i64" json:"plugin_id"`
-	RequestType   string     `thrift:"request_type,5,required" frugal:"5,required,string" json:"request_type"`
-	ResponseType  string     `thrift:"response_type,6,required" frugal:"6,required,string" json:"response_type"`
+	RequestType   []byte     `thrift:"request_type,5,required" frugal:"5,required,binary" json:"request_type"`
+	ResponseType  []byte     `thrift:"response_type,6,required" frugal:"6,required,binary" json:"response_type"`
 	ApiUrl        string     `thrift:"api_url,7,required" frugal:"7,required,string" json:"api_url"`
 	ImportModelId *int64     `thrift:"import_model_id,8,optional" frugal:"8,optional,i64" json:"import_model_id,omitempty"`
 	CreatedAt     *base.Time `thrift:"created_at,9,required" frugal:"9,required,base.Time" json:"created_at"`
@@ -1929,11 +1929,11 @@ func (p *PluginTool) GetPluginId() (v int64) {
 	return p.PluginId
 }
 
-func (p *PluginTool) GetRequestType() (v string) {
+func (p *PluginTool) GetRequestType() (v []byte) {
 	return p.RequestType
 }
 
-func (p *PluginTool) GetResponseType() (v string) {
+func (p *PluginTool) GetResponseType() (v []byte) {
 	return p.ResponseType
 }
 
@@ -1988,10 +1988,10 @@ func (p *PluginTool) SetDescription(val string) {
 func (p *PluginTool) SetPluginId(val int64) {
 	p.PluginId = val
 }
-func (p *PluginTool) SetRequestType(val string) {
+func (p *PluginTool) SetRequestType(val []byte) {
 	p.RequestType = val
 }
-func (p *PluginTool) SetResponseType(val string) {
+func (p *PluginTool) SetResponseType(val []byte) {
 	p.ResponseType = val
 }
 func (p *PluginTool) SetApiUrl(val string) {
@@ -2286,22 +2286,22 @@ func (p *PluginTool) ReadField4(iprot thrift.TProtocol) error {
 }
 func (p *PluginTool) ReadField5(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field []byte
+	if v, err := iprot.ReadBinary(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = []byte(v)
 	}
 	p.RequestType = _field
 	return nil
 }
 func (p *PluginTool) ReadField6(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field []byte
+	if v, err := iprot.ReadBinary(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = []byte(v)
 	}
 	p.ResponseType = _field
 	return nil
@@ -2493,7 +2493,7 @@ func (p *PluginTool) writeField5(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("request_type", thrift.STRING, 5); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.RequestType); err != nil {
+	if err := oprot.WriteBinary([]byte(p.RequestType)); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2510,7 +2510,7 @@ func (p *PluginTool) writeField6(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("response_type", thrift.STRING, 6); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.ResponseType); err != nil {
+	if err := oprot.WriteBinary([]byte(p.ResponseType)); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2690,16 +2690,16 @@ func (p *PluginTool) Field4DeepEqual(src int64) bool {
 	}
 	return true
 }
-func (p *PluginTool) Field5DeepEqual(src string) bool {
+func (p *PluginTool) Field5DeepEqual(src []byte) bool {
 
-	if strings.Compare(p.RequestType, src) != 0 {
+	if bytes.Compare(p.RequestType, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field6DeepEqual(src string) bool {
+func (p *PluginTool) Field6DeepEqual(src []byte) bool {
 
-	if strings.Compare(p.ResponseType, src) != 0 {
+	if bytes.Compare(p.ResponseType, src) != 0 {
 		return false
 	}
 	return true
@@ -6502,8 +6502,8 @@ type CreatePluginToolReq struct {
 	Name          string `thrift:"name,1,required" frugal:"1,required,string" json:"name"`
 	Description   string `thrift:"description,2,required" frugal:"2,required,string" json:"description"`
 	PluginId      int64  `thrift:"plugin_id,3,required" frugal:"3,required,i64" json:"plugin_id"`
-	RequestType   string `thrift:"request_type,4,required" frugal:"4,required,string" json:"request_type"`
-	ResponseType  string `thrift:"response_type,5,required" frugal:"5,required,string" json:"response_type"`
+	RequestType   []byte `thrift:"request_type,4,required" frugal:"4,required,binary" json:"request_type"`
+	ResponseType  []byte `thrift:"response_type,5,required" frugal:"5,required,binary" json:"response_type"`
 	ApiUrl        string `thrift:"api_url,6,required" frugal:"6,required,string" json:"api_url"`
 	ImportModelId *int64 `thrift:"import_model_id,7,optional" frugal:"7,optional,i64" json:"import_model_id,omitempty"`
 }
@@ -6527,11 +6527,11 @@ func (p *CreatePluginToolReq) GetPluginId() (v int64) {
 	return p.PluginId
 }
 
-func (p *CreatePluginToolReq) GetRequestType() (v string) {
+func (p *CreatePluginToolReq) GetRequestType() (v []byte) {
 	return p.RequestType
 }
 
-func (p *CreatePluginToolReq) GetResponseType() (v string) {
+func (p *CreatePluginToolReq) GetResponseType() (v []byte) {
 	return p.ResponseType
 }
 
@@ -6556,10 +6556,10 @@ func (p *CreatePluginToolReq) SetDescription(val string) {
 func (p *CreatePluginToolReq) SetPluginId(val int64) {
 	p.PluginId = val
 }
-func (p *CreatePluginToolReq) SetRequestType(val string) {
+func (p *CreatePluginToolReq) SetRequestType(val []byte) {
 	p.RequestType = val
 }
-func (p *CreatePluginToolReq) SetResponseType(val string) {
+func (p *CreatePluginToolReq) SetResponseType(val []byte) {
 	p.ResponseType = val
 }
 func (p *CreatePluginToolReq) SetApiUrl(val string) {
@@ -6765,22 +6765,22 @@ func (p *CreatePluginToolReq) ReadField3(iprot thrift.TProtocol) error {
 }
 func (p *CreatePluginToolReq) ReadField4(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field []byte
+	if v, err := iprot.ReadBinary(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = []byte(v)
 	}
 	p.RequestType = _field
 	return nil
 }
 func (p *CreatePluginToolReq) ReadField5(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field []byte
+	if v, err := iprot.ReadBinary(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = []byte(v)
 	}
 	p.ResponseType = _field
 	return nil
@@ -6915,7 +6915,7 @@ func (p *CreatePluginToolReq) writeField4(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("request_type", thrift.STRING, 4); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.RequestType); err != nil {
+	if err := oprot.WriteBinary([]byte(p.RequestType)); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -6932,7 +6932,7 @@ func (p *CreatePluginToolReq) writeField5(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("response_type", thrift.STRING, 5); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.ResponseType); err != nil {
+	if err := oprot.WriteBinary([]byte(p.ResponseType)); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -7040,16 +7040,16 @@ func (p *CreatePluginToolReq) Field3DeepEqual(src int64) bool {
 	}
 	return true
 }
-func (p *CreatePluginToolReq) Field4DeepEqual(src string) bool {
+func (p *CreatePluginToolReq) Field4DeepEqual(src []byte) bool {
 
-	if strings.Compare(p.RequestType, src) != 0 {
+	if bytes.Compare(p.RequestType, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginToolReq) Field5DeepEqual(src string) bool {
+func (p *CreatePluginToolReq) Field5DeepEqual(src []byte) bool {
 
-	if strings.Compare(p.ResponseType, src) != 0 {
+	if bytes.Compare(p.ResponseType, src) != 0 {
 		return false
 	}
 	return true
@@ -7079,8 +7079,8 @@ type UpdatePluginToolReq struct {
 	Name          *string `thrift:"name,2,optional" frugal:"2,optional,string" json:"name,omitempty"`
 	Description   *string `thrift:"description,3,optional" frugal:"3,optional,string" json:"description,omitempty"`
 	PluginId      *int64  `thrift:"plugin_id,4,optional" frugal:"4,optional,i64" json:"plugin_id,omitempty"`
-	RequestType   *string `thrift:"request_type,5,optional" frugal:"5,optional,string" json:"request_type,omitempty"`
-	ResponseType  *string `thrift:"response_type,6,optional" frugal:"6,optional,string" json:"response_type,omitempty"`
+	RequestType   []byte  `thrift:"request_type,5,optional" frugal:"5,optional,binary" json:"request_type,omitempty"`
+	ResponseType  []byte  `thrift:"response_type,6,optional" frugal:"6,optional,binary" json:"response_type,omitempty"`
 	ApiUrl        *string `thrift:"api_url,7,optional" frugal:"7,optional,string" json:"api_url,omitempty"`
 	ImportModelId *int64  `thrift:"import_model_id,8,optional" frugal:"8,optional,i64" json:"import_model_id,omitempty"`
 }
@@ -7123,22 +7123,22 @@ func (p *UpdatePluginToolReq) GetPluginId() (v int64) {
 	return *p.PluginId
 }
 
-var UpdatePluginToolReq_RequestType_DEFAULT string
+var UpdatePluginToolReq_RequestType_DEFAULT []byte
 
-func (p *UpdatePluginToolReq) GetRequestType() (v string) {
+func (p *UpdatePluginToolReq) GetRequestType() (v []byte) {
 	if !p.IsSetRequestType() {
 		return UpdatePluginToolReq_RequestType_DEFAULT
 	}
-	return *p.RequestType
+	return p.RequestType
 }
 
-var UpdatePluginToolReq_ResponseType_DEFAULT string
+var UpdatePluginToolReq_ResponseType_DEFAULT []byte
 
-func (p *UpdatePluginToolReq) GetResponseType() (v string) {
+func (p *UpdatePluginToolReq) GetResponseType() (v []byte) {
 	if !p.IsSetResponseType() {
 		return UpdatePluginToolReq_ResponseType_DEFAULT
 	}
-	return *p.ResponseType
+	return p.ResponseType
 }
 
 var UpdatePluginToolReq_ApiUrl_DEFAULT string
@@ -7170,10 +7170,10 @@ func (p *UpdatePluginToolReq) SetDescription(val *string) {
 func (p *UpdatePluginToolReq) SetPluginId(val *int64) {
 	p.PluginId = val
 }
-func (p *UpdatePluginToolReq) SetRequestType(val *string) {
+func (p *UpdatePluginToolReq) SetRequestType(val []byte) {
 	p.RequestType = val
 }
-func (p *UpdatePluginToolReq) SetResponseType(val *string) {
+func (p *UpdatePluginToolReq) SetResponseType(val []byte) {
 	p.ResponseType = val
 }
 func (p *UpdatePluginToolReq) SetApiUrl(val *string) {
@@ -7388,22 +7388,22 @@ func (p *UpdatePluginToolReq) ReadField4(iprot thrift.TProtocol) error {
 }
 func (p *UpdatePluginToolReq) ReadField5(iprot thrift.TProtocol) error {
 
-	var _field *string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field []byte
+	if v, err := iprot.ReadBinary(); err != nil {
 		return err
 	} else {
-		_field = &v
+		_field = []byte(v)
 	}
 	p.RequestType = _field
 	return nil
 }
 func (p *UpdatePluginToolReq) ReadField6(iprot thrift.TProtocol) error {
 
-	var _field *string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field []byte
+	if v, err := iprot.ReadBinary(); err != nil {
 		return err
 	} else {
-		_field = &v
+		_field = []byte(v)
 	}
 	p.ResponseType = _field
 	return nil
@@ -7566,7 +7566,7 @@ func (p *UpdatePluginToolReq) writeField5(oprot thrift.TProtocol) (err error) {
 		if err = oprot.WriteFieldBegin("request_type", thrift.STRING, 5); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteString(*p.RequestType); err != nil {
+		if err := oprot.WriteBinary([]byte(p.RequestType)); err != nil {
 			return err
 		}
 		if err = oprot.WriteFieldEnd(); err != nil {
@@ -7585,7 +7585,7 @@ func (p *UpdatePluginToolReq) writeField6(oprot thrift.TProtocol) (err error) {
 		if err = oprot.WriteFieldBegin("response_type", thrift.STRING, 6); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteString(*p.ResponseType); err != nil {
+		if err := oprot.WriteBinary([]byte(p.ResponseType)); err != nil {
 			return err
 		}
 		if err = oprot.WriteFieldEnd(); err != nil {
@@ -7721,26 +7721,16 @@ func (p *UpdatePluginToolReq) Field4DeepEqual(src *int64) bool {
 	}
 	return true
 }
-func (p *UpdatePluginToolReq) Field5DeepEqual(src *string) bool {
+func (p *UpdatePluginToolReq) Field5DeepEqual(src []byte) bool {
 
-	if p.RequestType == src {
-		return true
-	} else if p.RequestType == nil || src == nil {
-		return false
-	}
-	if strings.Compare(*p.RequestType, *src) != 0 {
+	if bytes.Compare(p.RequestType, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *UpdatePluginToolReq) Field6DeepEqual(src *string) bool {
+func (p *UpdatePluginToolReq) Field6DeepEqual(src []byte) bool {
 
-	if p.ResponseType == src {
-		return true
-	} else if p.ResponseType == nil || src == nil {
-		return false
-	}
-	if strings.Compare(*p.ResponseType, *src) != 0 {
+	if bytes.Compare(p.ResponseType, src) != 0 {
 		return false
 	}
 	return true

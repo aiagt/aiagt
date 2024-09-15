@@ -17,6 +17,7 @@ require (
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.5.3
+	github.com/samber/lo v1.47.0
 	github.com/sashabaranov/go-openai v1.29.2
 	github.com/stretchr/testify v1.8.4
 	gorm.io/gorm v1.25.11
@@ -67,7 +68,6 @@ require (
 	github.com/nyaruka/phonenumbers v1.0.55 // indirect
 	github.com/oleiade/lane v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/samber/lo v1.47.0 // indirect
 	github.com/sirupsen/logrus v1.9.2 // indirect
 	github.com/tidwall/gjson v1.14.4 // indirect
 	github.com/tidwall/match v1.1.1 // indirect

@@ -37,8 +37,8 @@ struct PluginTool {
     2: required string name
     3: required string description
     4: required i64 plugin_id
-    5: required string request_type
-    6: required string response_type
+    5: required binary request_type
+    6: required binary response_type
     7: required string api_url
     8: optional i64 import_model_id
     9: required base.Time created_at
@@ -110,8 +110,8 @@ struct CreatePluginToolReq {
     1: required string name
     2: required string description
     3: required i64 plugin_id
-    4: required string request_type
-    5: required string response_type
+    4: required binary request_type
+    5: required binary response_type
     6: required string api_url
     7: optional i64 import_model_id
 }
@@ -121,8 +121,8 @@ struct UpdatePluginToolReq {
     2: optional string name
     3: optional string description
     4: optional i64 plugin_id
-    5: optional string request_type
-    6: optional string response_type
+    5: optional binary request_type
+    6: optional binary response_type
     7: optional string api_url
     8: optional i64 import_model_id
 }

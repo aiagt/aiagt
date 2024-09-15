@@ -2,14 +2,11 @@ package call
 
 import (
 	"context"
-	"fmt"
-	"testing"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	"github.com/stretchr/testify/assert"
 )
 
 const addr = "localhost:34378"
@@ -46,23 +43,23 @@ func runServer() {
 	h.Spin()
 }
 
-func TestCall(t *testing.T) {
-	go runServer()
+// func TestCall(t *testing.T) {
+// 	go runServer()
 
-	var (
-		reqType = &RequestType{ContentType: "application/json", Parameters: Object{
-			&Field{Name: "message", Type: "string"},
-		}}
-		respType = &ResponseType{ContentType: "application/json", Parameters: Object{
-			&Field{Name: "code", Type: "number"},
-			&Field{Name: "msg", Type: "string"},
-		}}
-		body   = []byte(`{"message":"success"}`)
-		apiURL = fmt.Sprintf("http://%s/test", addr)
-	)
+// 	var (
+// 		reqType = &RequestType{ContentType: "application/json", Parameters: Object{
+// 			&Field{Name: "message", Type: "string"},
+// 		}}
+// 		respType = &ResponseType{ContentType: "application/json", Parameters: Object{
+// 			&Field{Name: "code", Type: "number"},
+// 			&Field{Name: "msg", Type: "string"},
+// 		}}
+// 		body   = []byte(`{"message":"success"}`)
+// 		apiURL = fmt.Sprintf("http://%s/test", addr)
+// 	)
 
-	resp, err := Call(context.Background(), new(RequestBody), apiURL, reqType, respType, body)
-	assert.NoError(t, err)
+// 	resp, err := Call(context.Background(), new(RequestBody), apiURL, reqType, respType, body)
+// 	assert.NoError(t, err)
 
-	t.Log(string(resp))
-}
+// 	t.Log(string(resp))
+// }

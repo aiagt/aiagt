@@ -1,11 +1,9 @@
 package handler
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
-	"github.com/aiagt/aiagt/common/closer"
+	"github.com/aiagt/aiagt/pkg/closer"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"io"
 
@@ -14,32 +12,48 @@ import (
 )
 
 func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelService_ChatServer) (err error) {
-	chatReq := mapper.NewOpenAIGoRequest(req.OpenaiReq)
+	ctx := stream.Context()
 
-	chatStream, err := s.openaiCli.CreateChatCompletionStream(context.Background(), *chatReq)
+	chatReq := mapper.NewOpenAIGoRequest(req.OpenaiReq)
+	chatReq.Model = "gpt-3.5-turbo-0125"
+
+	ok, err := s.callTokenCache.Decr(ctx, req.Token)
 	if err != nil {
-		return bizChat.NewErr(err)
+		return bizChat.NewErr(err).Log("call token decr failed")
+	}
+
+	if !ok {
+		return bizChat.NewCodeErr(11, errors.New("call limit reached")).Log("call limit reached")
+	}
+
+	reqJSON, _ := json.MarshalIndent(chatReq, "", "  ")
+	klog.Info("chatReq: ", string(reqJSON))
+
+	chatStream, err := s.openaiCli.CreateChatCompletionStream(ctx, *chatReq)
+	if err != nil {
+		return bizChat.NewErr(err).Log("create chat completion stream failed")
 	}
 	defer closer.Close(chatStream)
 
 	for {
 		r, err := chatStream.Recv()
 		if errors.Is(err, io.EOF) {
-			fmt.Println("EOF")
 			return nil
 		}
 		if err != nil {
-			return bizChat.NewErr(err)
+			return bizChat.NewErr(err).Log("chat stream recv failed")
 		}
 
-		s, _ := json.Marshal(r)
-		klog.Infof("[RECV] %s", s)
+		s, _ := json.MarshalIndent(r.Choices[0], "", "  ")
+		klog.Info(string(s))
+
+		openaiResp := mapper.NewOpenAIResponse(&r)
 
 		err = stream.Send(&modelsvc.ChatResp{
-			OpenaiResp: mapper.NewOpenAIResponse(&r),
+			OpenaiResp: openaiResp,
 		})
 		if err != nil {
-			return bizChat.NewErr(err)
+			return bizChat.NewErr(err).Log("chat stream send failed")
 		}
 	}
 }

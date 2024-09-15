@@ -2,9 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
+	"github.com/aiagt/aiagt/pkg/call"
 
 	"github.com/aiagt/aiagt/app/plugin/model"
-	"github.com/aiagt/aiagt/app/plugin/pkg/call"
 	"github.com/aiagt/aiagt/common/baseutil"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
@@ -82,8 +82,8 @@ func NewGenPluginTool(tool *model.PluginTool) *pluginsvc.PluginTool {
 		Name:          tool.Name,
 		Description:   tool.Description,
 		PluginId:      tool.PluginID,
-		RequestType:   string(requestType),
-		ResponseType:  string(responseType),
+		RequestType:   requestType,
+		ResponseType:  responseType,
 		ApiUrl:        tool.ApiURL,
 		ImportModelId: tool.ImportModelID,
 		CreatedAt:     baseutil.NewBaseTime(tool.CreatedAt),
@@ -170,12 +170,12 @@ func NewModelCreatePluginTool(tool *pluginsvc.CreatePluginToolReq) *model.Plugin
 		responseType call.ResponseType
 	)
 
-	err := json.Unmarshal([]byte(tool.RequestType), &requestType)
+	err := json.Unmarshal(tool.RequestType, &requestType)
 	if err != nil {
 		logger.Warnf("plugin tool request type unmarshaling error: %s", err.Error())
 	}
 
-	err = json.Unmarshal([]byte(tool.ResponseType), &responseType)
+	err = json.Unmarshal(tool.ResponseType, &responseType)
 	if err != nil {
 		logger.Warnf("plugin tool response type unmarshaling error: %s", err.Error())
 	}
@@ -199,14 +199,15 @@ func NewModelUpdatePluginTool(tool *pluginsvc.UpdatePluginToolReq) *model.Plugin
 
 	if tool.RequestType != nil {
 		requestType = new(call.RequestType)
-		err := json.Unmarshal([]byte(*tool.RequestType), requestType)
+		err := json.Unmarshal(tool.RequestType, requestType)
 		if err != nil {
 			logger.Warnf("plugin tool request type unmarshaling error: %s", err.Error())
 		}
 	}
 
 	if tool.ResponseType != nil {
-		err := json.Unmarshal([]byte(*tool.ResponseType), &responseType)
+		responseType = new(call.ResponseType)
+		err := json.Unmarshal(tool.ResponseType, &responseType)
 		if err != nil {
 			logger.Warnf("plugin tool response type unmarshaling error: %s", err.Error())
 		}

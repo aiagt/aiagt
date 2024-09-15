@@ -3,11 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/aiagt/aiagt/pkg/closer"
 	"os"
 	"os/exec"
 	"path/filepath"
 
-	"github.com/aiagt/aiagt/common/closer"
 	"github.com/aiagt/aiagt/tools/utils/goparser"
 	"github.com/aiagt/aiagt/tools/utils/logger"
 	"github.com/aiagt/aiagt/tools/utils/multi_error"

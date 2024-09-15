@@ -2,8 +2,11 @@ package mapper
 
 import (
 	"encoding/json"
-	"github.com/aiagt/aiagt/common/safe"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"strings"
+
+	"github.com/aiagt/aiagt/pkg/call"
+	"github.com/aiagt/aiagt/pkg/safe"
 
 	"github.com/aiagt/aiagt/kitex_gen/openai"
 	"github.com/samber/lo"
@@ -104,14 +107,16 @@ func NewOpenAIGoFunction(function *openai.FunctionDefinition) *openaigo.Function
 		return nil
 	}
 
-	var parameters any
+	klog.Infof("function parameters %v", string(function.Parameters))
+
+	var parameters call.RequestType
 	_ = json.Unmarshal(function.Parameters, &parameters)
 
 	return &openaigo.FunctionDefinition{
 		Name:        function.Name,
 		Description: safe.Value(function.Description),
 		Strict:      safe.Value(function.Strict),
-		Parameters:  parameters,
+		Parameters:  &parameters,
 	}
 }
 

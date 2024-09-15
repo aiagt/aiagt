@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"github.com/aiagt/aiagt/pkg/safe"
 	"io"
 
 	"github.com/aiagt/aiagt/common/ctxutil"
@@ -20,6 +21,7 @@ func main() {
 	}
 
 	logger(Chat(ctx))
+	//logger(ListMessage(ctx))
 }
 
 func login(ctx context.Context) (context.Context, error) {
@@ -42,13 +44,14 @@ func logger(resp any, err error) {
 
 func Chat(ctx context.Context) (any, error) {
 	stream, err := rpc.ChatStreamCli.Chat(ctx, &chatsvc.ChatReq{
-		AppId: 1,
+		AppId:          1,
+		ConversationId: safe.Pointer(int64(32)),
 		Messages: []*chatsvc.MessageContent{
 			{
 				Type: chatsvc.MessageType_TEXT,
 				Content: &chatsvc.MessageContentValue{
 					Text: &chatsvc.MessageContentValueText{
-						Text: "今天北京天气怎么样？",
+						Text: "现在是九月份",
 					},
 				},
 			},
@@ -66,8 +69,20 @@ func Chat(ctx context.Context) (any, error) {
 		if err != nil {
 			return nil, err
 		}
-		logger(msg, nil)
+		for _, m := range msg.Messages {
+			if m.Content.Type == chatsvc.MessageType_TEXT {
+				print(m.Content.Content.Text.Text)
+			} else {
+				logger(m, nil)
+			}
+		}
 	}
 
 	return nil, nil
+}
+
+func ListMessage(ctx context.Context) (any, error) {
+	return rpc.ChatCli.ListMessage(ctx, &chatsvc.ListMessageReq{
+		ConversationId: 31,
+	})
 }

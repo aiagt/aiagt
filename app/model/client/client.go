@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/aiagt/aiagt/pkg/safe"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/sashabaranov/go-openai/jsonschema"
 	"io"
 
-	"github.com/aiagt/aiagt/common/safe"
 	"github.com/aiagt/aiagt/kitex_gen/modelsvc"
 	"github.com/aiagt/aiagt/kitex_gen/openai"
 	"github.com/aiagt/aiagt/rpc"

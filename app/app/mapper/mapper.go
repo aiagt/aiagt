@@ -2,10 +2,10 @@ package mapper
 
 import (
 	"encoding/json"
+	"github.com/aiagt/aiagt/pkg/safe"
 
 	"github.com/aiagt/aiagt/app/app/model"
 	"github.com/aiagt/aiagt/common/baseutil"
-	"github.com/aiagt/aiagt/common/safe"
 	"github.com/aiagt/aiagt/kitex_gen/appsvc"
 	"github.com/aiagt/aiagt/kitex_gen/openai"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"

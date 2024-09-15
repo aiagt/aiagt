@@ -2,7 +2,8 @@ package handler
 
 import (
 	"context"
-	"github.com/aiagt/aiagt/common/safe"
+	"github.com/aiagt/aiagt/pkg/hash/hmap"
+	"github.com/aiagt/aiagt/pkg/safe"
 	"github.com/pkg/errors"
 	"io"
 	"strings"
@@ -12,7 +13,6 @@ import (
 
 	"github.com/aiagt/aiagt/app/chat/mapper"
 	"github.com/aiagt/aiagt/app/chat/model"
-	"github.com/aiagt/aiagt/common/hash/hmap"
 	"github.com/aiagt/aiagt/kitex_gen/appsvc"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	chatsvc "github.com/aiagt/aiagt/kitex_gen/chatsvc"
@@ -24,17 +24,17 @@ import (
 
 func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_ChatServer) (err error) {
 	ctx := stream.Context()
-	userID := ctxutil.UserID(ctx)
+	userID := ctxutil.MapUserID(ctx)
 
 	// get app information
 	app, err := s.appCli.GetAppByID(ctx, &base.IDReq{Id: req.AppId})
 	if err != nil {
-		return bizChat.CallErr(err)
+		return bizChat.CallErr(err).Log("get app by id error")
 	}
 
 	// verify that the user has access rights to the app
 	if app.AuthorId != userID {
-		return bizChat.CodeErr(bizerr.ErrCodeForbidden)
+		return bizChat.CodeErr(bizerr.ErrCodeForbidden).Log("user does not have access rights to the app")
 	}
 
 	// get message records and conversation information
@@ -46,12 +46,12 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 	if req.ConversationId != nil {
 		msgs, err = s.messageDao.GetByConversationID(ctx, *req.ConversationId)
 		if err != nil {
-			return bizChat.NewErr(err)
+			return bizChat.NewErr(err).Log("get message by conversation id error")
 		}
 
 		conversation, err = s.conversationDao.GetByID(ctx, *req.ConversationId)
 		if err != nil {
-			return bizChat.NewErr(err)
+			return bizChat.NewErr(err).Log("get conversation by id error")
 		}
 	} else {
 		const newConversationTitle = "New Conversation"
@@ -63,27 +63,33 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 
 		err = s.conversationDao.Create(ctx, conversation)
 		if err != nil {
-			return bizChat.CallErr(err)
+			return bizChat.CallErr(err).Log("create conversation error")
 		}
 
 		req.ConversationId = &conversation.ID
 	}
 
-	msgs = append(msgs, mapper.NewModelChatMessage(*req.ConversationId, req.Messages)...)
+	newMsgs := mapper.NewModelChatMessage(*req.ConversationId, req.Messages)
+	err = s.messageDao.CreateBatch(ctx, newMsgs)
+	if err != nil {
+		return bizChat.NewErr(err).Log("create message batch error")
+	}
+
+	msgs = append(msgs, newMsgs...)
 
 	// verify that the user has access rights to the conversation
 	if conversation.UserID != userID {
-		return bizChat.CodeErr(bizerr.ErrCodeForbidden)
+		return bizChat.CodeErr(bizerr.ErrCodeForbidden).Log("user does not have access rights to the conversation")
 	}
 
 	// generate token for model call
 	genTokenResp, err := s.modelCli.GenToken(ctx, &modelsvc.GenTokenReq{
 		AppId:          req.AppId,
 		ConversationId: *req.ConversationId,
-		CallLimit:      1,
+		CallLimit:      10,
 	})
 	if err != nil {
-		return bizChat.CallErr(err)
+		return bizChat.CallErr(err).Log("generate token error")
 	}
 
 	return s.chat(ctx, *req.ConversationId, msgs, app, genTokenResp.Token, stream)
@@ -91,11 +97,10 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 
 func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs []*model.Message, app *appsvc.App, token string, stream chatsvc.ChatService_ChatServer) (err error) {
 	var (
-		messages       = mapper.NewOpenAIListMessage(msgs)
-		modelConfig    = app.ModelConfig
-		functions      = mapper.NewOpenAIListFunctionDefinition(app.Tools)
-		toolMap        = hmap.NewMapWithKeyFunc(app.Tools, func(t *pluginsvc.PluginTool) string { return t.Name })
-		messageContent strings.Builder
+		messages    = mapper.NewOpenAIListMessage(msgs)
+		modelConfig = app.ModelConfig
+		functions   = mapper.NewOpenAIListFunctionDefinition(app.Tools)
+		toolMap     = hmap.NewMapWithKeyFunc(app.Tools, func(t *pluginsvc.PluginTool) string { return t.Name })
 	)
 
 	// call model chat api
@@ -120,51 +125,38 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 			User:             modelConfig.User,
 			Functions:        functions,
 			StreamOptions:    modelConfig.StreamOptions,
-			// FunctionCall:      nil,
-			// Tools:             nil,
-			// ToolChoice:        nil,
-			// ParallelToolCalls: nil,
 		},
 	})
 	if err != nil {
-		return bizChat.CallErr(err)
+		return bizChat.CallErr(err).Log("chat stream error")
 	}
 
+	var (
+		functionCalled        bool
+		functionCallName      strings.Builder
+		functionCallArguments strings.Builder
+		messageContent        strings.Builder
+	)
 	// traverse to receive and process result
 	for {
 		resp, err := chatStream.Recv()
 		if err == io.EOF {
-			msg := &model.Message{
-				Base:           model.Base{},
-				MessageContent: model.MessageContent{},
-				ConversationID: conversationID,
-				Role:           model.MessageRoleAssistant,
-			}
-
-			// store message
-			err = s.messageDao.Create(ctx, msg)
-			if err != nil {
-				return bizChat.NewErr(err)
-			}
-
 			return nil
 		}
 
 		if err != nil {
-			return bizChat.NewErr(err)
+			return bizChat.NewErr(err).Log("receive chat stream error")
 		}
 
-		var (
-			functionCallName      strings.Builder
-			functionCallArguments strings.Builder
-		)
 		// parse each choice
-		for i, choice := range resp.OpenaiResp.Choices {
+		for _, choice := range resp.OpenaiResp.Choices {
 			switch {
 			case choice.Delta.FunctionCall != nil:
 				functionCall := choice.Delta.FunctionCall
 
-				if i == 0 {
+				if !functionCalled {
+					functionCalled = true
+
 					// send function call message
 					err := stream.Send(&chatsvc.ChatResp{
 						Messages: []*chatsvc.ChatRespMessage{{
@@ -179,7 +171,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 						ConversationId: conversationID,
 					})
 					if err != nil {
-						return bizChat.CallErr(err)
+						return bizChat.CallErr(err).Log("send function call message error")
 					}
 				}
 
@@ -200,24 +192,60 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 					ConversationId: conversationID,
 				})
 				if err != nil {
-					return bizChat.CallErr(err)
+					return bizChat.CallErr(err).Log("send text message error")
 				}
 			case choice.FinishReason == "function_call":
 				functionCall := &openai.FunctionCall{
 					Name:      safe.Pointer(functionCallName.String()),
 					Arguments: safe.Pointer(functionCallArguments.String()),
 				}
+
 				tool, ok := toolMap[functionCall.GetName()]
 				if !ok {
-					return bizChat.NewErr(errors.New("plugin tool not found"))
+					return bizChat.NewErr(errors.New("plugin tool not found")).Log("plugin tool not found")
 				}
-				return s.handleFunctionCall(ctx, functionCall, conversationID, tool, stream)
+
+				// store function call message
+				msg := &model.Message{
+					MessageContent: model.MessageContent{
+						Type: model.MessageTypeFunctionCall,
+						Content: model.MessageContentValue{FuncCall: &model.MessageContentValueFuncCall{
+							Name:      functionCall.GetName(),
+							Arguments: functionCall.GetArguments(),
+						}}},
+					ConversationID: conversationID,
+					Role:           model.MessageRoleAssistant,
+				}
+				err = s.messageDao.Create(ctx, msg)
+				if err != nil {
+					return bizChat.NewErr(err).Log("create function call message error")
+				}
+
+				msgs = append(msgs, msg)
+
+				return s.handleFunctionCall(ctx, functionCall, tool, conversationID, msgs, app, token, stream)
+			case choice.FinishReason == "stop":
+				msg := &model.Message{
+					MessageContent: model.MessageContent{
+						Type: model.MessageTypeText,
+						Content: model.MessageContentValue{Text: &model.MessageContentValueText{
+							Text: messageContent.String(),
+						}}},
+					ConversationID: conversationID,
+					Role:           model.MessageRoleAssistant,
+				}
+				err = s.messageDao.Create(ctx, msg)
+				if err != nil {
+					return bizChat.NewErr(err).Log("create text message error")
+				}
+
+				return nil
 			}
 		}
 	}
 }
 
-func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *openai.FunctionCall, conversationID int64, tool *pluginsvc.PluginTool, stream chatsvc.ChatService_ChatServer) error {
+func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *openai.FunctionCall, tool *pluginsvc.PluginTool, conversationID int64, msgs []*model.Message, app *appsvc.App, token string, stream chatsvc.ChatService_ChatServer) error {
 	// get user secrets
 	const maxSecrets = 100
 	listSecretResp, err := s.userCli.ListSecret(ctx, &usersvc.ListSecretReq{
@@ -225,7 +253,7 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 		PluginId:   &tool.PluginId,
 	})
 	if err != nil {
-		return bizChat.CallErr(err)
+		return bizChat.CallErr(err).Log("list secret error")
 	}
 
 	secretMap := hmap.NewMapWithFuncs(listSecretResp.Secrets,
@@ -240,7 +268,7 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 		Request:  []byte(*functionCall.Arguments),
 	})
 	if err != nil {
-		return bizChat.CallErr(err)
+		return bizChat.CallErr(err).Log("call plugin tool error")
 	}
 
 	// store the result of the call
@@ -256,7 +284,7 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 	}
 	err = s.messageDao.Create(ctx, msg)
 	if err != nil {
-		return bizChat.NewErr(err)
+		return bizChat.NewErr(err).Log("create function message error")
 	}
 
 	// send function result message
@@ -273,8 +301,9 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 		ConversationId: conversationID,
 	})
 	if err != nil {
-		return bizChat.CallErr(err)
+		return bizChat.CallErr(err).Log("send function result message error")
 	}
 
-	return nil
+	msgs = append(msgs, msg)
+	return s.chat(ctx, conversationID, msgs, app, token, stream)
 }

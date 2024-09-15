@@ -1,6 +1,7 @@
 package serversuite
 
 import (
+	"github.com/aiagt/aiagt/common/kitex/serversuite/metahandler"
 	"github.com/aiagt/aiagt/common/kitex/serversuite/middleware"
 	"github.com/cloudwego/kitex/server"
 )
@@ -19,6 +20,7 @@ func NewServerSuite(authSvc middleware.AuthService) *ServerSuite {
 	m := middleware.NewMiddleware(authSvc)
 	opts = append(opts, server.WithMiddleware(m.Transaction))
 	opts = append(opts, server.WithMiddleware(m.Auth))
+	opts = append(opts, server.WithMetaHandler(metahandler.NewStreamingMetaHandler()))
 
 	return &ServerSuite{opts: opts}
 }

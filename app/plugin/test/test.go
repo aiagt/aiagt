@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/aiagt/aiagt/app/plugin/pkg/call"
+	"github.com/aiagt/aiagt/pkg/call"
+	"github.com/sashabaranov/go-openai/jsonschema"
+
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
@@ -22,7 +24,8 @@ func main() {
 
 	// logger(GetPlugin(ctx))
 	// logger(ListPlugin(ctx))
-	logger(CreatePlugigTool(ctx))
+	// logger(CreatePlugigTool(ctx))
+	logger(UpdatePluginTool(ctx))
 }
 
 func login(ctx context.Context) (context.Context, error) {
@@ -88,20 +91,79 @@ func ListPlugin(ctx context.Context) (any, error) {
 }
 
 func CreatePlugigTool(ctx context.Context) (any, error) {
-	requestType := call.RequestType{
-		ContentType: "application/json",
-		Parameters: call.Object{
-			{Name: "location", Description: "The city and state, e.g. San Francisco, CA", Type: "string"},
-			{Name: "unit", Description: "The unit of the weather information, e.g. Celsius, Fahrenheit", Type: "string"},
+	reqType := call.RequestType{
+		Type: jsonschema.Object,
+		Properties: map[string]jsonschema.Definition{
+			"location": {
+				Type:        jsonschema.String,
+				Description: "The city and state, e.g. San Francisco, CA",
+			},
+			"unit": {
+				Type:        jsonschema.String,
+				Description: "The unit of the weather information, e.g. Celsius, Fahrenheit",
+			},
 		},
+		Required: []string{"location", "unit"},
+		// ContentType: "application/json",
+		// Parameters: call.Object{
+		// 	{Name: "location", Description: "The city and state, e.g. San Francisco, CA", Type: "string"},
+		// 	{Name: "unit", Description: "The unit of the weather information, e.g. Celsius, Fahrenheit", Type: "string"},
+		// },
 	}
-	rt, _ := json.Marshal(requestType)
+	requestType, _ := json.Marshal(reqType)
 
 	return rpc.PluginCli.CreateTool(ctx, &pluginsvc.CreatePluginToolReq{
 		PluginId:    1,
 		Name:        "get_current_weather",
 		Description: "Get the current weather in a given location",
-		RequestType: string(rt),
+		RequestType: requestType,
 		ApiUrl:      "https://api.openweathermap.org/data/2.5/weather",
+	})
+}
+
+func UpdatePluginTool(ctx context.Context) (any, error) {
+	reqType := &call.RequestType{
+		Type: jsonschema.Object,
+		Properties: map[string]jsonschema.Definition{
+			"location": {
+				Type:        jsonschema.String,
+				Description: "The city and state, e.g. San Francisco, CA",
+			},
+			"unit": {
+				Type:        jsonschema.String,
+				Description: "The unit of the weather information, e.g. Celsius, Fahrenheit",
+			},
+		},
+		Required: []string{"location", "unit"},
+	}
+
+	requestType, _ := reqType.MarshalJSON()
+
+	respType := &call.ResponseType{
+		Type: jsonschema.Object,
+		Properties: map[string]jsonschema.Definition{
+			"code": {
+				Type: jsonschema.Integer,
+			},
+			"message": {
+				Type: jsonschema.String,
+			},
+			"data": {
+				Type: jsonschema.Object,
+				Properties: map[string]jsonschema.Definition{
+					"temperature": {
+						Type: jsonschema.Number,
+					},
+				},
+			},
+		},
+		Required: []string{"code", "message"},
+	}
+	responseType, _ := respType.MarshalJSON()
+
+	return rpc.PluginCli.UpdateTool(ctx, &pluginsvc.UpdatePluginToolReq{
+		Id:           1,
+		RequestType:  requestType,
+		ResponseType: responseType,
 	})
 }

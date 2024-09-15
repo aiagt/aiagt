@@ -1,6 +1,8 @@
 package hmap
 
-import "github.com/aiagt/aiagt/common/hash"
+import (
+	"github.com/aiagt/aiagt/pkg/hash"
+)
 
 type Map[E comparable, T any] map[E]T
 

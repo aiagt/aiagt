@@ -1,8 +1,6 @@
 package mapper
 
 import (
-	"encoding/json"
-
 	"github.com/aiagt/aiagt/app/chat/model"
 	"github.com/aiagt/aiagt/common/baseutil"
 	"github.com/aiagt/aiagt/kitex_gen/chatsvc"
@@ -121,13 +119,11 @@ func NewOpenAIListMessage(messages []*model.Message) []*openai.ChatCompletionMes
 func NewOpenAIFunctionDefinition(tool *pluginsvc.PluginTool) *openai.FunctionDefinition {
 	strict := true
 
-	reqTypeBytes, _ := json.Marshal(tool.RequestType)
-
 	return &openai.FunctionDefinition{
 		Name:        tool.Name,
 		Description: &tool.Description,
 		Strict:      &strict,
-		Parameters:  reqTypeBytes,
+		Parameters:  []byte(tool.RequestType),
 	}
 }
 

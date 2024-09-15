@@ -111,3 +111,12 @@ func (d *MessageDao) GetByConversationID(ctx context.Context, id int64) ([]*mode
 
 	return result, nil
 }
+
+func (d *MessageDao) CreateBatch(ctx context.Context, ms []*model.Message) error {
+	err := d.db(ctx).Model(d.m).CreateInBatches(ms, 100).Error
+	if err != nil {
+		return errors.Wrap(err, "message dao create batch error")
+	}
+
+	return nil
+}

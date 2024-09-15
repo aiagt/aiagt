@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+
 	"github.com/aiagt/aiagt/common/bizerr"
 
 	"github.com/aiagt/aiagt/app/user/pkg/jwt"
@@ -43,6 +44,9 @@ func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 			biz := bizerr.NewBiz(serviceName, methodName+"_auth", 4000000)
 			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized))
 		}
+
+		// inject user id in streaming middleware
+		ctx = ctxutil.WithMapUserID(ctx, id)
 
 		return next(ctxutil.WithUserID(ctx, id), req, resp)
 	}

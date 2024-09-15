@@ -3,7 +3,9 @@ package bizerr
 import (
 	"errors"
 	"fmt"
+	"runtime"
 
+	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
 )
 
@@ -22,12 +24,13 @@ func NewBiz(serviceName, interfaceName string, codePrefix int) *Biz {
 }
 
 func (i *Biz) NewCodeErr(code ErrCode, err error) *BizError {
-	return &BizError{
+	berr := &BizError{
 		Code:          i.Code + code,
 		ServiceName:   i.ServiceName,
 		InterfaceName: i.InterfaceName,
 		Err:           err,
 	}
+	return berr
 }
 
 func (i *Biz) CodeErr(code ErrCode) *BizError {
@@ -81,6 +84,18 @@ func (e *BizError) BizExtra() map[string]string {
 
 func (e *BizError) Error() string {
 	return fmt.Sprintf("[bizerr] service_name: %s, interface_name: %s, code: %d, error: %s", e.ServiceName, e.InterfaceName, e.Code, e.Err.Error())
+}
+
+func (e *BizError) Log(msg string) *BizError {
+	_, file, line, _ := runtime.Caller(1)
+	klog.Errorf("position: %s:%d, %s, msg: %s", file, line, e.Error(), msg)
+	return e
+}
+
+func (e *BizError) Logf(format string, args ...any) *BizError {
+	_, file, line, _ := runtime.Caller(1)
+	klog.Errorf("position: %s:%d, %s, msg: %s", file, line, e.Error(), fmt.Sprintf(format, args...))
+	return e
 }
 
 type ErrCode int

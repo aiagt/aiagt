@@ -3,10 +3,11 @@ package handler
 import (
 	"context"
 
-	"github.com/aiagt/aiagt/app/plugin/pkg/call"
+	"github.com/aiagt/aiagt/pkg/call"
+	"github.com/aiagt/aiagt/pkg/hash/hset"
+
 	"github.com/aiagt/aiagt/common/bizerr"
 	"github.com/aiagt/aiagt/common/ctxutil"
-	"github.com/aiagt/aiagt/common/hash/hset"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 
