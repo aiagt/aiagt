@@ -12,6 +12,8 @@ func init() {
 	ktconf.LoadFiles(conf,
 		filepath.Join("conf", "conf.yaml"),
 		filepath.Join("app", "model", "conf", "conf.yaml"),
+		filepath.Join("conf", "conf-local.yaml"),
+		filepath.Join("app", "model", "conf", "conf-local.yaml"),
 	)
 }
 

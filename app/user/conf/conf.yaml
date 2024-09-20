@@ -20,10 +20,10 @@ email:
   smtp_host: smtp.feishu.cn
   email_from: "Aiagt <no-reply@aiagt.cn>"
   email_address: no-reply@aiagt.cn
-  auth: Yj8TUCL9AnnFfT6l
+  auth: xxx
 
 auth:
-  encrypt_salt: S0y1g#Iqh!0O7!58
+  encrypt_salt: xxx
   snowflake_node: 1
-  jwt_key: ^Tt7zPgrRs2#%xT5
+  jwt_key: xxx
   jwt_expire: 720  # hour
