@@ -11,6 +11,8 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/pkg/errors"
+
 	"github.com/iancoleman/strcase"
 )
 
@@ -25,6 +27,16 @@ func main() {
 	flag.Parse()
 
 	handlerFilePath := filepath.Join(servicePath, "handler.go")
+
+	exists, err := IsExists(handlerFilePath)
+	if err != nil {
+		panic(fmt.Errorf("check existence of %s error: %w", handlerFilePath, err))
+	}
+
+	if !exists {
+		return
+	}
+
 	fset := token.NewFileSet()
 
 	node, err := parser.ParseFile(fset, handlerFilePath, nil, parser.ParseComments)
@@ -71,10 +83,13 @@ func main() {
 }
 
 func writeNodes(path string, nodes ...ast.Decl) {
-	if _, err := os.Stat(path); err == nil {
+	exists, err := IsExists(path)
+	if err != nil {
+		panic(fmt.Errorf("check existence of %s error: %w", path, err))
+	}
+
+	if exists {
 		return
-	} else if !os.IsNotExist(err) {
-		panic(fmt.Errorf("check %s error: %w", path, err))
 	}
 
 	file, err := os.Create(path)
@@ -120,4 +135,16 @@ func writeDoc(file *os.File, node ast.Decl) {
 			n.Doc = nil
 		}
 	}
+}
+
+func IsExists(path string) (bool, error) {
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			return false, nil
+		}
+
+		return false, errors.Wrap(err, "os.Stat error")
+	}
+
+	return true, nil
 }

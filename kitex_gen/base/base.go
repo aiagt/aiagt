@@ -867,8 +867,205 @@ func (p *IDReq) Field1DeepEqual(src int64) bool {
 	return true
 }
 
+type IDsReq struct {
+	Ids []int64 `thrift:"ids,1,required" frugal:"1,required,list<i64>" json:"ids"`
+}
+
+func NewIDsReq() *IDsReq {
+	return &IDsReq{}
+}
+
+func (p *IDsReq) InitDefault() {
+}
+
+func (p *IDsReq) GetIds() (v []int64) {
+	return p.Ids
+}
+func (p *IDsReq) SetIds(val []int64) {
+	p.Ids = val
+}
+
+var fieldIDToName_IDsReq = map[int16]string{
+	1: "ids",
+}
+
+func (p *IDsReq) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetIds bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetIds = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetIds {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_IDsReq[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_IDsReq[fieldId]))
+}
+
+func (p *IDsReq) ReadField1(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	_field := make([]int64, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.Ids = _field
+	return nil
+}
+
+func (p *IDsReq) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("IDsReq"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *IDsReq) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ids", thrift.LIST, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.I64, len(p.Ids)); err != nil {
+		return err
+	}
+	for _, v := range p.Ids {
+		if err := oprot.WriteI64(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *IDsReq) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("IDsReq(%+v)", *p)
+
+}
+
+func (p *IDsReq) DeepEqual(ano *IDsReq) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Ids) {
+		return false
+	}
+	return true
+}
+
+func (p *IDsReq) Field1DeepEqual(src []int64) bool {
+
+	if len(p.Ids) != len(src) {
+		return false
+	}
+	for i, v := range p.Ids {
+		_src := src[i]
+		if v != _src {
+			return false
+		}
+	}
+	return true
+}
+
 type Time struct {
-	Timestamp int64 `thrift:"timestamp,1,required" frugal:"1,required,i64" json:"timestamp"`
+	Timestamp *int64 `thrift:"timestamp,1,optional" frugal:"1,optional,i64" json:"timestamp,omitempty"`
 }
 
 func NewTime() *Time {
@@ -878,10 +1075,15 @@ func NewTime() *Time {
 func (p *Time) InitDefault() {
 }
 
+var Time_Timestamp_DEFAULT int64
+
 func (p *Time) GetTimestamp() (v int64) {
-	return p.Timestamp
+	if !p.IsSetTimestamp() {
+		return Time_Timestamp_DEFAULT
+	}
+	return *p.Timestamp
 }
-func (p *Time) SetTimestamp(val int64) {
+func (p *Time) SetTimestamp(val *int64) {
 	p.Timestamp = val
 }
 
@@ -889,11 +1091,14 @@ var fieldIDToName_Time = map[int16]string{
 	1: "timestamp",
 }
 
+func (p *Time) IsSetTimestamp() bool {
+	return p.Timestamp != nil
+}
+
 func (p *Time) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
-	var issetTimestamp bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -914,7 +1119,6 @@ func (p *Time) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetTimestamp = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -931,10 +1135,6 @@ func (p *Time) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
-	if !issetTimestamp {
-		fieldId = 1
-		goto RequiredFieldNotSetError
-	}
 	return nil
 ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -949,17 +1149,15 @@ ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-RequiredFieldNotSetError:
-	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_Time[fieldId]))
 }
 
 func (p *Time) ReadField1(iprot thrift.TProtocol) error {
 
-	var _field int64
+	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.Timestamp = _field
 	return nil
@@ -994,14 +1192,16 @@ WriteStructEndError:
 }
 
 func (p *Time) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("timestamp", thrift.I64, 1); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.Timestamp); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetTimestamp() {
+		if err = oprot.WriteFieldBegin("timestamp", thrift.I64, 1); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteI64(*p.Timestamp); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -1030,16 +1230,21 @@ func (p *Time) DeepEqual(ano *Time) bool {
 	return true
 }
 
-func (p *Time) Field1DeepEqual(src int64) bool {
+func (p *Time) Field1DeepEqual(src *int64) bool {
 
-	if p.Timestamp != src {
+	if p.Timestamp == src {
+		return true
+	} else if p.Timestamp == nil || src == nil {
+		return false
+	}
+	if *p.Timestamp != *src {
 		return false
 	}
 	return true
 }
 
 type Duration struct {
-	Milliseconds int64 `thrift:"milliseconds,1,required" frugal:"1,required,i64" json:"milliseconds"`
+	Milliseconds *int64 `thrift:"milliseconds,1,optional" frugal:"1,optional,i64" json:"milliseconds,omitempty"`
 }
 
 func NewDuration() *Duration {
@@ -1049,10 +1254,15 @@ func NewDuration() *Duration {
 func (p *Duration) InitDefault() {
 }
 
+var Duration_Milliseconds_DEFAULT int64
+
 func (p *Duration) GetMilliseconds() (v int64) {
-	return p.Milliseconds
+	if !p.IsSetMilliseconds() {
+		return Duration_Milliseconds_DEFAULT
+	}
+	return *p.Milliseconds
 }
-func (p *Duration) SetMilliseconds(val int64) {
+func (p *Duration) SetMilliseconds(val *int64) {
 	p.Milliseconds = val
 }
 
@@ -1060,11 +1270,14 @@ var fieldIDToName_Duration = map[int16]string{
 	1: "milliseconds",
 }
 
+func (p *Duration) IsSetMilliseconds() bool {
+	return p.Milliseconds != nil
+}
+
 func (p *Duration) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
-	var issetMilliseconds bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1085,7 +1298,6 @@ func (p *Duration) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetMilliseconds = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -1102,10 +1314,6 @@ func (p *Duration) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
-	if !issetMilliseconds {
-		fieldId = 1
-		goto RequiredFieldNotSetError
-	}
 	return nil
 ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -1120,17 +1328,15 @@ ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-RequiredFieldNotSetError:
-	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_Duration[fieldId]))
 }
 
 func (p *Duration) ReadField1(iprot thrift.TProtocol) error {
 
-	var _field int64
+	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
 	p.Milliseconds = _field
 	return nil
@@ -1165,14 +1371,16 @@ WriteStructEndError:
 }
 
 func (p *Duration) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("milliseconds", thrift.I64, 1); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.Milliseconds); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetMilliseconds() {
+		if err = oprot.WriteFieldBegin("milliseconds", thrift.I64, 1); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteI64(*p.Milliseconds); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -1201,9 +1409,14 @@ func (p *Duration) DeepEqual(ano *Duration) bool {
 	return true
 }
 
-func (p *Duration) Field1DeepEqual(src int64) bool {
+func (p *Duration) Field1DeepEqual(src *int64) bool {
 
-	if p.Milliseconds != src {
+	if p.Milliseconds == src {
+		return true
+	} else if p.Milliseconds == nil || src == nil {
+		return false
+	}
+	if *p.Milliseconds != *src {
 		return false
 	}
 	return true

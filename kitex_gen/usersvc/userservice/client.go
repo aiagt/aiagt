@@ -14,9 +14,12 @@ import (
 type Client interface {
 	Register(ctx context.Context, req *usersvc.RegisterReq, callOptions ...callopt.Option) (r *usersvc.RegisterResp, err error)
 	Login(ctx context.Context, req *usersvc.LoginReq, callOptions ...callopt.Option) (r *usersvc.LoginResp, err error)
-	ForgotPassword(ctx context.Context, req *usersvc.ForgotPasswordReq, callOptions ...callopt.Option) (r *usersvc.ForgotPasswordResp, err error)
+	ResetPassword(ctx context.Context, req *usersvc.ResetPasswordReq, callOptions ...callopt.Option) (r *base.Empty, err error)
+	SendCaptcha(ctx context.Context, req *usersvc.SendCaptchaReq, callOptions ...callopt.Option) (r *usersvc.SendCaptchaResp, err error)
 	UpdateUser(ctx context.Context, req *usersvc.UpdateUserReq, callOptions ...callopt.Option) (r *base.Empty, err error)
+	GetUser(ctx context.Context, callOptions ...callopt.Option) (r *usersvc.User, err error)
 	GetUserByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *usersvc.User, err error)
+	GetUserByIds(ctx context.Context, req *base.IDsReq, callOptions ...callopt.Option) (r []*usersvc.User, err error)
 	CreateSecret(ctx context.Context, req *usersvc.CreateSecretReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	UpdateSecret(ctx context.Context, req *usersvc.UpdateSecretReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	DeleteSecret(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
@@ -62,9 +65,14 @@ func (p *kUserServiceClient) Login(ctx context.Context, req *usersvc.LoginReq, c
 	return p.kClient.Login(ctx, req)
 }
 
-func (p *kUserServiceClient) ForgotPassword(ctx context.Context, req *usersvc.ForgotPasswordReq, callOptions ...callopt.Option) (r *usersvc.ForgotPasswordResp, err error) {
+func (p *kUserServiceClient) ResetPassword(ctx context.Context, req *usersvc.ResetPasswordReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.ForgotPassword(ctx, req)
+	return p.kClient.ResetPassword(ctx, req)
+}
+
+func (p *kUserServiceClient) SendCaptcha(ctx context.Context, req *usersvc.SendCaptchaReq, callOptions ...callopt.Option) (r *usersvc.SendCaptchaResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.SendCaptcha(ctx, req)
 }
 
 func (p *kUserServiceClient) UpdateUser(ctx context.Context, req *usersvc.UpdateUserReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
@@ -72,9 +80,19 @@ func (p *kUserServiceClient) UpdateUser(ctx context.Context, req *usersvc.Update
 	return p.kClient.UpdateUser(ctx, req)
 }
 
+func (p *kUserServiceClient) GetUser(ctx context.Context, callOptions ...callopt.Option) (r *usersvc.User, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetUser(ctx)
+}
+
 func (p *kUserServiceClient) GetUserByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *usersvc.User, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetUserByID(ctx, req)
+}
+
+func (p *kUserServiceClient) GetUserByIds(ctx context.Context, req *base.IDsReq, callOptions ...callopt.Option) (r []*usersvc.User, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetUserByIds(ctx, req)
 }
 
 func (p *kUserServiceClient) CreateSecret(ctx context.Context, req *usersvc.CreateSecretReq, callOptions ...callopt.Option) (r *base.Empty, err error) {

@@ -22,7 +22,8 @@ type Client interface {
 	UpdateTool(ctx context.Context, req *pluginsvc.UpdatePluginToolReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	DeleteTool(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	GetToolByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *pluginsvc.PluginTool, err error)
-	ListTool(ctx context.Context, req *pluginsvc.ListPluginToolReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginToolResp, err error)
+	ListPluginTool(ctx context.Context, req *pluginsvc.ListPluginToolReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginToolResp, err error)
+	ListPluginLabel(ctx context.Context, req *pluginsvc.ListPluginLabelReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginLabelResp, err error)
 	CallPluginTool(ctx context.Context, req *pluginsvc.CallPluginToolReq, callOptions ...callopt.Option) (r *pluginsvc.CallPluginToolResp, err error)
 	TestPluginTool(ctx context.Context, req *pluginsvc.CallPluginToolReq, callOptions ...callopt.Option) (r *pluginsvc.TestPluginToolResp, err error)
 }
@@ -106,9 +107,14 @@ func (p *kPluginServiceClient) GetToolByID(ctx context.Context, req *base.IDReq,
 	return p.kClient.GetToolByID(ctx, req)
 }
 
-func (p *kPluginServiceClient) ListTool(ctx context.Context, req *pluginsvc.ListPluginToolReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginToolResp, err error) {
+func (p *kPluginServiceClient) ListPluginTool(ctx context.Context, req *pluginsvc.ListPluginToolReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginToolResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.ListTool(ctx, req)
+	return p.kClient.ListPluginTool(ctx, req)
+}
+
+func (p *kPluginServiceClient) ListPluginLabel(ctx context.Context, req *pluginsvc.ListPluginLabelReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginLabelResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.ListPluginLabel(ctx, req)
 }
 
 func (p *kPluginServiceClient) CallPluginTool(ctx context.Context, req *pluginsvc.CallPluginToolReq, callOptions ...callopt.Option) (r *pluginsvc.CallPluginToolResp, err error) {

@@ -322,7 +322,7 @@ func (p *ChatReq) Field3DeepEqual(src *openai.ChatCompletionRequest) bool {
 }
 
 type ChatResp struct {
-	OpenaiResp *openai.ChatCompletionResponse `thrift:"openai_resp,1,required" frugal:"1,required,openai.ChatCompletionResponse" json:"openai_resp"`
+	OpenaiResp *openai.ChatCompletionStreamResponse `thrift:"openai_resp,1,required" frugal:"1,required,openai.ChatCompletionStreamResponse" json:"openai_resp"`
 }
 
 func NewChatResp() *ChatResp {
@@ -332,15 +332,15 @@ func NewChatResp() *ChatResp {
 func (p *ChatResp) InitDefault() {
 }
 
-var ChatResp_OpenaiResp_DEFAULT *openai.ChatCompletionResponse
+var ChatResp_OpenaiResp_DEFAULT *openai.ChatCompletionStreamResponse
 
-func (p *ChatResp) GetOpenaiResp() (v *openai.ChatCompletionResponse) {
+func (p *ChatResp) GetOpenaiResp() (v *openai.ChatCompletionStreamResponse) {
 	if !p.IsSetOpenaiResp() {
 		return ChatResp_OpenaiResp_DEFAULT
 	}
 	return p.OpenaiResp
 }
-func (p *ChatResp) SetOpenaiResp(val *openai.ChatCompletionResponse) {
+func (p *ChatResp) SetOpenaiResp(val *openai.ChatCompletionStreamResponse) {
 	p.OpenaiResp = val
 }
 
@@ -417,7 +417,7 @@ RequiredFieldNotSetError:
 }
 
 func (p *ChatResp) ReadField1(iprot thrift.TProtocol) error {
-	_field := openai.NewChatCompletionResponse()
+	_field := openai.NewChatCompletionStreamResponse()
 	if err := _field.Read(iprot); err != nil {
 		return err
 	}
@@ -490,7 +490,7 @@ func (p *ChatResp) DeepEqual(ano *ChatResp) bool {
 	return true
 }
 
-func (p *ChatResp) Field1DeepEqual(src *openai.ChatCompletionResponse) bool {
+func (p *ChatResp) Field1DeepEqual(src *openai.ChatCompletionStreamResponse) bool {
 
 	if !p.OpenaiResp.DeepEqual(src) {
 		return false
@@ -499,11 +499,10 @@ func (p *ChatResp) Field1DeepEqual(src *openai.ChatCompletionResponse) bool {
 }
 
 type GenTokenReq struct {
-	AppId          int64 `thrift:"app_id,1,required" frugal:"1,required,i64" json:"app_id"`
-	UserId         int64 `thrift:"user_id,2,required" frugal:"2,required,i64" json:"user_id"`
-	PluginId       int64 `thrift:"plugin_id,3,required" frugal:"3,required,i64" json:"plugin_id"`
-	ConversationId int64 `thrift:"conversation_id,4,required" frugal:"4,required,i64" json:"conversation_id"`
-	CallLimit      int32 `thrift:"call_limit,5,required" frugal:"5,required,i32" json:"call_limit"`
+	AppId          int64  `thrift:"app_id,1,required" frugal:"1,required,i64" json:"app_id"`
+	PluginId       *int64 `thrift:"plugin_id,2,optional" frugal:"2,optional,i64" json:"plugin_id,omitempty"`
+	ConversationId int64  `thrift:"conversation_id,3,required" frugal:"3,required,i64" json:"conversation_id"`
+	CallLimit      int32  `thrift:"call_limit,4,required" frugal:"4,required,i32" json:"call_limit"`
 }
 
 func NewGenTokenReq() *GenTokenReq {
@@ -517,12 +516,13 @@ func (p *GenTokenReq) GetAppId() (v int64) {
 	return p.AppId
 }
 
-func (p *GenTokenReq) GetUserId() (v int64) {
-	return p.UserId
-}
+var GenTokenReq_PluginId_DEFAULT int64
 
 func (p *GenTokenReq) GetPluginId() (v int64) {
-	return p.PluginId
+	if !p.IsSetPluginId() {
+		return GenTokenReq_PluginId_DEFAULT
+	}
+	return *p.PluginId
 }
 
 func (p *GenTokenReq) GetConversationId() (v int64) {
@@ -535,10 +535,7 @@ func (p *GenTokenReq) GetCallLimit() (v int32) {
 func (p *GenTokenReq) SetAppId(val int64) {
 	p.AppId = val
 }
-func (p *GenTokenReq) SetUserId(val int64) {
-	p.UserId = val
-}
-func (p *GenTokenReq) SetPluginId(val int64) {
+func (p *GenTokenReq) SetPluginId(val *int64) {
 	p.PluginId = val
 }
 func (p *GenTokenReq) SetConversationId(val int64) {
@@ -550,10 +547,13 @@ func (p *GenTokenReq) SetCallLimit(val int32) {
 
 var fieldIDToName_GenTokenReq = map[int16]string{
 	1: "app_id",
-	2: "user_id",
-	3: "plugin_id",
-	4: "conversation_id",
-	5: "call_limit",
+	2: "plugin_id",
+	3: "conversation_id",
+	4: "call_limit",
+}
+
+func (p *GenTokenReq) IsSetPluginId() bool {
+	return p.PluginId != nil
 }
 
 func (p *GenTokenReq) Read(iprot thrift.TProtocol) (err error) {
@@ -561,8 +561,6 @@ func (p *GenTokenReq) Read(iprot thrift.TProtocol) (err error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetAppId bool = false
-	var issetUserId bool = false
-	var issetPluginId bool = false
 	var issetConversationId bool = false
 	var issetCallLimit bool = false
 
@@ -594,7 +592,6 @@ func (p *GenTokenReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetUserId = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -603,22 +600,13 @@ func (p *GenTokenReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPluginId = true
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 4:
-			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField4(iprot); err != nil {
-					goto ReadFieldError
-				}
 				issetConversationId = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 5:
+		case 4:
 			if fieldTypeId == thrift.I32 {
-				if err = p.ReadField5(iprot); err != nil {
+				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetCallLimit = true
@@ -643,23 +631,13 @@ func (p *GenTokenReq) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetUserId {
-		fieldId = 2
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetPluginId {
+	if !issetConversationId {
 		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetConversationId {
-		fieldId = 4
-		goto RequiredFieldNotSetError
-	}
-
 	if !issetCallLimit {
-		fieldId = 5
+		fieldId = 4
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -693,13 +671,13 @@ func (p *GenTokenReq) ReadField1(iprot thrift.TProtocol) error {
 }
 func (p *GenTokenReq) ReadField2(iprot thrift.TProtocol) error {
 
-	var _field int64
+	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = &v
 	}
-	p.UserId = _field
+	p.PluginId = _field
 	return nil
 }
 func (p *GenTokenReq) ReadField3(iprot thrift.TProtocol) error {
@@ -710,21 +688,10 @@ func (p *GenTokenReq) ReadField3(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.PluginId = _field
-	return nil
-}
-func (p *GenTokenReq) ReadField4(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
-		return err
-	} else {
-		_field = v
-	}
 	p.ConversationId = _field
 	return nil
 }
-func (p *GenTokenReq) ReadField5(iprot thrift.TProtocol) error {
+func (p *GenTokenReq) ReadField4(iprot thrift.TProtocol) error {
 
 	var _field int32
 	if v, err := iprot.ReadI32(); err != nil {
@@ -756,10 +723,6 @@ func (p *GenTokenReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField4(oprot); err != nil {
 			fieldId = 4
-			goto WriteFieldError
-		}
-		if err = p.writeField5(oprot); err != nil {
-			fieldId = 5
 			goto WriteFieldError
 		}
 	}
@@ -798,14 +761,16 @@ WriteFieldEndError:
 }
 
 func (p *GenTokenReq) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 2); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.UserId); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetPluginId() {
+		if err = oprot.WriteFieldBegin("plugin_id", thrift.I64, 2); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteI64(*p.PluginId); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:
@@ -815,10 +780,10 @@ WriteFieldEndError:
 }
 
 func (p *GenTokenReq) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("plugin_id", thrift.I64, 3); err != nil {
+	if err = oprot.WriteFieldBegin("conversation_id", thrift.I64, 3); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.PluginId); err != nil {
+	if err := oprot.WriteI64(p.ConversationId); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -832,24 +797,7 @@ WriteFieldEndError:
 }
 
 func (p *GenTokenReq) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("conversation_id", thrift.I64, 4); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.ConversationId); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
-}
-
-func (p *GenTokenReq) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("call_limit", thrift.I32, 5); err != nil {
+	if err = oprot.WriteFieldBegin("call_limit", thrift.I32, 4); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI32(p.CallLimit); err != nil {
@@ -860,9 +808,9 @@ func (p *GenTokenReq) writeField5(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
 func (p *GenTokenReq) String() string {
@@ -882,16 +830,13 @@ func (p *GenTokenReq) DeepEqual(ano *GenTokenReq) bool {
 	if !p.Field1DeepEqual(ano.AppId) {
 		return false
 	}
-	if !p.Field2DeepEqual(ano.UserId) {
+	if !p.Field2DeepEqual(ano.PluginId) {
 		return false
 	}
-	if !p.Field3DeepEqual(ano.PluginId) {
+	if !p.Field3DeepEqual(ano.ConversationId) {
 		return false
 	}
-	if !p.Field4DeepEqual(ano.ConversationId) {
-		return false
-	}
-	if !p.Field5DeepEqual(ano.CallLimit) {
+	if !p.Field4DeepEqual(ano.CallLimit) {
 		return false
 	}
 	return true
@@ -904,28 +849,26 @@ func (p *GenTokenReq) Field1DeepEqual(src int64) bool {
 	}
 	return true
 }
-func (p *GenTokenReq) Field2DeepEqual(src int64) bool {
+func (p *GenTokenReq) Field2DeepEqual(src *int64) bool {
 
-	if p.UserId != src {
+	if p.PluginId == src {
+		return true
+	} else if p.PluginId == nil || src == nil {
+		return false
+	}
+	if *p.PluginId != *src {
 		return false
 	}
 	return true
 }
 func (p *GenTokenReq) Field3DeepEqual(src int64) bool {
 
-	if p.PluginId != src {
-		return false
-	}
-	return true
-}
-func (p *GenTokenReq) Field4DeepEqual(src int64) bool {
-
 	if p.ConversationId != src {
 		return false
 	}
 	return true
 }
-func (p *GenTokenReq) Field5DeepEqual(src int32) bool {
+func (p *GenTokenReq) Field4DeepEqual(src int32) bool {
 
 	if p.CallLimit != src {
 		return false

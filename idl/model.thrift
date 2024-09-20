@@ -17,15 +17,14 @@ struct ChatReq {
 }
 
 struct ChatResp {
-    1: required openai.ChatCompletionResponse openai_resp
+    1: required openai.ChatCompletionStreamResponse openai_resp
 }
 
 struct GenTokenReq {
     1: required i64 app_id
-    2: required i64 user_id
-    3: required i64 plugin_id
-    4: required i64 conversation_id
-    5: required i32 call_limit
+    2: optional i64 plugin_id
+    3: required i64 conversation_id
+    4: required i32 call_limit
 }
 
 struct GenTokenResp {

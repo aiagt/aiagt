@@ -18,11 +18,15 @@ struct IDReq {
     1: required i64 id
 }
 
+struct IDsReq {
+    1: required list<i64> ids
+}
+
 // The Time type is encapsulated to encapsulate unified time processing logic
 struct Time {
-    1: required i64 timestamp
+    1: optional i64 timestamp
 }
 
 struct Duration {
-    1: required i64 milliseconds
+    1: optional i64 milliseconds
 }
