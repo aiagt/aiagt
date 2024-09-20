@@ -13,8 +13,9 @@ gen-rpc:
 	gen_handler --service_path=. --remove_handler=true
 
 model_list = $(foreach model,$(models),-model $(model))
+skip_default_model ?= false
 
 init-rpc:
 	@cd app/${svc} && \
 	gen_handler --service_path=. --remove_handler=true && \
-	init_service --service_path=. --service_name=${svc} ${model_list}
+	init_service --service_path=. --service_name=${svc} ${model_list} --skip_default_model=${skip_default_model}

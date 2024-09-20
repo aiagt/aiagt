@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	Authorization       = "AUTHORIZATION"
-	AuthorizationUserID = "AUTHORIZATION_USER_ID"
+	Authorization              = "AUTHORIZATION"
+	AuthorizationUserID CtxKey = "AUTHORIZATION_USER_ID"
 )
 
 func WithToken(ctx context.Context, token string) context.Context {

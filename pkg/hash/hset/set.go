@@ -39,9 +39,7 @@ func (s Set[T]) Add(vals ...T) {
 }
 
 func (s Set[T]) Remove(v T) {
-	if _, ok := s[v]; ok {
-		delete(s, v)
-	}
+	delete(s, v)
 }
 
 func (s Set[T]) Has(v T) bool {

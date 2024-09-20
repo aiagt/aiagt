@@ -10,6 +10,7 @@ import (
 	"github.com/redis/go-redis/v9"
 
 	"github.com/aiagt/aiagt/common/locker"
+	"github.com/aiagt/aiagt/pkg/logerr"
 	ktrdb "github.com/aiagt/kitextool/option/server/redis"
 )
 
@@ -78,7 +79,7 @@ func (c *CallTokenCache) Decr(ctx context.Context, token string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	defer lock.Unlock()
+	defer logerr.Log(lock.Unlock())
 
 	val, err := c.Get(ctx, token)
 	if err != nil {

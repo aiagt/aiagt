@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	TxKey = "TX"
+	TxKey CtxKey = "TRANSACTION"
 )
 
 func WithTx(ctx context.Context, db *gorm.DB) context.Context {

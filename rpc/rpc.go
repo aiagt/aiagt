@@ -66,9 +66,3 @@ func init() {
 		streamclient.WithSuite(ktclient.NewKitexToolSuite(nil, ktclient.WithTransport(transport.TTHeaderFramed))),
 	)
 }
-
-func noError(err error) {
-	if err != nil {
-		panic(err)
-	}
-}

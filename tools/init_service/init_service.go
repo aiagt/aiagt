@@ -17,21 +17,25 @@ import (
 
 func main() {
 	var (
-		serviceName string
-		servicePath string
-		models      flagSlice[string]
+		serviceName      string
+		servicePath      string
+		models           flagSlice[string]
+		skipDefaultModel bool
 	)
 
 	flag.StringVar(&serviceName, "service_name", "", "service name")
 	flag.StringVar(&servicePath, "service_path", "", "path to service directory")
 	flag.Var(&models, "model", "model name")
+	flag.BoolVar(&skipDefaultModel, "skip_default_model", false, "skip default model")
 	flag.Parse()
 
 	if serviceName == "" {
 		serviceName = filepath.Base(servicePath)
 	}
 
-	models = append(models, serviceName)
+	if !skipDefaultModel {
+		models = append(models, serviceName)
+	}
 
 	handlers, err := ParseHandlers(servicePath, serviceName)
 	if err != nil {
@@ -150,7 +154,15 @@ func ParseHandlers(servicePath, serviceName string) ([]string, error) {
 		return nil, errors.New("Service implementation not found")
 	}
 
-	return methods.Methods, nil
+	// keep only public methods
+	var result []string
+	for _, method := range methods.Methods {
+		if len(method) > 0 && method[0] >= 'A' && method[0] <= 'Z' {
+			result = append(result, method)
+		}
+	}
+
+	return result, nil
 }
 
 type Name struct {

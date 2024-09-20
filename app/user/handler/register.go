@@ -74,13 +74,11 @@ func validatePassword(password string) bool {
 		return false
 	}
 
-	letter := regexp.MustCompile(`[a-zA-Z]`)
-	if !letter.MatchString(password) {
+	if !regexp.MustCompile(`[a-zA-Z]`).MatchString(password) {
 		return false
 	}
 
-	numberOrSymbol := regexp.MustCompile(`[\d\W]`)
-	if !numberOrSymbol.MatchString(password) {
+	if !regexp.MustCompile(`[\d\W]`).MatchString(password) {
 		return false
 	}
 
