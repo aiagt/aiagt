@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/aiagt/aiagt/app/chat/conf"
 	"github.com/aiagt/aiagt/app/chat/dal/db"
 	"github.com/aiagt/aiagt/app/chat/handler"
@@ -13,7 +15,6 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/cloudwego/kitex/transport"
 	"gorm.io/gorm"
-	"log"
 )
 
 func main() {

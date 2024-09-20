@@ -3,10 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/aiagt/aiagt/pkg/closer"
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/aiagt/aiagt/pkg/closer"
 
 	"github.com/aiagt/aiagt/tools/utils/goparser"
 	"github.com/aiagt/aiagt/tools/utils/logger"
@@ -156,6 +157,7 @@ func ParseHandlers(servicePath, serviceName string) ([]string, error) {
 
 	// keep only public methods
 	var result []string
+
 	for _, method := range methods.Methods {
 		if len(method) > 0 && method[0] >= 'A' && method[0] <= 'Z' {
 			result = append(result, method)

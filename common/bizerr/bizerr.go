@@ -30,6 +30,7 @@ func (i *Biz) NewCodeErr(code ErrCode, err error) *BizError {
 		InterfaceName: i.InterfaceName,
 		Err:           err,
 	}
+
 	return berr
 }
 
@@ -38,15 +39,18 @@ func (i *Biz) CodeErr(code ErrCode) *BizError {
 	if !ok {
 		err = errors.New("unknown error")
 	}
+
 	return i.NewCodeErr(code, err)
 }
 
 func (i *Biz) CallErr(err error) *BizError {
 	be := new(BizError)
 	ok := errors.As(err, &be)
+
 	if ok {
 		return be
 	}
+
 	return i.NewErr(err)
 }
 
@@ -56,6 +60,7 @@ func (i *Biz) NewErr(err error) *BizError {
 	} else if errors.Is(err, gorm.ErrDuplicatedKey) {
 		return i.CodeErr(ErrCodeAlreadyExists)
 	}
+
 	return i.NewCodeErr(ErrCodeInternal, err)
 }
 
@@ -89,12 +94,14 @@ func (e *BizError) Error() string {
 func (e *BizError) Log(msg string) *BizError {
 	_, file, line, _ := runtime.Caller(1)
 	klog.Errorf("position: %s:%d, %s, msg: %s", file, line, e.Error(), msg)
+
 	return e
 }
 
 func (e *BizError) Logf(format string, args ...any) *BizError {
 	_, file, line, _ := runtime.Caller(1)
 	klog.Errorf("position: %s:%d, %s, msg: %s", file, line, e.Error(), fmt.Sprintf(format, args...))
+
 	return e
 }
 

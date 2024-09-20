@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"github.com/aiagt/aiagt/pkg/closer"
 	"io"
 	"net/http"
+
+	"github.com/aiagt/aiagt/pkg/closer"
 
 	"github.com/pkg/errors"
 )
@@ -29,6 +30,7 @@ const (
 func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *RequestType, responseType *ResponseType, reqBody []byte) ([]byte, error) {
 	// verify request body
 	var requestBody interface{}
+
 	err := VerifySchemaAndUnmarshal(*requestType, reqBody, &requestBody)
 	if err != nil {
 		return nil, errors.Wrap(err, "request body validation error")
@@ -66,6 +68,7 @@ func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *Re
 
 	// verify response body
 	var responseBody interface{}
+
 	err = VerifySchemaAndUnmarshal(*responseType, respBody, responseBody)
 	if err != nil {
 		return nil, errors.Wrap(err, "response body validation error")

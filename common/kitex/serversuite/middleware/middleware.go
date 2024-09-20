@@ -29,5 +29,6 @@ func ReturnBizErr(ctx context.Context, err error) error {
 	}
 
 	setter.SetBizStatusErr(bizErr)
+
 	return nil
 }

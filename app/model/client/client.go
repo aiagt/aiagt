@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
+
 	"github.com/aiagt/aiagt/pkg/safe"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/sashabaranov/go-openai/jsonschema"
-	"io"
 
 	"github.com/aiagt/aiagt/kitex_gen/modelsvc"
 	"github.com/aiagt/aiagt/kitex_gen/openai"
@@ -43,20 +44,20 @@ func main() {
 					Content: safe.Pointer("北京天气怎么样？"),
 				},
 			},
-			//MaxTokens:         nil,
-			//Temperature:       nil,
-			//TopP:              nil,
-			//N:                 nil,
-			//Stream:            nil,
-			//Stop:              nil,
-			//PresencePenalty:   nil,
-			//ResponseFormat:    nil,
-			//Seed:              nil,
-			//FrequencyPenalty:  nil,
-			//LogitBias:         nil,
-			//Logprobs:          nil,
-			//TopLogprobs:       nil,
-			//User:              nil,
+			// MaxTokens:         nil,
+			// Temperature:       nil,
+			// TopP:              nil,
+			// N:                 nil,
+			// Stream:            nil,
+			// Stop:              nil,
+			// PresencePenalty:   nil,
+			// ResponseFormat:    nil,
+			// Seed:              nil,
+			// FrequencyPenalty:  nil,
+			// LogitBias:         nil,
+			// Logprobs:          nil,
+			// TopLogprobs:       nil,
+			// User:              nil,
 			Functions: []*openai.FunctionDefinition{
 				{
 					Name:        "get_current_weather",
@@ -64,14 +65,13 @@ func main() {
 					Parameters:  p,
 				},
 			},
-			//FunctionCall:      nil,
-			//Tools:             nil,
-			//ToolChoice:        nil,
-			//StreamOptions:     nil,
-			//ParallelToolCalls: nil,
+			// FunctionCall:      nil,
+			// Tools:             nil,
+			// ToolChoice:        nil,
+			// StreamOptions:     nil,
+			// ParallelToolCalls: nil,
 		},
 	})
-
 	if err != nil {
 		klog.Errorf("err: %#v", err)
 		return
@@ -82,6 +82,7 @@ func main() {
 		if errors.Is(err, io.EOF) {
 			return
 		}
+
 		if err != nil {
 			return
 		}

@@ -17,6 +17,7 @@ import (
 
 func main() {
 	ctx := context.Background()
+
 	ctx, err := login(ctx)
 	if err != nil {
 		logger(nil, err)
@@ -30,10 +31,12 @@ func main() {
 
 func login(ctx context.Context) (context.Context, error) {
 	password := "au199108"
+
 	resp, err := rpc.UserCli.Login(ctx, &usersvc.LoginReq{Email: "ahao_study@163.com", Password: &password})
 	if err != nil {
 		return nil, err
 	}
+
 	return ctxutil.WithToken(ctx, resp.Token), nil
 }
 
@@ -42,6 +45,7 @@ func logger(resp any, err error) {
 		klog.Error(err)
 		return
 	}
+
 	klog.Infof("resp: %#v", resp)
 }
 

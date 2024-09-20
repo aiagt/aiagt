@@ -113,6 +113,7 @@ func NewOpenAIListMessage(messages []*model.Message) []*openai.ChatCompletionMes
 	for i, m := range messages {
 		result[i] = NewOpenAIMessage(m)
 	}
+
 	return result
 }
 
@@ -136,6 +137,7 @@ func NewOpenAIListFunctionDefinition(tools []*pluginsvc.PluginTool) []*openai.Fu
 
 	return result
 }
+
 func NewGenConversation(conversation *model.Conversation) *chatsvc.Conversation {
 	return &chatsvc.Conversation{
 		Id:     conversation.ID,
@@ -150,6 +152,7 @@ func NewGenListConversation(conversations []*model.Conversation) []*chatsvc.Conv
 	for i, conversation := range conversations {
 		result[i] = NewGenConversation(conversation)
 	}
+
 	return result
 }
 

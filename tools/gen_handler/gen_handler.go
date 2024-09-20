@@ -32,6 +32,7 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("check existence of %s error: %w", handlerFilePath, err))
 	}
+
 	if !exists {
 		return
 	}
@@ -86,6 +87,7 @@ func writeNodes(path string, nodes ...ast.Decl) {
 	if err != nil {
 		panic(fmt.Errorf("check existence of %s error: %w", path, err))
 	}
+
 	if exists {
 		return
 	}

@@ -3,9 +3,10 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"io"
+
 	"github.com/aiagt/aiagt/pkg/closer"
 	"github.com/cloudwego/kitex/pkg/klog"
-	"io"
 
 	"github.com/aiagt/aiagt/app/model/mapper"
 	modelsvc "github.com/aiagt/aiagt/kitex_gen/modelsvc"
@@ -40,6 +41,7 @@ func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelServ
 		if errors.Is(err, io.EOF) {
 			return nil
 		}
+
 		if err != nil {
 			return bizChat.NewErr(err).Log("chat stream recv failed")
 		}

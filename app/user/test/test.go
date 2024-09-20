@@ -21,6 +21,7 @@ func logger(resp any, err error) {
 		klog.Error(err)
 		return
 	}
+
 	klog.Infof("resp: %#v", resp)
 }
 
@@ -42,6 +43,7 @@ func Register(ctx context.Context) (any, error) {
 
 func Login(ctx context.Context) (any, error) {
 	password := "au199108"
+
 	return rpc.UserCli.Login(ctx, &usersvc.LoginReq{
 		Email:    "ahao_study@163.com",
 		Password: &password,

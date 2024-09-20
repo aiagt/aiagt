@@ -12,6 +12,7 @@ import (
 
 func TestSendAuthCaptcha(t *testing.T) {
 	ktconf.LoadFiles(conf.Conf(), filepath.Join("..", "..", "conf", "conf.yaml"))
+
 	err := SendAuthCaptcha(captcha.Generate(), "ahao_study@163.com")
 	assert.NoError(t, err)
 }

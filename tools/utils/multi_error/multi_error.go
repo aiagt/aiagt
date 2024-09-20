@@ -10,6 +10,7 @@ func NewRunError(err error) *RunError {
 	if err == nil {
 		return nil
 	}
+
 	return &RunError{err: err}
 }
 
@@ -17,6 +18,7 @@ func (e *RunError) Expect(msg string) {
 	if e == nil || e.err == nil {
 		return
 	}
+
 	logger.Errorf("%s: %v", msg, e.err)
 }
 
@@ -32,6 +34,7 @@ func (m *MultiError) Run(fn func() error) *RunError {
 	if m.err == nil {
 		m.err = fn()
 	}
+
 	return NewRunError(m.err)
 }
 
@@ -47,6 +50,7 @@ func (m *MultiError1[T]) Run(fn func(T) error, arg1 T) *RunError {
 	if m.err == nil {
 		m.err = fn(arg1)
 	}
+
 	return NewRunError(m.err)
 }
 
@@ -62,5 +66,6 @@ func (m *MultiError2[T, E]) Run(fn func(T, E) error, arg1 T, arg2 E) *RunError {
 	if m.err == nil {
 		m.err = fn(arg1, arg2)
 	}
+
 	return NewRunError(m.err)
 }

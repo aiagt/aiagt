@@ -18,5 +18,5 @@ func TestGenerateToken(t *testing.T) {
 	id, err := ParseToken(token)
 	assert.NoError(t, err)
 
-	assert.Equal(t, id, int64(128))
+	assert.Equal(t, int64(128), id)
 }

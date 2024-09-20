@@ -39,6 +39,7 @@ func (c *CaptchaCache) Get(ctx context.Context, typ CaptchaType, email string) (
 		if errors.Is(err, redis.Nil) {
 			return "", nil
 		}
+
 		return "", err
 	}
 

@@ -2,6 +2,7 @@ package ctxutil
 
 import (
 	"context"
+
 	"github.com/bytedance/gopkg/cloud/metainfo"
 	"github.com/cloudwego/kitex/pkg/utils/contextmap"
 )
@@ -39,6 +40,7 @@ func Forbidden(ctx context.Context, id int64) bool {
 	if !ok {
 		return true
 	}
+
 	return userID != id
 }
 
@@ -50,6 +52,7 @@ func WithMapUserID(ctx context.Context, userID int64) context.Context {
 	if m, ok := contextmap.GetContextMap(ctx); ok {
 		m.Store(AuthorizationUserID, userID)
 	}
+
 	return ctx
 }
 
@@ -58,5 +61,6 @@ func MapUserID(ctx context.Context) int64 {
 		userID, _ := m.Load(AuthorizationUserID)
 		return userID.(int64)
 	}
+
 	return 0
 }

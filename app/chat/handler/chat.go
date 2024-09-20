@@ -2,11 +2,12 @@ package handler
 
 import (
 	"context"
+	"io"
+	"strings"
+
 	"github.com/aiagt/aiagt/pkg/hash/hmap"
 	"github.com/aiagt/aiagt/pkg/safe"
 	"github.com/pkg/errors"
-	"io"
-	"strings"
 
 	"github.com/aiagt/aiagt/common/bizerr"
 	"github.com/aiagt/aiagt/common/ctxutil"
@@ -70,6 +71,7 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 	}
 
 	newMsgs := mapper.NewModelChatMessage(*req.ConversationId, req.Messages)
+
 	err = s.messageDao.CreateBatch(ctx, newMsgs)
 	if err != nil {
 		return bizChat.NewErr(err).Log("create message batch error")
@@ -167,7 +169,8 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 									Name:      functionCall.GetName(),
 									Arguments: functionCall.GetArguments(),
 								}},
-							}}},
+							},
+						}},
 						ConversationId: conversationID,
 					})
 					if err != nil {
@@ -188,7 +191,8 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 						Content: &chatsvc.MessageContent{
 							Type:    chatsvc.MessageType_TEXT,
 							Content: &chatsvc.MessageContentValue{Text: &chatsvc.MessageContentValueText{Text: *content}},
-						}}},
+						},
+					}},
 					ConversationId: conversationID,
 				})
 				if err != nil {
@@ -212,10 +216,12 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 						Content: model.MessageContentValue{FuncCall: &model.MessageContentValueFuncCall{
 							Name:      functionCall.GetName(),
 							Arguments: functionCall.GetArguments(),
-						}}},
+						}},
+					},
 					ConversationID: conversationID,
 					Role:           model.MessageRoleAssistant,
 				}
+
 				err = s.messageDao.Create(ctx, msg)
 				if err != nil {
 					return bizChat.NewErr(err).Log("create function call message error")
@@ -230,10 +236,12 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 						Type: model.MessageTypeText,
 						Content: model.MessageContentValue{Text: &model.MessageContentValueText{
 							Text: messageContent.String(),
-						}}},
+						}},
+					},
 					ConversationID: conversationID,
 					Role:           model.MessageRoleAssistant,
 				}
+
 				err = s.messageDao.Create(ctx, msg)
 				if err != nil {
 					return bizChat.NewErr(err).Log("create text message error")
@@ -248,6 +256,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *openai.FunctionCall, tool *pluginsvc.PluginTool, conversationID int64, msgs []*model.Message, app *appsvc.App, token string, stream chatsvc.ChatService_ChatServer) error {
 	// get user secrets
 	const maxSecrets = 100
+
 	listSecretResp, err := s.userCli.ListSecret(ctx, &usersvc.ListSecretReq{
 		Pagination: &base.PaginationReq{PageSize: maxSecrets},
 		PluginId:   &tool.PluginId,
@@ -278,10 +287,12 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 			Content: model.MessageContentValue{Func: &model.MessageContentValueFunc{
 				Name:    *functionCall.Name,
 				Content: string(callResp.Response),
-			}}},
+			}},
+		},
 		ConversationID: conversationID,
 		Role:           model.MessageRoleFunction,
 	}
+
 	err = s.messageDao.Create(ctx, msg)
 	if err != nil {
 		return bizChat.NewErr(err).Log("create function message error")
@@ -297,7 +308,8 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 					Name:    *functionCall.Name,
 					Content: string(callResp.Response),
 				}},
-			}}},
+			},
+		}},
 		ConversationId: conversationID,
 	})
 	if err != nil {
@@ -305,5 +317,6 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 	}
 
 	msgs = append(msgs, msg)
+
 	return s.chat(ctx, conversationID, msgs, app, token, stream)
 }

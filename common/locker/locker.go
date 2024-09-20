@@ -25,19 +25,23 @@ func NewRedisLocker(ctx context.Context, client *redis.Client, key string) *Redi
 
 func (rl *RedisLocker) Lock() error {
 	lockKey := lockPrefix + rl.key
+
 	success, err := rl.client.SetNX(rl.ctx, lockKey, "locked", lockExpiry).Result()
 	if err != nil {
 		return err
 	}
+
 	if !success {
 		return errors.New("failed to acquire lock")
 	}
+
 	return nil
 }
 
 func (rl *RedisLocker) Unlock() error {
 	lockKey := lockPrefix + rl.key
 	_, err := rl.client.Del(rl.ctx, lockKey).Result()
+
 	return err
 }
 
@@ -53,5 +57,6 @@ func (rl *RedisLocker) LockWithRetry(retryInterval time.Duration, maxRetries int
 		case <-time.After(retryInterval):
 		}
 	}
+
 	return errors.New("max retries reached, failed to acquire lock")
 }

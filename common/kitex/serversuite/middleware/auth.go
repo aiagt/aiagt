@@ -39,6 +39,7 @@ func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 		}
 
 		token := ctxutil.Token(ctx)
+
 		id, err := jwt.ParseToken(token)
 		if err != nil {
 			biz := bizerr.NewBiz(serviceName, methodName+"_auth", 4000000)

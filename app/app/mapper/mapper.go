@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"encoding/json"
+
 	"github.com/aiagt/aiagt/pkg/safe"
 
 	"github.com/aiagt/aiagt/app/app/model"

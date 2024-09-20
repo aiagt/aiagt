@@ -22,9 +22,11 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *usersvc.RegisterReq
 	if !validateEmail(req.Email) {
 		return nil, bizRegister.NewCodeErr(11, errors.New("invalid email"))
 	}
+
 	if !validatePassword(req.Password) {
 		return nil, bizRegister.NewCodeErr(12, errors.New("invalid password"))
 	}
+
 	if !validateUsername(req.Username) {
 		return nil, bizRegister.NewCodeErr(13, errors.New("invalid username"))
 	}

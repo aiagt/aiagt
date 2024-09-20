@@ -38,6 +38,7 @@ func NewMapWithFuncs[E comparable, V, T any](vals []T, kf func(T) E, vf func(T) 
 	for _, val := range vals {
 		m[kf(val)] = vf(val)
 	}
+
 	return m
 }
 
@@ -65,5 +66,6 @@ func (m Map[E, T]) Get(key E) T {
 		var zero T
 		return zero
 	}
+
 	return val
 }

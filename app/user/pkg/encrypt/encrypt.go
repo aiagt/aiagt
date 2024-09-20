@@ -10,5 +10,6 @@ import (
 func Encrypt(password string) string {
 	hash := sha256.New()
 	hash.Write([]byte(password + conf.Conf().Auth.EncryptSalt))
+
 	return hex.EncodeToString(hash.Sum(nil))
 }

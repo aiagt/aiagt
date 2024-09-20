@@ -61,7 +61,7 @@ func (d *LabelDao) List(ctx context.Context, req *appsvc.ListAppLabelReq) ([]*mo
 		limit  = int(page.PageSize)
 	)
 
-	err := d.db(ctx).Model(d.m).Scopes(func (db *gorm.DB) *gorm.DB {
+	err := d.db(ctx).Model(d.m).Scopes(func(db *gorm.DB) *gorm.DB {
 		if req.Text != nil {
 			db = db.Where("text like ?", fmt.Sprintf("%%%s%%", *req.Text))
 		}

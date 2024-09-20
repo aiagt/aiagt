@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"encoding/json"
+
 	"github.com/aiagt/aiagt/pkg/call"
 
 	"github.com/aiagt/aiagt/app/plugin/model"
@@ -33,12 +34,15 @@ func NewGenPlugin(plugin *model.Plugin, author *usersvc.User, labels []*pluginsv
 	if author != nil {
 		result.Author = author
 	}
+
 	if labels != nil {
 		result.Labels = labels
 	}
+
 	if tools != nil {
 		result.Tools = tools
 	}
+
 	return result
 }
 
@@ -47,6 +51,7 @@ func NewGenListPlugin(list []*model.Plugin) []*pluginsvc.Plugin {
 	for i, plugin := range list {
 		result[i] = NewGenPlugin(plugin, nil, nil, nil)
 	}
+
 	return result
 }
 
@@ -64,6 +69,7 @@ func NewGenListPluginSecret(list []*model.PluginSecret) []*pluginsvc.PluginSecre
 	for i, secret := range list {
 		result[i] = NewGenPluginSecret(secret)
 	}
+
 	return result
 }
 
@@ -72,6 +78,7 @@ func NewGenPluginTool(tool *model.PluginTool) *pluginsvc.PluginTool {
 	if err != nil {
 		logger.Warnf("plugin tool request type marshaling error: %s", err.Error())
 	}
+
 	responseType, err := json.Marshal(tool.ResponseType)
 	if err != nil {
 		logger.Warnf("plugin tool response type marshaling error: %s", err.Error())
@@ -97,6 +104,7 @@ func NewGenListPluginTool(list []*model.PluginTool) []*pluginsvc.PluginTool {
 	for i, tool := range list {
 		result[i] = NewGenPluginTool(tool)
 	}
+
 	return result
 }
 
@@ -113,6 +121,7 @@ func NewGenListPluginLabel(list []*model.PluginLabel) []*pluginsvc.PluginLabel {
 	for i, label := range list {
 		result[i] = NewGenPluginLabel(label)
 	}
+
 	return result
 }
 
@@ -130,6 +139,7 @@ func NewModelListPluginSecret(list []*pluginsvc.PluginSecret) []*model.PluginSec
 	for i, secret := range list {
 		result[i] = NewModelPluginSecret(secret)
 	}
+
 	return result
 }
 
@@ -199,6 +209,7 @@ func NewModelUpdatePluginTool(tool *pluginsvc.UpdatePluginToolReq) *model.Plugin
 
 	if tool.RequestType != nil {
 		requestType = new(call.RequestType)
+
 		err := json.Unmarshal(tool.RequestType, requestType)
 		if err != nil {
 			logger.Warnf("plugin tool request type unmarshaling error: %s", err.Error())
@@ -207,6 +218,7 @@ func NewModelUpdatePluginTool(tool *pluginsvc.UpdatePluginToolReq) *model.Plugin
 
 	if tool.ResponseType != nil {
 		responseType = new(call.ResponseType)
+
 		err := json.Unmarshal(tool.ResponseType, &responseType)
 		if err != nil {
 			logger.Warnf("plugin tool response type unmarshaling error: %s", err.Error())

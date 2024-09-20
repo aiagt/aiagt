@@ -1,8 +1,9 @@
 package main
 
 import (
-	ktrdb "github.com/aiagt/kitextool/option/server/redis"
 	"log"
+
+	ktrdb "github.com/aiagt/kitextool/option/server/redis"
 
 	"github.com/aiagt/aiagt/app/model/conf"
 	"github.com/aiagt/aiagt/app/model/dal/cache"

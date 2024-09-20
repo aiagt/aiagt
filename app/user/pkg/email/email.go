@@ -28,6 +28,7 @@ func SendAuthCaptcha(captcha string, toEmails ...string) error {
 		<h1 style="margin: 1.2em 0;">%s</h1>
 		<p style="font-size: 12px; color: #666;">请在5分钟内完成验证，过期失效，请勿告知他人，以防个人信息泄露</p>
 	</div>`, captcha)
+
 	return Send(subject, html, toEmails...)
 }
 
@@ -38,5 +39,6 @@ func SendResetCaptcha(captcha string, toEmails ...string) error {
 		<h1 style="margin: 1.2em 0;">%s</h1>
 		<p style="font-size: 12px; color: #666;">请在5分钟内完成验证，过期失效，请勿告知他人，以防个人信息泄露</p>
 	</div>`, captcha)
+
 	return Send(subject, html, toEmails...)
 }

@@ -17,6 +17,7 @@ func initSnowFlake() {
 	if err != nil {
 		panic(err)
 	}
+
 	node = n
 }
 

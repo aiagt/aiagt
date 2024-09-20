@@ -27,6 +27,7 @@ func NewGenListUser(users []*model.User) []*usersvc.User {
 	for i, user := range users {
 		result[i] = NewGenUser(user)
 	}
+
 	return result
 }
 
@@ -47,6 +48,7 @@ func NewGenListSecret(secrets []*model.Secret) []*usersvc.Secret {
 	for i, secret := range secrets {
 		result[i] = NewGenSecret(secret)
 	}
+
 	return result
 }
 

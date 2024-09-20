@@ -4,5 +4,4 @@ type Models struct {
 	Base
 }
 
-type ModelsOptional struct {
-}
+type ModelsOptional struct{}

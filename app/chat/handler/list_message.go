@@ -26,7 +26,7 @@ func (s *ChatServiceImpl) ListMessage(ctx context.Context, req *chatsvc.ListMess
 	}
 
 	resp = &chatsvc.ListMessageResp{
-		Messages: mapper.NewGenListMessage(messages),
+		Messages:   mapper.NewGenListMessage(messages),
 		Pagination: page,
 	}
 

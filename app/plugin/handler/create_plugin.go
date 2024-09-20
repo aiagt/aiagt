@@ -21,6 +21,7 @@ func (s *PluginServiceImpl) CreatePlugin(ctx context.Context, req *pluginsvc.Cre
 	if !ok {
 		return nil, bizCreatePlugin.NewErr(err)
 	}
+
 	plugin := mapper.NewModelCreatePlugin(req, userID, labelIDs)
 
 	if err = s.pluginDao.Create(ctx, plugin); err != nil {

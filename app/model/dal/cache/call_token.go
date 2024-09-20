@@ -56,6 +56,7 @@ func (c *CallTokenCache) Get(ctx context.Context, token string) (*CallTokenValue
 		if errors.Is(err, redis.Nil) {
 			return nil, nil
 		}
+
 		return nil, err
 	}
 

@@ -52,6 +52,7 @@ func (s *PluginServiceImpl) CallPluginTool(ctx context.Context, req *pluginsvc.C
 	secretSet := hset.NewSetWithKey("secret_name", plugin.Secrets...)
 
 	secretMap := make(map[string]string, len(plugin.Secrets))
+
 	for _, secret := range listSecret.Secrets {
 		if secretSet.Has(secret.Name) {
 			secretMap[secret.Name] = secret.Value

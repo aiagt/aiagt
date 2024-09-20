@@ -21,6 +21,7 @@ func (s *UserServiceImpl) SendCaptcha(ctx context.Context, req *usersvc.SendCapt
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, bizSendCaptcha.NewErr(err)
 	}
+
 	if err == nil {
 		resp.Exists = true
 	}

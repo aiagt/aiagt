@@ -55,6 +55,7 @@ func ParseToken(token string) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
+
 	if !t.Valid {
 		return 0, fmt.Errorf("invalid token")
 	}

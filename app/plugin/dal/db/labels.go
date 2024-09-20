@@ -91,6 +91,7 @@ func (d *LabelDao) CreateBatch(ctx context.Context, labels []*model.PluginLabel)
 	if err != nil {
 		return errors.Wrap(err, "plugin label dao create batch error")
 	}
+
 	return nil
 }
 
@@ -113,6 +114,7 @@ func (d *LabelDao) UpdateLabels(ctx context.Context, labelIDs []int64, labelText
 	for i, text := range labelTexts {
 		labels[i] = &model.PluginLabel{Text: text}
 	}
+
 	if err := d.CreateBatch(ctx, labels); err != nil {
 		return nil, errors.Wrap(err, "plugin label dao update labels error")
 	}

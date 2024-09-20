@@ -29,6 +29,7 @@ func NewSetWithFunc[T comparable, E any](fn func(E) T, vals ...E) Set[T] {
 	for _, v := range vals {
 		s[fn(v)] = struct{}{}
 	}
+
 	return s
 }
 

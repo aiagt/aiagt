@@ -19,6 +19,7 @@ func ParseStructMethods(filePath string) (map[string]*StructMethod, error) {
 	structMethods := make(map[string]*StructMethod)
 
 	fset := token.NewFileSet()
+
 	node, err := parser.ParseFile(fset, filePath, nil, parser.AllErrors)
 	if err != nil {
 		return nil, fmt.Errorf("parse file %s error: %v", filePath, err)
@@ -41,16 +42,19 @@ func ParseStructMethods(filePath string) (map[string]*StructMethod, error) {
 
 				if structName != "" {
 					methodName := funcDecl.Name.Name
+
 					if _, exists := structMethods[structName]; !exists {
 						structMethods[structName] = &StructMethod{
 							StructName: structName,
 							Methods:    []string{},
 						}
 					}
+
 					structMethods[structName].Methods = append(structMethods[structName].Methods, methodName)
 				}
 			}
 		}
+
 		return true
 	})
 
@@ -64,11 +68,13 @@ func ParseGoFilesInDir(dir string) (map[string]*StructMethod, error) {
 		if err != nil {
 			return err
 		}
+
 		if !info.IsDir() && strings.HasSuffix(info.Name(), ".go") {
 			fileStructMethods, err := ParseStructMethods(path)
 			if err != nil {
 				return err
 			}
+
 			for structName, methods := range fileStructMethods {
 				if _, exists := structMethods[structName]; !exists {
 					structMethods[structName] = methods
@@ -77,6 +83,7 @@ func ParseGoFilesInDir(dir string) (map[string]*StructMethod, error) {
 				}
 			}
 		}
+
 		return nil
 	})
 	if err != nil {

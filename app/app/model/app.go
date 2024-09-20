@@ -45,19 +45,19 @@ type StreamOptions struct {
 	IncludeUsage *bool `json:"include_usage,omitempty"`
 }
 
-type AppOptional struct{
-	Name            *string       `gorm:"column:name"`
-	Description     *string       `gorm:"column:description"`
-	DescriptionMd   *string       `gorm:"column:description_md;type:text"`
-	ModelID         *int64        `gorm:"column:model_id"`
-	EnableImage     *bool         `gorm:"column:enable_image"`
-	EnableFile      *bool         `gorm:"column:enable_file"`
-	Version         *string       `gorm:"column:version"`
-	IsPrivate       *bool         `gorm:"column:is_private"`
-	HomePage        *string       `gorm:"column:home_page"`
+type AppOptional struct {
+	Name            *string      `gorm:"column:name"`
+	Description     *string      `gorm:"column:description"`
+	DescriptionMd   *string      `gorm:"column:description_md;type:text"`
+	ModelID         *int64       `gorm:"column:model_id"`
+	EnableImage     *bool        `gorm:"column:enable_image"`
+	EnableFile      *bool        `gorm:"column:enable_file"`
+	Version         *string      `gorm:"column:version"`
+	IsPrivate       *bool        `gorm:"column:is_private"`
+	HomePage        *string      `gorm:"column:home_page"`
 	PresetQuestions []string     `gorm:"column:preset_questions;serializer:json;type:json"`
 	ToolIDs         []int64      `gorm:"column:tool_ids;serializer:json;type:json"`
-	Logo            *string       `gorm:"column:logo"`
+	Logo            *string      `gorm:"column:logo"`
 	LabelIDs        []int64      `gorm:"column:label_ids;serializer:json;type:json"`
 	ModelConfig     *ModelConfig `gorm:"column:model_config;serializer:json;type:json"`
 	PublishedAt     *time.Time   `gorm:"column:published_at"`

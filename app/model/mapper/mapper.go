@@ -2,8 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	"github.com/cloudwego/kitex/pkg/klog"
 	"strings"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 
 	"github.com/aiagt/aiagt/pkg/call"
 	"github.com/aiagt/aiagt/pkg/safe"
@@ -178,6 +179,7 @@ func NewOpenAIFunctionCall(functionCall *openaigo.FunctionCall) *openai.Function
 	if functionCall == nil {
 		return nil
 	}
+
 	return &openai.FunctionCall{
 		Name:      safe.OptionalPointer(functionCall.Name),
 		Arguments: safe.OptionalPointer(functionCall.Arguments),
