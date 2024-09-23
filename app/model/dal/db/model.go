@@ -5,10 +5,10 @@ import (
 	"math"
 
 	"github.com/aiagt/aiagt/app/model/model"
+	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/pkg/errors"
 
-	ktdb "github.com/aiagt/kitextool/option/server/db"
 	"gorm.io/gorm"
 )
 
@@ -22,7 +22,7 @@ func NewModelDao() *ModelDao {
 }
 
 func (d *ModelDao) db(ctx context.Context) *gorm.DB {
-	return ktdb.DBCtx(ctx)
+	return ctxutil.Tx(ctx)
 }
 
 // GetByID get model by id
