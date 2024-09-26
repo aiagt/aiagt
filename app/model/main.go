@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"github.com/cloudwego/kitex/transport"
 	"gorm.io/gorm"
-	"log"
 
 	ktdb "github.com/aiagt/kitextool/option/server/db"
 	ktrdb "github.com/aiagt/kitextool/option/server/redis"

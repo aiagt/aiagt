@@ -23,7 +23,7 @@ func main() {
 	}
 
 	logger(Chat(ctx))
-	//logger(ListMessage(ctx))
+	// logger(ListMessage(ctx))
 }
 
 func login(ctx context.Context) (context.Context, error) {

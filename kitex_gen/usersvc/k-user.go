@@ -14,9 +14,7 @@ import (
 	"github.com/aiagt/aiagt/kitex_gen/base"
 )
 
-var (
-	_ = base.KitexUnusedProtection
-)
+var _ = base.KitexUnusedProtection
 
 // unused protection
 var (

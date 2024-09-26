@@ -61,9 +61,9 @@ func (d *ModelDao) List(ctx context.Context, req *modelsvc.ListModelReq) ([]*mod
 		limit  = int(page.PageSize)
 	)
 
-	err := d.db(ctx).Model(d.m).Scopes(func (db *gorm.DB) *gorm.DB {
+	err := d.db(ctx).Model(d.m).Scopes(func(db *gorm.DB) *gorm.DB {
 		if req.Name != nil {
-			db = db.Where("name like ?", fmt.Sprintf("%%%s%%", req.Name))
+			db = db.Where("name like ?", fmt.Sprintf("%%%s%%", *req.Name))
 		}
 		if req.Source != nil {
 			db = db.Where("source = ?", req.Source)

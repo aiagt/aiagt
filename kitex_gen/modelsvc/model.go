@@ -5,11 +5,12 @@ package modelsvc
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/openai"
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/cloudwego/kitex/pkg/streaming"
-	"strings"
 )
 
 type ChatReq struct {
@@ -41,12 +42,15 @@ func (p *ChatReq) GetOpenaiReq() (v *openai.ChatCompletionRequest) {
 	}
 	return p.OpenaiReq
 }
+
 func (p *ChatReq) SetToken(val string) {
 	p.Token = val
 }
+
 func (p *ChatReq) SetModelId(val int64) {
 	p.ModelId = val
 }
+
 func (p *ChatReq) SetOpenaiReq(val *openai.ChatCompletionRequest) {
 	p.OpenaiReq = val
 }
@@ -62,7 +66,6 @@ func (p *ChatReq) IsSetOpenaiReq() bool {
 }
 
 func (p *ChatReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetToken bool = false
@@ -156,7 +159,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *ChatReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -166,8 +168,8 @@ func (p *ChatReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Token = _field
 	return nil
 }
-func (p *ChatReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *ChatReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -177,6 +179,7 @@ func (p *ChatReq) ReadField2(iprot thrift.TProtocol) error {
 	p.ModelId = _field
 	return nil
 }
+
 func (p *ChatReq) ReadField3(iprot thrift.TProtocol) error {
 	_field := openai.NewChatCompletionRequest()
 	if err := _field.Read(iprot); err != nil {
@@ -278,7 +281,6 @@ func (p *ChatReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ChatReq(%+v)", *p)
-
 }
 
 func (p *ChatReq) DeepEqual(ano *ChatReq) bool {
@@ -300,21 +302,20 @@ func (p *ChatReq) DeepEqual(ano *ChatReq) bool {
 }
 
 func (p *ChatReq) Field1DeepEqual(src string) bool {
-
 	if strings.Compare(p.Token, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *ChatReq) Field2DeepEqual(src int64) bool {
 
+func (p *ChatReq) Field2DeepEqual(src int64) bool {
 	if p.ModelId != src {
 		return false
 	}
 	return true
 }
-func (p *ChatReq) Field3DeepEqual(src *openai.ChatCompletionRequest) bool {
 
+func (p *ChatReq) Field3DeepEqual(src *openai.ChatCompletionRequest) bool {
 	if !p.OpenaiReq.DeepEqual(src) {
 		return false
 	}
@@ -340,6 +341,7 @@ func (p *ChatResp) GetOpenaiResp() (v *openai.ChatCompletionStreamResponse) {
 	}
 	return p.OpenaiResp
 }
+
 func (p *ChatResp) SetOpenaiResp(val *openai.ChatCompletionStreamResponse) {
 	p.OpenaiResp = val
 }
@@ -353,7 +355,6 @@ func (p *ChatResp) IsSetOpenaiResp() bool {
 }
 
 func (p *ChatResp) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetOpenaiResp bool = false
@@ -475,7 +476,6 @@ func (p *ChatResp) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ChatResp(%+v)", *p)
-
 }
 
 func (p *ChatResp) DeepEqual(ano *ChatResp) bool {
@@ -491,7 +491,6 @@ func (p *ChatResp) DeepEqual(ano *ChatResp) bool {
 }
 
 func (p *ChatResp) Field1DeepEqual(src *openai.ChatCompletionStreamResponse) bool {
-
 	if !p.OpenaiResp.DeepEqual(src) {
 		return false
 	}
@@ -532,15 +531,19 @@ func (p *GenTokenReq) GetConversationId() (v int64) {
 func (p *GenTokenReq) GetCallLimit() (v int32) {
 	return p.CallLimit
 }
+
 func (p *GenTokenReq) SetAppId(val int64) {
 	p.AppId = val
 }
+
 func (p *GenTokenReq) SetPluginId(val *int64) {
 	p.PluginId = val
 }
+
 func (p *GenTokenReq) SetConversationId(val int64) {
 	p.ConversationId = val
 }
+
 func (p *GenTokenReq) SetCallLimit(val int32) {
 	p.CallLimit = val
 }
@@ -557,7 +560,6 @@ func (p *GenTokenReq) IsSetPluginId() bool {
 }
 
 func (p *GenTokenReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetAppId bool = false
@@ -659,7 +661,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *GenTokenReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -669,8 +670,8 @@ func (p *GenTokenReq) ReadField1(iprot thrift.TProtocol) error {
 	p.AppId = _field
 	return nil
 }
-func (p *GenTokenReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *GenTokenReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -680,8 +681,8 @@ func (p *GenTokenReq) ReadField2(iprot thrift.TProtocol) error {
 	p.PluginId = _field
 	return nil
 }
-func (p *GenTokenReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *GenTokenReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -691,8 +692,8 @@ func (p *GenTokenReq) ReadField3(iprot thrift.TProtocol) error {
 	p.ConversationId = _field
 	return nil
 }
-func (p *GenTokenReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *GenTokenReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field int32
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -818,7 +819,6 @@ func (p *GenTokenReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("GenTokenReq(%+v)", *p)
-
 }
 
 func (p *GenTokenReq) DeepEqual(ano *GenTokenReq) bool {
@@ -843,14 +843,13 @@ func (p *GenTokenReq) DeepEqual(ano *GenTokenReq) bool {
 }
 
 func (p *GenTokenReq) Field1DeepEqual(src int64) bool {
-
 	if p.AppId != src {
 		return false
 	}
 	return true
 }
-func (p *GenTokenReq) Field2DeepEqual(src *int64) bool {
 
+func (p *GenTokenReq) Field2DeepEqual(src *int64) bool {
 	if p.PluginId == src {
 		return true
 	} else if p.PluginId == nil || src == nil {
@@ -861,15 +860,15 @@ func (p *GenTokenReq) Field2DeepEqual(src *int64) bool {
 	}
 	return true
 }
-func (p *GenTokenReq) Field3DeepEqual(src int64) bool {
 
+func (p *GenTokenReq) Field3DeepEqual(src int64) bool {
 	if p.ConversationId != src {
 		return false
 	}
 	return true
 }
-func (p *GenTokenReq) Field4DeepEqual(src int32) bool {
 
+func (p *GenTokenReq) Field4DeepEqual(src int32) bool {
 	if p.CallLimit != src {
 		return false
 	}
@@ -900,9 +899,11 @@ func (p *GenTokenResp) GetExpiredAt() (v *base.Time) {
 	}
 	return p.ExpiredAt
 }
+
 func (p *GenTokenResp) SetToken(val string) {
 	p.Token = val
 }
+
 func (p *GenTokenResp) SetExpiredAt(val *base.Time) {
 	p.ExpiredAt = val
 }
@@ -917,7 +918,6 @@ func (p *GenTokenResp) IsSetExpiredAt() bool {
 }
 
 func (p *GenTokenResp) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetToken bool = false
@@ -996,7 +996,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *GenTokenResp) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1006,6 +1005,7 @@ func (p *GenTokenResp) ReadField1(iprot thrift.TProtocol) error {
 	p.Token = _field
 	return nil
 }
+
 func (p *GenTokenResp) ReadField2(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -1086,7 +1086,6 @@ func (p *GenTokenResp) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("GenTokenResp(%+v)", *p)
-
 }
 
 func (p *GenTokenResp) DeepEqual(ano *GenTokenResp) bool {
@@ -1105,14 +1104,13 @@ func (p *GenTokenResp) DeepEqual(ano *GenTokenResp) bool {
 }
 
 func (p *GenTokenResp) Field1DeepEqual(src string) bool {
-
 	if strings.Compare(p.Token, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *GenTokenResp) Field2DeepEqual(src *base.Time) bool {
 
+func (p *GenTokenResp) Field2DeepEqual(src *base.Time) bool {
 	if !p.ExpiredAt.DeepEqual(src) {
 		return false
 	}
@@ -1153,18 +1151,23 @@ func (p *Model) GetSource() (v string) {
 func (p *Model) GetModelKey() (v string) {
 	return p.ModelKey
 }
+
 func (p *Model) SetId(val int64) {
 	p.Id = val
 }
+
 func (p *Model) SetName(val string) {
 	p.Name = val
 }
+
 func (p *Model) SetDescription(val string) {
 	p.Description = val
 }
+
 func (p *Model) SetSource(val string) {
 	p.Source = val
 }
+
 func (p *Model) SetModelKey(val string) {
 	p.ModelKey = val
 }
@@ -1178,7 +1181,6 @@ var fieldIDToName_Model = map[int16]string{
 }
 
 func (p *Model) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -1302,7 +1304,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *Model) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -1312,8 +1313,8 @@ func (p *Model) ReadField1(iprot thrift.TProtocol) error {
 	p.Id = _field
 	return nil
 }
-func (p *Model) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *Model) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1323,8 +1324,8 @@ func (p *Model) ReadField2(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *Model) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *Model) ReadField3(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1334,8 +1335,8 @@ func (p *Model) ReadField3(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *Model) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *Model) ReadField4(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1345,8 +1346,8 @@ func (p *Model) ReadField4(iprot thrift.TProtocol) error {
 	p.Source = _field
 	return nil
 }
-func (p *Model) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *Model) ReadField5(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1491,7 +1492,6 @@ func (p *Model) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("Model(%+v)", *p)
-
 }
 
 func (p *Model) DeepEqual(ano *Model) bool {
@@ -1519,35 +1519,34 @@ func (p *Model) DeepEqual(ano *Model) bool {
 }
 
 func (p *Model) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
 	return true
 }
-func (p *Model) Field2DeepEqual(src string) bool {
 
+func (p *Model) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Name, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *Model) Field3DeepEqual(src string) bool {
 
+func (p *Model) Field3DeepEqual(src string) bool {
 	if strings.Compare(p.Description, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *Model) Field4DeepEqual(src string) bool {
 
+func (p *Model) Field4DeepEqual(src string) bool {
 	if strings.Compare(p.Source, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *Model) Field5DeepEqual(src string) bool {
 
+func (p *Model) Field5DeepEqual(src string) bool {
 	if strings.Compare(p.ModelKey, src) != 0 {
 		return false
 	}
@@ -1583,15 +1582,19 @@ func (p *CreateModelReq) GetSource() (v string) {
 func (p *CreateModelReq) GetModelKey() (v string) {
 	return p.ModelKey
 }
+
 func (p *CreateModelReq) SetName(val string) {
 	p.Name = val
 }
+
 func (p *CreateModelReq) SetDescription(val string) {
 	p.Description = val
 }
+
 func (p *CreateModelReq) SetSource(val string) {
 	p.Source = val
 }
+
 func (p *CreateModelReq) SetModelKey(val string) {
 	p.ModelKey = val
 }
@@ -1604,7 +1607,6 @@ var fieldIDToName_CreateModelReq = map[int16]string{
 }
 
 func (p *CreateModelReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetName bool = false
@@ -1713,7 +1715,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *CreateModelReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1723,8 +1724,8 @@ func (p *CreateModelReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *CreateModelReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *CreateModelReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1734,8 +1735,8 @@ func (p *CreateModelReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *CreateModelReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *CreateModelReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1745,8 +1746,8 @@ func (p *CreateModelReq) ReadField3(iprot thrift.TProtocol) error {
 	p.Source = _field
 	return nil
 }
-func (p *CreateModelReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *CreateModelReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1870,7 +1871,6 @@ func (p *CreateModelReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("CreateModelReq(%+v)", *p)
-
 }
 
 func (p *CreateModelReq) DeepEqual(ano *CreateModelReq) bool {
@@ -1895,28 +1895,27 @@ func (p *CreateModelReq) DeepEqual(ano *CreateModelReq) bool {
 }
 
 func (p *CreateModelReq) Field1DeepEqual(src string) bool {
-
 	if strings.Compare(p.Name, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreateModelReq) Field2DeepEqual(src string) bool {
 
+func (p *CreateModelReq) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Description, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreateModelReq) Field3DeepEqual(src string) bool {
 
+func (p *CreateModelReq) Field3DeepEqual(src string) bool {
 	if strings.Compare(p.Source, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreateModelReq) Field4DeepEqual(src string) bool {
 
+func (p *CreateModelReq) Field4DeepEqual(src string) bool {
 	if strings.Compare(p.ModelKey, src) != 0 {
 		return false
 	}
@@ -1977,18 +1976,23 @@ func (p *UpdateModelReq) GetModelKey() (v string) {
 	}
 	return *p.ModelKey
 }
+
 func (p *UpdateModelReq) SetId(val int64) {
 	p.Id = val
 }
+
 func (p *UpdateModelReq) SetName(val *string) {
 	p.Name = val
 }
+
 func (p *UpdateModelReq) SetDescription(val *string) {
 	p.Description = val
 }
+
 func (p *UpdateModelReq) SetSource(val *string) {
 	p.Source = val
 }
+
 func (p *UpdateModelReq) SetModelKey(val *string) {
 	p.ModelKey = val
 }
@@ -2018,7 +2022,6 @@ func (p *UpdateModelReq) IsSetModelKey() bool {
 }
 
 func (p *UpdateModelReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -2114,7 +2117,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *UpdateModelReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -2124,8 +2126,8 @@ func (p *UpdateModelReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Id = _field
 	return nil
 }
-func (p *UpdateModelReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *UpdateModelReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -2135,8 +2137,8 @@ func (p *UpdateModelReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *UpdateModelReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *UpdateModelReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -2146,8 +2148,8 @@ func (p *UpdateModelReq) ReadField3(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *UpdateModelReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *UpdateModelReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -2157,8 +2159,8 @@ func (p *UpdateModelReq) ReadField4(iprot thrift.TProtocol) error {
 	p.Source = _field
 	return nil
 }
-func (p *UpdateModelReq) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *UpdateModelReq) ReadField5(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -2311,7 +2313,6 @@ func (p *UpdateModelReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("UpdateModelReq(%+v)", *p)
-
 }
 
 func (p *UpdateModelReq) DeepEqual(ano *UpdateModelReq) bool {
@@ -2339,14 +2340,13 @@ func (p *UpdateModelReq) DeepEqual(ano *UpdateModelReq) bool {
 }
 
 func (p *UpdateModelReq) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
 	return true
 }
-func (p *UpdateModelReq) Field2DeepEqual(src *string) bool {
 
+func (p *UpdateModelReq) Field2DeepEqual(src *string) bool {
 	if p.Name == src {
 		return true
 	} else if p.Name == nil || src == nil {
@@ -2357,8 +2357,8 @@ func (p *UpdateModelReq) Field2DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdateModelReq) Field3DeepEqual(src *string) bool {
 
+func (p *UpdateModelReq) Field3DeepEqual(src *string) bool {
 	if p.Description == src {
 		return true
 	} else if p.Description == nil || src == nil {
@@ -2369,8 +2369,8 @@ func (p *UpdateModelReq) Field3DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdateModelReq) Field4DeepEqual(src *string) bool {
 
+func (p *UpdateModelReq) Field4DeepEqual(src *string) bool {
 	if p.Source == src {
 		return true
 	} else if p.Source == nil || src == nil {
@@ -2381,8 +2381,8 @@ func (p *UpdateModelReq) Field4DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdateModelReq) Field5DeepEqual(src *string) bool {
 
+func (p *UpdateModelReq) Field5DeepEqual(src *string) bool {
 	if p.ModelKey == src {
 		return true
 	} else if p.ModelKey == nil || src == nil {
@@ -2433,12 +2433,15 @@ func (p *ListModelReq) GetSource() (v string) {
 	}
 	return *p.Source
 }
+
 func (p *ListModelReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
 }
+
 func (p *ListModelReq) SetName(val *string) {
 	p.Name = val
 }
+
 func (p *ListModelReq) SetSource(val *string) {
 	p.Source = val
 }
@@ -2462,7 +2465,6 @@ func (p *ListModelReq) IsSetSource() bool {
 }
 
 func (p *ListModelReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
@@ -2549,8 +2551,8 @@ func (p *ListModelReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Pagination = _field
 	return nil
 }
-func (p *ListModelReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *ListModelReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -2560,8 +2562,8 @@ func (p *ListModelReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *ListModelReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *ListModelReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -2668,7 +2670,6 @@ func (p *ListModelReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListModelReq(%+v)", *p)
-
 }
 
 func (p *ListModelReq) DeepEqual(ano *ListModelReq) bool {
@@ -2690,14 +2691,13 @@ func (p *ListModelReq) DeepEqual(ano *ListModelReq) bool {
 }
 
 func (p *ListModelReq) Field1DeepEqual(src *base.PaginationReq) bool {
-
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ListModelReq) Field2DeepEqual(src *string) bool {
 
+func (p *ListModelReq) Field2DeepEqual(src *string) bool {
 	if p.Name == src {
 		return true
 	} else if p.Name == nil || src == nil {
@@ -2708,8 +2708,8 @@ func (p *ListModelReq) Field2DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *ListModelReq) Field3DeepEqual(src *string) bool {
 
+func (p *ListModelReq) Field3DeepEqual(src *string) bool {
 	if p.Source == src {
 		return true
 	} else if p.Source == nil || src == nil {
@@ -2745,9 +2745,11 @@ func (p *ListModelResp) GetPagination() (v *base.PaginationResp) {
 func (p *ListModelResp) GetModels() (v []*Model) {
 	return p.Models
 }
+
 func (p *ListModelResp) SetPagination(val *base.PaginationResp) {
 	p.Pagination = val
 }
+
 func (p *ListModelResp) SetModels(val []*Model) {
 	p.Models = val
 }
@@ -2762,7 +2764,6 @@ func (p *ListModelResp) IsSetPagination() bool {
 }
 
 func (p *ListModelResp) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
@@ -2848,6 +2849,7 @@ func (p *ListModelResp) ReadField1(iprot thrift.TProtocol) error {
 	p.Pagination = _field
 	return nil
 }
+
 func (p *ListModelResp) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -2951,7 +2953,6 @@ func (p *ListModelResp) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListModelResp(%+v)", *p)
-
 }
 
 func (p *ListModelResp) DeepEqual(ano *ListModelResp) bool {
@@ -2970,14 +2971,13 @@ func (p *ListModelResp) DeepEqual(ano *ListModelResp) bool {
 }
 
 func (p *ListModelResp) Field1DeepEqual(src *base.PaginationResp) bool {
-
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ListModelResp) Field2DeepEqual(src []*Model) bool {
 
+func (p *ListModelResp) Field2DeepEqual(src []*Model) bool {
 	if len(p.Models) != len(src) {
 		return false
 	}
@@ -3031,6 +3031,7 @@ func (p *ModelServiceGenTokenArgs) GetReq() (v *GenTokenReq) {
 	}
 	return p.Req
 }
+
 func (p *ModelServiceGenTokenArgs) SetReq(val *GenTokenReq) {
 	p.Req = val
 }
@@ -3044,7 +3045,6 @@ func (p *ModelServiceGenTokenArgs) IsSetReq() bool {
 }
 
 func (p *ModelServiceGenTokenArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -3158,7 +3158,6 @@ func (p *ModelServiceGenTokenArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceGenTokenArgs(%+v)", *p)
-
 }
 
 func (p *ModelServiceGenTokenArgs) DeepEqual(ano *ModelServiceGenTokenArgs) bool {
@@ -3174,7 +3173,6 @@ func (p *ModelServiceGenTokenArgs) DeepEqual(ano *ModelServiceGenTokenArgs) bool
 }
 
 func (p *ModelServiceGenTokenArgs) Field1DeepEqual(src *GenTokenReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -3200,6 +3198,7 @@ func (p *ModelServiceGenTokenResult) GetSuccess() (v *GenTokenResp) {
 	}
 	return p.Success
 }
+
 func (p *ModelServiceGenTokenResult) SetSuccess(x interface{}) {
 	p.Success = x.(*GenTokenResp)
 }
@@ -3213,7 +3212,6 @@ func (p *ModelServiceGenTokenResult) IsSetSuccess() bool {
 }
 
 func (p *ModelServiceGenTokenResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -3329,7 +3327,6 @@ func (p *ModelServiceGenTokenResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceGenTokenResult(%+v)", *p)
-
 }
 
 func (p *ModelServiceGenTokenResult) DeepEqual(ano *ModelServiceGenTokenResult) bool {
@@ -3345,7 +3342,6 @@ func (p *ModelServiceGenTokenResult) DeepEqual(ano *ModelServiceGenTokenResult) 
 }
 
 func (p *ModelServiceGenTokenResult) Field0DeepEqual(src *GenTokenResp) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -3371,6 +3367,7 @@ func (p *ModelServiceChatArgs) GetReq() (v *ChatReq) {
 	}
 	return p.Req
 }
+
 func (p *ModelServiceChatArgs) SetReq(val *ChatReq) {
 	p.Req = val
 }
@@ -3384,7 +3381,6 @@ func (p *ModelServiceChatArgs) IsSetReq() bool {
 }
 
 func (p *ModelServiceChatArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -3498,7 +3494,6 @@ func (p *ModelServiceChatArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceChatArgs(%+v)", *p)
-
 }
 
 func (p *ModelServiceChatArgs) DeepEqual(ano *ModelServiceChatArgs) bool {
@@ -3514,7 +3509,6 @@ func (p *ModelServiceChatArgs) DeepEqual(ano *ModelServiceChatArgs) bool {
 }
 
 func (p *ModelServiceChatArgs) Field1DeepEqual(src *ChatReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -3540,6 +3534,7 @@ func (p *ModelServiceChatResult) GetSuccess() (v *ChatResp) {
 	}
 	return p.Success
 }
+
 func (p *ModelServiceChatResult) SetSuccess(x interface{}) {
 	p.Success = x.(*ChatResp)
 }
@@ -3553,7 +3548,6 @@ func (p *ModelServiceChatResult) IsSetSuccess() bool {
 }
 
 func (p *ModelServiceChatResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -3669,7 +3663,6 @@ func (p *ModelServiceChatResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceChatResult(%+v)", *p)
-
 }
 
 func (p *ModelServiceChatResult) DeepEqual(ano *ModelServiceChatResult) bool {
@@ -3685,7 +3678,6 @@ func (p *ModelServiceChatResult) DeepEqual(ano *ModelServiceChatResult) bool {
 }
 
 func (p *ModelServiceChatResult) Field0DeepEqual(src *ChatResp) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -3711,6 +3703,7 @@ func (p *ModelServiceCreateModelArgs) GetReq() (v *CreateModelReq) {
 	}
 	return p.Req
 }
+
 func (p *ModelServiceCreateModelArgs) SetReq(val *CreateModelReq) {
 	p.Req = val
 }
@@ -3724,7 +3717,6 @@ func (p *ModelServiceCreateModelArgs) IsSetReq() bool {
 }
 
 func (p *ModelServiceCreateModelArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -3838,7 +3830,6 @@ func (p *ModelServiceCreateModelArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceCreateModelArgs(%+v)", *p)
-
 }
 
 func (p *ModelServiceCreateModelArgs) DeepEqual(ano *ModelServiceCreateModelArgs) bool {
@@ -3854,7 +3845,6 @@ func (p *ModelServiceCreateModelArgs) DeepEqual(ano *ModelServiceCreateModelArgs
 }
 
 func (p *ModelServiceCreateModelArgs) Field1DeepEqual(src *CreateModelReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -3880,6 +3870,7 @@ func (p *ModelServiceCreateModelResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *ModelServiceCreateModelResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -3893,7 +3884,6 @@ func (p *ModelServiceCreateModelResult) IsSetSuccess() bool {
 }
 
 func (p *ModelServiceCreateModelResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -4009,7 +3999,6 @@ func (p *ModelServiceCreateModelResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceCreateModelResult(%+v)", *p)
-
 }
 
 func (p *ModelServiceCreateModelResult) DeepEqual(ano *ModelServiceCreateModelResult) bool {
@@ -4025,7 +4014,6 @@ func (p *ModelServiceCreateModelResult) DeepEqual(ano *ModelServiceCreateModelRe
 }
 
 func (p *ModelServiceCreateModelResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -4051,6 +4039,7 @@ func (p *ModelServiceUpdateModelArgs) GetReq() (v *UpdateModelReq) {
 	}
 	return p.Req
 }
+
 func (p *ModelServiceUpdateModelArgs) SetReq(val *UpdateModelReq) {
 	p.Req = val
 }
@@ -4064,7 +4053,6 @@ func (p *ModelServiceUpdateModelArgs) IsSetReq() bool {
 }
 
 func (p *ModelServiceUpdateModelArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -4178,7 +4166,6 @@ func (p *ModelServiceUpdateModelArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceUpdateModelArgs(%+v)", *p)
-
 }
 
 func (p *ModelServiceUpdateModelArgs) DeepEqual(ano *ModelServiceUpdateModelArgs) bool {
@@ -4194,7 +4181,6 @@ func (p *ModelServiceUpdateModelArgs) DeepEqual(ano *ModelServiceUpdateModelArgs
 }
 
 func (p *ModelServiceUpdateModelArgs) Field1DeepEqual(src *UpdateModelReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -4220,6 +4206,7 @@ func (p *ModelServiceUpdateModelResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *ModelServiceUpdateModelResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -4233,7 +4220,6 @@ func (p *ModelServiceUpdateModelResult) IsSetSuccess() bool {
 }
 
 func (p *ModelServiceUpdateModelResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -4349,7 +4335,6 @@ func (p *ModelServiceUpdateModelResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceUpdateModelResult(%+v)", *p)
-
 }
 
 func (p *ModelServiceUpdateModelResult) DeepEqual(ano *ModelServiceUpdateModelResult) bool {
@@ -4365,7 +4350,6 @@ func (p *ModelServiceUpdateModelResult) DeepEqual(ano *ModelServiceUpdateModelRe
 }
 
 func (p *ModelServiceUpdateModelResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -4391,6 +4375,7 @@ func (p *ModelServiceDeleteModelArgs) GetReq() (v *base.IDReq) {
 	}
 	return p.Req
 }
+
 func (p *ModelServiceDeleteModelArgs) SetReq(val *base.IDReq) {
 	p.Req = val
 }
@@ -4404,7 +4389,6 @@ func (p *ModelServiceDeleteModelArgs) IsSetReq() bool {
 }
 
 func (p *ModelServiceDeleteModelArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -4518,7 +4502,6 @@ func (p *ModelServiceDeleteModelArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceDeleteModelArgs(%+v)", *p)
-
 }
 
 func (p *ModelServiceDeleteModelArgs) DeepEqual(ano *ModelServiceDeleteModelArgs) bool {
@@ -4534,7 +4517,6 @@ func (p *ModelServiceDeleteModelArgs) DeepEqual(ano *ModelServiceDeleteModelArgs
 }
 
 func (p *ModelServiceDeleteModelArgs) Field1DeepEqual(src *base.IDReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -4560,6 +4542,7 @@ func (p *ModelServiceDeleteModelResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *ModelServiceDeleteModelResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -4573,7 +4556,6 @@ func (p *ModelServiceDeleteModelResult) IsSetSuccess() bool {
 }
 
 func (p *ModelServiceDeleteModelResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -4689,7 +4671,6 @@ func (p *ModelServiceDeleteModelResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceDeleteModelResult(%+v)", *p)
-
 }
 
 func (p *ModelServiceDeleteModelResult) DeepEqual(ano *ModelServiceDeleteModelResult) bool {
@@ -4705,7 +4686,6 @@ func (p *ModelServiceDeleteModelResult) DeepEqual(ano *ModelServiceDeleteModelRe
 }
 
 func (p *ModelServiceDeleteModelResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -4731,6 +4711,7 @@ func (p *ModelServiceGetModelByIDArgs) GetReq() (v *base.IDReq) {
 	}
 	return p.Req
 }
+
 func (p *ModelServiceGetModelByIDArgs) SetReq(val *base.IDReq) {
 	p.Req = val
 }
@@ -4744,7 +4725,6 @@ func (p *ModelServiceGetModelByIDArgs) IsSetReq() bool {
 }
 
 func (p *ModelServiceGetModelByIDArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -4858,7 +4838,6 @@ func (p *ModelServiceGetModelByIDArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceGetModelByIDArgs(%+v)", *p)
-
 }
 
 func (p *ModelServiceGetModelByIDArgs) DeepEqual(ano *ModelServiceGetModelByIDArgs) bool {
@@ -4874,7 +4853,6 @@ func (p *ModelServiceGetModelByIDArgs) DeepEqual(ano *ModelServiceGetModelByIDAr
 }
 
 func (p *ModelServiceGetModelByIDArgs) Field1DeepEqual(src *base.IDReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -4900,6 +4878,7 @@ func (p *ModelServiceGetModelByIDResult) GetSuccess() (v *Model) {
 	}
 	return p.Success
 }
+
 func (p *ModelServiceGetModelByIDResult) SetSuccess(x interface{}) {
 	p.Success = x.(*Model)
 }
@@ -4913,7 +4892,6 @@ func (p *ModelServiceGetModelByIDResult) IsSetSuccess() bool {
 }
 
 func (p *ModelServiceGetModelByIDResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -5029,7 +5007,6 @@ func (p *ModelServiceGetModelByIDResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceGetModelByIDResult(%+v)", *p)
-
 }
 
 func (p *ModelServiceGetModelByIDResult) DeepEqual(ano *ModelServiceGetModelByIDResult) bool {
@@ -5045,7 +5022,6 @@ func (p *ModelServiceGetModelByIDResult) DeepEqual(ano *ModelServiceGetModelByID
 }
 
 func (p *ModelServiceGetModelByIDResult) Field0DeepEqual(src *Model) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -5071,6 +5047,7 @@ func (p *ModelServiceListModelArgs) GetReq() (v *ListModelReq) {
 	}
 	return p.Req
 }
+
 func (p *ModelServiceListModelArgs) SetReq(val *ListModelReq) {
 	p.Req = val
 }
@@ -5084,7 +5061,6 @@ func (p *ModelServiceListModelArgs) IsSetReq() bool {
 }
 
 func (p *ModelServiceListModelArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -5198,7 +5174,6 @@ func (p *ModelServiceListModelArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceListModelArgs(%+v)", *p)
-
 }
 
 func (p *ModelServiceListModelArgs) DeepEqual(ano *ModelServiceListModelArgs) bool {
@@ -5214,7 +5189,6 @@ func (p *ModelServiceListModelArgs) DeepEqual(ano *ModelServiceListModelArgs) bo
 }
 
 func (p *ModelServiceListModelArgs) Field1DeepEqual(src *ListModelReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -5240,6 +5214,7 @@ func (p *ModelServiceListModelResult) GetSuccess() (v *ListModelResp) {
 	}
 	return p.Success
 }
+
 func (p *ModelServiceListModelResult) SetSuccess(x interface{}) {
 	p.Success = x.(*ListModelResp)
 }
@@ -5253,7 +5228,6 @@ func (p *ModelServiceListModelResult) IsSetSuccess() bool {
 }
 
 func (p *ModelServiceListModelResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -5369,7 +5343,6 @@ func (p *ModelServiceListModelResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelServiceListModelResult(%+v)", *p)
-
 }
 
 func (p *ModelServiceListModelResult) DeepEqual(ano *ModelServiceListModelResult) bool {
@@ -5385,7 +5358,6 @@ func (p *ModelServiceListModelResult) DeepEqual(ano *ModelServiceListModelResult
 }
 
 func (p *ModelServiceListModelResult) Field0DeepEqual(src *ListModelResp) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}

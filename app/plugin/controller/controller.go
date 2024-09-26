@@ -24,7 +24,6 @@ func RegisterRouter(r *route.RouterGroup, cli pluginsvc.Client) {
 	router.POST(r, "/tool/list", cli.ListPluginTool)
 
 	router.GET(r, "/label", cli.ListPluginLabel)
-
-	//router.POST(r, "/tool/call/:id", cli.CallPluginTool)
-	//router.POST(r, "/tool/test/:id", cli.TestPluginTool)
+	// router.POST(r, "/tool/call/:id", cli.CallPluginTool)
+	// router.POST(r, "/tool/test/:id", cli.TestPluginTool)
 }

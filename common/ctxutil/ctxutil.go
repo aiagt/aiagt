@@ -2,6 +2,7 @@ package ctxutil
 
 import (
 	"context"
+
 	"github.com/cloudwego/kitex/pkg/utils/contextmap"
 )
 
@@ -25,5 +26,6 @@ func GetMapValue[T any](ctx context.Context, key CtxKey) (T, bool) {
 	}
 
 	var zero T
+
 	return zero, false
 }

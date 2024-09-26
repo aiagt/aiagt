@@ -4,11 +4,11 @@ package base
 
 import (
 	"fmt"
+
 	"github.com/apache/thrift/lib/go/thrift"
 )
 
-type Empty struct {
-}
+type Empty struct{}
 
 func NewEmpty() *Empty {
 	return &Empty{}
@@ -20,7 +20,6 @@ func (p *Empty) InitDefault() {
 var fieldIDToName_Empty = map[int16]string{}
 
 func (p *Empty) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -87,7 +86,6 @@ func (p *Empty) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("Empty(%+v)", *p)
-
 }
 
 func (p *Empty) DeepEqual(ano *Empty) bool {
@@ -106,7 +104,6 @@ type PaginationReq struct {
 
 func NewPaginationReq() *PaginationReq {
 	return &PaginationReq{
-
 		Page:     1,
 		PageSize: 20,
 	}
@@ -124,9 +121,11 @@ func (p *PaginationReq) GetPage() (v int32) {
 func (p *PaginationReq) GetPageSize() (v int32) {
 	return p.PageSize
 }
+
 func (p *PaginationReq) SetPage(val int32) {
 	p.Page = val
 }
+
 func (p *PaginationReq) SetPageSize(val int32) {
 	p.PageSize = val
 }
@@ -137,7 +136,6 @@ var fieldIDToName_PaginationReq = map[int16]string{
 }
 
 func (p *PaginationReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -201,7 +199,6 @@ ReadStructEndError:
 }
 
 func (p *PaginationReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int32
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -211,8 +208,8 @@ func (p *PaginationReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Page = _field
 	return nil
 }
-func (p *PaginationReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *PaginationReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field int32
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -294,7 +291,6 @@ func (p *PaginationReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PaginationReq(%+v)", *p)
-
 }
 
 func (p *PaginationReq) DeepEqual(ano *PaginationReq) bool {
@@ -313,14 +309,13 @@ func (p *PaginationReq) DeepEqual(ano *PaginationReq) bool {
 }
 
 func (p *PaginationReq) Field1DeepEqual(src int32) bool {
-
 	if p.Page != src {
 		return false
 	}
 	return true
 }
-func (p *PaginationReq) Field2DeepEqual(src int32) bool {
 
+func (p *PaginationReq) Field2DeepEqual(src int32) bool {
 	if p.PageSize != src {
 		return false
 	}
@@ -356,15 +351,19 @@ func (p *PaginationResp) GetTotal() (v int32) {
 func (p *PaginationResp) GetPageTotal() (v int32) {
 	return p.PageTotal
 }
+
 func (p *PaginationResp) SetPage(val int32) {
 	p.Page = val
 }
+
 func (p *PaginationResp) SetPageSize(val int32) {
 	p.PageSize = val
 }
+
 func (p *PaginationResp) SetTotal(val int32) {
 	p.Total = val
 }
+
 func (p *PaginationResp) SetPageTotal(val int32) {
 	p.PageTotal = val
 }
@@ -377,7 +376,6 @@ var fieldIDToName_PaginationResp = map[int16]string{
 }
 
 func (p *PaginationResp) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPage bool = false
@@ -486,7 +484,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *PaginationResp) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int32
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -496,8 +493,8 @@ func (p *PaginationResp) ReadField1(iprot thrift.TProtocol) error {
 	p.Page = _field
 	return nil
 }
-func (p *PaginationResp) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *PaginationResp) ReadField2(iprot thrift.TProtocol) error {
 	var _field int32
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -507,8 +504,8 @@ func (p *PaginationResp) ReadField2(iprot thrift.TProtocol) error {
 	p.PageSize = _field
 	return nil
 }
-func (p *PaginationResp) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *PaginationResp) ReadField3(iprot thrift.TProtocol) error {
 	var _field int32
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -518,8 +515,8 @@ func (p *PaginationResp) ReadField3(iprot thrift.TProtocol) error {
 	p.Total = _field
 	return nil
 }
-func (p *PaginationResp) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *PaginationResp) ReadField4(iprot thrift.TProtocol) error {
 	var _field int32
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -643,7 +640,6 @@ func (p *PaginationResp) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PaginationResp(%+v)", *p)
-
 }
 
 func (p *PaginationResp) DeepEqual(ano *PaginationResp) bool {
@@ -668,28 +664,27 @@ func (p *PaginationResp) DeepEqual(ano *PaginationResp) bool {
 }
 
 func (p *PaginationResp) Field1DeepEqual(src int32) bool {
-
 	if p.Page != src {
 		return false
 	}
 	return true
 }
-func (p *PaginationResp) Field2DeepEqual(src int32) bool {
 
+func (p *PaginationResp) Field2DeepEqual(src int32) bool {
 	if p.PageSize != src {
 		return false
 	}
 	return true
 }
-func (p *PaginationResp) Field3DeepEqual(src int32) bool {
 
+func (p *PaginationResp) Field3DeepEqual(src int32) bool {
 	if p.Total != src {
 		return false
 	}
 	return true
 }
-func (p *PaginationResp) Field4DeepEqual(src int32) bool {
 
+func (p *PaginationResp) Field4DeepEqual(src int32) bool {
 	if p.PageTotal != src {
 		return false
 	}
@@ -710,6 +705,7 @@ func (p *IDReq) InitDefault() {
 func (p *IDReq) GetId() (v int64) {
 	return p.Id
 }
+
 func (p *IDReq) SetId(val int64) {
 	p.Id = val
 }
@@ -719,7 +715,6 @@ var fieldIDToName_IDReq = map[int16]string{
 }
 
 func (p *IDReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -783,7 +778,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *IDReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -844,7 +838,6 @@ func (p *IDReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("IDReq(%+v)", *p)
-
 }
 
 func (p *IDReq) DeepEqual(ano *IDReq) bool {
@@ -860,7 +853,6 @@ func (p *IDReq) DeepEqual(ano *IDReq) bool {
 }
 
 func (p *IDReq) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
@@ -881,6 +873,7 @@ func (p *IDsReq) InitDefault() {
 func (p *IDsReq) GetIds() (v []int64) {
 	return p.Ids
 }
+
 func (p *IDsReq) SetIds(val []int64) {
 	p.Ids = val
 }
@@ -890,7 +883,6 @@ var fieldIDToName_IDsReq = map[int16]string{
 }
 
 func (p *IDsReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetIds bool = false
@@ -1035,7 +1027,6 @@ func (p *IDsReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("IDsReq(%+v)", *p)
-
 }
 
 func (p *IDsReq) DeepEqual(ano *IDsReq) bool {
@@ -1051,7 +1042,6 @@ func (p *IDsReq) DeepEqual(ano *IDsReq) bool {
 }
 
 func (p *IDsReq) Field1DeepEqual(src []int64) bool {
-
 	if len(p.Ids) != len(src) {
 		return false
 	}
@@ -1083,6 +1073,7 @@ func (p *Time) GetTimestamp() (v int64) {
 	}
 	return *p.Timestamp
 }
+
 func (p *Time) SetTimestamp(val *int64) {
 	p.Timestamp = val
 }
@@ -1096,7 +1087,6 @@ func (p *Time) IsSetTimestamp() bool {
 }
 
 func (p *Time) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -1152,7 +1142,6 @@ ReadStructEndError:
 }
 
 func (p *Time) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -1215,7 +1204,6 @@ func (p *Time) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("Time(%+v)", *p)
-
 }
 
 func (p *Time) DeepEqual(ano *Time) bool {
@@ -1231,7 +1219,6 @@ func (p *Time) DeepEqual(ano *Time) bool {
 }
 
 func (p *Time) Field1DeepEqual(src *int64) bool {
-
 	if p.Timestamp == src {
 		return true
 	} else if p.Timestamp == nil || src == nil {
@@ -1262,6 +1249,7 @@ func (p *Duration) GetMilliseconds() (v int64) {
 	}
 	return *p.Milliseconds
 }
+
 func (p *Duration) SetMilliseconds(val *int64) {
 	p.Milliseconds = val
 }
@@ -1275,7 +1263,6 @@ func (p *Duration) IsSetMilliseconds() bool {
 }
 
 func (p *Duration) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -1331,7 +1318,6 @@ ReadStructEndError:
 }
 
 func (p *Duration) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -1394,7 +1380,6 @@ func (p *Duration) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("Duration(%+v)", *p)
-
 }
 
 func (p *Duration) DeepEqual(ano *Duration) bool {
@@ -1410,7 +1395,6 @@ func (p *Duration) DeepEqual(ano *Duration) bool {
 }
 
 func (p *Duration) Field1DeepEqual(src *int64) bool {
-
 	if p.Milliseconds == src {
 		return true
 	} else if p.Milliseconds == nil || src == nil {

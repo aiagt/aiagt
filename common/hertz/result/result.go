@@ -2,6 +2,7 @@ package result
 
 import (
 	"context"
+
 	"github.com/aiagt/aiagt/common/bizerr"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/kitex/pkg/kerrors"
@@ -35,6 +36,7 @@ func Success(data interface{}) *Response {
 	if data != nil {
 		resp.Data = data
 	}
+
 	return resp
 }
 

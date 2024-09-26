@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/cloudwego/kitex/pkg/endpoint"
 	"github.com/cloudwego/kitex/pkg/streaming"
@@ -13,6 +14,7 @@ func (m *Middleware) StreamingStatus(next endpoint.Endpoint) endpoint.Endpoint {
 			// inject streaming status in streaming api
 			ctx = ctxutil.WithStreamingStatus(ctx)
 		}
+
 		return next(ctx, req, resp)
 	}
 }

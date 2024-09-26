@@ -16,5 +16,6 @@ func (s *ModelServiceImpl) GetModelByID(ctx context.Context, req *base.IDReq) (r
 	}
 
 	resp = mapper.NewGenModel(model)
+
 	return
 }

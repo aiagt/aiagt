@@ -3,6 +3,9 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"io"
+	"strings"
+
 	"github.com/aiagt/aiagt/common/bizerr"
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/common/hertz/result"
@@ -13,8 +16,6 @@ import (
 	"github.com/cloudwego/kitex/client/callopt/streamcall"
 	"github.com/hertz-contrib/sse"
 	"github.com/pkg/errors"
-	"io"
-	"strings"
 )
 
 // PinPongHandle pin pong api
@@ -39,6 +40,7 @@ func PinPongHandler[Q, P any](handle PinPongHandle[Q, P]) app.HandlerFunc {
 		if err != nil {
 			hlog.CtxErrorf(ctx, err.Error())
 			c.JSON(consts.StatusOK, result.BizError(err))
+
 			return
 		}
 
@@ -82,6 +84,7 @@ func SererStreamingHandler[Q, P any, S ServerStreamingClient[P]](handle ServerSt
 		if err != nil {
 			hlog.CtxErrorf(ctx, err.Error())
 			result.StreamBizError(ctx, stream, err)
+
 			return
 		}
 
@@ -96,6 +99,7 @@ func SererStreamingHandler[Q, P any, S ServerStreamingClient[P]](handle ServerSt
 			if err != nil {
 				hlog.CtxErrorf(ctx, err.Error())
 				result.StreamBizError(ctx, stream, err)
+
 				return
 			}
 

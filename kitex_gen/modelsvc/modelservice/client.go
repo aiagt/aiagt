@@ -4,6 +4,7 @@ package modelservice
 
 import (
 	"context"
+
 	base "github.com/aiagt/aiagt/kitex_gen/base"
 	modelsvc "github.com/aiagt/aiagt/kitex_gen/modelsvc"
 	client "github.com/cloudwego/kitex/client"

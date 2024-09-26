@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	base "github.com/aiagt/aiagt/kitex_gen/base"
 	modelsvc "github.com/aiagt/aiagt/kitex_gen/modelsvc"
 	client "github.com/cloudwego/kitex/client"
@@ -97,6 +98,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 func NewServiceInfoForClient() *kitex.ServiceInfo {
 	return newServiceInfo(false, false, true)
 }
+
 func NewServiceInfoForStreamClient() *kitex.ServiceInfo {
 	return newServiceInfo(true, true, false)
 }
@@ -141,6 +143,7 @@ func genTokenHandler(ctx context.Context, handler interface{}, arg, result inter
 	realResult.Success = success
 	return nil
 }
+
 func newModelServiceGenTokenArgs() interface{} {
 	return modelsvc.NewModelServiceGenTokenArgs()
 }
@@ -173,6 +176,7 @@ func (x *modelServiceChatClient) DoFinish(err error) {
 		panic(fmt.Sprintf("streaming.WithDoFinish is not implemented by %T", x.Stream))
 	}
 }
+
 func (x *modelServiceChatClient) Recv() (*modelsvc.ChatResp, error) {
 	m := new(modelsvc.ChatResp)
 	return m, x.Stream.RecvMsg(m)
@@ -204,6 +208,7 @@ func createModelHandler(ctx context.Context, handler interface{}, arg, result in
 	realResult.Success = success
 	return nil
 }
+
 func newModelServiceCreateModelArgs() interface{} {
 	return modelsvc.NewModelServiceCreateModelArgs()
 }
@@ -222,6 +227,7 @@ func updateModelHandler(ctx context.Context, handler interface{}, arg, result in
 	realResult.Success = success
 	return nil
 }
+
 func newModelServiceUpdateModelArgs() interface{} {
 	return modelsvc.NewModelServiceUpdateModelArgs()
 }
@@ -240,6 +246,7 @@ func deleteModelHandler(ctx context.Context, handler interface{}, arg, result in
 	realResult.Success = success
 	return nil
 }
+
 func newModelServiceDeleteModelArgs() interface{} {
 	return modelsvc.NewModelServiceDeleteModelArgs()
 }
@@ -258,6 +265,7 @@ func getModelByIDHandler(ctx context.Context, handler interface{}, arg, result i
 	realResult.Success = success
 	return nil
 }
+
 func newModelServiceGetModelByIDArgs() interface{} {
 	return modelsvc.NewModelServiceGetModelByIDArgs()
 }
@@ -276,6 +284,7 @@ func listModelHandler(ctx context.Context, handler interface{}, arg, result inte
 	realResult.Success = success
 	return nil
 }
+
 func newModelServiceListModelArgs() interface{} {
 	return modelsvc.NewModelServiceListModelArgs()
 }

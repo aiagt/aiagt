@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/pkg/safe"
 	"github.com/cloudwego/kitex/pkg/endpoint"
@@ -32,6 +33,7 @@ func (m *Middleware) Logger(next endpoint.Endpoint) endpoint.Endpoint {
 		}
 
 		klog.CtxInfof(ctx, "[RESPONSE] %s, request_id: %s, body: %v", methodName, requestID, pretty(resp, 1<<10))
+
 		return nil
 	}
 }
@@ -42,6 +44,7 @@ func pretty(v any, max int) string {
 	if max > 0 && len(resultBytes) > max {
 		builder := bytes.NewBuffer(resultBytes[:max])
 		builder.WriteString("...")
+
 		return builder.String()
 	}
 

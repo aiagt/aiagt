@@ -36,6 +36,7 @@ func GetUserID(ctx context.Context) (int64, bool) {
 	}
 
 	userID, ok := ctx.Value(AuthorizationUserID).(int64)
+
 	return userID, ok
 }
 

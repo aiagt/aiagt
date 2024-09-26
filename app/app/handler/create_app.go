@@ -12,9 +12,7 @@ import (
 
 // CreateApp implements the AppServiceImpl interface.
 func (s *AppServiceImpl) CreateApp(ctx context.Context, req *appsvc.CreateAppReq) (resp *base.Empty, err error) {
-	var (
-		id = ctxutil.UserID(ctx)
-	)
+	id := ctxutil.UserID(ctx)
 
 	labelIDs, err := s.labelDao.UpdateLabels(ctx, req.LabelIds, req.LabelTexts)
 	if err != nil {

@@ -298,6 +298,7 @@ func NewGenListModel(models []*model.Models) []*modelsvc.Model {
 	for i, m := range models {
 		result[i] = NewGenModel(m)
 	}
+
 	return result
 }
 

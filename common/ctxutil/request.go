@@ -2,6 +2,7 @@ package ctxutil
 
 import (
 	"context"
+
 	"github.com/bytedance/gopkg/cloud/metainfo"
 	"github.com/google/uuid"
 )
@@ -16,6 +17,7 @@ func WithRequestID(ctx context.Context) context.Context {
 	}
 
 	id := uuid.New().String()
+
 	return metainfo.WithPersistentValue(ctx, RequestIDKey, id)
 }
 
