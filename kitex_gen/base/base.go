@@ -100,8 +100,8 @@ func (p *Empty) DeepEqual(ano *Empty) bool {
 }
 
 type PaginationReq struct {
-	Page     int32 `thrift:"page,1" frugal:"1,default,i32" json:"page"`
-	PageSize int32 `thrift:"page_size,2" frugal:"2,default,i32" json:"page_size"`
+	Page     int32 `thrift:"page,1" frugal:"1,default,i32" json:"page" query:"page"`
+	PageSize int32 `thrift:"page_size,2" frugal:"2,default,i32" json:"page_size" query:"page_size"`
 }
 
 func NewPaginationReq() *PaginationReq {
@@ -697,7 +697,7 @@ func (p *PaginationResp) Field4DeepEqual(src int32) bool {
 }
 
 type IDReq struct {
-	Id int64 `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Id int64 `thrift:"id,1,required" frugal:"1,required,i64" path:"id"`
 }
 
 func NewIDReq() *IDReq {

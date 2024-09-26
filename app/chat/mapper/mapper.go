@@ -124,7 +124,7 @@ func NewOpenAIFunctionDefinition(tool *pluginsvc.PluginTool) *openai.FunctionDef
 		Name:        tool.Name,
 		Description: &tool.Description,
 		Strict:      &strict,
-		Parameters:  []byte(tool.RequestType),
+		Parameters:  tool.RequestType,
 	}
 }
 
@@ -140,10 +140,12 @@ func NewOpenAIListFunctionDefinition(tools []*pluginsvc.PluginTool) []*openai.Fu
 
 func NewGenConversation(conversation *model.Conversation) *chatsvc.Conversation {
 	return &chatsvc.Conversation{
-		Id:     conversation.ID,
-		AppId:  conversation.AppID,
-		UserId: conversation.UserID,
-		Title:  conversation.Title,
+		Id:        conversation.ID,
+		AppId:     conversation.AppID,
+		UserId:    conversation.UserID,
+		Title:     conversation.Title,
+		CreatedAt: baseutil.NewBaseTime(conversation.CreatedAt),
+		UpdatedAt: baseutil.NewBaseTime(conversation.UpdatedAt),
 	}
 }
 

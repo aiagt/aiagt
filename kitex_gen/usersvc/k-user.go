@@ -2197,7 +2197,6 @@ func (p *UpdateUserReq) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
-	var issetId bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -2215,13 +2214,12 @@ func (p *UpdateUserReq) FastRead(buf []byte) (int, error) {
 		}
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				l, err = p.FastReadField1(buf[offset:])
 				offset += l
 				if err != nil {
 					goto ReadFieldError
 				}
-				issetId = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2327,20 +2325,6 @@ func (p *UpdateUserReq) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
-		case 9:
-			if fieldTypeId == thrift.STRING {
-				l, err = p.FastReadField9(buf[offset:])
-				offset += l
-				if err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
-				offset += l
-				if err != nil {
-					goto SkipFieldError
-				}
-			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -2361,10 +2345,6 @@ func (p *UpdateUserReq) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
-	if !issetId {
-		fieldId = 1
-		goto RequiredFieldNotSetError
-	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -2378,27 +2358,9 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-RequiredFieldNotSetError:
-	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_UpdateUserReq[fieldId]))
 }
 
 func (p *UpdateUserReq) FastReadField1(buf []byte) (int, error) {
-	offset := 0
-
-	var _field int64
-	if v, l, err := bthrift.Binary.ReadI64(buf[offset:]); err != nil {
-		return offset, err
-	} else {
-		offset += l
-
-		_field = v
-
-	}
-	p.Id = _field
-	return offset, nil
-}
-
-func (p *UpdateUserReq) FastReadField2(buf []byte) (int, error) {
 	offset := 0
 
 	var _field *string
@@ -2413,7 +2375,7 @@ func (p *UpdateUserReq) FastReadField2(buf []byte) (int, error) {
 	return offset, nil
 }
 
-func (p *UpdateUserReq) FastReadField3(buf []byte) (int, error) {
+func (p *UpdateUserReq) FastReadField2(buf []byte) (int, error) {
 	offset := 0
 
 	var _field *string
@@ -2428,7 +2390,7 @@ func (p *UpdateUserReq) FastReadField3(buf []byte) (int, error) {
 	return offset, nil
 }
 
-func (p *UpdateUserReq) FastReadField4(buf []byte) (int, error) {
+func (p *UpdateUserReq) FastReadField3(buf []byte) (int, error) {
 	offset := 0
 
 	var _field *string
@@ -2443,7 +2405,7 @@ func (p *UpdateUserReq) FastReadField4(buf []byte) (int, error) {
 	return offset, nil
 }
 
-func (p *UpdateUserReq) FastReadField5(buf []byte) (int, error) {
+func (p *UpdateUserReq) FastReadField4(buf []byte) (int, error) {
 	offset := 0
 
 	var _field *string
@@ -2458,7 +2420,7 @@ func (p *UpdateUserReq) FastReadField5(buf []byte) (int, error) {
 	return offset, nil
 }
 
-func (p *UpdateUserReq) FastReadField6(buf []byte) (int, error) {
+func (p *UpdateUserReq) FastReadField5(buf []byte) (int, error) {
 	offset := 0
 
 	var _field *string
@@ -2473,7 +2435,7 @@ func (p *UpdateUserReq) FastReadField6(buf []byte) (int, error) {
 	return offset, nil
 }
 
-func (p *UpdateUserReq) FastReadField7(buf []byte) (int, error) {
+func (p *UpdateUserReq) FastReadField6(buf []byte) (int, error) {
 	offset := 0
 
 	var _field *string
@@ -2488,7 +2450,7 @@ func (p *UpdateUserReq) FastReadField7(buf []byte) (int, error) {
 	return offset, nil
 }
 
-func (p *UpdateUserReq) FastReadField8(buf []byte) (int, error) {
+func (p *UpdateUserReq) FastReadField7(buf []byte) (int, error) {
 	offset := 0
 
 	var _field *string
@@ -2503,7 +2465,7 @@ func (p *UpdateUserReq) FastReadField8(buf []byte) (int, error) {
 	return offset, nil
 }
 
-func (p *UpdateUserReq) FastReadField9(buf []byte) (int, error) {
+func (p *UpdateUserReq) FastReadField8(buf []byte) (int, error) {
 	offset := 0
 
 	var _field *string
@@ -2535,7 +2497,6 @@ func (p *UpdateUserReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryW
 		offset += p.fastWriteField6(buf[offset:], binaryWriter)
 		offset += p.fastWriteField7(buf[offset:], binaryWriter)
 		offset += p.fastWriteField8(buf[offset:], binaryWriter)
-		offset += p.fastWriteField9(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -2554,7 +2515,6 @@ func (p *UpdateUserReq) BLength() int {
 		l += p.field6Length()
 		l += p.field7Length()
 		l += p.field8Length()
-		l += p.field9Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -2563,17 +2523,19 @@ func (p *UpdateUserReq) BLength() int {
 
 func (p *UpdateUserReq) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "id", thrift.I64, 1)
-	offset += bthrift.Binary.WriteI64(buf[offset:], p.Id)
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	if p.IsSetUsername() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "username", thrift.STRING, 1)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Username)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
 	return offset
 }
 
 func (p *UpdateUserReq) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetUsername() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "username", thrift.STRING, 2)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Username)
+	if p.IsSetEmail() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "email", thrift.STRING, 2)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Email)
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
 	return offset
@@ -2581,9 +2543,9 @@ func (p *UpdateUserReq) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryW
 
 func (p *UpdateUserReq) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetEmail() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "email", thrift.STRING, 3)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Email)
+	if p.IsSetPhoneNumber() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "phone_number", thrift.STRING, 3)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.PhoneNumber)
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
 	return offset
@@ -2591,9 +2553,9 @@ func (p *UpdateUserReq) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryW
 
 func (p *UpdateUserReq) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetPhoneNumber() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "phone_number", thrift.STRING, 4)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.PhoneNumber)
+	if p.IsSetSignature() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "signature", thrift.STRING, 4)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Signature)
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
 	return offset
@@ -2601,9 +2563,9 @@ func (p *UpdateUserReq) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryW
 
 func (p *UpdateUserReq) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetSignature() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "signature", thrift.STRING, 5)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Signature)
+	if p.IsSetHomepage() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "homepage", thrift.STRING, 5)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Homepage)
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
 	return offset
@@ -2611,9 +2573,9 @@ func (p *UpdateUserReq) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryW
 
 func (p *UpdateUserReq) fastWriteField6(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetHomepage() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "homepage", thrift.STRING, 6)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Homepage)
+	if p.IsSetDescriptionMd() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "description_md", thrift.STRING, 6)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.DescriptionMd)
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
 	return offset
@@ -2621,9 +2583,9 @@ func (p *UpdateUserReq) fastWriteField6(buf []byte, binaryWriter bthrift.BinaryW
 
 func (p *UpdateUserReq) fastWriteField7(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetDescriptionMd() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "description_md", thrift.STRING, 7)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.DescriptionMd)
+	if p.IsSetGithub() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "github", thrift.STRING, 7)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Github)
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
 	return offset
@@ -2631,18 +2593,8 @@ func (p *UpdateUserReq) fastWriteField7(buf []byte, binaryWriter bthrift.BinaryW
 
 func (p *UpdateUserReq) fastWriteField8(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetGithub() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "github", thrift.STRING, 8)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Github)
-		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
-	}
-	return offset
-}
-
-func (p *UpdateUserReq) fastWriteField9(buf []byte, binaryWriter bthrift.BinaryWriter) int {
-	offset := 0
 	if p.IsSetAvatar() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "avatar", thrift.STRING, 9)
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "avatar", thrift.STRING, 8)
 		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Avatar)
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
@@ -2651,17 +2603,19 @@ func (p *UpdateUserReq) fastWriteField9(buf []byte, binaryWriter bthrift.BinaryW
 
 func (p *UpdateUserReq) field1Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("id", thrift.I64, 1)
-	l += bthrift.Binary.I64Length(p.Id)
-	l += bthrift.Binary.FieldEndLength()
+	if p.IsSetUsername() {
+		l += bthrift.Binary.FieldBeginLength("username", thrift.STRING, 1)
+		l += bthrift.Binary.StringLengthNocopy(*p.Username)
+		l += bthrift.Binary.FieldEndLength()
+	}
 	return l
 }
 
 func (p *UpdateUserReq) field2Length() int {
 	l := 0
-	if p.IsSetUsername() {
-		l += bthrift.Binary.FieldBeginLength("username", thrift.STRING, 2)
-		l += bthrift.Binary.StringLengthNocopy(*p.Username)
+	if p.IsSetEmail() {
+		l += bthrift.Binary.FieldBeginLength("email", thrift.STRING, 2)
+		l += bthrift.Binary.StringLengthNocopy(*p.Email)
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l
@@ -2669,9 +2623,9 @@ func (p *UpdateUserReq) field2Length() int {
 
 func (p *UpdateUserReq) field3Length() int {
 	l := 0
-	if p.IsSetEmail() {
-		l += bthrift.Binary.FieldBeginLength("email", thrift.STRING, 3)
-		l += bthrift.Binary.StringLengthNocopy(*p.Email)
+	if p.IsSetPhoneNumber() {
+		l += bthrift.Binary.FieldBeginLength("phone_number", thrift.STRING, 3)
+		l += bthrift.Binary.StringLengthNocopy(*p.PhoneNumber)
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l
@@ -2679,9 +2633,9 @@ func (p *UpdateUserReq) field3Length() int {
 
 func (p *UpdateUserReq) field4Length() int {
 	l := 0
-	if p.IsSetPhoneNumber() {
-		l += bthrift.Binary.FieldBeginLength("phone_number", thrift.STRING, 4)
-		l += bthrift.Binary.StringLengthNocopy(*p.PhoneNumber)
+	if p.IsSetSignature() {
+		l += bthrift.Binary.FieldBeginLength("signature", thrift.STRING, 4)
+		l += bthrift.Binary.StringLengthNocopy(*p.Signature)
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l
@@ -2689,9 +2643,9 @@ func (p *UpdateUserReq) field4Length() int {
 
 func (p *UpdateUserReq) field5Length() int {
 	l := 0
-	if p.IsSetSignature() {
-		l += bthrift.Binary.FieldBeginLength("signature", thrift.STRING, 5)
-		l += bthrift.Binary.StringLengthNocopy(*p.Signature)
+	if p.IsSetHomepage() {
+		l += bthrift.Binary.FieldBeginLength("homepage", thrift.STRING, 5)
+		l += bthrift.Binary.StringLengthNocopy(*p.Homepage)
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l
@@ -2699,9 +2653,9 @@ func (p *UpdateUserReq) field5Length() int {
 
 func (p *UpdateUserReq) field6Length() int {
 	l := 0
-	if p.IsSetHomepage() {
-		l += bthrift.Binary.FieldBeginLength("homepage", thrift.STRING, 6)
-		l += bthrift.Binary.StringLengthNocopy(*p.Homepage)
+	if p.IsSetDescriptionMd() {
+		l += bthrift.Binary.FieldBeginLength("description_md", thrift.STRING, 6)
+		l += bthrift.Binary.StringLengthNocopy(*p.DescriptionMd)
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l
@@ -2709,9 +2663,9 @@ func (p *UpdateUserReq) field6Length() int {
 
 func (p *UpdateUserReq) field7Length() int {
 	l := 0
-	if p.IsSetDescriptionMd() {
-		l += bthrift.Binary.FieldBeginLength("description_md", thrift.STRING, 7)
-		l += bthrift.Binary.StringLengthNocopy(*p.DescriptionMd)
+	if p.IsSetGithub() {
+		l += bthrift.Binary.FieldBeginLength("github", thrift.STRING, 7)
+		l += bthrift.Binary.StringLengthNocopy(*p.Github)
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l
@@ -2719,18 +2673,8 @@ func (p *UpdateUserReq) field7Length() int {
 
 func (p *UpdateUserReq) field8Length() int {
 	l := 0
-	if p.IsSetGithub() {
-		l += bthrift.Binary.FieldBeginLength("github", thrift.STRING, 8)
-		l += bthrift.Binary.StringLengthNocopy(*p.Github)
-		l += bthrift.Binary.FieldEndLength()
-	}
-	return l
-}
-
-func (p *UpdateUserReq) field9Length() int {
-	l := 0
 	if p.IsSetAvatar() {
-		l += bthrift.Binary.FieldBeginLength("avatar", thrift.STRING, 9)
+		l += bthrift.Binary.FieldBeginLength("avatar", thrift.STRING, 8)
 		l += bthrift.Binary.StringLengthNocopy(*p.Avatar)
 		l += bthrift.Binary.FieldEndLength()
 	}

@@ -1,6 +1,7 @@
 package clientsuite
 
 import (
+	"github.com/aiagt/aiagt/common/kitex/clientsuite/middleware"
 	"github.com/cloudwego/kitex/client"
 )
 
@@ -14,6 +15,9 @@ func (s *ClientSuite) Options() []client.Option {
 
 func NewClientSuite() *ClientSuite {
 	var opts []client.Option
-	// opts = append(opts, client.WithMiddleware(middleware.Auth))
+
+	m := middleware.NewMiddleware()
+	opts = append(opts, m.Middlewares()...)
+
 	return &ClientSuite{opts: opts}
 }

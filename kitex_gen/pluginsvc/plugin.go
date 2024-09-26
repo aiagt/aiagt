@@ -3056,7 +3056,7 @@ func (p *PluginLabel) Field3DeepEqual(src *base.Time) bool {
 
 type ListPluginLabelReq struct {
 	Pagination *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
-	Text       *string             `thrift:"text,2,optional" frugal:"2,optional,string" json:"text,omitempty"`
+	Text       *string             `thrift:"text,2,optional" frugal:"2,optional,string" query:"text"`
 }
 
 func NewListPluginLabelReq() *ListPluginLabelReq {
@@ -4577,7 +4577,7 @@ func (p *CreatePluginReq) Field12DeepEqual(src string) bool {
 }
 
 type UpdatePluginReq struct {
-	Id            int64           `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Id            int64           `thrift:"id,1,required" frugal:"1,required,i64" path:"id"`
 	Key           *int64          `thrift:"key,2,optional" frugal:"2,optional,i64" json:"key,omitempty"`
 	Name          *string         `thrift:"name,3,optional" frugal:"3,optional,string" json:"name,omitempty"`
 	Description   *string         `thrift:"description,4,optional" frugal:"4,optional,string" json:"description,omitempty"`
@@ -7075,7 +7075,7 @@ func (p *CreatePluginToolReq) Field7DeepEqual(src *int64) bool {
 }
 
 type UpdatePluginToolReq struct {
-	Id            int64   `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Id            int64   `thrift:"id,1,required" frugal:"1,required,i64" path:"id"`
 	Name          *string `thrift:"name,2,optional" frugal:"2,optional,string" json:"name,omitempty"`
 	Description   *string `thrift:"description,3,optional" frugal:"3,optional,string" json:"description,omitempty"`
 	PluginId      *int64  `thrift:"plugin_id,4,optional" frugal:"4,optional,i64" json:"plugin_id,omitempty"`

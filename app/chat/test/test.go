@@ -23,7 +23,7 @@ func main() {
 	}
 
 	logger(Chat(ctx))
-	// logger(ListMessage(ctx))
+	//logger(ListMessage(ctx))
 }
 
 func login(ctx context.Context) (context.Context, error) {
@@ -50,13 +50,13 @@ func logger(resp any, err error) {
 func Chat(ctx context.Context) (any, error) {
 	stream, err := rpc.ChatStreamCli.Chat(ctx, &chatsvc.ChatReq{
 		AppId:          1,
-		ConversationId: safe.Pointer(int64(32)),
+		ConversationId: safe.Pointer(int64(31)),
 		Messages: []*chatsvc.MessageContent{
 			{
 				Type: chatsvc.MessageType_TEXT,
 				Content: &chatsvc.MessageContentValue{
 					Text: &chatsvc.MessageContentValueText{
-						Text: "现在是九月份",
+						Text: "乌鲁木齐呢",
 					},
 				},
 			},

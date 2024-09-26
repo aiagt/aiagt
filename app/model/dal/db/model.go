@@ -2,11 +2,13 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"math"
 
 	"github.com/aiagt/aiagt/app/model/model"
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/base"
+	"github.com/aiagt/aiagt/kitex_gen/modelsvc"
 	"github.com/pkg/errors"
 
 	"gorm.io/gorm"
@@ -50,15 +52,24 @@ func (d *ModelDao) GetByIDs(ctx context.Context, ids []int64) ([]*model.Models, 
 }
 
 // List get model list
-func (d *ModelDao) List(ctx context.Context, page *base.PaginationReq) ([]*model.Models, *base.PaginationResp, error) {
+func (d *ModelDao) List(ctx context.Context, req *modelsvc.ListModelReq) ([]*model.Models, *base.PaginationResp, error) {
 	var (
 		list   []*model.Models
 		total  int64
+		page   = req.Pagination
 		offset = int((page.Page - 1) * page.PageSize)
 		limit  = int(page.PageSize)
 	)
 
-	err := d.db(ctx).Model(d.m).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
+	err := d.db(ctx).Model(d.m).Scopes(func (db *gorm.DB) *gorm.DB {
+		if req.Name != nil {
+			db = db.Where("name like ?", fmt.Sprintf("%%%s%%", req.Name))
+		}
+		if req.Source != nil {
+			db = db.Where("source = ?", req.Source)
+		}
+		return db
+	}).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "model dao get page error")
 	}

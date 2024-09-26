@@ -3295,7 +3295,7 @@ func (p *Message) Field6DeepEqual(src *base.Time) bool {
 }
 
 type UpdateMessageReq struct {
-	Id      int64           `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Id      int64           `thrift:"id,1,required" frugal:"1,required,i64" path:"id"`
 	Message *MessageContent `thrift:"message,2,required" frugal:"2,required,MessageContent" json:"message"`
 }
 
@@ -3539,7 +3539,7 @@ func (p *UpdateMessageReq) Field2DeepEqual(src *MessageContent) bool {
 
 type ListMessageReq struct {
 	Pagination     *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
-	ConversationId int64               `thrift:"conversation_id,2,required" frugal:"2,required,i64" json:"conversation_id"`
+	ConversationId int64               `thrift:"conversation_id,2,required" frugal:"2,required,i64" query:"conversation_id"`
 }
 
 func NewListMessageReq() *ListMessageReq {
@@ -4050,7 +4050,7 @@ func (p *ListMessageResp) Field2DeepEqual(src []*Message) bool {
 }
 
 type UpdateConversationReq struct {
-	Id    int64  `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Id    int64  `thrift:"id,1,required" frugal:"1,required,i64" path:"id"`
 	Title string `thrift:"title,2,required" frugal:"2,required,string" json:"title"`
 }
 
@@ -4288,7 +4288,7 @@ func (p *UpdateConversationReq) Field2DeepEqual(src string) bool {
 
 type ListConversationReq struct {
 	Pagination *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
-	AppId      int64               `thrift:"app_id,2,required" frugal:"2,required,i64" json:"app_id"`
+	AppId      int64               `thrift:"app_id,2,required" frugal:"2,required,i64" query:"app_id"`
 }
 
 func NewListConversationReq() *ListConversationReq {

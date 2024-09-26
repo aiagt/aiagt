@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -17,16 +18,22 @@ type RedisLocker struct {
 	ctx    context.Context
 	client *redis.Client
 	key    string
+	value  string
 }
 
 func NewRedisLocker(ctx context.Context, client *redis.Client, key string) *RedisLocker {
-	return &RedisLocker{ctx: ctx, client: client, key: key}
+	return &RedisLocker{
+		ctx:    ctx,
+		client: client,
+		key:    key,
+		value:  uuid.NewString(),
+	}
 }
 
 func (rl *RedisLocker) Lock() error {
 	lockKey := lockPrefix + rl.key
 
-	success, err := rl.client.SetNX(rl.ctx, lockKey, "locked", lockExpiry).Result()
+	success, err := rl.client.SetNX(rl.ctx, lockKey, rl.value, lockExpiry).Result()
 	if err != nil {
 		return err
 	}
@@ -40,9 +47,25 @@ func (rl *RedisLocker) Lock() error {
 
 func (rl *RedisLocker) Unlock() error {
 	lockKey := lockPrefix + rl.key
-	_, err := rl.client.Del(rl.ctx, lockKey).Result()
 
-	return err
+	luaScript := `
+		if redis.call("GET", KEYS[1]) == ARGV[1] then
+			return redis.call("DEL", KEYS[1])
+		else
+			return 0
+		end
+	`
+
+	res, err := rl.client.Eval(rl.ctx, luaScript, []string{lockKey}, rl.value).Int()
+	if err != nil {
+		return err
+	}
+
+	if res == 0 {
+		return errors.New("failed to release lock or lock does not exist")
+	}
+
+	return nil
 }
 
 func (rl *RedisLocker) LockWithRetry(retryInterval time.Duration, maxRetries int) error {

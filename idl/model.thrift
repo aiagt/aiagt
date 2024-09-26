@@ -32,7 +32,47 @@ struct GenTokenResp {
     2: required base.Time expired_at
 }
 
+struct Model {
+    1: required i64 id
+    2: required string name
+    3: required string description
+    4: required string source
+    5: required string model_key
+}
+
+struct CreateModelReq {
+    1: required string name
+    2: required string description
+    3: required string source
+    4: required string model_key
+}
+
+struct UpdateModelReq {
+    1: required i64 id (go.tag='path:"id"')
+    2: optional string name
+    3: optional string description
+    4: optional string source
+    5: optional string model_key
+}
+
+struct ListModelReq {
+    1: required base.PaginationReq pagination
+    2: optional string name (go.tag='query:"name"')
+    3: optional string source (go.tag='query:"source"')
+}
+
+struct ListModelResp {
+    1: required base.PaginationResp pagination
+    2: required list<Model> models
+}
+
 service ModelService {
     GenTokenResp GenToken(1: GenTokenReq req)
     ChatResp Chat(1: ChatReq req) (streaming.mode="server")
+
+    base.Empty CreateModel(1: CreateModelReq req)
+    base.Empty UpdateModel(1: UpdateModelReq req)
+    base.Empty DeleteModel(1: base.IDReq req)
+    Model GetModelByID(1: base.IDReq req)
+    ListModelResp ListModel(1: ListModelReq req)
 }

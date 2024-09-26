@@ -18,8 +18,7 @@ func NewServerSuite(authSvc middleware.AuthService) *ServerSuite {
 	var opts []server.Option
 
 	m := middleware.NewMiddleware(authSvc)
-	opts = append(opts, server.WithMiddleware(m.Transaction))
-	opts = append(opts, server.WithMiddleware(m.Auth))
+	opts = append(opts, m.Middlewares()...)
 	opts = append(opts, server.WithMetaHandler(metahandler.NewStreamingMetaHandler()))
 
 	return &ServerSuite{opts: opts}

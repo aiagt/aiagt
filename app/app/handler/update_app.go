@@ -21,7 +21,12 @@ func (s *AppServiceImpl) UpdateApp(ctx context.Context, req *appsvc.UpdateAppReq
 		return nil, bizUpdateApp.CodeErr(bizerr.ErrCodeForbidden)
 	}
 
-	err = s.appDao.Update(ctx, req.Id, mapper.NewModelUpdateApp(req))
+	labelIDs, err := s.labelDao.UpdateLabels(ctx, req.LabelIds, req.LabelTexts)
+	if err != nil {
+		return nil, bizCreateApp.NewErr(err)
+	}
+
+	err = s.appDao.Update(ctx, req.Id, mapper.NewModelUpdateApp(req, labelIDs))
 	if err != nil {
 		return nil, bizUpdateApp.NewErr(err)
 	}

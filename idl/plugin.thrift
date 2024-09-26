@@ -54,7 +54,7 @@ struct PluginLabel {
 
 struct ListPluginLabelReq {
     1: required base.PaginationReq pagination
-    2: optional string text
+    2: optional string text (go.tag='query:"text"')
 }
 
 struct ListPluginLabelResp {
@@ -78,7 +78,7 @@ struct CreatePluginReq {
 }
 
 struct UpdatePluginReq {
-    1: required i64 id
+    1: required i64 id (go.tag='path:"id"')
     2: optional i64 key
     3: optional string name
     4: optional string description
@@ -117,7 +117,7 @@ struct CreatePluginToolReq {
 }
 
 struct UpdatePluginToolReq {
-    1: required i64 id
+    1: required i64 id (go.tag='path:"id"')
     2: optional string name
     3: optional string description
     4: optional i64 plugin_id

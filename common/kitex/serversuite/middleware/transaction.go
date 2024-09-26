@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-
 	"github.com/aiagt/aiagt/common/ctxutil"
 	ktdb "github.com/aiagt/kitextool/option/server/db"
 	"github.com/cloudwego/kitex/pkg/endpoint"
@@ -19,7 +18,7 @@ func (m *Middleware) Transaction(next endpoint.Endpoint) endpoint.Endpoint {
 		}
 
 		// start transaction
-		tx := db.WithContext(ctx).Begin()
+		tx := db.Begin()
 		ctx = ctxutil.WithTx(ctx, tx)
 
 		err = next(ctx, req, resp)

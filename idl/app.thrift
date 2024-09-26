@@ -67,7 +67,7 @@ struct CreateAppReq {
 }
 
 struct UpdateAppReq {
-    1: required i64 id
+    1: required i64 id (go.tag='path:"id"')
     2: optional string name
     3: optional string description
     4: optional string description_md
@@ -111,7 +111,7 @@ struct AppLabel {
 
 struct ListAppLabelReq {
     1: required base.PaginationReq pagination
-    2: optional string text
+    2: optional string text (go.tag='query:"text"')
 }
 
 struct ListAppLabelResp {
