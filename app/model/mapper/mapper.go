@@ -4,19 +4,19 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/cloudwego/kitex/pkg/klog"
-
+	"github.com/aiagt/aiagt/app/model/model"
 	"github.com/aiagt/aiagt/pkg/call"
 	"github.com/aiagt/aiagt/pkg/safe"
 
+	"github.com/aiagt/aiagt/kitex_gen/modelsvc"
 	"github.com/aiagt/aiagt/kitex_gen/openai"
 	"github.com/samber/lo"
 	openaigo "github.com/sashabaranov/go-openai"
 )
 
-func NewOpenAIGoRequest(req *openai.ChatCompletionRequest) *openaigo.ChatCompletionRequest {
+func NewOpenAIGoRequest(req *openai.ChatCompletionRequest, modelKey string) *openaigo.ChatCompletionRequest {
 	result := &openaigo.ChatCompletionRequest{
-		Model:            req.Model,
+		Model:            modelKey,
 		Messages:         NewOpenAIGoListMessage(req.Messages),
 		MaxTokens:        int(safe.Value(req.MaxTokens)),
 		Temperature:      float32(safe.Value(req.Temperature)),
@@ -108,9 +108,8 @@ func NewOpenAIGoFunction(function *openai.FunctionDefinition) *openaigo.Function
 		return nil
 	}
 
-	klog.Infof("function parameters %v", string(function.Parameters))
-
-	var parameters call.RequestType
+	// NOTE: 'additionalProperties' is required to be supplied and to be false
+	parameters := call.RequestType{AdditionalProperties: false}
 	_ = json.Unmarshal(function.Parameters, &parameters)
 
 	return &openaigo.FunctionDefinition{
@@ -281,5 +280,42 @@ func NewOpenAIResponseUsage(usage *openaigo.Usage) *openai.Usage {
 		PromptTokens:     int32(usage.PromptTokens),
 		CompletionTokens: int32(usage.CompletionTokens),
 		TotalTokens:      int32(usage.TotalTokens),
+	}
+}
+
+func NewGenModel(model *model.Models) *modelsvc.Model {
+	return &modelsvc.Model{
+		Id:          model.ID,
+		Name:        model.Name,
+		Description: model.Description,
+		Source:      model.Source,
+		ModelKey:    model.ModelKey,
+	}
+}
+
+func NewGenListModel(models []*model.Models) []*modelsvc.Model {
+	result := make([]*modelsvc.Model, len(models))
+	for i, m := range models {
+		result[i] = NewGenModel(m)
+	}
+
+	return result
+}
+
+func NewModelCreateModel(req *modelsvc.CreateModelReq) *model.Models {
+	return &model.Models{
+		Name:        req.Name,
+		Description: req.Description,
+		Source:      req.Source,
+		ModelKey:    req.ModelKey,
+	}
+}
+
+func NewModelUpdateModel(req *modelsvc.UpdateModelReq) *model.ModelsOptional {
+	return &model.ModelsOptional{
+		Name:        req.Name,
+		Description: req.Description,
+		Source:      req.Source,
+		ModelKey:    req.ModelKey,
 	}
 }

@@ -19,7 +19,7 @@ func (m *Middleware) Transaction(next endpoint.Endpoint) endpoint.Endpoint {
 		}
 
 		// start transaction
-		tx := db.WithContext(ctx).Begin()
+		tx := db.Begin()
 		ctx = ctxutil.WithTx(ctx, tx)
 
 		err = next(ctx, req, resp)

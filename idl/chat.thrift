@@ -88,13 +88,13 @@ struct Message {
 }
 
 struct UpdateMessageReq {
-    1: required i64 id
+    1: required i64 id (go.tag='path:"id"')
     2: required MessageContent message
 }
 
 struct ListMessageReq {
     1: required base.PaginationReq pagination
-    2: required i64 conversation_id
+    2: required i64 conversation_id (go.tag='query:"conversation_id"')
 }
 
 struct ListMessageResp {
@@ -103,13 +103,13 @@ struct ListMessageResp {
 }
 
 struct UpdateConversationReq {
-    1: required i64 id
+    1: required i64 id (go.tag='path:"id"')
     2: required string title
 }
 
 struct ListConversationReq {
     1: required base.PaginationReq pagination
-    2: required i64 app_id
+    2: required i64 app_id (go.tag='query:"app_id"')
 }
 
 struct ListConversationResp {

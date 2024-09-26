@@ -42,12 +42,9 @@ func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 
 		id, err := jwt.ParseToken(token)
 		if err != nil {
-			biz := bizerr.NewBiz(serviceName, methodName+"_auth", 4000000)
+			biz := bizerr.NewBiz(serviceName, "auth", 40000)
 			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized))
 		}
-
-		// inject user id in streaming middleware
-		ctx = ctxutil.WithMapUserID(ctx, id)
 
 		return next(ctxutil.WithUserID(ctx, id), req, resp)
 	}

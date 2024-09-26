@@ -52,15 +52,14 @@ struct LoginResp {
 }
 
 struct UpdateUserReq {
-    1: required i64 id
-    2: optional string username
-    3: optional string email
-    4: optional string phone_number
-    5: optional string signature
-    6: optional string homepage
-    7: optional string description_md
-    8: optional string github
-    9: optional string avatar
+    1: optional string username
+    2: optional string email
+    3: optional string phone_number
+    4: optional string signature
+    5: optional string homepage
+    6: optional string description_md
+    7: optional string github
+    8: optional string avatar
 }
 
 struct ResetPasswordReq {
@@ -76,7 +75,7 @@ struct CreateSecretReq {
 }
 
 struct UpdateSecretReq {
-    1: required i64 id
+    1: required i64 id (go.tag='path:"id"')
     2: optional i64 plugin_id
     3: optional string name
     4: optional string value
@@ -84,8 +83,8 @@ struct UpdateSecretReq {
 
 struct ListSecretReq {
     1: required base.PaginationReq pagination
-    2: optional i64 plugin_id
-    3: optional string name
+    2: optional i64 plugin_id (go.tag='query:"plugin_id"')
+    3: optional string name (go.tag='query:"name"')
 }
 
 struct ListSecretResp {

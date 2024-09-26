@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aiagt/aiagt/pkg/locker"
+
 	"github.com/redis/go-redis/v9"
 
-	"github.com/aiagt/aiagt/common/locker"
 	"github.com/aiagt/aiagt/pkg/logerr"
 	ktrdb "github.com/aiagt/kitextool/option/server/redis"
 )

@@ -31,7 +31,7 @@ func (s *PluginServiceImpl) PublishPlugin(ctx context.Context, req *base.IDReq) 
 	for _, tool := range tools {
 		// if the test time is before the update time,
 		// it means that there are no tests after the update and cannot be published
-		if tool.TestedAt.Before(tool.UpdatedAt) {
+		if tool.TestedAt == nil || tool.TestedAt.Before(tool.UpdatedAt) {
 			return nil, bizPublishPlugin.NewCodeErr(11, errors.New("plugin tools not completed testing"))
 		}
 	}

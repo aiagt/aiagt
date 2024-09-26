@@ -4,6 +4,8 @@ package modelservice
 
 import (
 	"context"
+
+	base "github.com/aiagt/aiagt/kitex_gen/base"
 	modelsvc "github.com/aiagt/aiagt/kitex_gen/modelsvc"
 	client "github.com/cloudwego/kitex/client"
 	callopt "github.com/cloudwego/kitex/client/callopt"
@@ -16,6 +18,11 @@ import (
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
 	GenToken(ctx context.Context, req *modelsvc.GenTokenReq, callOptions ...callopt.Option) (r *modelsvc.GenTokenResp, err error)
+	CreateModel(ctx context.Context, req *modelsvc.CreateModelReq, callOptions ...callopt.Option) (r *base.Empty, err error)
+	UpdateModel(ctx context.Context, req *modelsvc.UpdateModelReq, callOptions ...callopt.Option) (r *base.Empty, err error)
+	DeleteModel(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
+	GetModelByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *modelsvc.Model, err error)
+	ListModel(ctx context.Context, req *modelsvc.ListModelReq, callOptions ...callopt.Option) (r *modelsvc.ListModelResp, err error)
 }
 
 // StreamClient is designed to provide Interface for Streaming APIs.
@@ -60,6 +67,31 @@ type kModelServiceClient struct {
 func (p *kModelServiceClient) GenToken(ctx context.Context, req *modelsvc.GenTokenReq, callOptions ...callopt.Option) (r *modelsvc.GenTokenResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GenToken(ctx, req)
+}
+
+func (p *kModelServiceClient) CreateModel(ctx context.Context, req *modelsvc.CreateModelReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.CreateModel(ctx, req)
+}
+
+func (p *kModelServiceClient) UpdateModel(ctx context.Context, req *modelsvc.UpdateModelReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.UpdateModel(ctx, req)
+}
+
+func (p *kModelServiceClient) DeleteModel(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.DeleteModel(ctx, req)
+}
+
+func (p *kModelServiceClient) GetModelByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *modelsvc.Model, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetModelByID(ctx, req)
+}
+
+func (p *kModelServiceClient) ListModel(ctx context.Context, req *modelsvc.ListModelReq, callOptions ...callopt.Option) (r *modelsvc.ListModelResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.ListModel(ctx, req)
 }
 
 // NewStreamClient creates a stream client for the service's streaming APIs defined in IDL.

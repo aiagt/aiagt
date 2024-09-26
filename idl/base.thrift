@@ -3,8 +3,8 @@ namespace go base
 struct Empty {}
 
 struct PaginationReq {
-    1: i32 page = 1
-    2: i32 page_size = 20
+    1: i32 page = 1 (go.tag='json:"page" query:"page"')
+    2: i32 page_size = 20 (go.tag='json:"page_size" query:"page_size"')
 }
 
 struct PaginationResp {
@@ -15,7 +15,7 @@ struct PaginationResp {
 }
 
 struct IDReq {
-    1: required i64 id
+    1: required i64 id (go.tag='path:"id"')
 }
 
 struct IDsReq {

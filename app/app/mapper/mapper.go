@@ -83,7 +83,7 @@ func NewGenListApp(apps []*model.App) []*appsvc.App {
 	return result
 }
 
-func NewModelCreateApp(req *appsvc.CreateAppReq, userID int64) *model.App {
+func NewModelCreateApp(req *appsvc.CreateAppReq, userID int64, labelIDs []int64) *model.App {
 	return &model.App{
 		Name:            req.Name,
 		Description:     req.Description,
@@ -98,7 +98,7 @@ func NewModelCreateApp(req *appsvc.CreateAppReq, userID int64) *model.App {
 		ToolIDs:         req.ToolIds,
 		Logo:            req.Logo,
 		AuthorID:        userID,
-		LabelIDs:        req.LabelIds,
+		LabelIDs:        labelIDs,
 		ModelConfig:     NewModelModelConfig(req.ModelConfig),
 	}
 }
@@ -152,7 +152,7 @@ func NewGenListAppLabel(labels []*model.AppLabel) []*appsvc.AppLabel {
 	return result
 }
 
-func NewModelUpdateApp(req *appsvc.UpdateAppReq) *model.AppOptional {
+func NewModelUpdateApp(req *appsvc.UpdateAppReq, labelIDs []int64) *model.AppOptional {
 	return &model.AppOptional{
 		Name:            req.Name,
 		Description:     req.Description,
@@ -165,7 +165,7 @@ func NewModelUpdateApp(req *appsvc.UpdateAppReq) *model.AppOptional {
 		PresetQuestions: req.PresetQuestions,
 		ToolIDs:         req.ToolIds,
 		Logo:            req.Logo,
-		LabelIDs:        req.LabelIds,
+		LabelIDs:        labelIDs,
 		ModelConfig:     NewModelModelConfig(req.ModelConfig),
 	}
 }

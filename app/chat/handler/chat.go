@@ -25,7 +25,7 @@ import (
 
 func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_ChatServer) (err error) {
 	ctx := stream.Context()
-	userID := ctxutil.MapUserID(ctx)
+	userID := ctxutil.UserID(ctx)
 
 	// get app information
 	app, err := s.appCli.GetAppByID(ctx, &base.IDReq{Id: req.AppId})

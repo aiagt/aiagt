@@ -6,6 +6,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
+	base "github.com/aiagt/aiagt/kitex_gen/base"
 	modelsvc "github.com/aiagt/aiagt/kitex_gen/modelsvc"
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
@@ -28,6 +30,41 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		newModelServiceChatResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingServer),
+	),
+	"CreateModel": kitex.NewMethodInfo(
+		createModelHandler,
+		newModelServiceCreateModelArgs,
+		newModelServiceCreateModelResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"UpdateModel": kitex.NewMethodInfo(
+		updateModelHandler,
+		newModelServiceUpdateModelArgs,
+		newModelServiceUpdateModelResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"DeleteModel": kitex.NewMethodInfo(
+		deleteModelHandler,
+		newModelServiceDeleteModelArgs,
+		newModelServiceDeleteModelResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"GetModelByID": kitex.NewMethodInfo(
+		getModelByIDHandler,
+		newModelServiceGetModelByIDArgs,
+		newModelServiceGetModelByIDResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"ListModel": kitex.NewMethodInfo(
+		listModelHandler,
+		newModelServiceListModelArgs,
+		newModelServiceListModelResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
 }
 
@@ -61,6 +98,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 func NewServiceInfoForClient() *kitex.ServiceInfo {
 	return newServiceInfo(false, false, true)
 }
+
 func NewServiceInfoForStreamClient() *kitex.ServiceInfo {
 	return newServiceInfo(true, true, false)
 }
@@ -105,6 +143,7 @@ func genTokenHandler(ctx context.Context, handler interface{}, arg, result inter
 	realResult.Success = success
 	return nil
 }
+
 func newModelServiceGenTokenArgs() interface{} {
 	return modelsvc.NewModelServiceGenTokenArgs()
 }
@@ -137,6 +176,7 @@ func (x *modelServiceChatClient) DoFinish(err error) {
 		panic(fmt.Sprintf("streaming.WithDoFinish is not implemented by %T", x.Stream))
 	}
 }
+
 func (x *modelServiceChatClient) Recv() (*modelsvc.ChatResp, error) {
 	m := new(modelsvc.ChatResp)
 	return m, x.Stream.RecvMsg(m)
@@ -156,6 +196,101 @@ func newModelServiceChatArgs() interface{} {
 
 func newModelServiceChatResult() interface{} {
 	return modelsvc.NewModelServiceChatResult()
+}
+
+func createModelHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*modelsvc.ModelServiceCreateModelArgs)
+	realResult := result.(*modelsvc.ModelServiceCreateModelResult)
+	success, err := handler.(modelsvc.ModelService).CreateModel(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+
+func newModelServiceCreateModelArgs() interface{} {
+	return modelsvc.NewModelServiceCreateModelArgs()
+}
+
+func newModelServiceCreateModelResult() interface{} {
+	return modelsvc.NewModelServiceCreateModelResult()
+}
+
+func updateModelHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*modelsvc.ModelServiceUpdateModelArgs)
+	realResult := result.(*modelsvc.ModelServiceUpdateModelResult)
+	success, err := handler.(modelsvc.ModelService).UpdateModel(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+
+func newModelServiceUpdateModelArgs() interface{} {
+	return modelsvc.NewModelServiceUpdateModelArgs()
+}
+
+func newModelServiceUpdateModelResult() interface{} {
+	return modelsvc.NewModelServiceUpdateModelResult()
+}
+
+func deleteModelHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*modelsvc.ModelServiceDeleteModelArgs)
+	realResult := result.(*modelsvc.ModelServiceDeleteModelResult)
+	success, err := handler.(modelsvc.ModelService).DeleteModel(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+
+func newModelServiceDeleteModelArgs() interface{} {
+	return modelsvc.NewModelServiceDeleteModelArgs()
+}
+
+func newModelServiceDeleteModelResult() interface{} {
+	return modelsvc.NewModelServiceDeleteModelResult()
+}
+
+func getModelByIDHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*modelsvc.ModelServiceGetModelByIDArgs)
+	realResult := result.(*modelsvc.ModelServiceGetModelByIDResult)
+	success, err := handler.(modelsvc.ModelService).GetModelByID(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+
+func newModelServiceGetModelByIDArgs() interface{} {
+	return modelsvc.NewModelServiceGetModelByIDArgs()
+}
+
+func newModelServiceGetModelByIDResult() interface{} {
+	return modelsvc.NewModelServiceGetModelByIDResult()
+}
+
+func listModelHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*modelsvc.ModelServiceListModelArgs)
+	realResult := result.(*modelsvc.ModelServiceListModelResult)
+	success, err := handler.(modelsvc.ModelService).ListModel(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+
+func newModelServiceListModelArgs() interface{} {
+	return modelsvc.NewModelServiceListModelArgs()
+}
+
+func newModelServiceListModelResult() interface{} {
+	return modelsvc.NewModelServiceListModelResult()
 }
 
 type kClient struct {
@@ -197,4 +332,54 @@ func (p *kClient) Chat(ctx context.Context, req *modelsvc.ChatReq) (ModelService
 		return nil, err
 	}
 	return stream, nil
+}
+
+func (p *kClient) CreateModel(ctx context.Context, req *modelsvc.CreateModelReq) (r *base.Empty, err error) {
+	var _args modelsvc.ModelServiceCreateModelArgs
+	_args.Req = req
+	var _result modelsvc.ModelServiceCreateModelResult
+	if err = p.c.Call(ctx, "CreateModel", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) UpdateModel(ctx context.Context, req *modelsvc.UpdateModelReq) (r *base.Empty, err error) {
+	var _args modelsvc.ModelServiceUpdateModelArgs
+	_args.Req = req
+	var _result modelsvc.ModelServiceUpdateModelResult
+	if err = p.c.Call(ctx, "UpdateModel", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) DeleteModel(ctx context.Context, req *base.IDReq) (r *base.Empty, err error) {
+	var _args modelsvc.ModelServiceDeleteModelArgs
+	_args.Req = req
+	var _result modelsvc.ModelServiceDeleteModelResult
+	if err = p.c.Call(ctx, "DeleteModel", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetModelByID(ctx context.Context, req *base.IDReq) (r *modelsvc.Model, err error) {
+	var _args modelsvc.ModelServiceGetModelByIDArgs
+	_args.Req = req
+	var _result modelsvc.ModelServiceGetModelByIDResult
+	if err = p.c.Call(ctx, "GetModelByID", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) ListModel(ctx context.Context, req *modelsvc.ListModelReq) (r *modelsvc.ListModelResp, err error) {
+	var _args modelsvc.ModelServiceListModelArgs
+	_args.Req = req
+	var _result modelsvc.ModelServiceListModelResult
+	if err = p.c.Call(ctx, "ListModel", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
 }

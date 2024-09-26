@@ -101,6 +101,15 @@ func (d *MessageDao) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
+func (d *MessageDao) DeleteByConversationID(ctx context.Context, conversationID int64) error {
+	err := d.db(ctx).Model(d.m).Where("conversation_id = ?", conversationID).Delete(d.m).Error
+	if err != nil {
+		return errors.Wrap(err, "message dao delete by conversation id error")
+	}
+
+	return nil
+}
+
 func (d *MessageDao) GetByConversationID(ctx context.Context, id int64) ([]*model.Message, error) {
 	var result []*model.Message
 

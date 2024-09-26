@@ -25,5 +25,10 @@ func (s *ChatServiceImpl) DeleteConversation(ctx context.Context, req *base.IDRe
 		return nil, bizDeleteConversation.NewErr(err)
 	}
 
+	err = s.messageDao.DeleteByConversationID(ctx, req.Id)
+	if err != nil {
+		return nil, bizDeleteConversation.NewErr(err)
+	}
+
 	return
 }

@@ -5,12 +5,13 @@ package appsvc
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/openai"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 	"github.com/apache/thrift/lib/go/thrift"
-	"strings"
 )
 
 type App struct {
@@ -167,69 +168,91 @@ func (p *App) GetPublishedAt() (v *base.Time) {
 	}
 	return p.PublishedAt
 }
+
 func (p *App) SetId(val int64) {
 	p.Id = val
 }
+
 func (p *App) SetName(val string) {
 	p.Name = val
 }
+
 func (p *App) SetDescription(val string) {
 	p.Description = val
 }
+
 func (p *App) SetDescriptionMd(val string) {
 	p.DescriptionMd = val
 }
+
 func (p *App) SetModelId(val int64) {
 	p.ModelId = val
 }
+
 func (p *App) SetEnableImage(val bool) {
 	p.EnableImage = val
 }
+
 func (p *App) SetEnableFile(val bool) {
 	p.EnableFile = val
 }
+
 func (p *App) SetVersion(val string) {
 	p.Version = val
 }
+
 func (p *App) SetIsPrivate(val bool) {
 	p.IsPrivate = val
 }
+
 func (p *App) SetHomePage(val string) {
 	p.HomePage = val
 }
+
 func (p *App) SetPresetQuestions(val []string) {
 	p.PresetQuestions = val
 }
+
 func (p *App) SetToolIds(val []int64) {
 	p.ToolIds = val
 }
+
 func (p *App) SetTools(val []*pluginsvc.PluginTool) {
 	p.Tools = val
 }
+
 func (p *App) SetLogo(val string) {
 	p.Logo = val
 }
+
 func (p *App) SetAuthorId(val int64) {
 	p.AuthorId = val
 }
+
 func (p *App) SetAuthor(val *usersvc.User) {
 	p.Author = val
 }
+
 func (p *App) SetLabelIds(val []int64) {
 	p.LabelIds = val
 }
+
 func (p *App) SetLabels(val []*AppLabel) {
 	p.Labels = val
 }
+
 func (p *App) SetModelConfig(val *ModelConfig) {
 	p.ModelConfig = val
 }
+
 func (p *App) SetCreatedAt(val *base.Time) {
 	p.CreatedAt = val
 }
+
 func (p *App) SetUpdatedAt(val *base.Time) {
 	p.UpdatedAt = val
 }
+
 func (p *App) SetPublishedAt(val *base.Time) {
 	p.PublishedAt = val
 }
@@ -288,7 +311,6 @@ func (p *App) IsSetPublishedAt() bool {
 }
 
 func (p *App) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -639,7 +661,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *App) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -649,8 +670,8 @@ func (p *App) ReadField1(iprot thrift.TProtocol) error {
 	p.Id = _field
 	return nil
 }
-func (p *App) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *App) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -660,8 +681,8 @@ func (p *App) ReadField2(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *App) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *App) ReadField3(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -671,8 +692,8 @@ func (p *App) ReadField3(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *App) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *App) ReadField4(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -682,8 +703,8 @@ func (p *App) ReadField4(iprot thrift.TProtocol) error {
 	p.DescriptionMd = _field
 	return nil
 }
-func (p *App) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *App) ReadField5(iprot thrift.TProtocol) error {
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -693,8 +714,8 @@ func (p *App) ReadField5(iprot thrift.TProtocol) error {
 	p.ModelId = _field
 	return nil
 }
-func (p *App) ReadField6(iprot thrift.TProtocol) error {
 
+func (p *App) ReadField6(iprot thrift.TProtocol) error {
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -704,8 +725,8 @@ func (p *App) ReadField6(iprot thrift.TProtocol) error {
 	p.EnableImage = _field
 	return nil
 }
-func (p *App) ReadField7(iprot thrift.TProtocol) error {
 
+func (p *App) ReadField7(iprot thrift.TProtocol) error {
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -715,8 +736,8 @@ func (p *App) ReadField7(iprot thrift.TProtocol) error {
 	p.EnableFile = _field
 	return nil
 }
-func (p *App) ReadField8(iprot thrift.TProtocol) error {
 
+func (p *App) ReadField8(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -726,8 +747,8 @@ func (p *App) ReadField8(iprot thrift.TProtocol) error {
 	p.Version = _field
 	return nil
 }
-func (p *App) ReadField9(iprot thrift.TProtocol) error {
 
+func (p *App) ReadField9(iprot thrift.TProtocol) error {
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -737,8 +758,8 @@ func (p *App) ReadField9(iprot thrift.TProtocol) error {
 	p.IsPrivate = _field
 	return nil
 }
-func (p *App) ReadField10(iprot thrift.TProtocol) error {
 
+func (p *App) ReadField10(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -748,6 +769,7 @@ func (p *App) ReadField10(iprot thrift.TProtocol) error {
 	p.HomePage = _field
 	return nil
 }
+
 func (p *App) ReadField11(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -771,6 +793,7 @@ func (p *App) ReadField11(iprot thrift.TProtocol) error {
 	p.PresetQuestions = _field
 	return nil
 }
+
 func (p *App) ReadField12(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -794,6 +817,7 @@ func (p *App) ReadField12(iprot thrift.TProtocol) error {
 	p.ToolIds = _field
 	return nil
 }
+
 func (p *App) ReadField13(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -817,8 +841,8 @@ func (p *App) ReadField13(iprot thrift.TProtocol) error {
 	p.Tools = _field
 	return nil
 }
-func (p *App) ReadField14(iprot thrift.TProtocol) error {
 
+func (p *App) ReadField14(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -828,8 +852,8 @@ func (p *App) ReadField14(iprot thrift.TProtocol) error {
 	p.Logo = _field
 	return nil
 }
-func (p *App) ReadField15(iprot thrift.TProtocol) error {
 
+func (p *App) ReadField15(iprot thrift.TProtocol) error {
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -839,6 +863,7 @@ func (p *App) ReadField15(iprot thrift.TProtocol) error {
 	p.AuthorId = _field
 	return nil
 }
+
 func (p *App) ReadField16(iprot thrift.TProtocol) error {
 	_field := usersvc.NewUser()
 	if err := _field.Read(iprot); err != nil {
@@ -847,6 +872,7 @@ func (p *App) ReadField16(iprot thrift.TProtocol) error {
 	p.Author = _field
 	return nil
 }
+
 func (p *App) ReadField17(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -870,6 +896,7 @@ func (p *App) ReadField17(iprot thrift.TProtocol) error {
 	p.LabelIds = _field
 	return nil
 }
+
 func (p *App) ReadField18(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -893,6 +920,7 @@ func (p *App) ReadField18(iprot thrift.TProtocol) error {
 	p.Labels = _field
 	return nil
 }
+
 func (p *App) ReadField19(iprot thrift.TProtocol) error {
 	_field := NewModelConfig()
 	if err := _field.Read(iprot); err != nil {
@@ -901,6 +929,7 @@ func (p *App) ReadField19(iprot thrift.TProtocol) error {
 	p.ModelConfig = _field
 	return nil
 }
+
 func (p *App) ReadField20(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -909,6 +938,7 @@ func (p *App) ReadField20(iprot thrift.TProtocol) error {
 	p.CreatedAt = _field
 	return nil
 }
+
 func (p *App) ReadField21(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -917,6 +947,7 @@ func (p *App) ReadField21(iprot thrift.TProtocol) error {
 	p.UpdatedAt = _field
 	return nil
 }
+
 func (p *App) ReadField22(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -1465,7 +1496,6 @@ func (p *App) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("App(%+v)", *p)
-
 }
 
 func (p *App) DeepEqual(ano *App) bool {
@@ -1544,77 +1574,76 @@ func (p *App) DeepEqual(ano *App) bool {
 }
 
 func (p *App) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
 	return true
 }
-func (p *App) Field2DeepEqual(src string) bool {
 
+func (p *App) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Name, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *App) Field3DeepEqual(src string) bool {
 
+func (p *App) Field3DeepEqual(src string) bool {
 	if strings.Compare(p.Description, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *App) Field4DeepEqual(src string) bool {
 
+func (p *App) Field4DeepEqual(src string) bool {
 	if strings.Compare(p.DescriptionMd, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *App) Field5DeepEqual(src int64) bool {
 
+func (p *App) Field5DeepEqual(src int64) bool {
 	if p.ModelId != src {
 		return false
 	}
 	return true
 }
-func (p *App) Field6DeepEqual(src bool) bool {
 
+func (p *App) Field6DeepEqual(src bool) bool {
 	if p.EnableImage != src {
 		return false
 	}
 	return true
 }
-func (p *App) Field7DeepEqual(src bool) bool {
 
+func (p *App) Field7DeepEqual(src bool) bool {
 	if p.EnableFile != src {
 		return false
 	}
 	return true
 }
-func (p *App) Field8DeepEqual(src string) bool {
 
+func (p *App) Field8DeepEqual(src string) bool {
 	if strings.Compare(p.Version, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *App) Field9DeepEqual(src bool) bool {
 
+func (p *App) Field9DeepEqual(src bool) bool {
 	if p.IsPrivate != src {
 		return false
 	}
 	return true
 }
-func (p *App) Field10DeepEqual(src string) bool {
 
+func (p *App) Field10DeepEqual(src string) bool {
 	if strings.Compare(p.HomePage, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *App) Field11DeepEqual(src []string) bool {
 
+func (p *App) Field11DeepEqual(src []string) bool {
 	if len(p.PresetQuestions) != len(src) {
 		return false
 	}
@@ -1626,8 +1655,8 @@ func (p *App) Field11DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *App) Field12DeepEqual(src []int64) bool {
 
+func (p *App) Field12DeepEqual(src []int64) bool {
 	if len(p.ToolIds) != len(src) {
 		return false
 	}
@@ -1639,8 +1668,8 @@ func (p *App) Field12DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *App) Field13DeepEqual(src []*pluginsvc.PluginTool) bool {
 
+func (p *App) Field13DeepEqual(src []*pluginsvc.PluginTool) bool {
 	if len(p.Tools) != len(src) {
 		return false
 	}
@@ -1652,29 +1681,29 @@ func (p *App) Field13DeepEqual(src []*pluginsvc.PluginTool) bool {
 	}
 	return true
 }
-func (p *App) Field14DeepEqual(src string) bool {
 
+func (p *App) Field14DeepEqual(src string) bool {
 	if strings.Compare(p.Logo, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *App) Field15DeepEqual(src int64) bool {
 
+func (p *App) Field15DeepEqual(src int64) bool {
 	if p.AuthorId != src {
 		return false
 	}
 	return true
 }
-func (p *App) Field16DeepEqual(src *usersvc.User) bool {
 
+func (p *App) Field16DeepEqual(src *usersvc.User) bool {
 	if !p.Author.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *App) Field17DeepEqual(src []int64) bool {
 
+func (p *App) Field17DeepEqual(src []int64) bool {
 	if len(p.LabelIds) != len(src) {
 		return false
 	}
@@ -1686,8 +1715,8 @@ func (p *App) Field17DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *App) Field18DeepEqual(src []*AppLabel) bool {
 
+func (p *App) Field18DeepEqual(src []*AppLabel) bool {
 	if len(p.Labels) != len(src) {
 		return false
 	}
@@ -1699,29 +1728,29 @@ func (p *App) Field18DeepEqual(src []*AppLabel) bool {
 	}
 	return true
 }
-func (p *App) Field19DeepEqual(src *ModelConfig) bool {
 
+func (p *App) Field19DeepEqual(src *ModelConfig) bool {
 	if !p.ModelConfig.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *App) Field20DeepEqual(src *base.Time) bool {
 
+func (p *App) Field20DeepEqual(src *base.Time) bool {
 	if !p.CreatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *App) Field21DeepEqual(src *base.Time) bool {
 
+func (p *App) Field21DeepEqual(src *base.Time) bool {
 	if !p.UpdatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *App) Field22DeepEqual(src *base.Time) bool {
 
+func (p *App) Field22DeepEqual(src *base.Time) bool {
 	if !p.PublishedAt.DeepEqual(src) {
 		return false
 	}
@@ -1748,7 +1777,6 @@ type ModelConfig struct {
 
 func NewModelConfig() *ModelConfig {
 	return &ModelConfig{
-
 		N:      1,
 		Stream: true,
 	}
@@ -1893,48 +1921,63 @@ func (p *ModelConfig) GetStreamOptions() (v *openai.StreamOptions) {
 	}
 	return p.StreamOptions
 }
+
 func (p *ModelConfig) SetMaxTokens(val *int32) {
 	p.MaxTokens = val
 }
+
 func (p *ModelConfig) SetTemperature(val *float64) {
 	p.Temperature = val
 }
+
 func (p *ModelConfig) SetTopP(val *float64) {
 	p.TopP = val
 }
+
 func (p *ModelConfig) SetN(val int32) {
 	p.N = val
 }
+
 func (p *ModelConfig) SetStream(val bool) {
 	p.Stream = val
 }
+
 func (p *ModelConfig) SetStop(val []string) {
 	p.Stop = val
 }
+
 func (p *ModelConfig) SetPresencePenalty(val *float64) {
 	p.PresencePenalty = val
 }
+
 func (p *ModelConfig) SetResponseFormat(val *openai.ChatCompletionResponseFormat) {
 	p.ResponseFormat = val
 }
+
 func (p *ModelConfig) SetSeed(val *int32) {
 	p.Seed = val
 }
+
 func (p *ModelConfig) SetFrequencyPenalty(val *float64) {
 	p.FrequencyPenalty = val
 }
+
 func (p *ModelConfig) SetLogitBias(val map[string]int32) {
 	p.LogitBias = val
 }
+
 func (p *ModelConfig) SetLogprobs(val *bool) {
 	p.Logprobs = val
 }
+
 func (p *ModelConfig) SetTopLogprobs(val *int32) {
 	p.TopLogprobs = val
 }
+
 func (p *ModelConfig) SetUser(val *string) {
 	p.User = val
 }
+
 func (p *ModelConfig) SetStreamOptions(val *openai.StreamOptions) {
 	p.StreamOptions = val
 }
@@ -2018,7 +2061,6 @@ func (p *ModelConfig) IsSetStreamOptions() bool {
 }
 
 func (p *ModelConfig) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -2186,7 +2228,6 @@ ReadStructEndError:
 }
 
 func (p *ModelConfig) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field *int32
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -2196,8 +2237,8 @@ func (p *ModelConfig) ReadField1(iprot thrift.TProtocol) error {
 	p.MaxTokens = _field
 	return nil
 }
-func (p *ModelConfig) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *ModelConfig) ReadField2(iprot thrift.TProtocol) error {
 	var _field *float64
 	if v, err := iprot.ReadDouble(); err != nil {
 		return err
@@ -2207,8 +2248,8 @@ func (p *ModelConfig) ReadField2(iprot thrift.TProtocol) error {
 	p.Temperature = _field
 	return nil
 }
-func (p *ModelConfig) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *ModelConfig) ReadField3(iprot thrift.TProtocol) error {
 	var _field *float64
 	if v, err := iprot.ReadDouble(); err != nil {
 		return err
@@ -2218,8 +2259,8 @@ func (p *ModelConfig) ReadField3(iprot thrift.TProtocol) error {
 	p.TopP = _field
 	return nil
 }
-func (p *ModelConfig) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *ModelConfig) ReadField4(iprot thrift.TProtocol) error {
 	var _field int32
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -2229,8 +2270,8 @@ func (p *ModelConfig) ReadField4(iprot thrift.TProtocol) error {
 	p.N = _field
 	return nil
 }
-func (p *ModelConfig) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *ModelConfig) ReadField5(iprot thrift.TProtocol) error {
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -2240,6 +2281,7 @@ func (p *ModelConfig) ReadField5(iprot thrift.TProtocol) error {
 	p.Stream = _field
 	return nil
 }
+
 func (p *ModelConfig) ReadField6(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -2263,8 +2305,8 @@ func (p *ModelConfig) ReadField6(iprot thrift.TProtocol) error {
 	p.Stop = _field
 	return nil
 }
-func (p *ModelConfig) ReadField7(iprot thrift.TProtocol) error {
 
+func (p *ModelConfig) ReadField7(iprot thrift.TProtocol) error {
 	var _field *float64
 	if v, err := iprot.ReadDouble(); err != nil {
 		return err
@@ -2274,6 +2316,7 @@ func (p *ModelConfig) ReadField7(iprot thrift.TProtocol) error {
 	p.PresencePenalty = _field
 	return nil
 }
+
 func (p *ModelConfig) ReadField8(iprot thrift.TProtocol) error {
 	_field := openai.NewChatCompletionResponseFormat()
 	if err := _field.Read(iprot); err != nil {
@@ -2282,8 +2325,8 @@ func (p *ModelConfig) ReadField8(iprot thrift.TProtocol) error {
 	p.ResponseFormat = _field
 	return nil
 }
-func (p *ModelConfig) ReadField9(iprot thrift.TProtocol) error {
 
+func (p *ModelConfig) ReadField9(iprot thrift.TProtocol) error {
 	var _field *int32
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -2293,8 +2336,8 @@ func (p *ModelConfig) ReadField9(iprot thrift.TProtocol) error {
 	p.Seed = _field
 	return nil
 }
-func (p *ModelConfig) ReadField10(iprot thrift.TProtocol) error {
 
+func (p *ModelConfig) ReadField10(iprot thrift.TProtocol) error {
 	var _field *float64
 	if v, err := iprot.ReadDouble(); err != nil {
 		return err
@@ -2304,6 +2347,7 @@ func (p *ModelConfig) ReadField10(iprot thrift.TProtocol) error {
 	p.FrequencyPenalty = _field
 	return nil
 }
+
 func (p *ModelConfig) ReadField11(iprot thrift.TProtocol) error {
 	_, _, size, err := iprot.ReadMapBegin()
 	if err != nil {
@@ -2333,8 +2377,8 @@ func (p *ModelConfig) ReadField11(iprot thrift.TProtocol) error {
 	p.LogitBias = _field
 	return nil
 }
-func (p *ModelConfig) ReadField12(iprot thrift.TProtocol) error {
 
+func (p *ModelConfig) ReadField12(iprot thrift.TProtocol) error {
 	var _field *bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -2344,8 +2388,8 @@ func (p *ModelConfig) ReadField12(iprot thrift.TProtocol) error {
 	p.Logprobs = _field
 	return nil
 }
-func (p *ModelConfig) ReadField13(iprot thrift.TProtocol) error {
 
+func (p *ModelConfig) ReadField13(iprot thrift.TProtocol) error {
 	var _field *int32
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -2355,8 +2399,8 @@ func (p *ModelConfig) ReadField13(iprot thrift.TProtocol) error {
 	p.TopLogprobs = _field
 	return nil
 }
-func (p *ModelConfig) ReadField14(iprot thrift.TProtocol) error {
 
+func (p *ModelConfig) ReadField14(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -2366,6 +2410,7 @@ func (p *ModelConfig) ReadField14(iprot thrift.TProtocol) error {
 	p.User = _field
 	return nil
 }
+
 func (p *ModelConfig) ReadField15(iprot thrift.TProtocol) error {
 	_field := openai.NewStreamOptions()
 	if err := _field.Read(iprot); err != nil {
@@ -2768,7 +2813,6 @@ func (p *ModelConfig) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ModelConfig(%+v)", *p)
-
 }
 
 func (p *ModelConfig) DeepEqual(ano *ModelConfig) bool {
@@ -2826,7 +2870,6 @@ func (p *ModelConfig) DeepEqual(ano *ModelConfig) bool {
 }
 
 func (p *ModelConfig) Field1DeepEqual(src *int32) bool {
-
 	if p.MaxTokens == src {
 		return true
 	} else if p.MaxTokens == nil || src == nil {
@@ -2837,8 +2880,8 @@ func (p *ModelConfig) Field1DeepEqual(src *int32) bool {
 	}
 	return true
 }
-func (p *ModelConfig) Field2DeepEqual(src *float64) bool {
 
+func (p *ModelConfig) Field2DeepEqual(src *float64) bool {
 	if p.Temperature == src {
 		return true
 	} else if p.Temperature == nil || src == nil {
@@ -2849,8 +2892,8 @@ func (p *ModelConfig) Field2DeepEqual(src *float64) bool {
 	}
 	return true
 }
-func (p *ModelConfig) Field3DeepEqual(src *float64) bool {
 
+func (p *ModelConfig) Field3DeepEqual(src *float64) bool {
 	if p.TopP == src {
 		return true
 	} else if p.TopP == nil || src == nil {
@@ -2861,22 +2904,22 @@ func (p *ModelConfig) Field3DeepEqual(src *float64) bool {
 	}
 	return true
 }
-func (p *ModelConfig) Field4DeepEqual(src int32) bool {
 
+func (p *ModelConfig) Field4DeepEqual(src int32) bool {
 	if p.N != src {
 		return false
 	}
 	return true
 }
-func (p *ModelConfig) Field5DeepEqual(src bool) bool {
 
+func (p *ModelConfig) Field5DeepEqual(src bool) bool {
 	if p.Stream != src {
 		return false
 	}
 	return true
 }
-func (p *ModelConfig) Field6DeepEqual(src []string) bool {
 
+func (p *ModelConfig) Field6DeepEqual(src []string) bool {
 	if len(p.Stop) != len(src) {
 		return false
 	}
@@ -2888,8 +2931,8 @@ func (p *ModelConfig) Field6DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *ModelConfig) Field7DeepEqual(src *float64) bool {
 
+func (p *ModelConfig) Field7DeepEqual(src *float64) bool {
 	if p.PresencePenalty == src {
 		return true
 	} else if p.PresencePenalty == nil || src == nil {
@@ -2900,15 +2943,15 @@ func (p *ModelConfig) Field7DeepEqual(src *float64) bool {
 	}
 	return true
 }
-func (p *ModelConfig) Field8DeepEqual(src *openai.ChatCompletionResponseFormat) bool {
 
+func (p *ModelConfig) Field8DeepEqual(src *openai.ChatCompletionResponseFormat) bool {
 	if !p.ResponseFormat.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ModelConfig) Field9DeepEqual(src *int32) bool {
 
+func (p *ModelConfig) Field9DeepEqual(src *int32) bool {
 	if p.Seed == src {
 		return true
 	} else if p.Seed == nil || src == nil {
@@ -2919,8 +2962,8 @@ func (p *ModelConfig) Field9DeepEqual(src *int32) bool {
 	}
 	return true
 }
-func (p *ModelConfig) Field10DeepEqual(src *float64) bool {
 
+func (p *ModelConfig) Field10DeepEqual(src *float64) bool {
 	if p.FrequencyPenalty == src {
 		return true
 	} else if p.FrequencyPenalty == nil || src == nil {
@@ -2931,8 +2974,8 @@ func (p *ModelConfig) Field10DeepEqual(src *float64) bool {
 	}
 	return true
 }
-func (p *ModelConfig) Field11DeepEqual(src map[string]int32) bool {
 
+func (p *ModelConfig) Field11DeepEqual(src map[string]int32) bool {
 	if len(p.LogitBias) != len(src) {
 		return false
 	}
@@ -2944,8 +2987,8 @@ func (p *ModelConfig) Field11DeepEqual(src map[string]int32) bool {
 	}
 	return true
 }
-func (p *ModelConfig) Field12DeepEqual(src *bool) bool {
 
+func (p *ModelConfig) Field12DeepEqual(src *bool) bool {
 	if p.Logprobs == src {
 		return true
 	} else if p.Logprobs == nil || src == nil {
@@ -2956,8 +2999,8 @@ func (p *ModelConfig) Field12DeepEqual(src *bool) bool {
 	}
 	return true
 }
-func (p *ModelConfig) Field13DeepEqual(src *int32) bool {
 
+func (p *ModelConfig) Field13DeepEqual(src *int32) bool {
 	if p.TopLogprobs == src {
 		return true
 	} else if p.TopLogprobs == nil || src == nil {
@@ -2968,8 +3011,8 @@ func (p *ModelConfig) Field13DeepEqual(src *int32) bool {
 	}
 	return true
 }
-func (p *ModelConfig) Field14DeepEqual(src *string) bool {
 
+func (p *ModelConfig) Field14DeepEqual(src *string) bool {
 	if p.User == src {
 		return true
 	} else if p.User == nil || src == nil {
@@ -2980,8 +3023,8 @@ func (p *ModelConfig) Field14DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *ModelConfig) Field15DeepEqual(src *openai.StreamOptions) bool {
 
+func (p *ModelConfig) Field15DeepEqual(src *openai.StreamOptions) bool {
 	if !p.StreamOptions.DeepEqual(src) {
 		return false
 	}
@@ -3077,48 +3120,63 @@ func (p *CreateAppReq) GetModelConfig() (v *ModelConfig) {
 	}
 	return p.ModelConfig
 }
+
 func (p *CreateAppReq) SetName(val string) {
 	p.Name = val
 }
+
 func (p *CreateAppReq) SetDescription(val string) {
 	p.Description = val
 }
+
 func (p *CreateAppReq) SetDescriptionMd(val string) {
 	p.DescriptionMd = val
 }
+
 func (p *CreateAppReq) SetModelId(val int64) {
 	p.ModelId = val
 }
+
 func (p *CreateAppReq) SetEnableImage(val bool) {
 	p.EnableImage = val
 }
+
 func (p *CreateAppReq) SetEnableFile(val bool) {
 	p.EnableFile = val
 }
+
 func (p *CreateAppReq) SetVersion(val string) {
 	p.Version = val
 }
+
 func (p *CreateAppReq) SetIsPrivate(val bool) {
 	p.IsPrivate = val
 }
+
 func (p *CreateAppReq) SetHomePage(val string) {
 	p.HomePage = val
 }
+
 func (p *CreateAppReq) SetPresetQuestions(val []string) {
 	p.PresetQuestions = val
 }
+
 func (p *CreateAppReq) SetToolIds(val []int64) {
 	p.ToolIds = val
 }
+
 func (p *CreateAppReq) SetLogo(val string) {
 	p.Logo = val
 }
+
 func (p *CreateAppReq) SetLabelIds(val []int64) {
 	p.LabelIds = val
 }
+
 func (p *CreateAppReq) SetLabelTexts(val []string) {
 	p.LabelTexts = val
 }
+
 func (p *CreateAppReq) SetModelConfig(val *ModelConfig) {
 	p.ModelConfig = val
 }
@@ -3146,7 +3204,6 @@ func (p *CreateAppReq) IsSetModelConfig() bool {
 }
 
 func (p *CreateAppReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetName bool = false
@@ -3420,7 +3477,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *CreateAppReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -3430,8 +3486,8 @@ func (p *CreateAppReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *CreateAppReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *CreateAppReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -3441,8 +3497,8 @@ func (p *CreateAppReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *CreateAppReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *CreateAppReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -3452,8 +3508,8 @@ func (p *CreateAppReq) ReadField3(iprot thrift.TProtocol) error {
 	p.DescriptionMd = _field
 	return nil
 }
-func (p *CreateAppReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *CreateAppReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -3463,8 +3519,8 @@ func (p *CreateAppReq) ReadField4(iprot thrift.TProtocol) error {
 	p.ModelId = _field
 	return nil
 }
-func (p *CreateAppReq) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *CreateAppReq) ReadField5(iprot thrift.TProtocol) error {
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -3474,8 +3530,8 @@ func (p *CreateAppReq) ReadField5(iprot thrift.TProtocol) error {
 	p.EnableImage = _field
 	return nil
 }
-func (p *CreateAppReq) ReadField6(iprot thrift.TProtocol) error {
 
+func (p *CreateAppReq) ReadField6(iprot thrift.TProtocol) error {
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -3485,8 +3541,8 @@ func (p *CreateAppReq) ReadField6(iprot thrift.TProtocol) error {
 	p.EnableFile = _field
 	return nil
 }
-func (p *CreateAppReq) ReadField7(iprot thrift.TProtocol) error {
 
+func (p *CreateAppReq) ReadField7(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -3496,8 +3552,8 @@ func (p *CreateAppReq) ReadField7(iprot thrift.TProtocol) error {
 	p.Version = _field
 	return nil
 }
-func (p *CreateAppReq) ReadField8(iprot thrift.TProtocol) error {
 
+func (p *CreateAppReq) ReadField8(iprot thrift.TProtocol) error {
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -3507,8 +3563,8 @@ func (p *CreateAppReq) ReadField8(iprot thrift.TProtocol) error {
 	p.IsPrivate = _field
 	return nil
 }
-func (p *CreateAppReq) ReadField9(iprot thrift.TProtocol) error {
 
+func (p *CreateAppReq) ReadField9(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -3518,6 +3574,7 @@ func (p *CreateAppReq) ReadField9(iprot thrift.TProtocol) error {
 	p.HomePage = _field
 	return nil
 }
+
 func (p *CreateAppReq) ReadField10(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -3541,6 +3598,7 @@ func (p *CreateAppReq) ReadField10(iprot thrift.TProtocol) error {
 	p.PresetQuestions = _field
 	return nil
 }
+
 func (p *CreateAppReq) ReadField11(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -3564,8 +3622,8 @@ func (p *CreateAppReq) ReadField11(iprot thrift.TProtocol) error {
 	p.ToolIds = _field
 	return nil
 }
-func (p *CreateAppReq) ReadField12(iprot thrift.TProtocol) error {
 
+func (p *CreateAppReq) ReadField12(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -3575,6 +3633,7 @@ func (p *CreateAppReq) ReadField12(iprot thrift.TProtocol) error {
 	p.Logo = _field
 	return nil
 }
+
 func (p *CreateAppReq) ReadField13(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -3598,6 +3657,7 @@ func (p *CreateAppReq) ReadField13(iprot thrift.TProtocol) error {
 	p.LabelIds = _field
 	return nil
 }
+
 func (p *CreateAppReq) ReadField14(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -3621,6 +3681,7 @@ func (p *CreateAppReq) ReadField14(iprot thrift.TProtocol) error {
 	p.LabelTexts = _field
 	return nil
 }
+
 func (p *CreateAppReq) ReadField15(iprot thrift.TProtocol) error {
 	_field := NewModelConfig()
 	if err := _field.Read(iprot); err != nil {
@@ -4006,7 +4067,6 @@ func (p *CreateAppReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("CreateAppReq(%+v)", *p)
-
 }
 
 func (p *CreateAppReq) DeepEqual(ano *CreateAppReq) bool {
@@ -4064,70 +4124,69 @@ func (p *CreateAppReq) DeepEqual(ano *CreateAppReq) bool {
 }
 
 func (p *CreateAppReq) Field1DeepEqual(src string) bool {
-
 	if strings.Compare(p.Name, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreateAppReq) Field2DeepEqual(src string) bool {
 
+func (p *CreateAppReq) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Description, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreateAppReq) Field3DeepEqual(src string) bool {
 
+func (p *CreateAppReq) Field3DeepEqual(src string) bool {
 	if strings.Compare(p.DescriptionMd, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreateAppReq) Field4DeepEqual(src int64) bool {
 
+func (p *CreateAppReq) Field4DeepEqual(src int64) bool {
 	if p.ModelId != src {
 		return false
 	}
 	return true
 }
-func (p *CreateAppReq) Field5DeepEqual(src bool) bool {
 
+func (p *CreateAppReq) Field5DeepEqual(src bool) bool {
 	if p.EnableImage != src {
 		return false
 	}
 	return true
 }
-func (p *CreateAppReq) Field6DeepEqual(src bool) bool {
 
+func (p *CreateAppReq) Field6DeepEqual(src bool) bool {
 	if p.EnableFile != src {
 		return false
 	}
 	return true
 }
-func (p *CreateAppReq) Field7DeepEqual(src string) bool {
 
+func (p *CreateAppReq) Field7DeepEqual(src string) bool {
 	if strings.Compare(p.Version, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreateAppReq) Field8DeepEqual(src bool) bool {
 
+func (p *CreateAppReq) Field8DeepEqual(src bool) bool {
 	if p.IsPrivate != src {
 		return false
 	}
 	return true
 }
-func (p *CreateAppReq) Field9DeepEqual(src string) bool {
 
+func (p *CreateAppReq) Field9DeepEqual(src string) bool {
 	if strings.Compare(p.HomePage, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreateAppReq) Field10DeepEqual(src []string) bool {
 
+func (p *CreateAppReq) Field10DeepEqual(src []string) bool {
 	if len(p.PresetQuestions) != len(src) {
 		return false
 	}
@@ -4139,8 +4198,8 @@ func (p *CreateAppReq) Field10DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *CreateAppReq) Field11DeepEqual(src []int64) bool {
 
+func (p *CreateAppReq) Field11DeepEqual(src []int64) bool {
 	if len(p.ToolIds) != len(src) {
 		return false
 	}
@@ -4152,15 +4211,15 @@ func (p *CreateAppReq) Field11DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *CreateAppReq) Field12DeepEqual(src string) bool {
 
+func (p *CreateAppReq) Field12DeepEqual(src string) bool {
 	if strings.Compare(p.Logo, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreateAppReq) Field13DeepEqual(src []int64) bool {
 
+func (p *CreateAppReq) Field13DeepEqual(src []int64) bool {
 	if len(p.LabelIds) != len(src) {
 		return false
 	}
@@ -4172,8 +4231,8 @@ func (p *CreateAppReq) Field13DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *CreateAppReq) Field14DeepEqual(src []string) bool {
 
+func (p *CreateAppReq) Field14DeepEqual(src []string) bool {
 	if len(p.LabelTexts) != len(src) {
 		return false
 	}
@@ -4185,8 +4244,8 @@ func (p *CreateAppReq) Field14DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *CreateAppReq) Field15DeepEqual(src *ModelConfig) bool {
 
+func (p *CreateAppReq) Field15DeepEqual(src *ModelConfig) bool {
 	if !p.ModelConfig.DeepEqual(src) {
 		return false
 	}
@@ -4194,7 +4253,7 @@ func (p *CreateAppReq) Field15DeepEqual(src *ModelConfig) bool {
 }
 
 type UpdateAppReq struct {
-	Id              int64        `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Id              int64        `thrift:"id,1,required" frugal:"1,required,i64" path:"id"`
 	Name            *string      `thrift:"name,2,optional" frugal:"2,optional,string" json:"name,omitempty"`
 	Description     *string      `thrift:"description,3,optional" frugal:"3,optional,string" json:"description,omitempty"`
 	DescriptionMd   *string      `thrift:"description_md,4,optional" frugal:"4,optional,string" json:"description_md,omitempty"`
@@ -4357,51 +4416,67 @@ func (p *UpdateAppReq) GetModelConfig() (v *ModelConfig) {
 	}
 	return p.ModelConfig
 }
+
 func (p *UpdateAppReq) SetId(val int64) {
 	p.Id = val
 }
+
 func (p *UpdateAppReq) SetName(val *string) {
 	p.Name = val
 }
+
 func (p *UpdateAppReq) SetDescription(val *string) {
 	p.Description = val
 }
+
 func (p *UpdateAppReq) SetDescriptionMd(val *string) {
 	p.DescriptionMd = val
 }
+
 func (p *UpdateAppReq) SetModelId(val *int64) {
 	p.ModelId = val
 }
+
 func (p *UpdateAppReq) SetEnableImage(val *bool) {
 	p.EnableImage = val
 }
+
 func (p *UpdateAppReq) SetEnableFile(val *bool) {
 	p.EnableFile = val
 }
+
 func (p *UpdateAppReq) SetVersion(val *string) {
 	p.Version = val
 }
+
 func (p *UpdateAppReq) SetIsPrivate(val *bool) {
 	p.IsPrivate = val
 }
+
 func (p *UpdateAppReq) SetHomePage(val *string) {
 	p.HomePage = val
 }
+
 func (p *UpdateAppReq) SetPresetQuestions(val []string) {
 	p.PresetQuestions = val
 }
+
 func (p *UpdateAppReq) SetToolIds(val []int64) {
 	p.ToolIds = val
 }
+
 func (p *UpdateAppReq) SetLogo(val *string) {
 	p.Logo = val
 }
+
 func (p *UpdateAppReq) SetLabelIds(val []int64) {
 	p.LabelIds = val
 }
+
 func (p *UpdateAppReq) SetLabelTexts(val []string) {
 	p.LabelTexts = val
 }
+
 func (p *UpdateAppReq) SetModelConfig(val *ModelConfig) {
 	p.ModelConfig = val
 }
@@ -4486,7 +4561,6 @@ func (p *UpdateAppReq) IsSetModelConfig() bool {
 }
 
 func (p *UpdateAppReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -4670,7 +4744,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *UpdateAppReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -4680,8 +4753,8 @@ func (p *UpdateAppReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Id = _field
 	return nil
 }
-func (p *UpdateAppReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *UpdateAppReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -4691,8 +4764,8 @@ func (p *UpdateAppReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *UpdateAppReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *UpdateAppReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -4702,8 +4775,8 @@ func (p *UpdateAppReq) ReadField3(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *UpdateAppReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *UpdateAppReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -4713,8 +4786,8 @@ func (p *UpdateAppReq) ReadField4(iprot thrift.TProtocol) error {
 	p.DescriptionMd = _field
 	return nil
 }
-func (p *UpdateAppReq) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *UpdateAppReq) ReadField5(iprot thrift.TProtocol) error {
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -4724,8 +4797,8 @@ func (p *UpdateAppReq) ReadField5(iprot thrift.TProtocol) error {
 	p.ModelId = _field
 	return nil
 }
-func (p *UpdateAppReq) ReadField6(iprot thrift.TProtocol) error {
 
+func (p *UpdateAppReq) ReadField6(iprot thrift.TProtocol) error {
 	var _field *bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -4735,8 +4808,8 @@ func (p *UpdateAppReq) ReadField6(iprot thrift.TProtocol) error {
 	p.EnableImage = _field
 	return nil
 }
-func (p *UpdateAppReq) ReadField7(iprot thrift.TProtocol) error {
 
+func (p *UpdateAppReq) ReadField7(iprot thrift.TProtocol) error {
 	var _field *bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -4746,8 +4819,8 @@ func (p *UpdateAppReq) ReadField7(iprot thrift.TProtocol) error {
 	p.EnableFile = _field
 	return nil
 }
-func (p *UpdateAppReq) ReadField8(iprot thrift.TProtocol) error {
 
+func (p *UpdateAppReq) ReadField8(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -4757,8 +4830,8 @@ func (p *UpdateAppReq) ReadField8(iprot thrift.TProtocol) error {
 	p.Version = _field
 	return nil
 }
-func (p *UpdateAppReq) ReadField9(iprot thrift.TProtocol) error {
 
+func (p *UpdateAppReq) ReadField9(iprot thrift.TProtocol) error {
 	var _field *bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -4768,8 +4841,8 @@ func (p *UpdateAppReq) ReadField9(iprot thrift.TProtocol) error {
 	p.IsPrivate = _field
 	return nil
 }
-func (p *UpdateAppReq) ReadField10(iprot thrift.TProtocol) error {
 
+func (p *UpdateAppReq) ReadField10(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -4779,6 +4852,7 @@ func (p *UpdateAppReq) ReadField10(iprot thrift.TProtocol) error {
 	p.HomePage = _field
 	return nil
 }
+
 func (p *UpdateAppReq) ReadField11(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -4802,6 +4876,7 @@ func (p *UpdateAppReq) ReadField11(iprot thrift.TProtocol) error {
 	p.PresetQuestions = _field
 	return nil
 }
+
 func (p *UpdateAppReq) ReadField12(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -4825,8 +4900,8 @@ func (p *UpdateAppReq) ReadField12(iprot thrift.TProtocol) error {
 	p.ToolIds = _field
 	return nil
 }
-func (p *UpdateAppReq) ReadField13(iprot thrift.TProtocol) error {
 
+func (p *UpdateAppReq) ReadField13(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -4836,6 +4911,7 @@ func (p *UpdateAppReq) ReadField13(iprot thrift.TProtocol) error {
 	p.Logo = _field
 	return nil
 }
+
 func (p *UpdateAppReq) ReadField14(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -4859,6 +4935,7 @@ func (p *UpdateAppReq) ReadField14(iprot thrift.TProtocol) error {
 	p.LabelIds = _field
 	return nil
 }
+
 func (p *UpdateAppReq) ReadField15(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -4882,6 +4959,7 @@ func (p *UpdateAppReq) ReadField15(iprot thrift.TProtocol) error {
 	p.LabelTexts = _field
 	return nil
 }
+
 func (p *UpdateAppReq) ReadField16(iprot thrift.TProtocol) error {
 	_field := NewModelConfig()
 	if err := _field.Read(iprot); err != nil {
@@ -5318,7 +5396,6 @@ func (p *UpdateAppReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("UpdateAppReq(%+v)", *p)
-
 }
 
 func (p *UpdateAppReq) DeepEqual(ano *UpdateAppReq) bool {
@@ -5379,14 +5456,13 @@ func (p *UpdateAppReq) DeepEqual(ano *UpdateAppReq) bool {
 }
 
 func (p *UpdateAppReq) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
 	return true
 }
-func (p *UpdateAppReq) Field2DeepEqual(src *string) bool {
 
+func (p *UpdateAppReq) Field2DeepEqual(src *string) bool {
 	if p.Name == src {
 		return true
 	} else if p.Name == nil || src == nil {
@@ -5397,8 +5473,8 @@ func (p *UpdateAppReq) Field2DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field3DeepEqual(src *string) bool {
 
+func (p *UpdateAppReq) Field3DeepEqual(src *string) bool {
 	if p.Description == src {
 		return true
 	} else if p.Description == nil || src == nil {
@@ -5409,8 +5485,8 @@ func (p *UpdateAppReq) Field3DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field4DeepEqual(src *string) bool {
 
+func (p *UpdateAppReq) Field4DeepEqual(src *string) bool {
 	if p.DescriptionMd == src {
 		return true
 	} else if p.DescriptionMd == nil || src == nil {
@@ -5421,8 +5497,8 @@ func (p *UpdateAppReq) Field4DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field5DeepEqual(src *int64) bool {
 
+func (p *UpdateAppReq) Field5DeepEqual(src *int64) bool {
 	if p.ModelId == src {
 		return true
 	} else if p.ModelId == nil || src == nil {
@@ -5433,8 +5509,8 @@ func (p *UpdateAppReq) Field5DeepEqual(src *int64) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field6DeepEqual(src *bool) bool {
 
+func (p *UpdateAppReq) Field6DeepEqual(src *bool) bool {
 	if p.EnableImage == src {
 		return true
 	} else if p.EnableImage == nil || src == nil {
@@ -5445,8 +5521,8 @@ func (p *UpdateAppReq) Field6DeepEqual(src *bool) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field7DeepEqual(src *bool) bool {
 
+func (p *UpdateAppReq) Field7DeepEqual(src *bool) bool {
 	if p.EnableFile == src {
 		return true
 	} else if p.EnableFile == nil || src == nil {
@@ -5457,8 +5533,8 @@ func (p *UpdateAppReq) Field7DeepEqual(src *bool) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field8DeepEqual(src *string) bool {
 
+func (p *UpdateAppReq) Field8DeepEqual(src *string) bool {
 	if p.Version == src {
 		return true
 	} else if p.Version == nil || src == nil {
@@ -5469,8 +5545,8 @@ func (p *UpdateAppReq) Field8DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field9DeepEqual(src *bool) bool {
 
+func (p *UpdateAppReq) Field9DeepEqual(src *bool) bool {
 	if p.IsPrivate == src {
 		return true
 	} else if p.IsPrivate == nil || src == nil {
@@ -5481,8 +5557,8 @@ func (p *UpdateAppReq) Field9DeepEqual(src *bool) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field10DeepEqual(src *string) bool {
 
+func (p *UpdateAppReq) Field10DeepEqual(src *string) bool {
 	if p.HomePage == src {
 		return true
 	} else if p.HomePage == nil || src == nil {
@@ -5493,8 +5569,8 @@ func (p *UpdateAppReq) Field10DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field11DeepEqual(src []string) bool {
 
+func (p *UpdateAppReq) Field11DeepEqual(src []string) bool {
 	if len(p.PresetQuestions) != len(src) {
 		return false
 	}
@@ -5506,8 +5582,8 @@ func (p *UpdateAppReq) Field11DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field12DeepEqual(src []int64) bool {
 
+func (p *UpdateAppReq) Field12DeepEqual(src []int64) bool {
 	if len(p.ToolIds) != len(src) {
 		return false
 	}
@@ -5519,8 +5595,8 @@ func (p *UpdateAppReq) Field12DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field13DeepEqual(src *string) bool {
 
+func (p *UpdateAppReq) Field13DeepEqual(src *string) bool {
 	if p.Logo == src {
 		return true
 	} else if p.Logo == nil || src == nil {
@@ -5531,8 +5607,8 @@ func (p *UpdateAppReq) Field13DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field14DeepEqual(src []int64) bool {
 
+func (p *UpdateAppReq) Field14DeepEqual(src []int64) bool {
 	if len(p.LabelIds) != len(src) {
 		return false
 	}
@@ -5544,8 +5620,8 @@ func (p *UpdateAppReq) Field14DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field15DeepEqual(src []string) bool {
 
+func (p *UpdateAppReq) Field15DeepEqual(src []string) bool {
 	if len(p.LabelTexts) != len(src) {
 		return false
 	}
@@ -5557,8 +5633,8 @@ func (p *UpdateAppReq) Field15DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *UpdateAppReq) Field16DeepEqual(src *ModelConfig) bool {
 
+func (p *UpdateAppReq) Field16DeepEqual(src *ModelConfig) bool {
 	if !p.ModelConfig.DeepEqual(src) {
 		return false
 	}
@@ -5624,18 +5700,23 @@ func (p *ListAppReq) GetLabels() (v []string) {
 	}
 	return p.Labels
 }
+
 func (p *ListAppReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
 }
+
 func (p *ListAppReq) SetAuthorId(val *int64) {
 	p.AuthorId = val
 }
+
 func (p *ListAppReq) SetName(val *string) {
 	p.Name = val
 }
+
 func (p *ListAppReq) SetDescription(val *string) {
 	p.Description = val
 }
+
 func (p *ListAppReq) SetLabels(val []string) {
 	p.Labels = val
 }
@@ -5669,7 +5750,6 @@ func (p *ListAppReq) IsSetLabels() bool {
 }
 
 func (p *ListAppReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
@@ -5772,8 +5852,8 @@ func (p *ListAppReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Pagination = _field
 	return nil
 }
-func (p *ListAppReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *ListAppReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -5783,8 +5863,8 @@ func (p *ListAppReq) ReadField2(iprot thrift.TProtocol) error {
 	p.AuthorId = _field
 	return nil
 }
-func (p *ListAppReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *ListAppReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -5794,8 +5874,8 @@ func (p *ListAppReq) ReadField3(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *ListAppReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *ListAppReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -5805,6 +5885,7 @@ func (p *ListAppReq) ReadField4(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
+
 func (p *ListAppReq) ReadField5(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -5979,7 +6060,6 @@ func (p *ListAppReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListAppReq(%+v)", *p)
-
 }
 
 func (p *ListAppReq) DeepEqual(ano *ListAppReq) bool {
@@ -6007,14 +6087,13 @@ func (p *ListAppReq) DeepEqual(ano *ListAppReq) bool {
 }
 
 func (p *ListAppReq) Field1DeepEqual(src *base.PaginationReq) bool {
-
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ListAppReq) Field2DeepEqual(src *int64) bool {
 
+func (p *ListAppReq) Field2DeepEqual(src *int64) bool {
 	if p.AuthorId == src {
 		return true
 	} else if p.AuthorId == nil || src == nil {
@@ -6025,8 +6104,8 @@ func (p *ListAppReq) Field2DeepEqual(src *int64) bool {
 	}
 	return true
 }
-func (p *ListAppReq) Field3DeepEqual(src *string) bool {
 
+func (p *ListAppReq) Field3DeepEqual(src *string) bool {
 	if p.Name == src {
 		return true
 	} else if p.Name == nil || src == nil {
@@ -6037,8 +6116,8 @@ func (p *ListAppReq) Field3DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *ListAppReq) Field4DeepEqual(src *string) bool {
 
+func (p *ListAppReq) Field4DeepEqual(src *string) bool {
 	if p.Description == src {
 		return true
 	} else if p.Description == nil || src == nil {
@@ -6049,8 +6128,8 @@ func (p *ListAppReq) Field4DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *ListAppReq) Field5DeepEqual(src []string) bool {
 
+func (p *ListAppReq) Field5DeepEqual(src []string) bool {
 	if len(p.Labels) != len(src) {
 		return false
 	}
@@ -6087,9 +6166,11 @@ func (p *ListAppResp) GetPagination() (v *base.PaginationResp) {
 func (p *ListAppResp) GetApps() (v []*App) {
 	return p.Apps
 }
+
 func (p *ListAppResp) SetPagination(val *base.PaginationResp) {
 	p.Pagination = val
 }
+
 func (p *ListAppResp) SetApps(val []*App) {
 	p.Apps = val
 }
@@ -6104,7 +6185,6 @@ func (p *ListAppResp) IsSetPagination() bool {
 }
 
 func (p *ListAppResp) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
@@ -6190,6 +6270,7 @@ func (p *ListAppResp) ReadField1(iprot thrift.TProtocol) error {
 	p.Pagination = _field
 	return nil
 }
+
 func (p *ListAppResp) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -6293,7 +6374,6 @@ func (p *ListAppResp) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListAppResp(%+v)", *p)
-
 }
 
 func (p *ListAppResp) DeepEqual(ano *ListAppResp) bool {
@@ -6312,14 +6392,13 @@ func (p *ListAppResp) DeepEqual(ano *ListAppResp) bool {
 }
 
 func (p *ListAppResp) Field1DeepEqual(src *base.PaginationResp) bool {
-
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ListAppResp) Field2DeepEqual(src []*App) bool {
 
+func (p *ListAppResp) Field2DeepEqual(src []*App) bool {
 	if len(p.Apps) != len(src) {
 		return false
 	}
@@ -6351,9 +6430,11 @@ func (p *PublishAppReq) GetId() (v int64) {
 func (p *PublishAppReq) GetVersion() (v string) {
 	return p.Version
 }
+
 func (p *PublishAppReq) SetId(val int64) {
 	p.Id = val
 }
+
 func (p *PublishAppReq) SetVersion(val string) {
 	p.Version = val
 }
@@ -6364,7 +6445,6 @@ var fieldIDToName_PublishAppReq = map[int16]string{
 }
 
 func (p *PublishAppReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -6443,7 +6523,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *PublishAppReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -6453,8 +6532,8 @@ func (p *PublishAppReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Id = _field
 	return nil
 }
-func (p *PublishAppReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *PublishAppReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -6536,7 +6615,6 @@ func (p *PublishAppReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PublishAppReq(%+v)", *p)
-
 }
 
 func (p *PublishAppReq) DeepEqual(ano *PublishAppReq) bool {
@@ -6555,14 +6633,13 @@ func (p *PublishAppReq) DeepEqual(ano *PublishAppReq) bool {
 }
 
 func (p *PublishAppReq) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
 	return true
 }
-func (p *PublishAppReq) Field2DeepEqual(src string) bool {
 
+func (p *PublishAppReq) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Version, src) != 0 {
 		return false
 	}
@@ -6598,12 +6675,15 @@ func (p *AppLabel) GetCreatedAt() (v *base.Time) {
 	}
 	return p.CreatedAt
 }
+
 func (p *AppLabel) SetId(val int64) {
 	p.Id = val
 }
+
 func (p *AppLabel) SetText(val string) {
 	p.Text = val
 }
+
 func (p *AppLabel) SetCreatedAt(val *base.Time) {
 	p.CreatedAt = val
 }
@@ -6619,7 +6699,6 @@ func (p *AppLabel) IsSetCreatedAt() bool {
 }
 
 func (p *AppLabel) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -6713,7 +6792,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *AppLabel) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -6723,8 +6801,8 @@ func (p *AppLabel) ReadField1(iprot thrift.TProtocol) error {
 	p.Id = _field
 	return nil
 }
-func (p *AppLabel) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *AppLabel) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -6734,6 +6812,7 @@ func (p *AppLabel) ReadField2(iprot thrift.TProtocol) error {
 	p.Text = _field
 	return nil
 }
+
 func (p *AppLabel) ReadField3(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -6835,7 +6914,6 @@ func (p *AppLabel) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppLabel(%+v)", *p)
-
 }
 
 func (p *AppLabel) DeepEqual(ano *AppLabel) bool {
@@ -6857,21 +6935,20 @@ func (p *AppLabel) DeepEqual(ano *AppLabel) bool {
 }
 
 func (p *AppLabel) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
 	return true
 }
-func (p *AppLabel) Field2DeepEqual(src string) bool {
 
+func (p *AppLabel) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Text, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *AppLabel) Field3DeepEqual(src *base.Time) bool {
 
+func (p *AppLabel) Field3DeepEqual(src *base.Time) bool {
 	if !p.CreatedAt.DeepEqual(src) {
 		return false
 	}
@@ -6880,7 +6957,7 @@ func (p *AppLabel) Field3DeepEqual(src *base.Time) bool {
 
 type ListAppLabelReq struct {
 	Pagination *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
-	Text       *string             `thrift:"text,2,optional" frugal:"2,optional,string" json:"text,omitempty"`
+	Text       *string             `thrift:"text,2,optional" frugal:"2,optional,string" query:"text"`
 }
 
 func NewListAppLabelReq() *ListAppLabelReq {
@@ -6907,9 +6984,11 @@ func (p *ListAppLabelReq) GetText() (v string) {
 	}
 	return *p.Text
 }
+
 func (p *ListAppLabelReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
 }
+
 func (p *ListAppLabelReq) SetText(val *string) {
 	p.Text = val
 }
@@ -6928,7 +7007,6 @@ func (p *ListAppLabelReq) IsSetText() bool {
 }
 
 func (p *ListAppLabelReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
@@ -7007,8 +7085,8 @@ func (p *ListAppLabelReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Pagination = _field
 	return nil
 }
-func (p *ListAppLabelReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *ListAppLabelReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -7092,7 +7170,6 @@ func (p *ListAppLabelReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListAppLabelReq(%+v)", *p)
-
 }
 
 func (p *ListAppLabelReq) DeepEqual(ano *ListAppLabelReq) bool {
@@ -7111,14 +7188,13 @@ func (p *ListAppLabelReq) DeepEqual(ano *ListAppLabelReq) bool {
 }
 
 func (p *ListAppLabelReq) Field1DeepEqual(src *base.PaginationReq) bool {
-
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ListAppLabelReq) Field2DeepEqual(src *string) bool {
 
+func (p *ListAppLabelReq) Field2DeepEqual(src *string) bool {
 	if p.Text == src {
 		return true
 	} else if p.Text == nil || src == nil {
@@ -7154,9 +7230,11 @@ func (p *ListAppLabelResp) GetPagination() (v *base.PaginationResp) {
 func (p *ListAppLabelResp) GetLabels() (v []*AppLabel) {
 	return p.Labels
 }
+
 func (p *ListAppLabelResp) SetPagination(val *base.PaginationResp) {
 	p.Pagination = val
 }
+
 func (p *ListAppLabelResp) SetLabels(val []*AppLabel) {
 	p.Labels = val
 }
@@ -7171,7 +7249,6 @@ func (p *ListAppLabelResp) IsSetPagination() bool {
 }
 
 func (p *ListAppLabelResp) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
@@ -7257,6 +7334,7 @@ func (p *ListAppLabelResp) ReadField1(iprot thrift.TProtocol) error {
 	p.Pagination = _field
 	return nil
 }
+
 func (p *ListAppLabelResp) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -7360,7 +7438,6 @@ func (p *ListAppLabelResp) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListAppLabelResp(%+v)", *p)
-
 }
 
 func (p *ListAppLabelResp) DeepEqual(ano *ListAppLabelResp) bool {
@@ -7379,14 +7456,13 @@ func (p *ListAppLabelResp) DeepEqual(ano *ListAppLabelResp) bool {
 }
 
 func (p *ListAppLabelResp) Field1DeepEqual(src *base.PaginationResp) bool {
-
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ListAppLabelResp) Field2DeepEqual(src []*AppLabel) bool {
 
+func (p *ListAppLabelResp) Field2DeepEqual(src []*AppLabel) bool {
 	if len(p.Labels) != len(src) {
 		return false
 	}
@@ -7434,6 +7510,7 @@ func (p *AppServiceCreateAppArgs) GetReq() (v *CreateAppReq) {
 	}
 	return p.Req
 }
+
 func (p *AppServiceCreateAppArgs) SetReq(val *CreateAppReq) {
 	p.Req = val
 }
@@ -7447,7 +7524,6 @@ func (p *AppServiceCreateAppArgs) IsSetReq() bool {
 }
 
 func (p *AppServiceCreateAppArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -7561,7 +7637,6 @@ func (p *AppServiceCreateAppArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceCreateAppArgs(%+v)", *p)
-
 }
 
 func (p *AppServiceCreateAppArgs) DeepEqual(ano *AppServiceCreateAppArgs) bool {
@@ -7577,7 +7652,6 @@ func (p *AppServiceCreateAppArgs) DeepEqual(ano *AppServiceCreateAppArgs) bool {
 }
 
 func (p *AppServiceCreateAppArgs) Field1DeepEqual(src *CreateAppReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -7603,6 +7677,7 @@ func (p *AppServiceCreateAppResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *AppServiceCreateAppResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -7616,7 +7691,6 @@ func (p *AppServiceCreateAppResult) IsSetSuccess() bool {
 }
 
 func (p *AppServiceCreateAppResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -7732,7 +7806,6 @@ func (p *AppServiceCreateAppResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceCreateAppResult(%+v)", *p)
-
 }
 
 func (p *AppServiceCreateAppResult) DeepEqual(ano *AppServiceCreateAppResult) bool {
@@ -7748,7 +7821,6 @@ func (p *AppServiceCreateAppResult) DeepEqual(ano *AppServiceCreateAppResult) bo
 }
 
 func (p *AppServiceCreateAppResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -7774,6 +7846,7 @@ func (p *AppServiceUpdateAppArgs) GetReq() (v *UpdateAppReq) {
 	}
 	return p.Req
 }
+
 func (p *AppServiceUpdateAppArgs) SetReq(val *UpdateAppReq) {
 	p.Req = val
 }
@@ -7787,7 +7860,6 @@ func (p *AppServiceUpdateAppArgs) IsSetReq() bool {
 }
 
 func (p *AppServiceUpdateAppArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -7901,7 +7973,6 @@ func (p *AppServiceUpdateAppArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceUpdateAppArgs(%+v)", *p)
-
 }
 
 func (p *AppServiceUpdateAppArgs) DeepEqual(ano *AppServiceUpdateAppArgs) bool {
@@ -7917,7 +7988,6 @@ func (p *AppServiceUpdateAppArgs) DeepEqual(ano *AppServiceUpdateAppArgs) bool {
 }
 
 func (p *AppServiceUpdateAppArgs) Field1DeepEqual(src *UpdateAppReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -7943,6 +8013,7 @@ func (p *AppServiceUpdateAppResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *AppServiceUpdateAppResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -7956,7 +8027,6 @@ func (p *AppServiceUpdateAppResult) IsSetSuccess() bool {
 }
 
 func (p *AppServiceUpdateAppResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -8072,7 +8142,6 @@ func (p *AppServiceUpdateAppResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceUpdateAppResult(%+v)", *p)
-
 }
 
 func (p *AppServiceUpdateAppResult) DeepEqual(ano *AppServiceUpdateAppResult) bool {
@@ -8088,7 +8157,6 @@ func (p *AppServiceUpdateAppResult) DeepEqual(ano *AppServiceUpdateAppResult) bo
 }
 
 func (p *AppServiceUpdateAppResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -8114,6 +8182,7 @@ func (p *AppServiceDeleteAppArgs) GetReq() (v *base.IDReq) {
 	}
 	return p.Req
 }
+
 func (p *AppServiceDeleteAppArgs) SetReq(val *base.IDReq) {
 	p.Req = val
 }
@@ -8127,7 +8196,6 @@ func (p *AppServiceDeleteAppArgs) IsSetReq() bool {
 }
 
 func (p *AppServiceDeleteAppArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -8241,7 +8309,6 @@ func (p *AppServiceDeleteAppArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceDeleteAppArgs(%+v)", *p)
-
 }
 
 func (p *AppServiceDeleteAppArgs) DeepEqual(ano *AppServiceDeleteAppArgs) bool {
@@ -8257,7 +8324,6 @@ func (p *AppServiceDeleteAppArgs) DeepEqual(ano *AppServiceDeleteAppArgs) bool {
 }
 
 func (p *AppServiceDeleteAppArgs) Field1DeepEqual(src *base.IDReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -8283,6 +8349,7 @@ func (p *AppServiceDeleteAppResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *AppServiceDeleteAppResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -8296,7 +8363,6 @@ func (p *AppServiceDeleteAppResult) IsSetSuccess() bool {
 }
 
 func (p *AppServiceDeleteAppResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -8412,7 +8478,6 @@ func (p *AppServiceDeleteAppResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceDeleteAppResult(%+v)", *p)
-
 }
 
 func (p *AppServiceDeleteAppResult) DeepEqual(ano *AppServiceDeleteAppResult) bool {
@@ -8428,7 +8493,6 @@ func (p *AppServiceDeleteAppResult) DeepEqual(ano *AppServiceDeleteAppResult) bo
 }
 
 func (p *AppServiceDeleteAppResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -8454,6 +8518,7 @@ func (p *AppServiceGetAppByIDArgs) GetReq() (v *base.IDReq) {
 	}
 	return p.Req
 }
+
 func (p *AppServiceGetAppByIDArgs) SetReq(val *base.IDReq) {
 	p.Req = val
 }
@@ -8467,7 +8532,6 @@ func (p *AppServiceGetAppByIDArgs) IsSetReq() bool {
 }
 
 func (p *AppServiceGetAppByIDArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -8581,7 +8645,6 @@ func (p *AppServiceGetAppByIDArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceGetAppByIDArgs(%+v)", *p)
-
 }
 
 func (p *AppServiceGetAppByIDArgs) DeepEqual(ano *AppServiceGetAppByIDArgs) bool {
@@ -8597,7 +8660,6 @@ func (p *AppServiceGetAppByIDArgs) DeepEqual(ano *AppServiceGetAppByIDArgs) bool
 }
 
 func (p *AppServiceGetAppByIDArgs) Field1DeepEqual(src *base.IDReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -8623,6 +8685,7 @@ func (p *AppServiceGetAppByIDResult) GetSuccess() (v *App) {
 	}
 	return p.Success
 }
+
 func (p *AppServiceGetAppByIDResult) SetSuccess(x interface{}) {
 	p.Success = x.(*App)
 }
@@ -8636,7 +8699,6 @@ func (p *AppServiceGetAppByIDResult) IsSetSuccess() bool {
 }
 
 func (p *AppServiceGetAppByIDResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -8752,7 +8814,6 @@ func (p *AppServiceGetAppByIDResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceGetAppByIDResult(%+v)", *p)
-
 }
 
 func (p *AppServiceGetAppByIDResult) DeepEqual(ano *AppServiceGetAppByIDResult) bool {
@@ -8768,7 +8829,6 @@ func (p *AppServiceGetAppByIDResult) DeepEqual(ano *AppServiceGetAppByIDResult) 
 }
 
 func (p *AppServiceGetAppByIDResult) Field0DeepEqual(src *App) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -8794,6 +8854,7 @@ func (p *AppServiceListAppArgs) GetReq() (v *ListAppReq) {
 	}
 	return p.Req
 }
+
 func (p *AppServiceListAppArgs) SetReq(val *ListAppReq) {
 	p.Req = val
 }
@@ -8807,7 +8868,6 @@ func (p *AppServiceListAppArgs) IsSetReq() bool {
 }
 
 func (p *AppServiceListAppArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -8921,7 +8981,6 @@ func (p *AppServiceListAppArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceListAppArgs(%+v)", *p)
-
 }
 
 func (p *AppServiceListAppArgs) DeepEqual(ano *AppServiceListAppArgs) bool {
@@ -8937,7 +8996,6 @@ func (p *AppServiceListAppArgs) DeepEqual(ano *AppServiceListAppArgs) bool {
 }
 
 func (p *AppServiceListAppArgs) Field1DeepEqual(src *ListAppReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -8963,6 +9021,7 @@ func (p *AppServiceListAppResult) GetSuccess() (v *ListAppResp) {
 	}
 	return p.Success
 }
+
 func (p *AppServiceListAppResult) SetSuccess(x interface{}) {
 	p.Success = x.(*ListAppResp)
 }
@@ -8976,7 +9035,6 @@ func (p *AppServiceListAppResult) IsSetSuccess() bool {
 }
 
 func (p *AppServiceListAppResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -9092,7 +9150,6 @@ func (p *AppServiceListAppResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceListAppResult(%+v)", *p)
-
 }
 
 func (p *AppServiceListAppResult) DeepEqual(ano *AppServiceListAppResult) bool {
@@ -9108,7 +9165,6 @@ func (p *AppServiceListAppResult) DeepEqual(ano *AppServiceListAppResult) bool {
 }
 
 func (p *AppServiceListAppResult) Field0DeepEqual(src *ListAppResp) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -9134,6 +9190,7 @@ func (p *AppServicePublishAppArgs) GetReq() (v *PublishAppReq) {
 	}
 	return p.Req
 }
+
 func (p *AppServicePublishAppArgs) SetReq(val *PublishAppReq) {
 	p.Req = val
 }
@@ -9147,7 +9204,6 @@ func (p *AppServicePublishAppArgs) IsSetReq() bool {
 }
 
 func (p *AppServicePublishAppArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -9261,7 +9317,6 @@ func (p *AppServicePublishAppArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServicePublishAppArgs(%+v)", *p)
-
 }
 
 func (p *AppServicePublishAppArgs) DeepEqual(ano *AppServicePublishAppArgs) bool {
@@ -9277,7 +9332,6 @@ func (p *AppServicePublishAppArgs) DeepEqual(ano *AppServicePublishAppArgs) bool
 }
 
 func (p *AppServicePublishAppArgs) Field1DeepEqual(src *PublishAppReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -9303,6 +9357,7 @@ func (p *AppServicePublishAppResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *AppServicePublishAppResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -9316,7 +9371,6 @@ func (p *AppServicePublishAppResult) IsSetSuccess() bool {
 }
 
 func (p *AppServicePublishAppResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -9432,7 +9486,6 @@ func (p *AppServicePublishAppResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServicePublishAppResult(%+v)", *p)
-
 }
 
 func (p *AppServicePublishAppResult) DeepEqual(ano *AppServicePublishAppResult) bool {
@@ -9448,7 +9501,6 @@ func (p *AppServicePublishAppResult) DeepEqual(ano *AppServicePublishAppResult) 
 }
 
 func (p *AppServicePublishAppResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -9474,6 +9526,7 @@ func (p *AppServiceListAppLabelArgs) GetReq() (v *ListAppLabelReq) {
 	}
 	return p.Req
 }
+
 func (p *AppServiceListAppLabelArgs) SetReq(val *ListAppLabelReq) {
 	p.Req = val
 }
@@ -9487,7 +9540,6 @@ func (p *AppServiceListAppLabelArgs) IsSetReq() bool {
 }
 
 func (p *AppServiceListAppLabelArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -9601,7 +9653,6 @@ func (p *AppServiceListAppLabelArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceListAppLabelArgs(%+v)", *p)
-
 }
 
 func (p *AppServiceListAppLabelArgs) DeepEqual(ano *AppServiceListAppLabelArgs) bool {
@@ -9617,7 +9668,6 @@ func (p *AppServiceListAppLabelArgs) DeepEqual(ano *AppServiceListAppLabelArgs) 
 }
 
 func (p *AppServiceListAppLabelArgs) Field1DeepEqual(src *ListAppLabelReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -9643,6 +9693,7 @@ func (p *AppServiceListAppLabelResult) GetSuccess() (v *ListAppLabelResp) {
 	}
 	return p.Success
 }
+
 func (p *AppServiceListAppLabelResult) SetSuccess(x interface{}) {
 	p.Success = x.(*ListAppLabelResp)
 }
@@ -9656,7 +9707,6 @@ func (p *AppServiceListAppLabelResult) IsSetSuccess() bool {
 }
 
 func (p *AppServiceListAppLabelResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -9772,7 +9822,6 @@ func (p *AppServiceListAppLabelResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("AppServiceListAppLabelResult(%+v)", *p)
-
 }
 
 func (p *AppServiceListAppLabelResult) DeepEqual(ano *AppServiceListAppLabelResult) bool {
@@ -9788,7 +9837,6 @@ func (p *AppServiceListAppLabelResult) DeepEqual(ano *AppServiceListAppLabelResu
 }
 
 func (p *AppServiceListAppLabelResult) Field0DeepEqual(src *ListAppLabelResp) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}

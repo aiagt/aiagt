@@ -23,45 +23,45 @@ func NewBiz(serviceName, interfaceName string, codePrefix int) *Biz {
 	}
 }
 
-func (i *Biz) NewCodeErr(code ErrCode, err error) *BizError {
-	berr := &BizError{
-		Code:          i.Code + code,
-		ServiceName:   i.ServiceName,
-		InterfaceName: i.InterfaceName,
+func (b *Biz) NewCodeErr(code ErrCode, err error) *BizError {
+	bizErr := &BizError{
+		Code:          b.Code + code,
+		ServiceName:   b.ServiceName,
+		InterfaceName: b.InterfaceName,
 		Err:           err,
 	}
 
-	return berr
+	return bizErr
 }
 
-func (i *Biz) CodeErr(code ErrCode) *BizError {
+func (b *Biz) CodeErr(code ErrCode) *BizError {
 	err, ok := ErrMap[code]
 	if !ok {
 		err = errors.New("unknown error")
 	}
 
-	return i.NewCodeErr(code, err)
+	return b.NewCodeErr(code, err)
 }
 
-func (i *Biz) CallErr(err error) *BizError {
+func (b *Biz) CallErr(err error) *BizError {
 	be := new(BizError)
-	ok := errors.As(err, &be)
 
+	ok := errors.As(err, &be)
 	if ok {
 		return be
 	}
 
-	return i.NewErr(err)
+	return b.NewErr(err)
 }
 
-func (i *Biz) NewErr(err error) *BizError {
+func (b *Biz) NewErr(err error) *BizError {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return i.CodeErr(ErrCodeNotExists)
+		return b.CodeErr(ErrCodeNotExists)
 	} else if errors.Is(err, gorm.ErrDuplicatedKey) {
-		return i.CodeErr(ErrCodeAlreadyExists)
+		return b.CodeErr(ErrCodeAlreadyExists)
 	}
 
-	return i.NewCodeErr(ErrCodeInternal, err)
+	return b.NewCodeErr(ErrCodeServerFailure, err)
 }
 
 type BizError struct {
@@ -76,7 +76,7 @@ func (e *BizError) BizStatusCode() int32 {
 }
 
 func (e *BizError) BizMessage() string {
-	return e.Err.Error()
+	return fmt.Sprintf("<%s.%s> %s", e.ServiceName, e.InterfaceName, e.Err.Error())
 }
 
 func (e *BizError) BizExtra() map[string]string {
@@ -108,7 +108,7 @@ func (e *BizError) Logf(format string, args ...any) *BizError {
 type ErrCode int
 
 const (
-	ErrCodeInternal ErrCode = 50
+	ErrCodeServerFailure ErrCode = 50
 
 	ErrCodeBadRequest    ErrCode = 40
 	ErrCodeUnauthorized  ErrCode = 41

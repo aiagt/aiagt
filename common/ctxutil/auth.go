@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/bytedance/gopkg/cloud/metainfo"
-	"github.com/cloudwego/kitex/pkg/utils/contextmap"
 )
 
 const (
@@ -22,45 +21,35 @@ func Token(ctx context.Context) string {
 }
 
 func WithUserID(ctx context.Context, userID int64) context.Context {
-	return context.WithValue(ctx, AuthorizationUserID, userID)
-}
-
-func UserID(ctx context.Context) int64 {
-	userID, _ := ctx.Value(AuthorizationUserID).(int64)
-	return userID
-}
-
-func GetUserID(ctx context.Context) (int64, bool) {
-	userID, ok := ctx.Value(AuthorizationUserID).(int64)
-	return userID, ok
-}
-
-func Forbidden(ctx context.Context, id int64) bool {
-	userID, ok := ctx.Value(AuthorizationUserID).(int64)
-	if !ok {
-		return true
-	}
-
-	return userID != id
-}
-
-func WithContextMap(ctx context.Context) context.Context {
-	return contextmap.WithContextMap(ctx)
-}
-
-func WithMapUserID(ctx context.Context, userID int64) context.Context {
-	if m, ok := contextmap.GetContextMap(ctx); ok {
-		m.Store(AuthorizationUserID, userID)
+	if IsStreaming(ctx) {
+		ctx = WithMapValue(ctx, AuthorizationUserID, userID)
+	} else {
+		ctx = context.WithValue(ctx, AuthorizationUserID, userID)
 	}
 
 	return ctx
 }
 
-func MapUserID(ctx context.Context) int64 {
-	if m, ok := contextmap.GetContextMap(ctx); ok {
-		userID, _ := m.Load(AuthorizationUserID)
-		return userID.(int64)
+func GetUserID(ctx context.Context) (int64, bool) {
+	if IsStreaming(ctx) {
+		return GetMapValue[int64](ctx, AuthorizationUserID)
 	}
 
-	return 0
+	userID, ok := ctx.Value(AuthorizationUserID).(int64)
+
+	return userID, ok
+}
+
+func UserID(ctx context.Context) int64 {
+	userID, _ := GetUserID(ctx)
+	return userID
+}
+
+func Forbidden(ctx context.Context, id int64) bool {
+	userID, ok := GetUserID(ctx)
+	if !ok {
+		return false
+	}
+
+	return userID != id
 }

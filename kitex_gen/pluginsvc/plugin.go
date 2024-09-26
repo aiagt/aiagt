@@ -6,10 +6,11 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 	"github.com/apache/thrift/lib/go/thrift"
-	"strings"
 )
 
 type Plugin struct {
@@ -146,60 +147,79 @@ func (p *Plugin) GetPublishedAt() (v *base.Time) {
 	}
 	return p.PublishedAt
 }
+
 func (p *Plugin) SetId(val int64) {
 	p.Id = val
 }
+
 func (p *Plugin) SetKey(val int64) {
 	p.Key = val
 }
+
 func (p *Plugin) SetName(val string) {
 	p.Name = val
 }
+
 func (p *Plugin) SetDescription(val string) {
 	p.Description = val
 }
+
 func (p *Plugin) SetDescriptionMd(val string) {
 	p.DescriptionMd = val
 }
+
 func (p *Plugin) SetAuthorId(val int64) {
 	p.AuthorId = val
 }
+
 func (p *Plugin) SetAuthor(val *usersvc.User) {
 	p.Author = val
 }
+
 func (p *Plugin) SetIsPrivate(val bool) {
 	p.IsPrivate = val
 }
+
 func (p *Plugin) SetHomePage(val string) {
 	p.HomePage = val
 }
+
 func (p *Plugin) SetEnableSecret(val bool) {
 	p.EnableSecret = val
 }
+
 func (p *Plugin) SetSecrets(val []*PluginSecret) {
 	p.Secrets = val
 }
+
 func (p *Plugin) SetLabelIds(val []int64) {
 	p.LabelIds = val
 }
+
 func (p *Plugin) SetLabels(val []*PluginLabel) {
 	p.Labels = val
 }
+
 func (p *Plugin) SetToolIds(val []int64) {
 	p.ToolIds = val
 }
+
 func (p *Plugin) SetTools(val []*PluginTool) {
 	p.Tools = val
 }
+
 func (p *Plugin) SetLogo(val string) {
 	p.Logo = val
 }
+
 func (p *Plugin) SetCreatedAt(val *base.Time) {
 	p.CreatedAt = val
 }
+
 func (p *Plugin) SetUpdatedAt(val *base.Time) {
 	p.UpdatedAt = val
 }
+
 func (p *Plugin) SetPublishedAt(val *base.Time) {
 	p.PublishedAt = val
 }
@@ -251,7 +271,6 @@ func (p *Plugin) IsSetPublishedAt() bool {
 }
 
 func (p *Plugin) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -557,7 +576,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *Plugin) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -567,8 +585,8 @@ func (p *Plugin) ReadField1(iprot thrift.TProtocol) error {
 	p.Id = _field
 	return nil
 }
-func (p *Plugin) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *Plugin) ReadField2(iprot thrift.TProtocol) error {
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -578,8 +596,8 @@ func (p *Plugin) ReadField2(iprot thrift.TProtocol) error {
 	p.Key = _field
 	return nil
 }
-func (p *Plugin) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *Plugin) ReadField3(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -589,8 +607,8 @@ func (p *Plugin) ReadField3(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *Plugin) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *Plugin) ReadField4(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -600,8 +618,8 @@ func (p *Plugin) ReadField4(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *Plugin) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *Plugin) ReadField5(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -611,8 +629,8 @@ func (p *Plugin) ReadField5(iprot thrift.TProtocol) error {
 	p.DescriptionMd = _field
 	return nil
 }
-func (p *Plugin) ReadField6(iprot thrift.TProtocol) error {
 
+func (p *Plugin) ReadField6(iprot thrift.TProtocol) error {
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -622,6 +640,7 @@ func (p *Plugin) ReadField6(iprot thrift.TProtocol) error {
 	p.AuthorId = _field
 	return nil
 }
+
 func (p *Plugin) ReadField7(iprot thrift.TProtocol) error {
 	_field := usersvc.NewUser()
 	if err := _field.Read(iprot); err != nil {
@@ -630,8 +649,8 @@ func (p *Plugin) ReadField7(iprot thrift.TProtocol) error {
 	p.Author = _field
 	return nil
 }
-func (p *Plugin) ReadField8(iprot thrift.TProtocol) error {
 
+func (p *Plugin) ReadField8(iprot thrift.TProtocol) error {
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -641,8 +660,8 @@ func (p *Plugin) ReadField8(iprot thrift.TProtocol) error {
 	p.IsPrivate = _field
 	return nil
 }
-func (p *Plugin) ReadField9(iprot thrift.TProtocol) error {
 
+func (p *Plugin) ReadField9(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -652,8 +671,8 @@ func (p *Plugin) ReadField9(iprot thrift.TProtocol) error {
 	p.HomePage = _field
 	return nil
 }
-func (p *Plugin) ReadField10(iprot thrift.TProtocol) error {
 
+func (p *Plugin) ReadField10(iprot thrift.TProtocol) error {
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -663,6 +682,7 @@ func (p *Plugin) ReadField10(iprot thrift.TProtocol) error {
 	p.EnableSecret = _field
 	return nil
 }
+
 func (p *Plugin) ReadField11(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -686,6 +706,7 @@ func (p *Plugin) ReadField11(iprot thrift.TProtocol) error {
 	p.Secrets = _field
 	return nil
 }
+
 func (p *Plugin) ReadField12(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -709,6 +730,7 @@ func (p *Plugin) ReadField12(iprot thrift.TProtocol) error {
 	p.LabelIds = _field
 	return nil
 }
+
 func (p *Plugin) ReadField13(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -732,6 +754,7 @@ func (p *Plugin) ReadField13(iprot thrift.TProtocol) error {
 	p.Labels = _field
 	return nil
 }
+
 func (p *Plugin) ReadField14(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -755,6 +778,7 @@ func (p *Plugin) ReadField14(iprot thrift.TProtocol) error {
 	p.ToolIds = _field
 	return nil
 }
+
 func (p *Plugin) ReadField15(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -778,8 +802,8 @@ func (p *Plugin) ReadField15(iprot thrift.TProtocol) error {
 	p.Tools = _field
 	return nil
 }
-func (p *Plugin) ReadField16(iprot thrift.TProtocol) error {
 
+func (p *Plugin) ReadField16(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -789,6 +813,7 @@ func (p *Plugin) ReadField16(iprot thrift.TProtocol) error {
 	p.Logo = _field
 	return nil
 }
+
 func (p *Plugin) ReadField17(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -797,6 +822,7 @@ func (p *Plugin) ReadField17(iprot thrift.TProtocol) error {
 	p.CreatedAt = _field
 	return nil
 }
+
 func (p *Plugin) ReadField18(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -805,6 +831,7 @@ func (p *Plugin) ReadField18(iprot thrift.TProtocol) error {
 	p.UpdatedAt = _field
 	return nil
 }
+
 func (p *Plugin) ReadField19(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -1290,7 +1317,6 @@ func (p *Plugin) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("Plugin(%+v)", *p)
-
 }
 
 func (p *Plugin) DeepEqual(ano *Plugin) bool {
@@ -1360,77 +1386,76 @@ func (p *Plugin) DeepEqual(ano *Plugin) bool {
 }
 
 func (p *Plugin) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field2DeepEqual(src int64) bool {
 
+func (p *Plugin) Field2DeepEqual(src int64) bool {
 	if p.Key != src {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field3DeepEqual(src string) bool {
 
+func (p *Plugin) Field3DeepEqual(src string) bool {
 	if strings.Compare(p.Name, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field4DeepEqual(src string) bool {
 
+func (p *Plugin) Field4DeepEqual(src string) bool {
 	if strings.Compare(p.Description, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field5DeepEqual(src string) bool {
 
+func (p *Plugin) Field5DeepEqual(src string) bool {
 	if strings.Compare(p.DescriptionMd, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field6DeepEqual(src int64) bool {
 
+func (p *Plugin) Field6DeepEqual(src int64) bool {
 	if p.AuthorId != src {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field7DeepEqual(src *usersvc.User) bool {
 
+func (p *Plugin) Field7DeepEqual(src *usersvc.User) bool {
 	if !p.Author.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field8DeepEqual(src bool) bool {
 
+func (p *Plugin) Field8DeepEqual(src bool) bool {
 	if p.IsPrivate != src {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field9DeepEqual(src string) bool {
 
+func (p *Plugin) Field9DeepEqual(src string) bool {
 	if strings.Compare(p.HomePage, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field10DeepEqual(src bool) bool {
 
+func (p *Plugin) Field10DeepEqual(src bool) bool {
 	if p.EnableSecret != src {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field11DeepEqual(src []*PluginSecret) bool {
 
+func (p *Plugin) Field11DeepEqual(src []*PluginSecret) bool {
 	if len(p.Secrets) != len(src) {
 		return false
 	}
@@ -1442,8 +1467,8 @@ func (p *Plugin) Field11DeepEqual(src []*PluginSecret) bool {
 	}
 	return true
 }
-func (p *Plugin) Field12DeepEqual(src []int64) bool {
 
+func (p *Plugin) Field12DeepEqual(src []int64) bool {
 	if len(p.LabelIds) != len(src) {
 		return false
 	}
@@ -1455,8 +1480,8 @@ func (p *Plugin) Field12DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *Plugin) Field13DeepEqual(src []*PluginLabel) bool {
 
+func (p *Plugin) Field13DeepEqual(src []*PluginLabel) bool {
 	if len(p.Labels) != len(src) {
 		return false
 	}
@@ -1468,8 +1493,8 @@ func (p *Plugin) Field13DeepEqual(src []*PluginLabel) bool {
 	}
 	return true
 }
-func (p *Plugin) Field14DeepEqual(src []int64) bool {
 
+func (p *Plugin) Field14DeepEqual(src []int64) bool {
 	if len(p.ToolIds) != len(src) {
 		return false
 	}
@@ -1481,8 +1506,8 @@ func (p *Plugin) Field14DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *Plugin) Field15DeepEqual(src []*PluginTool) bool {
 
+func (p *Plugin) Field15DeepEqual(src []*PluginTool) bool {
 	if len(p.Tools) != len(src) {
 		return false
 	}
@@ -1494,29 +1519,29 @@ func (p *Plugin) Field15DeepEqual(src []*PluginTool) bool {
 	}
 	return true
 }
-func (p *Plugin) Field16DeepEqual(src string) bool {
 
+func (p *Plugin) Field16DeepEqual(src string) bool {
 	if strings.Compare(p.Logo, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field17DeepEqual(src *base.Time) bool {
 
+func (p *Plugin) Field17DeepEqual(src *base.Time) bool {
 	if !p.CreatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field18DeepEqual(src *base.Time) bool {
 
+func (p *Plugin) Field18DeepEqual(src *base.Time) bool {
 	if !p.UpdatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *Plugin) Field19DeepEqual(src *base.Time) bool {
 
+func (p *Plugin) Field19DeepEqual(src *base.Time) bool {
 	if !p.PublishedAt.DeepEqual(src) {
 		return false
 	}
@@ -1552,15 +1577,19 @@ func (p *PluginSecret) GetAcquireMethod() (v string) {
 func (p *PluginSecret) GetLink() (v string) {
 	return p.Link
 }
+
 func (p *PluginSecret) SetName(val string) {
 	p.Name = val
 }
+
 func (p *PluginSecret) SetDescription(val string) {
 	p.Description = val
 }
+
 func (p *PluginSecret) SetAcquireMethod(val string) {
 	p.AcquireMethod = val
 }
+
 func (p *PluginSecret) SetLink(val string) {
 	p.Link = val
 }
@@ -1573,7 +1602,6 @@ var fieldIDToName_PluginSecret = map[int16]string{
 }
 
 func (p *PluginSecret) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetName bool = false
@@ -1682,7 +1710,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *PluginSecret) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1692,8 +1719,8 @@ func (p *PluginSecret) ReadField1(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *PluginSecret) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *PluginSecret) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1703,8 +1730,8 @@ func (p *PluginSecret) ReadField2(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *PluginSecret) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *PluginSecret) ReadField3(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1714,8 +1741,8 @@ func (p *PluginSecret) ReadField3(iprot thrift.TProtocol) error {
 	p.AcquireMethod = _field
 	return nil
 }
-func (p *PluginSecret) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *PluginSecret) ReadField4(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -1839,7 +1866,6 @@ func (p *PluginSecret) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginSecret(%+v)", *p)
-
 }
 
 func (p *PluginSecret) DeepEqual(ano *PluginSecret) bool {
@@ -1864,28 +1890,27 @@ func (p *PluginSecret) DeepEqual(ano *PluginSecret) bool {
 }
 
 func (p *PluginSecret) Field1DeepEqual(src string) bool {
-
 	if strings.Compare(p.Name, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *PluginSecret) Field2DeepEqual(src string) bool {
 
+func (p *PluginSecret) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Description, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *PluginSecret) Field3DeepEqual(src string) bool {
 
+func (p *PluginSecret) Field3DeepEqual(src string) bool {
 	if strings.Compare(p.AcquireMethod, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *PluginSecret) Field4DeepEqual(src string) bool {
 
+func (p *PluginSecret) Field4DeepEqual(src string) bool {
 	if strings.Compare(p.Link, src) != 0 {
 		return false
 	}
@@ -1976,36 +2001,47 @@ func (p *PluginTool) GetTestedAt() (v *base.Time) {
 	}
 	return p.TestedAt
 }
+
 func (p *PluginTool) SetId(val int64) {
 	p.Id = val
 }
+
 func (p *PluginTool) SetName(val string) {
 	p.Name = val
 }
+
 func (p *PluginTool) SetDescription(val string) {
 	p.Description = val
 }
+
 func (p *PluginTool) SetPluginId(val int64) {
 	p.PluginId = val
 }
+
 func (p *PluginTool) SetRequestType(val []byte) {
 	p.RequestType = val
 }
+
 func (p *PluginTool) SetResponseType(val []byte) {
 	p.ResponseType = val
 }
+
 func (p *PluginTool) SetApiUrl(val string) {
 	p.ApiUrl = val
 }
+
 func (p *PluginTool) SetImportModelId(val *int64) {
 	p.ImportModelId = val
 }
+
 func (p *PluginTool) SetCreatedAt(val *base.Time) {
 	p.CreatedAt = val
 }
+
 func (p *PluginTool) SetUpdatedAt(val *base.Time) {
 	p.UpdatedAt = val
 }
+
 func (p *PluginTool) SetTestedAt(val *base.Time) {
 	p.TestedAt = val
 }
@@ -2041,7 +2077,6 @@ func (p *PluginTool) IsSetTestedAt() bool {
 }
 
 func (p *PluginTool) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -2241,7 +2276,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *PluginTool) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -2251,8 +2285,8 @@ func (p *PluginTool) ReadField1(iprot thrift.TProtocol) error {
 	p.Id = _field
 	return nil
 }
-func (p *PluginTool) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *PluginTool) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -2262,8 +2296,8 @@ func (p *PluginTool) ReadField2(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *PluginTool) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *PluginTool) ReadField3(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -2273,8 +2307,8 @@ func (p *PluginTool) ReadField3(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *PluginTool) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *PluginTool) ReadField4(iprot thrift.TProtocol) error {
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -2284,8 +2318,8 @@ func (p *PluginTool) ReadField4(iprot thrift.TProtocol) error {
 	p.PluginId = _field
 	return nil
 }
-func (p *PluginTool) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *PluginTool) ReadField5(iprot thrift.TProtocol) error {
 	var _field []byte
 	if v, err := iprot.ReadBinary(); err != nil {
 		return err
@@ -2295,8 +2329,8 @@ func (p *PluginTool) ReadField5(iprot thrift.TProtocol) error {
 	p.RequestType = _field
 	return nil
 }
-func (p *PluginTool) ReadField6(iprot thrift.TProtocol) error {
 
+func (p *PluginTool) ReadField6(iprot thrift.TProtocol) error {
 	var _field []byte
 	if v, err := iprot.ReadBinary(); err != nil {
 		return err
@@ -2306,8 +2340,8 @@ func (p *PluginTool) ReadField6(iprot thrift.TProtocol) error {
 	p.ResponseType = _field
 	return nil
 }
-func (p *PluginTool) ReadField7(iprot thrift.TProtocol) error {
 
+func (p *PluginTool) ReadField7(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -2317,8 +2351,8 @@ func (p *PluginTool) ReadField7(iprot thrift.TProtocol) error {
 	p.ApiUrl = _field
 	return nil
 }
-func (p *PluginTool) ReadField8(iprot thrift.TProtocol) error {
 
+func (p *PluginTool) ReadField8(iprot thrift.TProtocol) error {
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -2328,6 +2362,7 @@ func (p *PluginTool) ReadField8(iprot thrift.TProtocol) error {
 	p.ImportModelId = _field
 	return nil
 }
+
 func (p *PluginTool) ReadField9(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -2336,6 +2371,7 @@ func (p *PluginTool) ReadField9(iprot thrift.TProtocol) error {
 	p.CreatedAt = _field
 	return nil
 }
+
 func (p *PluginTool) ReadField10(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -2344,6 +2380,7 @@ func (p *PluginTool) ReadField10(iprot thrift.TProtocol) error {
 	p.UpdatedAt = _field
 	return nil
 }
+
 func (p *PluginTool) ReadField11(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -2617,7 +2654,6 @@ func (p *PluginTool) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginTool(%+v)", *p)
-
 }
 
 func (p *PluginTool) DeepEqual(ano *PluginTool) bool {
@@ -2663,56 +2699,55 @@ func (p *PluginTool) DeepEqual(ano *PluginTool) bool {
 }
 
 func (p *PluginTool) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field2DeepEqual(src string) bool {
 
+func (p *PluginTool) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Name, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field3DeepEqual(src string) bool {
 
+func (p *PluginTool) Field3DeepEqual(src string) bool {
 	if strings.Compare(p.Description, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field4DeepEqual(src int64) bool {
 
+func (p *PluginTool) Field4DeepEqual(src int64) bool {
 	if p.PluginId != src {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field5DeepEqual(src []byte) bool {
 
+func (p *PluginTool) Field5DeepEqual(src []byte) bool {
 	if bytes.Compare(p.RequestType, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field6DeepEqual(src []byte) bool {
 
+func (p *PluginTool) Field6DeepEqual(src []byte) bool {
 	if bytes.Compare(p.ResponseType, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field7DeepEqual(src string) bool {
 
+func (p *PluginTool) Field7DeepEqual(src string) bool {
 	if strings.Compare(p.ApiUrl, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field8DeepEqual(src *int64) bool {
 
+func (p *PluginTool) Field8DeepEqual(src *int64) bool {
 	if p.ImportModelId == src {
 		return true
 	} else if p.ImportModelId == nil || src == nil {
@@ -2723,22 +2758,22 @@ func (p *PluginTool) Field8DeepEqual(src *int64) bool {
 	}
 	return true
 }
-func (p *PluginTool) Field9DeepEqual(src *base.Time) bool {
 
+func (p *PluginTool) Field9DeepEqual(src *base.Time) bool {
 	if !p.CreatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field10DeepEqual(src *base.Time) bool {
 
+func (p *PluginTool) Field10DeepEqual(src *base.Time) bool {
 	if !p.UpdatedAt.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *PluginTool) Field11DeepEqual(src *base.Time) bool {
 
+func (p *PluginTool) Field11DeepEqual(src *base.Time) bool {
 	if !p.TestedAt.DeepEqual(src) {
 		return false
 	}
@@ -2774,12 +2809,15 @@ func (p *PluginLabel) GetCreatedAt() (v *base.Time) {
 	}
 	return p.CreatedAt
 }
+
 func (p *PluginLabel) SetId(val int64) {
 	p.Id = val
 }
+
 func (p *PluginLabel) SetText(val string) {
 	p.Text = val
 }
+
 func (p *PluginLabel) SetCreatedAt(val *base.Time) {
 	p.CreatedAt = val
 }
@@ -2795,7 +2833,6 @@ func (p *PluginLabel) IsSetCreatedAt() bool {
 }
 
 func (p *PluginLabel) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -2889,7 +2926,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *PluginLabel) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -2899,8 +2935,8 @@ func (p *PluginLabel) ReadField1(iprot thrift.TProtocol) error {
 	p.Id = _field
 	return nil
 }
-func (p *PluginLabel) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *PluginLabel) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -2910,6 +2946,7 @@ func (p *PluginLabel) ReadField2(iprot thrift.TProtocol) error {
 	p.Text = _field
 	return nil
 }
+
 func (p *PluginLabel) ReadField3(iprot thrift.TProtocol) error {
 	_field := base.NewTime()
 	if err := _field.Read(iprot); err != nil {
@@ -3011,7 +3048,6 @@ func (p *PluginLabel) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginLabel(%+v)", *p)
-
 }
 
 func (p *PluginLabel) DeepEqual(ano *PluginLabel) bool {
@@ -3033,21 +3069,20 @@ func (p *PluginLabel) DeepEqual(ano *PluginLabel) bool {
 }
 
 func (p *PluginLabel) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
 	return true
 }
-func (p *PluginLabel) Field2DeepEqual(src string) bool {
 
+func (p *PluginLabel) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Text, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *PluginLabel) Field3DeepEqual(src *base.Time) bool {
 
+func (p *PluginLabel) Field3DeepEqual(src *base.Time) bool {
 	if !p.CreatedAt.DeepEqual(src) {
 		return false
 	}
@@ -3056,7 +3091,7 @@ func (p *PluginLabel) Field3DeepEqual(src *base.Time) bool {
 
 type ListPluginLabelReq struct {
 	Pagination *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
-	Text       *string             `thrift:"text,2,optional" frugal:"2,optional,string" json:"text,omitempty"`
+	Text       *string             `thrift:"text,2,optional" frugal:"2,optional,string" query:"text"`
 }
 
 func NewListPluginLabelReq() *ListPluginLabelReq {
@@ -3083,9 +3118,11 @@ func (p *ListPluginLabelReq) GetText() (v string) {
 	}
 	return *p.Text
 }
+
 func (p *ListPluginLabelReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
 }
+
 func (p *ListPluginLabelReq) SetText(val *string) {
 	p.Text = val
 }
@@ -3104,7 +3141,6 @@ func (p *ListPluginLabelReq) IsSetText() bool {
 }
 
 func (p *ListPluginLabelReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
@@ -3183,8 +3219,8 @@ func (p *ListPluginLabelReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Pagination = _field
 	return nil
 }
-func (p *ListPluginLabelReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *ListPluginLabelReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -3268,7 +3304,6 @@ func (p *ListPluginLabelReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListPluginLabelReq(%+v)", *p)
-
 }
 
 func (p *ListPluginLabelReq) DeepEqual(ano *ListPluginLabelReq) bool {
@@ -3287,14 +3322,13 @@ func (p *ListPluginLabelReq) DeepEqual(ano *ListPluginLabelReq) bool {
 }
 
 func (p *ListPluginLabelReq) Field1DeepEqual(src *base.PaginationReq) bool {
-
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ListPluginLabelReq) Field2DeepEqual(src *string) bool {
 
+func (p *ListPluginLabelReq) Field2DeepEqual(src *string) bool {
 	if p.Text == src {
 		return true
 	} else if p.Text == nil || src == nil {
@@ -3330,9 +3364,11 @@ func (p *ListPluginLabelResp) GetPagination() (v *base.PaginationResp) {
 func (p *ListPluginLabelResp) GetLabels() (v []*PluginLabel) {
 	return p.Labels
 }
+
 func (p *ListPluginLabelResp) SetPagination(val *base.PaginationResp) {
 	p.Pagination = val
 }
+
 func (p *ListPluginLabelResp) SetLabels(val []*PluginLabel) {
 	p.Labels = val
 }
@@ -3347,7 +3383,6 @@ func (p *ListPluginLabelResp) IsSetPagination() bool {
 }
 
 func (p *ListPluginLabelResp) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
@@ -3433,6 +3468,7 @@ func (p *ListPluginLabelResp) ReadField1(iprot thrift.TProtocol) error {
 	p.Pagination = _field
 	return nil
 }
+
 func (p *ListPluginLabelResp) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -3536,7 +3572,6 @@ func (p *ListPluginLabelResp) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListPluginLabelResp(%+v)", *p)
-
 }
 
 func (p *ListPluginLabelResp) DeepEqual(ano *ListPluginLabelResp) bool {
@@ -3555,14 +3590,13 @@ func (p *ListPluginLabelResp) DeepEqual(ano *ListPluginLabelResp) bool {
 }
 
 func (p *ListPluginLabelResp) Field1DeepEqual(src *base.PaginationResp) bool {
-
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ListPluginLabelResp) Field2DeepEqual(src []*PluginLabel) bool {
 
+func (p *ListPluginLabelResp) Field2DeepEqual(src []*PluginLabel) bool {
 	if len(p.Labels) != len(src) {
 		return false
 	}
@@ -3644,39 +3678,51 @@ func (p *CreatePluginReq) GetToolIds() (v []int64) {
 func (p *CreatePluginReq) GetLogo() (v string) {
 	return p.Logo
 }
+
 func (p *CreatePluginReq) SetKey(val int64) {
 	p.Key = val
 }
+
 func (p *CreatePluginReq) SetName(val string) {
 	p.Name = val
 }
+
 func (p *CreatePluginReq) SetDescription(val string) {
 	p.Description = val
 }
+
 func (p *CreatePluginReq) SetDescriptionMd(val string) {
 	p.DescriptionMd = val
 }
+
 func (p *CreatePluginReq) SetIsPrivate(val bool) {
 	p.IsPrivate = val
 }
+
 func (p *CreatePluginReq) SetHomePage(val string) {
 	p.HomePage = val
 }
+
 func (p *CreatePluginReq) SetEnableSecret(val bool) {
 	p.EnableSecret = val
 }
+
 func (p *CreatePluginReq) SetSecrets(val []*PluginSecret) {
 	p.Secrets = val
 }
+
 func (p *CreatePluginReq) SetLabelIds(val []int64) {
 	p.LabelIds = val
 }
+
 func (p *CreatePluginReq) SetLabelTexts(val []string) {
 	p.LabelTexts = val
 }
+
 func (p *CreatePluginReq) SetToolIds(val []int64) {
 	p.ToolIds = val
 }
+
 func (p *CreatePluginReq) SetLogo(val string) {
 	p.Logo = val
 }
@@ -3697,7 +3743,6 @@ var fieldIDToName_CreatePluginReq = map[int16]string{
 }
 
 func (p *CreatePluginReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetKey bool = false
@@ -3926,7 +3971,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *CreatePluginReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -3936,8 +3980,8 @@ func (p *CreatePluginReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Key = _field
 	return nil
 }
-func (p *CreatePluginReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -3947,8 +3991,8 @@ func (p *CreatePluginReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *CreatePluginReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -3958,8 +4002,8 @@ func (p *CreatePluginReq) ReadField3(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *CreatePluginReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -3969,8 +4013,8 @@ func (p *CreatePluginReq) ReadField4(iprot thrift.TProtocol) error {
 	p.DescriptionMd = _field
 	return nil
 }
-func (p *CreatePluginReq) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginReq) ReadField5(iprot thrift.TProtocol) error {
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -3980,8 +4024,8 @@ func (p *CreatePluginReq) ReadField5(iprot thrift.TProtocol) error {
 	p.IsPrivate = _field
 	return nil
 }
-func (p *CreatePluginReq) ReadField6(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginReq) ReadField6(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -3991,8 +4035,8 @@ func (p *CreatePluginReq) ReadField6(iprot thrift.TProtocol) error {
 	p.HomePage = _field
 	return nil
 }
-func (p *CreatePluginReq) ReadField7(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginReq) ReadField7(iprot thrift.TProtocol) error {
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -4002,6 +4046,7 @@ func (p *CreatePluginReq) ReadField7(iprot thrift.TProtocol) error {
 	p.EnableSecret = _field
 	return nil
 }
+
 func (p *CreatePluginReq) ReadField8(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -4025,6 +4070,7 @@ func (p *CreatePluginReq) ReadField8(iprot thrift.TProtocol) error {
 	p.Secrets = _field
 	return nil
 }
+
 func (p *CreatePluginReq) ReadField9(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -4048,6 +4094,7 @@ func (p *CreatePluginReq) ReadField9(iprot thrift.TProtocol) error {
 	p.LabelIds = _field
 	return nil
 }
+
 func (p *CreatePluginReq) ReadField10(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -4071,6 +4118,7 @@ func (p *CreatePluginReq) ReadField10(iprot thrift.TProtocol) error {
 	p.LabelTexts = _field
 	return nil
 }
+
 func (p *CreatePluginReq) ReadField11(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -4094,8 +4142,8 @@ func (p *CreatePluginReq) ReadField11(iprot thrift.TProtocol) error {
 	p.ToolIds = _field
 	return nil
 }
-func (p *CreatePluginReq) ReadField12(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginReq) ReadField12(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -4419,7 +4467,6 @@ func (p *CreatePluginReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("CreatePluginReq(%+v)", *p)
-
 }
 
 func (p *CreatePluginReq) DeepEqual(ano *CreatePluginReq) bool {
@@ -4468,56 +4515,55 @@ func (p *CreatePluginReq) DeepEqual(ano *CreatePluginReq) bool {
 }
 
 func (p *CreatePluginReq) Field1DeepEqual(src int64) bool {
-
 	if p.Key != src {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginReq) Field2DeepEqual(src string) bool {
 
+func (p *CreatePluginReq) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Name, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginReq) Field3DeepEqual(src string) bool {
 
+func (p *CreatePluginReq) Field3DeepEqual(src string) bool {
 	if strings.Compare(p.Description, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginReq) Field4DeepEqual(src string) bool {
 
+func (p *CreatePluginReq) Field4DeepEqual(src string) bool {
 	if strings.Compare(p.DescriptionMd, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginReq) Field5DeepEqual(src bool) bool {
 
+func (p *CreatePluginReq) Field5DeepEqual(src bool) bool {
 	if p.IsPrivate != src {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginReq) Field6DeepEqual(src string) bool {
 
+func (p *CreatePluginReq) Field6DeepEqual(src string) bool {
 	if strings.Compare(p.HomePage, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginReq) Field7DeepEqual(src bool) bool {
 
+func (p *CreatePluginReq) Field7DeepEqual(src bool) bool {
 	if p.EnableSecret != src {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginReq) Field8DeepEqual(src []*PluginSecret) bool {
 
+func (p *CreatePluginReq) Field8DeepEqual(src []*PluginSecret) bool {
 	if len(p.Secrets) != len(src) {
 		return false
 	}
@@ -4529,8 +4575,8 @@ func (p *CreatePluginReq) Field8DeepEqual(src []*PluginSecret) bool {
 	}
 	return true
 }
-func (p *CreatePluginReq) Field9DeepEqual(src []int64) bool {
 
+func (p *CreatePluginReq) Field9DeepEqual(src []int64) bool {
 	if len(p.LabelIds) != len(src) {
 		return false
 	}
@@ -4542,8 +4588,8 @@ func (p *CreatePluginReq) Field9DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *CreatePluginReq) Field10DeepEqual(src []string) bool {
 
+func (p *CreatePluginReq) Field10DeepEqual(src []string) bool {
 	if len(p.LabelTexts) != len(src) {
 		return false
 	}
@@ -4555,8 +4601,8 @@ func (p *CreatePluginReq) Field10DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *CreatePluginReq) Field11DeepEqual(src []int64) bool {
 
+func (p *CreatePluginReq) Field11DeepEqual(src []int64) bool {
 	if len(p.ToolIds) != len(src) {
 		return false
 	}
@@ -4568,8 +4614,8 @@ func (p *CreatePluginReq) Field11DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *CreatePluginReq) Field12DeepEqual(src string) bool {
 
+func (p *CreatePluginReq) Field12DeepEqual(src string) bool {
 	if strings.Compare(p.Logo, src) != 0 {
 		return false
 	}
@@ -4577,7 +4623,7 @@ func (p *CreatePluginReq) Field12DeepEqual(src string) bool {
 }
 
 type UpdatePluginReq struct {
-	Id            int64           `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Id            int64           `thrift:"id,1,required" frugal:"1,required,i64" path:"id"`
 	Key           *int64          `thrift:"key,2,optional" frugal:"2,optional,i64" json:"key,omitempty"`
 	Name          *string         `thrift:"name,3,optional" frugal:"3,optional,string" json:"name,omitempty"`
 	Description   *string         `thrift:"description,4,optional" frugal:"4,optional,string" json:"description,omitempty"`
@@ -4710,42 +4756,55 @@ func (p *UpdatePluginReq) GetLogo() (v string) {
 	}
 	return *p.Logo
 }
+
 func (p *UpdatePluginReq) SetId(val int64) {
 	p.Id = val
 }
+
 func (p *UpdatePluginReq) SetKey(val *int64) {
 	p.Key = val
 }
+
 func (p *UpdatePluginReq) SetName(val *string) {
 	p.Name = val
 }
+
 func (p *UpdatePluginReq) SetDescription(val *string) {
 	p.Description = val
 }
+
 func (p *UpdatePluginReq) SetDescriptionMd(val *string) {
 	p.DescriptionMd = val
 }
+
 func (p *UpdatePluginReq) SetIsPrivate(val *bool) {
 	p.IsPrivate = val
 }
+
 func (p *UpdatePluginReq) SetHomePage(val *string) {
 	p.HomePage = val
 }
+
 func (p *UpdatePluginReq) SetEnableSecret(val *bool) {
 	p.EnableSecret = val
 }
+
 func (p *UpdatePluginReq) SetSecrets(val []*PluginSecret) {
 	p.Secrets = val
 }
+
 func (p *UpdatePluginReq) SetLabelIds(val []int64) {
 	p.LabelIds = val
 }
+
 func (p *UpdatePluginReq) SetLabelTexts(val []string) {
 	p.LabelTexts = val
 }
+
 func (p *UpdatePluginReq) SetToolIds(val []int64) {
 	p.ToolIds = val
 }
+
 func (p *UpdatePluginReq) SetLogo(val *string) {
 	p.Logo = val
 }
@@ -4815,7 +4874,6 @@ func (p *UpdatePluginReq) IsSetLogo() bool {
 }
 
 func (p *UpdatePluginReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -4975,7 +5033,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *UpdatePluginReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -4985,8 +5042,8 @@ func (p *UpdatePluginReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Id = _field
 	return nil
 }
-func (p *UpdatePluginReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -4996,8 +5053,8 @@ func (p *UpdatePluginReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Key = _field
 	return nil
 }
-func (p *UpdatePluginReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -5007,8 +5064,8 @@ func (p *UpdatePluginReq) ReadField3(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *UpdatePluginReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -5018,8 +5075,8 @@ func (p *UpdatePluginReq) ReadField4(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *UpdatePluginReq) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginReq) ReadField5(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -5029,8 +5086,8 @@ func (p *UpdatePluginReq) ReadField5(iprot thrift.TProtocol) error {
 	p.DescriptionMd = _field
 	return nil
 }
-func (p *UpdatePluginReq) ReadField6(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginReq) ReadField6(iprot thrift.TProtocol) error {
 	var _field *bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -5040,8 +5097,8 @@ func (p *UpdatePluginReq) ReadField6(iprot thrift.TProtocol) error {
 	p.IsPrivate = _field
 	return nil
 }
-func (p *UpdatePluginReq) ReadField7(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginReq) ReadField7(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -5051,8 +5108,8 @@ func (p *UpdatePluginReq) ReadField7(iprot thrift.TProtocol) error {
 	p.HomePage = _field
 	return nil
 }
-func (p *UpdatePluginReq) ReadField8(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginReq) ReadField8(iprot thrift.TProtocol) error {
 	var _field *bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -5062,6 +5119,7 @@ func (p *UpdatePluginReq) ReadField8(iprot thrift.TProtocol) error {
 	p.EnableSecret = _field
 	return nil
 }
+
 func (p *UpdatePluginReq) ReadField9(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -5085,6 +5143,7 @@ func (p *UpdatePluginReq) ReadField9(iprot thrift.TProtocol) error {
 	p.Secrets = _field
 	return nil
 }
+
 func (p *UpdatePluginReq) ReadField10(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -5108,6 +5167,7 @@ func (p *UpdatePluginReq) ReadField10(iprot thrift.TProtocol) error {
 	p.LabelIds = _field
 	return nil
 }
+
 func (p *UpdatePluginReq) ReadField11(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -5131,6 +5191,7 @@ func (p *UpdatePluginReq) ReadField11(iprot thrift.TProtocol) error {
 	p.LabelTexts = _field
 	return nil
 }
+
 func (p *UpdatePluginReq) ReadField12(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -5154,8 +5215,8 @@ func (p *UpdatePluginReq) ReadField12(iprot thrift.TProtocol) error {
 	p.ToolIds = _field
 	return nil
 }
-func (p *UpdatePluginReq) ReadField13(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginReq) ReadField13(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -5524,7 +5585,6 @@ func (p *UpdatePluginReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("UpdatePluginReq(%+v)", *p)
-
 }
 
 func (p *UpdatePluginReq) DeepEqual(ano *UpdatePluginReq) bool {
@@ -5576,14 +5636,13 @@ func (p *UpdatePluginReq) DeepEqual(ano *UpdatePluginReq) bool {
 }
 
 func (p *UpdatePluginReq) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field2DeepEqual(src *int64) bool {
 
+func (p *UpdatePluginReq) Field2DeepEqual(src *int64) bool {
 	if p.Key == src {
 		return true
 	} else if p.Key == nil || src == nil {
@@ -5594,8 +5653,8 @@ func (p *UpdatePluginReq) Field2DeepEqual(src *int64) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field3DeepEqual(src *string) bool {
 
+func (p *UpdatePluginReq) Field3DeepEqual(src *string) bool {
 	if p.Name == src {
 		return true
 	} else if p.Name == nil || src == nil {
@@ -5606,8 +5665,8 @@ func (p *UpdatePluginReq) Field3DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field4DeepEqual(src *string) bool {
 
+func (p *UpdatePluginReq) Field4DeepEqual(src *string) bool {
 	if p.Description == src {
 		return true
 	} else if p.Description == nil || src == nil {
@@ -5618,8 +5677,8 @@ func (p *UpdatePluginReq) Field4DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field5DeepEqual(src *string) bool {
 
+func (p *UpdatePluginReq) Field5DeepEqual(src *string) bool {
 	if p.DescriptionMd == src {
 		return true
 	} else if p.DescriptionMd == nil || src == nil {
@@ -5630,8 +5689,8 @@ func (p *UpdatePluginReq) Field5DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field6DeepEqual(src *bool) bool {
 
+func (p *UpdatePluginReq) Field6DeepEqual(src *bool) bool {
 	if p.IsPrivate == src {
 		return true
 	} else if p.IsPrivate == nil || src == nil {
@@ -5642,8 +5701,8 @@ func (p *UpdatePluginReq) Field6DeepEqual(src *bool) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field7DeepEqual(src *string) bool {
 
+func (p *UpdatePluginReq) Field7DeepEqual(src *string) bool {
 	if p.HomePage == src {
 		return true
 	} else if p.HomePage == nil || src == nil {
@@ -5654,8 +5713,8 @@ func (p *UpdatePluginReq) Field7DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field8DeepEqual(src *bool) bool {
 
+func (p *UpdatePluginReq) Field8DeepEqual(src *bool) bool {
 	if p.EnableSecret == src {
 		return true
 	} else if p.EnableSecret == nil || src == nil {
@@ -5666,8 +5725,8 @@ func (p *UpdatePluginReq) Field8DeepEqual(src *bool) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field9DeepEqual(src []*PluginSecret) bool {
 
+func (p *UpdatePluginReq) Field9DeepEqual(src []*PluginSecret) bool {
 	if len(p.Secrets) != len(src) {
 		return false
 	}
@@ -5679,8 +5738,8 @@ func (p *UpdatePluginReq) Field9DeepEqual(src []*PluginSecret) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field10DeepEqual(src []int64) bool {
 
+func (p *UpdatePluginReq) Field10DeepEqual(src []int64) bool {
 	if len(p.LabelIds) != len(src) {
 		return false
 	}
@@ -5692,8 +5751,8 @@ func (p *UpdatePluginReq) Field10DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field11DeepEqual(src []string) bool {
 
+func (p *UpdatePluginReq) Field11DeepEqual(src []string) bool {
 	if len(p.LabelTexts) != len(src) {
 		return false
 	}
@@ -5705,8 +5764,8 @@ func (p *UpdatePluginReq) Field11DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field12DeepEqual(src []int64) bool {
 
+func (p *UpdatePluginReq) Field12DeepEqual(src []int64) bool {
 	if len(p.ToolIds) != len(src) {
 		return false
 	}
@@ -5718,8 +5777,8 @@ func (p *UpdatePluginReq) Field12DeepEqual(src []int64) bool {
 	}
 	return true
 }
-func (p *UpdatePluginReq) Field13DeepEqual(src *string) bool {
 
+func (p *UpdatePluginReq) Field13DeepEqual(src *string) bool {
 	if p.Logo == src {
 		return true
 	} else if p.Logo == nil || src == nil {
@@ -5790,18 +5849,23 @@ func (p *ListPluginReq) GetLabels() (v []int64) {
 	}
 	return p.Labels
 }
+
 func (p *ListPluginReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
 }
+
 func (p *ListPluginReq) SetAuthorId(val *int64) {
 	p.AuthorId = val
 }
+
 func (p *ListPluginReq) SetName(val *string) {
 	p.Name = val
 }
+
 func (p *ListPluginReq) SetDescription(val *string) {
 	p.Description = val
 }
+
 func (p *ListPluginReq) SetLabels(val []int64) {
 	p.Labels = val
 }
@@ -5835,7 +5899,6 @@ func (p *ListPluginReq) IsSetLabels() bool {
 }
 
 func (p *ListPluginReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
@@ -5938,8 +6001,8 @@ func (p *ListPluginReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Pagination = _field
 	return nil
 }
-func (p *ListPluginReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *ListPluginReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -5949,8 +6012,8 @@ func (p *ListPluginReq) ReadField2(iprot thrift.TProtocol) error {
 	p.AuthorId = _field
 	return nil
 }
-func (p *ListPluginReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *ListPluginReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -5960,8 +6023,8 @@ func (p *ListPluginReq) ReadField3(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *ListPluginReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *ListPluginReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -5971,6 +6034,7 @@ func (p *ListPluginReq) ReadField4(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
+
 func (p *ListPluginReq) ReadField5(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -6145,7 +6209,6 @@ func (p *ListPluginReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListPluginReq(%+v)", *p)
-
 }
 
 func (p *ListPluginReq) DeepEqual(ano *ListPluginReq) bool {
@@ -6173,14 +6236,13 @@ func (p *ListPluginReq) DeepEqual(ano *ListPluginReq) bool {
 }
 
 func (p *ListPluginReq) Field1DeepEqual(src *base.PaginationReq) bool {
-
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ListPluginReq) Field2DeepEqual(src *int64) bool {
 
+func (p *ListPluginReq) Field2DeepEqual(src *int64) bool {
 	if p.AuthorId == src {
 		return true
 	} else if p.AuthorId == nil || src == nil {
@@ -6191,8 +6253,8 @@ func (p *ListPluginReq) Field2DeepEqual(src *int64) bool {
 	}
 	return true
 }
-func (p *ListPluginReq) Field3DeepEqual(src *string) bool {
 
+func (p *ListPluginReq) Field3DeepEqual(src *string) bool {
 	if p.Name == src {
 		return true
 	} else if p.Name == nil || src == nil {
@@ -6203,8 +6265,8 @@ func (p *ListPluginReq) Field3DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *ListPluginReq) Field4DeepEqual(src *string) bool {
 
+func (p *ListPluginReq) Field4DeepEqual(src *string) bool {
 	if p.Description == src {
 		return true
 	} else if p.Description == nil || src == nil {
@@ -6215,8 +6277,8 @@ func (p *ListPluginReq) Field4DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *ListPluginReq) Field5DeepEqual(src []int64) bool {
 
+func (p *ListPluginReq) Field5DeepEqual(src []int64) bool {
 	if len(p.Labels) != len(src) {
 		return false
 	}
@@ -6253,9 +6315,11 @@ func (p *ListPluginResp) GetPagination() (v *base.PaginationResp) {
 func (p *ListPluginResp) GetPlugins() (v []*Plugin) {
 	return p.Plugins
 }
+
 func (p *ListPluginResp) SetPagination(val *base.PaginationResp) {
 	p.Pagination = val
 }
+
 func (p *ListPluginResp) SetPlugins(val []*Plugin) {
 	p.Plugins = val
 }
@@ -6270,7 +6334,6 @@ func (p *ListPluginResp) IsSetPagination() bool {
 }
 
 func (p *ListPluginResp) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
@@ -6356,6 +6419,7 @@ func (p *ListPluginResp) ReadField1(iprot thrift.TProtocol) error {
 	p.Pagination = _field
 	return nil
 }
+
 func (p *ListPluginResp) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -6459,7 +6523,6 @@ func (p *ListPluginResp) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListPluginResp(%+v)", *p)
-
 }
 
 func (p *ListPluginResp) DeepEqual(ano *ListPluginResp) bool {
@@ -6478,14 +6541,13 @@ func (p *ListPluginResp) DeepEqual(ano *ListPluginResp) bool {
 }
 
 func (p *ListPluginResp) Field1DeepEqual(src *base.PaginationResp) bool {
-
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ListPluginResp) Field2DeepEqual(src []*Plugin) bool {
 
+func (p *ListPluginResp) Field2DeepEqual(src []*Plugin) bool {
 	if len(p.Plugins) != len(src) {
 		return false
 	}
@@ -6547,24 +6609,31 @@ func (p *CreatePluginToolReq) GetImportModelId() (v int64) {
 	}
 	return *p.ImportModelId
 }
+
 func (p *CreatePluginToolReq) SetName(val string) {
 	p.Name = val
 }
+
 func (p *CreatePluginToolReq) SetDescription(val string) {
 	p.Description = val
 }
+
 func (p *CreatePluginToolReq) SetPluginId(val int64) {
 	p.PluginId = val
 }
+
 func (p *CreatePluginToolReq) SetRequestType(val []byte) {
 	p.RequestType = val
 }
+
 func (p *CreatePluginToolReq) SetResponseType(val []byte) {
 	p.ResponseType = val
 }
+
 func (p *CreatePluginToolReq) SetApiUrl(val string) {
 	p.ApiUrl = val
 }
+
 func (p *CreatePluginToolReq) SetImportModelId(val *int64) {
 	p.ImportModelId = val
 }
@@ -6584,7 +6653,6 @@ func (p *CreatePluginToolReq) IsSetImportModelId() bool {
 }
 
 func (p *CreatePluginToolReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetName bool = false
@@ -6731,7 +6799,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *CreatePluginToolReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -6741,8 +6808,8 @@ func (p *CreatePluginToolReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *CreatePluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -6752,8 +6819,8 @@ func (p *CreatePluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *CreatePluginToolReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginToolReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -6763,8 +6830,8 @@ func (p *CreatePluginToolReq) ReadField3(iprot thrift.TProtocol) error {
 	p.PluginId = _field
 	return nil
 }
-func (p *CreatePluginToolReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginToolReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field []byte
 	if v, err := iprot.ReadBinary(); err != nil {
 		return err
@@ -6774,8 +6841,8 @@ func (p *CreatePluginToolReq) ReadField4(iprot thrift.TProtocol) error {
 	p.RequestType = _field
 	return nil
 }
-func (p *CreatePluginToolReq) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginToolReq) ReadField5(iprot thrift.TProtocol) error {
 	var _field []byte
 	if v, err := iprot.ReadBinary(); err != nil {
 		return err
@@ -6785,8 +6852,8 @@ func (p *CreatePluginToolReq) ReadField5(iprot thrift.TProtocol) error {
 	p.ResponseType = _field
 	return nil
 }
-func (p *CreatePluginToolReq) ReadField6(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginToolReq) ReadField6(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -6796,8 +6863,8 @@ func (p *CreatePluginToolReq) ReadField6(iprot thrift.TProtocol) error {
 	p.ApiUrl = _field
 	return nil
 }
-func (p *CreatePluginToolReq) ReadField7(iprot thrift.TProtocol) error {
 
+func (p *CreatePluginToolReq) ReadField7(iprot thrift.TProtocol) error {
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -6986,7 +7053,6 @@ func (p *CreatePluginToolReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("CreatePluginToolReq(%+v)", *p)
-
 }
 
 func (p *CreatePluginToolReq) DeepEqual(ano *CreatePluginToolReq) bool {
@@ -7020,49 +7086,48 @@ func (p *CreatePluginToolReq) DeepEqual(ano *CreatePluginToolReq) bool {
 }
 
 func (p *CreatePluginToolReq) Field1DeepEqual(src string) bool {
-
 	if strings.Compare(p.Name, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginToolReq) Field2DeepEqual(src string) bool {
 
+func (p *CreatePluginToolReq) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Description, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginToolReq) Field3DeepEqual(src int64) bool {
 
+func (p *CreatePluginToolReq) Field3DeepEqual(src int64) bool {
 	if p.PluginId != src {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginToolReq) Field4DeepEqual(src []byte) bool {
 
+func (p *CreatePluginToolReq) Field4DeepEqual(src []byte) bool {
 	if bytes.Compare(p.RequestType, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginToolReq) Field5DeepEqual(src []byte) bool {
 
+func (p *CreatePluginToolReq) Field5DeepEqual(src []byte) bool {
 	if bytes.Compare(p.ResponseType, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginToolReq) Field6DeepEqual(src string) bool {
 
+func (p *CreatePluginToolReq) Field6DeepEqual(src string) bool {
 	if strings.Compare(p.ApiUrl, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CreatePluginToolReq) Field7DeepEqual(src *int64) bool {
 
+func (p *CreatePluginToolReq) Field7DeepEqual(src *int64) bool {
 	if p.ImportModelId == src {
 		return true
 	} else if p.ImportModelId == nil || src == nil {
@@ -7075,7 +7140,7 @@ func (p *CreatePluginToolReq) Field7DeepEqual(src *int64) bool {
 }
 
 type UpdatePluginToolReq struct {
-	Id            int64   `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Id            int64   `thrift:"id,1,required" frugal:"1,required,i64" path:"id"`
 	Name          *string `thrift:"name,2,optional" frugal:"2,optional,string" json:"name,omitempty"`
 	Description   *string `thrift:"description,3,optional" frugal:"3,optional,string" json:"description,omitempty"`
 	PluginId      *int64  `thrift:"plugin_id,4,optional" frugal:"4,optional,i64" json:"plugin_id,omitempty"`
@@ -7158,27 +7223,35 @@ func (p *UpdatePluginToolReq) GetImportModelId() (v int64) {
 	}
 	return *p.ImportModelId
 }
+
 func (p *UpdatePluginToolReq) SetId(val int64) {
 	p.Id = val
 }
+
 func (p *UpdatePluginToolReq) SetName(val *string) {
 	p.Name = val
 }
+
 func (p *UpdatePluginToolReq) SetDescription(val *string) {
 	p.Description = val
 }
+
 func (p *UpdatePluginToolReq) SetPluginId(val *int64) {
 	p.PluginId = val
 }
+
 func (p *UpdatePluginToolReq) SetRequestType(val []byte) {
 	p.RequestType = val
 }
+
 func (p *UpdatePluginToolReq) SetResponseType(val []byte) {
 	p.ResponseType = val
 }
+
 func (p *UpdatePluginToolReq) SetApiUrl(val *string) {
 	p.ApiUrl = val
 }
+
 func (p *UpdatePluginToolReq) SetImportModelId(val *int64) {
 	p.ImportModelId = val
 }
@@ -7223,7 +7296,6 @@ func (p *UpdatePluginToolReq) IsSetImportModelId() bool {
 }
 
 func (p *UpdatePluginToolReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetId bool = false
@@ -7343,7 +7415,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *UpdatePluginToolReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -7353,8 +7424,8 @@ func (p *UpdatePluginToolReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Id = _field
 	return nil
 }
-func (p *UpdatePluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -7364,8 +7435,8 @@ func (p *UpdatePluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
-func (p *UpdatePluginToolReq) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginToolReq) ReadField3(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -7375,8 +7446,8 @@ func (p *UpdatePluginToolReq) ReadField3(iprot thrift.TProtocol) error {
 	p.Description = _field
 	return nil
 }
-func (p *UpdatePluginToolReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginToolReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -7386,8 +7457,8 @@ func (p *UpdatePluginToolReq) ReadField4(iprot thrift.TProtocol) error {
 	p.PluginId = _field
 	return nil
 }
-func (p *UpdatePluginToolReq) ReadField5(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginToolReq) ReadField5(iprot thrift.TProtocol) error {
 	var _field []byte
 	if v, err := iprot.ReadBinary(); err != nil {
 		return err
@@ -7397,8 +7468,8 @@ func (p *UpdatePluginToolReq) ReadField5(iprot thrift.TProtocol) error {
 	p.RequestType = _field
 	return nil
 }
-func (p *UpdatePluginToolReq) ReadField6(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginToolReq) ReadField6(iprot thrift.TProtocol) error {
 	var _field []byte
 	if v, err := iprot.ReadBinary(); err != nil {
 		return err
@@ -7408,8 +7479,8 @@ func (p *UpdatePluginToolReq) ReadField6(iprot thrift.TProtocol) error {
 	p.ResponseType = _field
 	return nil
 }
-func (p *UpdatePluginToolReq) ReadField7(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginToolReq) ReadField7(iprot thrift.TProtocol) error {
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -7419,8 +7490,8 @@ func (p *UpdatePluginToolReq) ReadField7(iprot thrift.TProtocol) error {
 	p.ApiUrl = _field
 	return nil
 }
-func (p *UpdatePluginToolReq) ReadField8(iprot thrift.TProtocol) error {
 
+func (p *UpdatePluginToolReq) ReadField8(iprot thrift.TProtocol) error {
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -7642,7 +7713,6 @@ func (p *UpdatePluginToolReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("UpdatePluginToolReq(%+v)", *p)
-
 }
 
 func (p *UpdatePluginToolReq) DeepEqual(ano *UpdatePluginToolReq) bool {
@@ -7679,14 +7749,13 @@ func (p *UpdatePluginToolReq) DeepEqual(ano *UpdatePluginToolReq) bool {
 }
 
 func (p *UpdatePluginToolReq) Field1DeepEqual(src int64) bool {
-
 	if p.Id != src {
 		return false
 	}
 	return true
 }
-func (p *UpdatePluginToolReq) Field2DeepEqual(src *string) bool {
 
+func (p *UpdatePluginToolReq) Field2DeepEqual(src *string) bool {
 	if p.Name == src {
 		return true
 	} else if p.Name == nil || src == nil {
@@ -7697,8 +7766,8 @@ func (p *UpdatePluginToolReq) Field2DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdatePluginToolReq) Field3DeepEqual(src *string) bool {
 
+func (p *UpdatePluginToolReq) Field3DeepEqual(src *string) bool {
 	if p.Description == src {
 		return true
 	} else if p.Description == nil || src == nil {
@@ -7709,8 +7778,8 @@ func (p *UpdatePluginToolReq) Field3DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdatePluginToolReq) Field4DeepEqual(src *int64) bool {
 
+func (p *UpdatePluginToolReq) Field4DeepEqual(src *int64) bool {
 	if p.PluginId == src {
 		return true
 	} else if p.PluginId == nil || src == nil {
@@ -7721,22 +7790,22 @@ func (p *UpdatePluginToolReq) Field4DeepEqual(src *int64) bool {
 	}
 	return true
 }
-func (p *UpdatePluginToolReq) Field5DeepEqual(src []byte) bool {
 
+func (p *UpdatePluginToolReq) Field5DeepEqual(src []byte) bool {
 	if bytes.Compare(p.RequestType, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *UpdatePluginToolReq) Field6DeepEqual(src []byte) bool {
 
+func (p *UpdatePluginToolReq) Field6DeepEqual(src []byte) bool {
 	if bytes.Compare(p.ResponseType, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *UpdatePluginToolReq) Field7DeepEqual(src *string) bool {
 
+func (p *UpdatePluginToolReq) Field7DeepEqual(src *string) bool {
 	if p.ApiUrl == src {
 		return true
 	} else if p.ApiUrl == nil || src == nil {
@@ -7747,8 +7816,8 @@ func (p *UpdatePluginToolReq) Field7DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *UpdatePluginToolReq) Field8DeepEqual(src *int64) bool {
 
+func (p *UpdatePluginToolReq) Field8DeepEqual(src *int64) bool {
 	if p.ImportModelId == src {
 		return true
 	} else if p.ImportModelId == nil || src == nil {
@@ -7799,12 +7868,15 @@ func (p *ListPluginToolReq) GetToolIds() (v []int64) {
 	}
 	return p.ToolIds
 }
+
 func (p *ListPluginToolReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
 }
+
 func (p *ListPluginToolReq) SetPluginId(val *int64) {
 	p.PluginId = val
 }
+
 func (p *ListPluginToolReq) SetToolIds(val []int64) {
 	p.ToolIds = val
 }
@@ -7828,7 +7900,6 @@ func (p *ListPluginToolReq) IsSetToolIds() bool {
 }
 
 func (p *ListPluginToolReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPagination bool = false
@@ -7915,8 +7986,8 @@ func (p *ListPluginToolReq) ReadField1(iprot thrift.TProtocol) error {
 	p.Pagination = _field
 	return nil
 }
-func (p *ListPluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *ListPluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field *int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -7926,6 +7997,7 @@ func (p *ListPluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 	p.PluginId = _field
 	return nil
 }
+
 func (p *ListPluginToolReq) ReadField3(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
@@ -8054,7 +8126,6 @@ func (p *ListPluginToolReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListPluginToolReq(%+v)", *p)
-
 }
 
 func (p *ListPluginToolReq) DeepEqual(ano *ListPluginToolReq) bool {
@@ -8076,14 +8147,13 @@ func (p *ListPluginToolReq) DeepEqual(ano *ListPluginToolReq) bool {
 }
 
 func (p *ListPluginToolReq) Field1DeepEqual(src *base.PaginationReq) bool {
-
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ListPluginToolReq) Field2DeepEqual(src *int64) bool {
 
+func (p *ListPluginToolReq) Field2DeepEqual(src *int64) bool {
 	if p.PluginId == src {
 		return true
 	} else if p.PluginId == nil || src == nil {
@@ -8094,8 +8164,8 @@ func (p *ListPluginToolReq) Field2DeepEqual(src *int64) bool {
 	}
 	return true
 }
-func (p *ListPluginToolReq) Field3DeepEqual(src []int64) bool {
 
+func (p *ListPluginToolReq) Field3DeepEqual(src []int64) bool {
 	if len(p.ToolIds) != len(src) {
 		return false
 	}
@@ -8132,9 +8202,11 @@ func (p *ListPluginToolResp) GetPagination() (v *base.PaginationResp) {
 	}
 	return p.Pagination
 }
+
 func (p *ListPluginToolResp) SetTools(val []*PluginTool) {
 	p.Tools = val
 }
+
 func (p *ListPluginToolResp) SetPagination(val *base.PaginationResp) {
 	p.Pagination = val
 }
@@ -8149,7 +8221,6 @@ func (p *ListPluginToolResp) IsSetPagination() bool {
 }
 
 func (p *ListPluginToolResp) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetTools bool = false
@@ -8250,6 +8321,7 @@ func (p *ListPluginToolResp) ReadField1(iprot thrift.TProtocol) error {
 	p.Tools = _field
 	return nil
 }
+
 func (p *ListPluginToolResp) ReadField2(iprot thrift.TProtocol) error {
 	_field := base.NewPaginationResp()
 	if err := _field.Read(iprot); err != nil {
@@ -8338,7 +8410,6 @@ func (p *ListPluginToolResp) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ListPluginToolResp(%+v)", *p)
-
 }
 
 func (p *ListPluginToolResp) DeepEqual(ano *ListPluginToolResp) bool {
@@ -8357,7 +8428,6 @@ func (p *ListPluginToolResp) DeepEqual(ano *ListPluginToolResp) bool {
 }
 
 func (p *ListPluginToolResp) Field1DeepEqual(src []*PluginTool) bool {
-
 	if len(p.Tools) != len(src) {
 		return false
 	}
@@ -8369,8 +8439,8 @@ func (p *ListPluginToolResp) Field1DeepEqual(src []*PluginTool) bool {
 	}
 	return true
 }
-func (p *ListPluginToolResp) Field2DeepEqual(src *base.PaginationResp) bool {
 
+func (p *ListPluginToolResp) Field2DeepEqual(src *base.PaginationResp) bool {
 	if !p.Pagination.DeepEqual(src) {
 		return false
 	}
@@ -8411,15 +8481,19 @@ func (p *CallPluginToolReq) GetSecrets() (v map[string]string) {
 func (p *CallPluginToolReq) GetRequest() (v []byte) {
 	return p.Request
 }
+
 func (p *CallPluginToolReq) SetPluginId(val int64) {
 	p.PluginId = val
 }
+
 func (p *CallPluginToolReq) SetToolId(val int64) {
 	p.ToolId = val
 }
+
 func (p *CallPluginToolReq) SetSecrets(val map[string]string) {
 	p.Secrets = val
 }
+
 func (p *CallPluginToolReq) SetRequest(val []byte) {
 	p.Request = val
 }
@@ -8436,7 +8510,6 @@ func (p *CallPluginToolReq) IsSetSecrets() bool {
 }
 
 func (p *CallPluginToolReq) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPluginId bool = false
@@ -8538,7 +8611,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *CallPluginToolReq) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -8548,8 +8620,8 @@ func (p *CallPluginToolReq) ReadField1(iprot thrift.TProtocol) error {
 	p.PluginId = _field
 	return nil
 }
-func (p *CallPluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *CallPluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -8559,6 +8631,7 @@ func (p *CallPluginToolReq) ReadField2(iprot thrift.TProtocol) error {
 	p.ToolId = _field
 	return nil
 }
+
 func (p *CallPluginToolReq) ReadField3(iprot thrift.TProtocol) error {
 	_, _, size, err := iprot.ReadMapBegin()
 	if err != nil {
@@ -8588,8 +8661,8 @@ func (p *CallPluginToolReq) ReadField3(iprot thrift.TProtocol) error {
 	p.Secrets = _field
 	return nil
 }
-func (p *CallPluginToolReq) ReadField4(iprot thrift.TProtocol) error {
 
+func (p *CallPluginToolReq) ReadField4(iprot thrift.TProtocol) error {
 	var _field []byte
 	if v, err := iprot.ReadBinary(); err != nil {
 		return err
@@ -8726,7 +8799,6 @@ func (p *CallPluginToolReq) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("CallPluginToolReq(%+v)", *p)
-
 }
 
 func (p *CallPluginToolReq) DeepEqual(ano *CallPluginToolReq) bool {
@@ -8751,21 +8823,20 @@ func (p *CallPluginToolReq) DeepEqual(ano *CallPluginToolReq) bool {
 }
 
 func (p *CallPluginToolReq) Field1DeepEqual(src int64) bool {
-
 	if p.PluginId != src {
 		return false
 	}
 	return true
 }
-func (p *CallPluginToolReq) Field2DeepEqual(src int64) bool {
 
+func (p *CallPluginToolReq) Field2DeepEqual(src int64) bool {
 	if p.ToolId != src {
 		return false
 	}
 	return true
 }
-func (p *CallPluginToolReq) Field3DeepEqual(src map[string]string) bool {
 
+func (p *CallPluginToolReq) Field3DeepEqual(src map[string]string) bool {
 	if len(p.Secrets) != len(src) {
 		return false
 	}
@@ -8777,8 +8848,8 @@ func (p *CallPluginToolReq) Field3DeepEqual(src map[string]string) bool {
 	}
 	return true
 }
-func (p *CallPluginToolReq) Field4DeepEqual(src []byte) bool {
 
+func (p *CallPluginToolReq) Field4DeepEqual(src []byte) bool {
 	if bytes.Compare(p.Request, src) != 0 {
 		return false
 	}
@@ -8809,12 +8880,15 @@ func (p *CallPluginToolResp) GetMsg() (v string) {
 func (p *CallPluginToolResp) GetResponse() (v []byte) {
 	return p.Response
 }
+
 func (p *CallPluginToolResp) SetCode(val int64) {
 	p.Code = val
 }
+
 func (p *CallPluginToolResp) SetMsg(val string) {
 	p.Msg = val
 }
+
 func (p *CallPluginToolResp) SetResponse(val []byte) {
 	p.Response = val
 }
@@ -8826,7 +8900,6 @@ var fieldIDToName_CallPluginToolResp = map[int16]string{
 }
 
 func (p *CallPluginToolResp) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetCode bool = false
@@ -8920,7 +8993,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *CallPluginToolResp) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -8930,8 +9002,8 @@ func (p *CallPluginToolResp) ReadField1(iprot thrift.TProtocol) error {
 	p.Code = _field
 	return nil
 }
-func (p *CallPluginToolResp) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *CallPluginToolResp) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -8941,8 +9013,8 @@ func (p *CallPluginToolResp) ReadField2(iprot thrift.TProtocol) error {
 	p.Msg = _field
 	return nil
 }
-func (p *CallPluginToolResp) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *CallPluginToolResp) ReadField3(iprot thrift.TProtocol) error {
 	var _field []byte
 	if v, err := iprot.ReadBinary(); err != nil {
 		return err
@@ -9045,7 +9117,6 @@ func (p *CallPluginToolResp) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("CallPluginToolResp(%+v)", *p)
-
 }
 
 func (p *CallPluginToolResp) DeepEqual(ano *CallPluginToolResp) bool {
@@ -9067,21 +9138,20 @@ func (p *CallPluginToolResp) DeepEqual(ano *CallPluginToolResp) bool {
 }
 
 func (p *CallPluginToolResp) Field1DeepEqual(src int64) bool {
-
 	if p.Code != src {
 		return false
 	}
 	return true
 }
-func (p *CallPluginToolResp) Field2DeepEqual(src string) bool {
 
+func (p *CallPluginToolResp) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Msg, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *CallPluginToolResp) Field3DeepEqual(src []byte) bool {
 
+func (p *CallPluginToolResp) Field3DeepEqual(src []byte) bool {
 	if bytes.Compare(p.Response, src) != 0 {
 		return false
 	}
@@ -9112,12 +9182,15 @@ func (p *TestPluginToolResp) GetMsg() (v string) {
 func (p *TestPluginToolResp) GetResponse() (v []byte) {
 	return p.Response
 }
+
 func (p *TestPluginToolResp) SetCode(val bool) {
 	p.Code = val
 }
+
 func (p *TestPluginToolResp) SetMsg(val string) {
 	p.Msg = val
 }
+
 func (p *TestPluginToolResp) SetResponse(val []byte) {
 	p.Response = val
 }
@@ -9129,7 +9202,6 @@ var fieldIDToName_TestPluginToolResp = map[int16]string{
 }
 
 func (p *TestPluginToolResp) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetCode bool = false
@@ -9223,7 +9295,6 @@ RequiredFieldNotSetError:
 }
 
 func (p *TestPluginToolResp) ReadField1(iprot thrift.TProtocol) error {
-
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
 		return err
@@ -9233,8 +9304,8 @@ func (p *TestPluginToolResp) ReadField1(iprot thrift.TProtocol) error {
 	p.Code = _field
 	return nil
 }
-func (p *TestPluginToolResp) ReadField2(iprot thrift.TProtocol) error {
 
+func (p *TestPluginToolResp) ReadField2(iprot thrift.TProtocol) error {
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -9244,8 +9315,8 @@ func (p *TestPluginToolResp) ReadField2(iprot thrift.TProtocol) error {
 	p.Msg = _field
 	return nil
 }
-func (p *TestPluginToolResp) ReadField3(iprot thrift.TProtocol) error {
 
+func (p *TestPluginToolResp) ReadField3(iprot thrift.TProtocol) error {
 	var _field []byte
 	if v, err := iprot.ReadBinary(); err != nil {
 		return err
@@ -9348,7 +9419,6 @@ func (p *TestPluginToolResp) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("TestPluginToolResp(%+v)", *p)
-
 }
 
 func (p *TestPluginToolResp) DeepEqual(ano *TestPluginToolResp) bool {
@@ -9370,21 +9440,20 @@ func (p *TestPluginToolResp) DeepEqual(ano *TestPluginToolResp) bool {
 }
 
 func (p *TestPluginToolResp) Field1DeepEqual(src bool) bool {
-
 	if p.Code != src {
 		return false
 	}
 	return true
 }
-func (p *TestPluginToolResp) Field2DeepEqual(src string) bool {
 
+func (p *TestPluginToolResp) Field2DeepEqual(src string) bool {
 	if strings.Compare(p.Msg, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *TestPluginToolResp) Field3DeepEqual(src []byte) bool {
 
+func (p *TestPluginToolResp) Field3DeepEqual(src []byte) bool {
 	if bytes.Compare(p.Response, src) != 0 {
 		return false
 	}
@@ -9440,6 +9509,7 @@ func (p *PluginServiceCreatePluginArgs) GetReq() (v *CreatePluginReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceCreatePluginArgs) SetReq(val *CreatePluginReq) {
 	p.Req = val
 }
@@ -9453,7 +9523,6 @@ func (p *PluginServiceCreatePluginArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceCreatePluginArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -9567,7 +9636,6 @@ func (p *PluginServiceCreatePluginArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceCreatePluginArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceCreatePluginArgs) DeepEqual(ano *PluginServiceCreatePluginArgs) bool {
@@ -9583,7 +9651,6 @@ func (p *PluginServiceCreatePluginArgs) DeepEqual(ano *PluginServiceCreatePlugin
 }
 
 func (p *PluginServiceCreatePluginArgs) Field1DeepEqual(src *CreatePluginReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -9609,6 +9676,7 @@ func (p *PluginServiceCreatePluginResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *PluginServiceCreatePluginResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -9622,7 +9690,6 @@ func (p *PluginServiceCreatePluginResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceCreatePluginResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -9738,7 +9805,6 @@ func (p *PluginServiceCreatePluginResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceCreatePluginResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceCreatePluginResult) DeepEqual(ano *PluginServiceCreatePluginResult) bool {
@@ -9754,7 +9820,6 @@ func (p *PluginServiceCreatePluginResult) DeepEqual(ano *PluginServiceCreatePlug
 }
 
 func (p *PluginServiceCreatePluginResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -9780,6 +9845,7 @@ func (p *PluginServiceUpdatePluginArgs) GetReq() (v *UpdatePluginReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceUpdatePluginArgs) SetReq(val *UpdatePluginReq) {
 	p.Req = val
 }
@@ -9793,7 +9859,6 @@ func (p *PluginServiceUpdatePluginArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceUpdatePluginArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -9907,7 +9972,6 @@ func (p *PluginServiceUpdatePluginArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceUpdatePluginArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceUpdatePluginArgs) DeepEqual(ano *PluginServiceUpdatePluginArgs) bool {
@@ -9923,7 +9987,6 @@ func (p *PluginServiceUpdatePluginArgs) DeepEqual(ano *PluginServiceUpdatePlugin
 }
 
 func (p *PluginServiceUpdatePluginArgs) Field1DeepEqual(src *UpdatePluginReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -9949,6 +10012,7 @@ func (p *PluginServiceUpdatePluginResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *PluginServiceUpdatePluginResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -9962,7 +10026,6 @@ func (p *PluginServiceUpdatePluginResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceUpdatePluginResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -10078,7 +10141,6 @@ func (p *PluginServiceUpdatePluginResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceUpdatePluginResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceUpdatePluginResult) DeepEqual(ano *PluginServiceUpdatePluginResult) bool {
@@ -10094,7 +10156,6 @@ func (p *PluginServiceUpdatePluginResult) DeepEqual(ano *PluginServiceUpdatePlug
 }
 
 func (p *PluginServiceUpdatePluginResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -10120,6 +10181,7 @@ func (p *PluginServiceDeletePluginArgs) GetReq() (v *base.IDReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceDeletePluginArgs) SetReq(val *base.IDReq) {
 	p.Req = val
 }
@@ -10133,7 +10195,6 @@ func (p *PluginServiceDeletePluginArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceDeletePluginArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -10247,7 +10308,6 @@ func (p *PluginServiceDeletePluginArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceDeletePluginArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceDeletePluginArgs) DeepEqual(ano *PluginServiceDeletePluginArgs) bool {
@@ -10263,7 +10323,6 @@ func (p *PluginServiceDeletePluginArgs) DeepEqual(ano *PluginServiceDeletePlugin
 }
 
 func (p *PluginServiceDeletePluginArgs) Field1DeepEqual(src *base.IDReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -10289,6 +10348,7 @@ func (p *PluginServiceDeletePluginResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *PluginServiceDeletePluginResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -10302,7 +10362,6 @@ func (p *PluginServiceDeletePluginResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceDeletePluginResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -10418,7 +10477,6 @@ func (p *PluginServiceDeletePluginResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceDeletePluginResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceDeletePluginResult) DeepEqual(ano *PluginServiceDeletePluginResult) bool {
@@ -10434,7 +10492,6 @@ func (p *PluginServiceDeletePluginResult) DeepEqual(ano *PluginServiceDeletePlug
 }
 
 func (p *PluginServiceDeletePluginResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -10460,6 +10517,7 @@ func (p *PluginServiceGetPluginByIDArgs) GetReq() (v *base.IDReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceGetPluginByIDArgs) SetReq(val *base.IDReq) {
 	p.Req = val
 }
@@ -10473,7 +10531,6 @@ func (p *PluginServiceGetPluginByIDArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceGetPluginByIDArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -10587,7 +10644,6 @@ func (p *PluginServiceGetPluginByIDArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceGetPluginByIDArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceGetPluginByIDArgs) DeepEqual(ano *PluginServiceGetPluginByIDArgs) bool {
@@ -10603,7 +10659,6 @@ func (p *PluginServiceGetPluginByIDArgs) DeepEqual(ano *PluginServiceGetPluginBy
 }
 
 func (p *PluginServiceGetPluginByIDArgs) Field1DeepEqual(src *base.IDReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -10629,6 +10684,7 @@ func (p *PluginServiceGetPluginByIDResult) GetSuccess() (v *Plugin) {
 	}
 	return p.Success
 }
+
 func (p *PluginServiceGetPluginByIDResult) SetSuccess(x interface{}) {
 	p.Success = x.(*Plugin)
 }
@@ -10642,7 +10698,6 @@ func (p *PluginServiceGetPluginByIDResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceGetPluginByIDResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -10758,7 +10813,6 @@ func (p *PluginServiceGetPluginByIDResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceGetPluginByIDResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceGetPluginByIDResult) DeepEqual(ano *PluginServiceGetPluginByIDResult) bool {
@@ -10774,7 +10828,6 @@ func (p *PluginServiceGetPluginByIDResult) DeepEqual(ano *PluginServiceGetPlugin
 }
 
 func (p *PluginServiceGetPluginByIDResult) Field0DeepEqual(src *Plugin) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -10800,6 +10853,7 @@ func (p *PluginServiceListPluginArgs) GetReq() (v *ListPluginReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceListPluginArgs) SetReq(val *ListPluginReq) {
 	p.Req = val
 }
@@ -10813,7 +10867,6 @@ func (p *PluginServiceListPluginArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceListPluginArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -10927,7 +10980,6 @@ func (p *PluginServiceListPluginArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceListPluginArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceListPluginArgs) DeepEqual(ano *PluginServiceListPluginArgs) bool {
@@ -10943,7 +10995,6 @@ func (p *PluginServiceListPluginArgs) DeepEqual(ano *PluginServiceListPluginArgs
 }
 
 func (p *PluginServiceListPluginArgs) Field1DeepEqual(src *ListPluginReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -10969,6 +11020,7 @@ func (p *PluginServiceListPluginResult) GetSuccess() (v *ListPluginResp) {
 	}
 	return p.Success
 }
+
 func (p *PluginServiceListPluginResult) SetSuccess(x interface{}) {
 	p.Success = x.(*ListPluginResp)
 }
@@ -10982,7 +11034,6 @@ func (p *PluginServiceListPluginResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceListPluginResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -11098,7 +11149,6 @@ func (p *PluginServiceListPluginResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceListPluginResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceListPluginResult) DeepEqual(ano *PluginServiceListPluginResult) bool {
@@ -11114,7 +11164,6 @@ func (p *PluginServiceListPluginResult) DeepEqual(ano *PluginServiceListPluginRe
 }
 
 func (p *PluginServiceListPluginResult) Field0DeepEqual(src *ListPluginResp) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -11140,6 +11189,7 @@ func (p *PluginServicePublishPluginArgs) GetReq() (v *base.IDReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServicePublishPluginArgs) SetReq(val *base.IDReq) {
 	p.Req = val
 }
@@ -11153,7 +11203,6 @@ func (p *PluginServicePublishPluginArgs) IsSetReq() bool {
 }
 
 func (p *PluginServicePublishPluginArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -11267,7 +11316,6 @@ func (p *PluginServicePublishPluginArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServicePublishPluginArgs(%+v)", *p)
-
 }
 
 func (p *PluginServicePublishPluginArgs) DeepEqual(ano *PluginServicePublishPluginArgs) bool {
@@ -11283,7 +11331,6 @@ func (p *PluginServicePublishPluginArgs) DeepEqual(ano *PluginServicePublishPlug
 }
 
 func (p *PluginServicePublishPluginArgs) Field1DeepEqual(src *base.IDReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -11309,6 +11356,7 @@ func (p *PluginServicePublishPluginResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *PluginServicePublishPluginResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -11322,7 +11370,6 @@ func (p *PluginServicePublishPluginResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServicePublishPluginResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -11438,7 +11485,6 @@ func (p *PluginServicePublishPluginResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServicePublishPluginResult(%+v)", *p)
-
 }
 
 func (p *PluginServicePublishPluginResult) DeepEqual(ano *PluginServicePublishPluginResult) bool {
@@ -11454,7 +11500,6 @@ func (p *PluginServicePublishPluginResult) DeepEqual(ano *PluginServicePublishPl
 }
 
 func (p *PluginServicePublishPluginResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -11480,6 +11525,7 @@ func (p *PluginServiceCreateToolArgs) GetReq() (v *CreatePluginToolReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceCreateToolArgs) SetReq(val *CreatePluginToolReq) {
 	p.Req = val
 }
@@ -11493,7 +11539,6 @@ func (p *PluginServiceCreateToolArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceCreateToolArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -11607,7 +11652,6 @@ func (p *PluginServiceCreateToolArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceCreateToolArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceCreateToolArgs) DeepEqual(ano *PluginServiceCreateToolArgs) bool {
@@ -11623,7 +11667,6 @@ func (p *PluginServiceCreateToolArgs) DeepEqual(ano *PluginServiceCreateToolArgs
 }
 
 func (p *PluginServiceCreateToolArgs) Field1DeepEqual(src *CreatePluginToolReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -11649,6 +11692,7 @@ func (p *PluginServiceCreateToolResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *PluginServiceCreateToolResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -11662,7 +11706,6 @@ func (p *PluginServiceCreateToolResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceCreateToolResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -11778,7 +11821,6 @@ func (p *PluginServiceCreateToolResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceCreateToolResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceCreateToolResult) DeepEqual(ano *PluginServiceCreateToolResult) bool {
@@ -11794,7 +11836,6 @@ func (p *PluginServiceCreateToolResult) DeepEqual(ano *PluginServiceCreateToolRe
 }
 
 func (p *PluginServiceCreateToolResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -11820,6 +11861,7 @@ func (p *PluginServiceUpdateToolArgs) GetReq() (v *UpdatePluginToolReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceUpdateToolArgs) SetReq(val *UpdatePluginToolReq) {
 	p.Req = val
 }
@@ -11833,7 +11875,6 @@ func (p *PluginServiceUpdateToolArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceUpdateToolArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -11947,7 +11988,6 @@ func (p *PluginServiceUpdateToolArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceUpdateToolArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceUpdateToolArgs) DeepEqual(ano *PluginServiceUpdateToolArgs) bool {
@@ -11963,7 +12003,6 @@ func (p *PluginServiceUpdateToolArgs) DeepEqual(ano *PluginServiceUpdateToolArgs
 }
 
 func (p *PluginServiceUpdateToolArgs) Field1DeepEqual(src *UpdatePluginToolReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -11989,6 +12028,7 @@ func (p *PluginServiceUpdateToolResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *PluginServiceUpdateToolResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -12002,7 +12042,6 @@ func (p *PluginServiceUpdateToolResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceUpdateToolResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -12118,7 +12157,6 @@ func (p *PluginServiceUpdateToolResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceUpdateToolResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceUpdateToolResult) DeepEqual(ano *PluginServiceUpdateToolResult) bool {
@@ -12134,7 +12172,6 @@ func (p *PluginServiceUpdateToolResult) DeepEqual(ano *PluginServiceUpdateToolRe
 }
 
 func (p *PluginServiceUpdateToolResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -12160,6 +12197,7 @@ func (p *PluginServiceDeleteToolArgs) GetReq() (v *base.IDReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceDeleteToolArgs) SetReq(val *base.IDReq) {
 	p.Req = val
 }
@@ -12173,7 +12211,6 @@ func (p *PluginServiceDeleteToolArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceDeleteToolArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -12287,7 +12324,6 @@ func (p *PluginServiceDeleteToolArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceDeleteToolArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceDeleteToolArgs) DeepEqual(ano *PluginServiceDeleteToolArgs) bool {
@@ -12303,7 +12339,6 @@ func (p *PluginServiceDeleteToolArgs) DeepEqual(ano *PluginServiceDeleteToolArgs
 }
 
 func (p *PluginServiceDeleteToolArgs) Field1DeepEqual(src *base.IDReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -12329,6 +12364,7 @@ func (p *PluginServiceDeleteToolResult) GetSuccess() (v *base.Empty) {
 	}
 	return p.Success
 }
+
 func (p *PluginServiceDeleteToolResult) SetSuccess(x interface{}) {
 	p.Success = x.(*base.Empty)
 }
@@ -12342,7 +12378,6 @@ func (p *PluginServiceDeleteToolResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceDeleteToolResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -12458,7 +12493,6 @@ func (p *PluginServiceDeleteToolResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceDeleteToolResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceDeleteToolResult) DeepEqual(ano *PluginServiceDeleteToolResult) bool {
@@ -12474,7 +12508,6 @@ func (p *PluginServiceDeleteToolResult) DeepEqual(ano *PluginServiceDeleteToolRe
 }
 
 func (p *PluginServiceDeleteToolResult) Field0DeepEqual(src *base.Empty) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -12500,6 +12533,7 @@ func (p *PluginServiceGetToolByIDArgs) GetReq() (v *base.IDReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceGetToolByIDArgs) SetReq(val *base.IDReq) {
 	p.Req = val
 }
@@ -12513,7 +12547,6 @@ func (p *PluginServiceGetToolByIDArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceGetToolByIDArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -12627,7 +12660,6 @@ func (p *PluginServiceGetToolByIDArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceGetToolByIDArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceGetToolByIDArgs) DeepEqual(ano *PluginServiceGetToolByIDArgs) bool {
@@ -12643,7 +12675,6 @@ func (p *PluginServiceGetToolByIDArgs) DeepEqual(ano *PluginServiceGetToolByIDAr
 }
 
 func (p *PluginServiceGetToolByIDArgs) Field1DeepEqual(src *base.IDReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -12669,6 +12700,7 @@ func (p *PluginServiceGetToolByIDResult) GetSuccess() (v *PluginTool) {
 	}
 	return p.Success
 }
+
 func (p *PluginServiceGetToolByIDResult) SetSuccess(x interface{}) {
 	p.Success = x.(*PluginTool)
 }
@@ -12682,7 +12714,6 @@ func (p *PluginServiceGetToolByIDResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceGetToolByIDResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -12798,7 +12829,6 @@ func (p *PluginServiceGetToolByIDResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceGetToolByIDResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceGetToolByIDResult) DeepEqual(ano *PluginServiceGetToolByIDResult) bool {
@@ -12814,7 +12844,6 @@ func (p *PluginServiceGetToolByIDResult) DeepEqual(ano *PluginServiceGetToolByID
 }
 
 func (p *PluginServiceGetToolByIDResult) Field0DeepEqual(src *PluginTool) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -12840,6 +12869,7 @@ func (p *PluginServiceListPluginToolArgs) GetReq() (v *ListPluginToolReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceListPluginToolArgs) SetReq(val *ListPluginToolReq) {
 	p.Req = val
 }
@@ -12853,7 +12883,6 @@ func (p *PluginServiceListPluginToolArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceListPluginToolArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -12967,7 +12996,6 @@ func (p *PluginServiceListPluginToolArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceListPluginToolArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceListPluginToolArgs) DeepEqual(ano *PluginServiceListPluginToolArgs) bool {
@@ -12983,7 +13011,6 @@ func (p *PluginServiceListPluginToolArgs) DeepEqual(ano *PluginServiceListPlugin
 }
 
 func (p *PluginServiceListPluginToolArgs) Field1DeepEqual(src *ListPluginToolReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -13009,6 +13036,7 @@ func (p *PluginServiceListPluginToolResult) GetSuccess() (v *ListPluginToolResp)
 	}
 	return p.Success
 }
+
 func (p *PluginServiceListPluginToolResult) SetSuccess(x interface{}) {
 	p.Success = x.(*ListPluginToolResp)
 }
@@ -13022,7 +13050,6 @@ func (p *PluginServiceListPluginToolResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceListPluginToolResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -13138,7 +13165,6 @@ func (p *PluginServiceListPluginToolResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceListPluginToolResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceListPluginToolResult) DeepEqual(ano *PluginServiceListPluginToolResult) bool {
@@ -13154,7 +13180,6 @@ func (p *PluginServiceListPluginToolResult) DeepEqual(ano *PluginServiceListPlug
 }
 
 func (p *PluginServiceListPluginToolResult) Field0DeepEqual(src *ListPluginToolResp) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -13180,6 +13205,7 @@ func (p *PluginServiceListPluginLabelArgs) GetReq() (v *ListPluginLabelReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceListPluginLabelArgs) SetReq(val *ListPluginLabelReq) {
 	p.Req = val
 }
@@ -13193,7 +13219,6 @@ func (p *PluginServiceListPluginLabelArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceListPluginLabelArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -13307,7 +13332,6 @@ func (p *PluginServiceListPluginLabelArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceListPluginLabelArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceListPluginLabelArgs) DeepEqual(ano *PluginServiceListPluginLabelArgs) bool {
@@ -13323,7 +13347,6 @@ func (p *PluginServiceListPluginLabelArgs) DeepEqual(ano *PluginServiceListPlugi
 }
 
 func (p *PluginServiceListPluginLabelArgs) Field1DeepEqual(src *ListPluginLabelReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -13349,6 +13372,7 @@ func (p *PluginServiceListPluginLabelResult) GetSuccess() (v *ListPluginLabelRes
 	}
 	return p.Success
 }
+
 func (p *PluginServiceListPluginLabelResult) SetSuccess(x interface{}) {
 	p.Success = x.(*ListPluginLabelResp)
 }
@@ -13362,7 +13386,6 @@ func (p *PluginServiceListPluginLabelResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceListPluginLabelResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -13478,7 +13501,6 @@ func (p *PluginServiceListPluginLabelResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceListPluginLabelResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceListPluginLabelResult) DeepEqual(ano *PluginServiceListPluginLabelResult) bool {
@@ -13494,7 +13516,6 @@ func (p *PluginServiceListPluginLabelResult) DeepEqual(ano *PluginServiceListPlu
 }
 
 func (p *PluginServiceListPluginLabelResult) Field0DeepEqual(src *ListPluginLabelResp) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -13520,6 +13541,7 @@ func (p *PluginServiceCallPluginToolArgs) GetReq() (v *CallPluginToolReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceCallPluginToolArgs) SetReq(val *CallPluginToolReq) {
 	p.Req = val
 }
@@ -13533,7 +13555,6 @@ func (p *PluginServiceCallPluginToolArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceCallPluginToolArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -13647,7 +13668,6 @@ func (p *PluginServiceCallPluginToolArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceCallPluginToolArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceCallPluginToolArgs) DeepEqual(ano *PluginServiceCallPluginToolArgs) bool {
@@ -13663,7 +13683,6 @@ func (p *PluginServiceCallPluginToolArgs) DeepEqual(ano *PluginServiceCallPlugin
 }
 
 func (p *PluginServiceCallPluginToolArgs) Field1DeepEqual(src *CallPluginToolReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -13689,6 +13708,7 @@ func (p *PluginServiceCallPluginToolResult) GetSuccess() (v *CallPluginToolResp)
 	}
 	return p.Success
 }
+
 func (p *PluginServiceCallPluginToolResult) SetSuccess(x interface{}) {
 	p.Success = x.(*CallPluginToolResp)
 }
@@ -13702,7 +13722,6 @@ func (p *PluginServiceCallPluginToolResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceCallPluginToolResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -13818,7 +13837,6 @@ func (p *PluginServiceCallPluginToolResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceCallPluginToolResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceCallPluginToolResult) DeepEqual(ano *PluginServiceCallPluginToolResult) bool {
@@ -13834,7 +13852,6 @@ func (p *PluginServiceCallPluginToolResult) DeepEqual(ano *PluginServiceCallPlug
 }
 
 func (p *PluginServiceCallPluginToolResult) Field0DeepEqual(src *CallPluginToolResp) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}
@@ -13860,6 +13877,7 @@ func (p *PluginServiceTestPluginToolArgs) GetReq() (v *CallPluginToolReq) {
 	}
 	return p.Req
 }
+
 func (p *PluginServiceTestPluginToolArgs) SetReq(val *CallPluginToolReq) {
 	p.Req = val
 }
@@ -13873,7 +13891,6 @@ func (p *PluginServiceTestPluginToolArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceTestPluginToolArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -13987,7 +14004,6 @@ func (p *PluginServiceTestPluginToolArgs) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceTestPluginToolArgs(%+v)", *p)
-
 }
 
 func (p *PluginServiceTestPluginToolArgs) DeepEqual(ano *PluginServiceTestPluginToolArgs) bool {
@@ -14003,7 +14019,6 @@ func (p *PluginServiceTestPluginToolArgs) DeepEqual(ano *PluginServiceTestPlugin
 }
 
 func (p *PluginServiceTestPluginToolArgs) Field1DeepEqual(src *CallPluginToolReq) bool {
-
 	if !p.Req.DeepEqual(src) {
 		return false
 	}
@@ -14029,6 +14044,7 @@ func (p *PluginServiceTestPluginToolResult) GetSuccess() (v *TestPluginToolResp)
 	}
 	return p.Success
 }
+
 func (p *PluginServiceTestPluginToolResult) SetSuccess(x interface{}) {
 	p.Success = x.(*TestPluginToolResp)
 }
@@ -14042,7 +14058,6 @@ func (p *PluginServiceTestPluginToolResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceTestPluginToolResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -14158,7 +14173,6 @@ func (p *PluginServiceTestPluginToolResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("PluginServiceTestPluginToolResult(%+v)", *p)
-
 }
 
 func (p *PluginServiceTestPluginToolResult) DeepEqual(ano *PluginServiceTestPluginToolResult) bool {
@@ -14174,7 +14188,6 @@ func (p *PluginServiceTestPluginToolResult) DeepEqual(ano *PluginServiceTestPlug
 }
 
 func (p *PluginServiceTestPluginToolResult) Field0DeepEqual(src *TestPluginToolResp) bool {
-
 	if !p.Success.DeepEqual(src) {
 		return false
 	}

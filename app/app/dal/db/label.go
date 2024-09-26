@@ -96,3 +96,33 @@ func (d *LabelDao) Delete(ctx context.Context, id int64) error {
 
 	return nil
 }
+
+func (d *LabelDao) CreateBatch(ctx context.Context, labels []*model.AppLabel) error {
+	err := d.db(ctx).Model(d.m).CreateInBatches(&labels, 100).Error
+	if err != nil {
+		return errors.Wrap(err, "app label dao create batch error")
+	}
+
+	return nil
+}
+
+func (d *LabelDao) UpdateLabels(ctx context.Context, labelIDs []int64, labelTexts []string) ([]int64, error) {
+	if labelTexts == nil {
+		return labelIDs, nil
+	}
+
+	labels := make([]*model.AppLabel, len(labelTexts))
+	for i, text := range labelTexts {
+		labels[i] = &model.AppLabel{Text: text}
+	}
+
+	if err := d.CreateBatch(ctx, labels); err != nil {
+		return nil, errors.Wrap(err, "app label dao update labels error")
+	}
+
+	for _, label := range labels {
+		labelIDs = append(labelIDs, label.ID)
+	}
+
+	return labelIDs, nil
+}

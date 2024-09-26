@@ -3,6 +3,9 @@ package middleware
 import (
 	"context"
 
+	"github.com/cloudwego/kitex/pkg/endpoint"
+	"github.com/cloudwego/kitex/server"
+
 	"github.com/cloudwego/kitex/pkg/kerrors"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 )
@@ -13,6 +16,22 @@ type Middleware struct {
 
 func NewMiddleware(authSvc AuthService) *Middleware {
 	return &Middleware{authSvc: authSvc}
+}
+
+func (m *Middleware) Middlewares() []server.Option {
+	middles := []endpoint.Middleware{
+		m.StreamingStatus,
+		m.Logger,
+		m.Transaction,
+		m.Auth,
+	}
+
+	opts := make([]server.Option, len(middles))
+	for i, middle := range middles {
+		opts[i] = server.WithMiddleware(middle)
+	}
+
+	return opts
 }
 
 func ReturnBizErr(ctx context.Context, err error) error {

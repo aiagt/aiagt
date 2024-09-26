@@ -9,5 +9,5 @@ import (
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 func Generate() string {
-	return fmt.Sprintf("%6d", r.Intn(999999))
+	return fmt.Sprintf("%06d", r.Intn(999999))
 }
