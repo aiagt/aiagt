@@ -134,7 +134,6 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 	}
 
 	var (
-		functionCalled        bool
 		functionCallName      strings.Builder
 		functionCallArguments strings.Builder
 		messageContent        strings.Builder
@@ -155,29 +154,6 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 			switch {
 			case choice.Delta.FunctionCall != nil:
 				functionCall := choice.Delta.FunctionCall
-
-				if !functionCalled {
-					functionCalled = true
-
-					// send function call message
-					err := stream.Send(&chatsvc.ChatResp{
-						Messages: []*chatsvc.ChatRespMessage{{
-							Role: chatsvc.MessageRole_ASSISTANT,
-							Content: &chatsvc.MessageContent{
-								Type: chatsvc.MessageType_FUNCTION_CALL,
-								Content: &chatsvc.MessageContentValue{FuncCall: &chatsvc.MessageContentValueFuncCall{
-									Name:      functionCall.GetName(),
-									Arguments: functionCall.GetArguments(),
-								}},
-							},
-						}},
-						ConversationId: conversationID,
-					})
-					if err != nil {
-						return bizChat.CallErr(err).Log("send function call message error")
-					}
-				}
-
 				functionCallName.WriteString(functionCall.GetName())
 				functionCallArguments.WriteString(functionCall.GetArguments())
 			case choice.Delta.Content != nil:
@@ -202,6 +178,24 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 				functionCall := &openai.FunctionCall{
 					Name:      safe.Pointer(functionCallName.String()),
 					Arguments: safe.Pointer(functionCallArguments.String()),
+				}
+
+				// send function call message
+				err := stream.Send(&chatsvc.ChatResp{
+					Messages: []*chatsvc.ChatRespMessage{{
+						Role: chatsvc.MessageRole_ASSISTANT,
+						Content: &chatsvc.MessageContent{
+							Type: chatsvc.MessageType_FUNCTION_CALL,
+							Content: &chatsvc.MessageContentValue{FuncCall: &chatsvc.MessageContentValueFuncCall{
+								Name:      functionCall.GetName(),
+								Arguments: functionCall.GetArguments(),
+							}},
+						},
+					}},
+					ConversationId: conversationID,
+				})
+				if err != nil {
+					return bizChat.CallErr(err).Log("send function call message error")
 				}
 
 				tool, ok := toolMap[functionCall.GetName()]
