@@ -8,6 +8,8 @@ import (
 	"net/http"
 
 	"github.com/aiagt/aiagt/pkg/closer"
+	"github.com/aiagt/aiagt/pkg/utils"
+	"github.com/cloudwego/kitex/pkg/klog"
 
 	"github.com/pkg/errors"
 )
@@ -22,16 +24,18 @@ type RequestBody struct {
 	Body           interface{}       `json:"body,omitempty"`
 }
 
-const (
-	HTTPMethod = "POST"
-)
-
 // Call calling external api
 func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *RequestType, responseType *ResponseType, reqBody []byte) ([]byte, error) {
+	bodyPretty := utils.Pretty(body, 1<<10)
+	klog.Infof("[CALL] request body: %s, extension: %s", string(utils.SafeSlice[byte](reqBody, 0, 1000)), bodyPretty)
+
 	// verify request body
 	var requestBody interface{}
 
-	err := VerifySchemaAndUnmarshal(*requestType, reqBody, &requestBody)
+	requestType.Required = nil
+	responseType.Required = nil
+
+	err := VerifySchemaAndUnmarshal(requestType, reqBody, &requestBody)
 	if err != nil {
 		return nil, errors.Wrap(err, "request body validation error")
 	}
@@ -45,7 +49,7 @@ func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *Re
 	}
 
 	// create http request
-	req, err := http.NewRequest(HTTPMethod, apiURL, bytes.NewBuffer(bodyBytes))
+	req, err := http.NewRequest(http.MethodPost, apiURL, bytes.NewBuffer(bodyBytes))
 	if err != nil {
 		return nil, errors.Wrap(err, "new request error")
 	}
@@ -66,10 +70,12 @@ func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *Re
 		return nil, errors.Wrap(err, "read http response error")
 	}
 
+	klog.Infof("[CALL] response body: %s, extension: %s", string(utils.SafeSlice[byte](respBody, 0, 1000)), bodyPretty)
+
 	// verify response body
 	var responseBody interface{}
 
-	err = VerifySchemaAndUnmarshal(*responseType, respBody, responseBody)
+	err = VerifySchemaAndUnmarshal(responseType, respBody, responseBody)
 	if err != nil {
 		return nil, errors.Wrap(err, "response body validation error")
 	}

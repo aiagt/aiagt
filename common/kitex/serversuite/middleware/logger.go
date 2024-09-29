@@ -1,12 +1,10 @@
 package middleware
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 
 	"github.com/aiagt/aiagt/common/ctxutil"
-	"github.com/aiagt/aiagt/pkg/safe"
+	"github.com/aiagt/aiagt/pkg/utils"
 	"github.com/cloudwego/kitex/pkg/endpoint"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/utils/kitexutil"
@@ -24,7 +22,7 @@ func (m *Middleware) Logger(next endpoint.Endpoint) endpoint.Endpoint {
 		}
 
 		// pin pong api
-		klog.CtxInfof(ctx, "[REQUEST] %s, request_id: %s, body: %v", methodName, requestID, pretty(req, 1<<10))
+		klog.CtxInfof(ctx, "[REQUEST] %s, request_id: %s, body: %v", methodName, requestID, utils.Pretty(req, 1<<10))
 
 		err = next(ctx, req, resp)
 		if err != nil {
@@ -32,21 +30,8 @@ func (m *Middleware) Logger(next endpoint.Endpoint) endpoint.Endpoint {
 			return err
 		}
 
-		klog.CtxInfof(ctx, "[RESPONSE] %s, request_id: %s, body: %v", methodName, requestID, pretty(resp, 1<<10))
+		klog.CtxInfof(ctx, "[RESPONSE] %s, request_id: %s, body: %v", methodName, requestID, utils.Pretty(resp, 1<<10))
 
 		return nil
 	}
-}
-
-func pretty(v any, max int) string {
-	resultBytes := safe.UnsafeValue(json.Marshal(v))
-
-	if max > 0 && len(resultBytes) > max {
-		builder := bytes.NewBuffer(resultBytes[:max])
-		builder.WriteString("...")
-
-		return builder.String()
-	}
-
-	return string(resultBytes)
 }

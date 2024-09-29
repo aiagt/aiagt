@@ -3,7 +3,7 @@ package mapper
 import (
 	"encoding/json"
 
-	"github.com/aiagt/aiagt/pkg/safe"
+	"github.com/aiagt/aiagt/pkg/utils"
 
 	"github.com/aiagt/aiagt/app/app/model"
 	"github.com/aiagt/aiagt/common/baseutil"
@@ -49,8 +49,8 @@ func NewGenModelConfig(modelConfig *model.ModelConfig) *appsvc.ModelConfig {
 		MaxTokens:        modelConfig.MaxTokens,
 		Temperature:      modelConfig.Temperature,
 		TopP:             modelConfig.TopP,
-		N:                safe.Value(modelConfig.N),
-		Stream:           safe.Value(modelConfig.Stream),
+		N:                utils.Value(modelConfig.N),
+		Stream:           utils.Value(modelConfig.Stream),
 		Stop:             modelConfig.Stop,
 		PresencePenalty:  modelConfig.PresencePenalty,
 		Seed:             modelConfig.Seed,
@@ -112,8 +112,8 @@ func NewModelModelConfig(modelConfig *appsvc.ModelConfig) *model.ModelConfig {
 		MaxTokens:        modelConfig.MaxTokens,
 		Temperature:      modelConfig.Temperature,
 		TopP:             modelConfig.TopP,
-		N:                safe.Pointer(modelConfig.N),
-		Stream:           safe.Pointer(modelConfig.Stream),
+		N:                utils.Pointer(modelConfig.N),
+		Stream:           utils.Pointer(modelConfig.Stream),
 		Stop:             modelConfig.Stop,
 		PresencePenalty:  modelConfig.PresencePenalty,
 		Seed:             modelConfig.Seed,
@@ -128,7 +128,7 @@ func NewModelModelConfig(modelConfig *appsvc.ModelConfig) *model.ModelConfig {
 	if modelConfig.ResponseFormat != nil {
 		responseFormat, err := json.Marshal(modelConfig.ResponseFormat)
 		if err == nil {
-			result.ResponseFormat = safe.Pointer(string(responseFormat))
+			result.ResponseFormat = utils.Pointer(string(responseFormat))
 		}
 	}
 

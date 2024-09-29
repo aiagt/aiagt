@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/aiagt/aiagt/pkg/hash/hmap"
-	"github.com/aiagt/aiagt/pkg/safe"
+	"github.com/aiagt/aiagt/pkg/utils"
 	"github.com/pkg/errors"
 
 	"github.com/aiagt/aiagt/common/bizerr"
@@ -102,7 +102,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 		messages    = mapper.NewOpenAIListMessage(msgs)
 		modelConfig = app.ModelConfig
 		functions   = mapper.NewOpenAIListFunctionDefinition(app.Tools)
-		toolMap     = hmap.NewMapWithKeyFunc(app.Tools, func(t *pluginsvc.PluginTool) string { return t.Name })
+		toolMap     = hmap.FromSliceEntries(app.Tools, func(t *pluginsvc.PluginTool) (string, *pluginsvc.PluginTool, bool) { return t.Name, t, true })
 	)
 
 	// call model chat api
@@ -176,8 +176,8 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 				}
 			case choice.FinishReason == "function_call":
 				functionCall := &openai.FunctionCall{
-					Name:      safe.Pointer(functionCallName.String()),
-					Arguments: safe.Pointer(functionCallArguments.String()),
+					Name:      utils.Pointer(functionCallName.String()),
+					Arguments: utils.Pointer(functionCallArguments.String()),
 				}
 
 				// send function call message
@@ -259,9 +259,7 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 		return bizChat.CallErr(err).Log("list secret error")
 	}
 
-	secretMap := hmap.NewMapWithFuncs(listSecretResp.Secrets,
-		func(t *usersvc.Secret) string { return t.Name },
-		func(t *usersvc.Secret) string { return t.Value })
+	secretMap := hmap.FromSliceEntries(listSecretResp.Secrets, func(t *usersvc.Secret) (string, string, bool) { return t.Name, t.Value, true })
 
 	// call plugin tool
 	callResp, err := s.pluginCli.CallPluginTool(ctx, &pluginsvc.CallPluginToolReq{

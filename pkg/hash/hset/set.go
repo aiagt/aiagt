@@ -1,42 +1,44 @@
 package hset
 
-import (
-	"github.com/aiagt/aiagt/pkg/hash"
-)
-
 type Set[T comparable] map[T]struct{}
 
-func NewSet[T comparable](vals ...T) Set[T] {
-	s := make(Set[T], len(vals))
-	for _, v := range vals {
-		s[v] = struct{}{}
+func NewSet[T comparable](cap int) Set[T] {
+	return make(Set[T], cap)
+}
+
+func FromMap[K comparable, V any](m map[K]V) Set[K] {
+	s := make(Set[K], len(m))
+	for k := range m {
+		s[k] = struct{}{}
 	}
 
 	return s
 }
 
-func NewSetWithKey[T, K comparable, E hash.Comparable[K, T]](key K, vals ...E) Set[T] {
-	s := make(Set[T], len(vals))
-	for _, v := range vals {
-		s[v.HashKey(key)] = struct{}{}
+func FromSlice[K comparable, T any](vals []T, fn func(T) K) Set[K] {
+	s := make(Set[K])
+	for _, val := range vals {
+		s[fn(val)] = struct{}{}
 	}
 
 	return s
 }
 
-func NewSetWithFunc[T comparable, E any](fn func(E) T, vals ...E) Set[T] {
-	s := make(Set[T], len(vals))
-	for _, v := range vals {
-		s[fn(v)] = struct{}{}
-	}
-
-	return s
+func (s Set[T]) Add(val T) {
+	s[val] = struct{}{}
 }
 
-func (s Set[T]) Add(vals ...T) {
-	for _, v := range vals {
-		s[v] = struct{}{}
+func (s Set[T]) Union(other Set[T]) Set[T] {
+	result := make(Set[T], max(len(s), len(other)))
+	for v := range s {
+		result.Add(v)
 	}
+
+	for v := range other {
+		result.Add(v)
+	}
+
+	return result
 }
 
 func (s Set[T]) Remove(v T) {

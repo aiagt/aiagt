@@ -9,6 +9,6 @@ type (
 	ResponseType = jsonschema.Definition
 )
 
-func VerifySchemaAndUnmarshal(schema jsonschema.Definition, body []byte, v any) error {
-	return jsonschema.VerifySchemaAndUnmarshal(schema, body, v)
+func VerifySchemaAndUnmarshal(schema *jsonschema.Definition, body []byte, v any) error {
+	return jsonschema.VerifySchemaAndUnmarshal(*schema, body, v)
 }

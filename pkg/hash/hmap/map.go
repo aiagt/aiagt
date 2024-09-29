@@ -1,42 +1,36 @@
 package hmap
 
-import (
-	"github.com/aiagt/aiagt/pkg/hash"
-)
+type Map[K comparable, V any] map[K]V
 
-type Map[E comparable, T any] map[E]T
+func NewMap[K comparable, V any](cap int) Map[K, V] {
+	return make(Map[K, V], cap)
+}
 
-func NewMap[E, K comparable, T hash.Comparable[K, E]](vals []T, key K) Map[E, T] {
-	m := make(Map[E, T], len(vals))
-	for _, val := range vals {
-		m[val.HashKey(key)] = val
-	}
-
+func FromMap[K comparable, V any](m map[K]V) Map[K, V] {
 	return m
 }
 
-func NewMapWithValueFunc[E, K comparable, V any, T hash.Comparable[K, E]](vals []T, key K, vf func(T) V) Map[E, V] {
-	m := make(Map[E, V], len(vals))
-	for _, val := range vals {
-		m[val.HashKey(key)] = vf(val)
+func FromMapEntries[T, K comparable, E, V any](m map[T]E, fn func(k T, v E) (K, V, bool)) Map[K, V] {
+	result := NewMap[K, V](0)
+
+	for k, v := range m {
+		nk, nv, ok := fn(k, v)
+		if ok {
+			result[nk] = nv
+		}
 	}
 
-	return m
+	return result
 }
 
-func NewMapWithKeyFunc[E comparable, T any](vals []T, kf func(T) E) Map[E, T] {
-	m := make(Map[E, T], len(vals))
-	for _, val := range vals {
-		m[kf(val)] = val
-	}
+func FromSliceEntries[K comparable, T, V any](vals []T, fn func(T) (K, V, bool)) Map[K, V] {
+	m := make(Map[K, V], len(vals))
 
-	return m
-}
-
-func NewMapWithFuncs[E comparable, V, T any](vals []T, kf func(T) E, vf func(T) V) Map[E, V] {
-	m := make(Map[E, V], len(vals))
 	for _, val := range vals {
-		m[kf(val)] = vf(val)
+		k, v, ok := fn(val)
+		if ok {
+			m[k] = v
+		}
 	}
 
 	return m
@@ -58,14 +52,4 @@ func (m Map[E, T]) Values() []T {
 	}
 
 	return values
-}
-
-func (m Map[E, T]) Get(key E) T {
-	val, ok := m[key]
-	if !ok {
-		var zero T
-		return zero
-	}
-
-	return val
 }
