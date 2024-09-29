@@ -145,6 +145,7 @@ func NewModelListPluginSecret(list []*pluginsvc.PluginSecret) []*model.PluginSec
 
 func NewModelCreatePlugin(plugin *pluginsvc.CreatePluginReq, userID int64, labelIDs []int64) *model.Plugin {
 	return &model.Plugin{
+		Key:           plugin.Key,
 		Name:          plugin.Name,
 		Description:   plugin.Description,
 		DescriptionMd: plugin.DescriptionMd,
