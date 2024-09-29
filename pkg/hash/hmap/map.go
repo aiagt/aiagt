@@ -53,8 +53,3 @@ func (m Map[E, T]) Values() []T {
 
 	return values
 }
-
-func (m Map[E, T]) Get(key E) T {
-	val, _ := m[key]
-	return val
-}

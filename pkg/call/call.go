@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
+
 	"github.com/aiagt/aiagt/pkg/closer"
 	"github.com/aiagt/aiagt/pkg/utils"
 	"github.com/cloudwego/kitex/pkg/klog"
-	"io"
-	"net/http"
 
 	"github.com/pkg/errors"
 )
@@ -33,6 +34,7 @@ func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *Re
 
 	requestType.Required = nil
 	responseType.Required = nil
+
 	err := VerifySchemaAndUnmarshal(requestType, reqBody, &requestBody)
 	if err != nil {
 		return nil, errors.Wrap(err, "request body validation error")

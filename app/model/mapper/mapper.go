@@ -2,8 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	"github.com/aiagt/aiagt/pkg/hash/hmap"
 	"strings"
+
+	"github.com/aiagt/aiagt/pkg/hash/hmap"
 
 	"github.com/aiagt/aiagt/app/model/model"
 	"github.com/aiagt/aiagt/pkg/call"

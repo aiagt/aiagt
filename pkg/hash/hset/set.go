@@ -8,7 +8,7 @@ func NewSet[T comparable](cap int) Set[T] {
 
 func FromMap[K comparable, V any](m map[K]V) Set[K] {
 	s := make(Set[K], len(m))
-	for k, _ := range m {
+	for k := range m {
 		s[k] = struct{}{}
 	}
 
