@@ -1,4 +1,4 @@
-package safe
+package utils
 
 func Value[T any](v *T) T {
 	if v == nil {
@@ -22,15 +22,10 @@ func OptionalPointer[T comparable](v T) *T {
 	return &v
 }
 
-func UnsafeValue[T any](t T, _ error) T {
+func FirstResult[T any](t T, _ any) T {
 	return t
 }
 
-func First[T any](list []T) T {
-	var zero T
-	if len(list) == 0 {
-		return zero
-	}
-
-	return list[0]
+func SecondResult[T any](_ any, t T, _ any) T {
+	return t
 }

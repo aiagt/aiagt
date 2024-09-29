@@ -2,6 +2,8 @@ package handler
 
 import (
 	"context"
+	"github.com/aiagt/aiagt/app/plugin/model"
+	"github.com/aiagt/aiagt/pkg/hash/hmap"
 
 	"github.com/aiagt/aiagt/pkg/call"
 	"github.com/aiagt/aiagt/pkg/hash/hset"
@@ -18,7 +20,7 @@ import (
 func (s *PluginServiceImpl) CallPluginTool(ctx context.Context, req *pluginsvc.CallPluginToolReq) (resp *pluginsvc.CallPluginToolResp, err error) {
 	tool, err := s.toolDao.GetByID(ctx, req.ToolId)
 	if err != nil {
-		return nil, bizDeleteTool.NewErr(err)
+		return nil, bizCallPluginTool.NewErr(err)
 	}
 
 	if tool.PluginID != req.PluginId {
@@ -27,16 +29,16 @@ func (s *PluginServiceImpl) CallPluginTool(ctx context.Context, req *pluginsvc.C
 
 	plugin, err := s.pluginDao.GetByID(ctx, tool.PluginID)
 	if err != nil {
-		return nil, bizDeleteTool.NewErr(err)
+		return nil, bizCallPluginTool.NewErr(err)
 	}
 
 	userID, ok := ctxutil.GetUserID(ctx)
 	if !ok {
-		return nil, bizDeleteTool.NewErr(err)
+		return nil, bizCallPluginTool.NewErr(err)
 	}
 
 	if plugin.AuthorID != userID {
-		return nil, bizDeleteTool.CodeErr(bizerr.ErrCodeForbidden)
+		return nil, bizCallPluginTool.CodeErr(bizerr.ErrCodeForbidden)
 	}
 
 	listSecret, err := s.userCli.ListSecret(ctx, &usersvc.ListSecretReq{
@@ -46,29 +48,25 @@ func (s *PluginServiceImpl) CallPluginTool(ctx context.Context, req *pluginsvc.C
 		PluginId: &req.PluginId,
 	})
 	if err != nil {
-		return nil, bizDeleteTool.NewErr(err)
+		return nil, bizCallPluginTool.NewErr(err)
 	}
 
-	secretSet := hset.NewSetWithKey("secret_name", plugin.Secrets...)
+	secretDefs := hset.FromSlice(plugin.Secrets, func(t *model.PluginSecret) string { return t.Name })
 
-	secretMap := make(map[string]string, len(plugin.Secrets))
-
-	for _, secret := range listSecret.Secrets {
-		if secretSet.Has(secret.Name) {
-			secretMap[secret.Name] = secret.Value
-		}
-	}
+	userSecretMap := hmap.FromSliceEntries(listSecret.Secrets, func(t *usersvc.Secret) (string, string, bool) {
+		return t.Name, t.Value, secretDefs.Has(t.Name)
+	})
 
 	body := &call.RequestBody{
 		PluginID: tool.PluginID,
 		ToolID:   tool.ID,
 		UserID:   userID,
-		Secrets:  secretMap,
+		Secrets:  userSecretMap,
 	}
 
 	callResp, err := call.Call(ctx, body, tool.ApiURL, tool.RequestType, tool.ResponseType, req.Request)
 	if err != nil {
-		return nil, bizDeleteTool.NewErr(err)
+		return nil, bizCallPluginTool.NewErr(err)
 	}
 
 	resp = &pluginsvc.CallPluginToolResp{

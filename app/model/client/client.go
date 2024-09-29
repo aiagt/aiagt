@@ -6,7 +6,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/aiagt/aiagt/pkg/safe"
+	"github.com/aiagt/aiagt/pkg/utils"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/sashabaranov/go-openai/jsonschema"
 
@@ -41,7 +41,7 @@ func main() {
 			Messages: []*openai.ChatCompletionMessage{
 				{
 					Role:    "user",
-					Content: safe.Pointer("北京天气怎么样？"),
+					Content: utils.Pointer("北京天气怎么样？"),
 				},
 			},
 			// MaxTokens:         nil,
@@ -61,7 +61,7 @@ func main() {
 			Functions: []*openai.FunctionDefinition{
 				{
 					Name:        "get_current_weather",
-					Description: safe.Pointer("Get the current weather in a given location"),
+					Description: utils.Pointer("Get the current weather in a given location"),
 					Parameters:  p,
 				},
 			},

@@ -22,29 +22,11 @@ type Plugin struct {
 	PublishedAt   *time.Time      `gorm:"column:published_at"`
 }
 
-func (p *Plugin) HashKey(key string) int64 {
-	switch key {
-	case "author_id":
-		return p.AuthorID
-	default:
-		return 0
-	}
-}
-
 type PluginSecret struct {
 	Name          string `json:"name,omitempty"`
 	Description   string `json:"description,omitempty"`
 	AcquireMethod string `json:"acquire_method,omitempty"`
 	Link          string `json:"link,omitempty"`
-}
-
-func (p *PluginSecret) HashKey(key string) string {
-	switch key {
-	case "secret_name":
-		return p.Name
-	default:
-		return ""
-	}
 }
 
 type PluginOptional struct {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/aiagt/aiagt/pkg/safe"
+	"github.com/aiagt/aiagt/pkg/utils"
 
 	"github.com/aiagt/aiagt/app/app/model"
 	"github.com/aiagt/aiagt/common/bizerr"
@@ -25,8 +25,8 @@ func (s *AppServiceImpl) PublishApp(ctx context.Context, req *appsvc.PublishAppR
 	}
 
 	err = s.appDao.Update(ctx, req.Id, &model.AppOptional{
-		PublishedAt: safe.Pointer(time.Now()),
-		Version:     safe.Pointer(req.Version),
+		PublishedAt: utils.Pointer(time.Now()),
+		Version:     utils.Pointer(req.Version),
 	})
 	if err != nil {
 		return nil, bizPublishApp.NewErr(err)

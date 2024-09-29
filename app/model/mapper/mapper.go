@@ -2,11 +2,12 @@ package mapper
 
 import (
 	"encoding/json"
+	"github.com/aiagt/aiagt/pkg/hash/hmap"
 	"strings"
 
 	"github.com/aiagt/aiagt/app/model/model"
 	"github.com/aiagt/aiagt/pkg/call"
-	"github.com/aiagt/aiagt/pkg/safe"
+	"github.com/aiagt/aiagt/pkg/utils"
 
 	"github.com/aiagt/aiagt/kitex_gen/modelsvc"
 	"github.com/aiagt/aiagt/kitex_gen/openai"
@@ -18,19 +19,19 @@ func NewOpenAIGoRequest(req *openai.ChatCompletionRequest, modelKey string) *ope
 	result := &openaigo.ChatCompletionRequest{
 		Model:            modelKey,
 		Messages:         NewOpenAIGoListMessage(req.Messages),
-		MaxTokens:        int(safe.Value(req.MaxTokens)),
-		Temperature:      float32(safe.Value(req.Temperature)),
-		TopP:             float32(safe.Value(req.TopP)),
-		N:                int(safe.Value(req.N)),
-		Stream:           safe.Value(req.Stream),
+		MaxTokens:        int(utils.Value(req.MaxTokens)),
+		Temperature:      float32(utils.Value(req.Temperature)),
+		TopP:             float32(utils.Value(req.TopP)),
+		N:                int(utils.Value(req.N)),
+		Stream:           utils.Value(req.Stream),
 		Stop:             req.Stop,
-		PresencePenalty:  float32(safe.Value(req.PresencePenalty)),
-		Seed:             safe.Pointer(int(safe.Value(req.Seed))),
-		FrequencyPenalty: float32(safe.Value(req.FrequencyPenalty)),
+		PresencePenalty:  float32(utils.Value(req.PresencePenalty)),
+		Seed:             utils.Pointer(int(utils.Value(req.Seed))),
+		FrequencyPenalty: float32(utils.Value(req.FrequencyPenalty)),
 		LogitBias:        lo.MapEntries(req.LogitBias, func(k string, v int32) (string, int) { return k, int(v) }),
-		LogProbs:         safe.Value(req.Logprobs),
-		TopLogProbs:      int(safe.Value(req.TopLogprobs)),
-		User:             safe.Value(req.User),
+		LogProbs:         utils.Value(req.Logprobs),
+		TopLogProbs:      int(utils.Value(req.TopLogprobs)),
+		User:             utils.Value(req.User),
 		Functions:        NewOpenAIGoListFunction(req.Functions),
 		StreamOptions:    NewOpenAIGoStreamOptions(req.StreamOptions),
 		// FunctionCall: safe.Value(req.FunctionCall),
@@ -45,9 +46,9 @@ func NewOpenAIGoRequest(req *openai.ChatCompletionRequest, modelKey string) *ope
 func NewOpenAIGoMessage(message *openai.ChatCompletionMessage) *openaigo.ChatCompletionMessage {
 	return &openaigo.ChatCompletionMessage{
 		Role:         message.Role,
-		Content:      safe.Value(message.Content),
+		Content:      utils.Value(message.Content),
 		MultiContent: NewOpenAIGoMultiContent(message.MultiContent),
-		Name:         safe.Value(message.Name),
+		Name:         utils.Value(message.Name),
 		FunctionCall: NewOpenAIGoFunctionCall(message.FunctionCall),
 	}
 }
@@ -61,7 +62,7 @@ func NewOpenAIGoMultiContent(multiContent []*openai.ChatMessagePart) []openaigo.
 	for i, part := range multiContent {
 		result[i] = openaigo.ChatMessagePart{
 			Type: NewOpenAIGoMultiContentPartType(part.Type),
-			Text: safe.Value(part.Text),
+			Text: utils.Value(part.Text),
 			ImageURL: &openaigo.ChatMessageImageURL{
 				URL:    part.ImageUrl.Url,
 				Detail: openaigo.ImageURLDetail(strings.ToLower(part.ImageUrl.Detail.String())),
@@ -89,15 +90,15 @@ func NewOpenAIGoFunctionCall(functionCall *openai.FunctionCall) *openaigo.Functi
 	}
 
 	return &openaigo.FunctionCall{
-		Name:      safe.Value(functionCall.Name),
-		Arguments: safe.Value(functionCall.Arguments),
+		Name:      utils.Value(functionCall.Name),
+		Arguments: utils.Value(functionCall.Arguments),
 	}
 }
 
 func NewOpenAIGoListMessage(messages []*openai.ChatCompletionMessage) []openaigo.ChatCompletionMessage {
 	result := make([]openaigo.ChatCompletionMessage, len(messages))
 	for i, msg := range messages {
-		result[i] = safe.Value(NewOpenAIGoMessage(msg))
+		result[i] = utils.Value(NewOpenAIGoMessage(msg))
 	}
 
 	return result
@@ -108,14 +109,18 @@ func NewOpenAIGoFunction(function *openai.FunctionDefinition) *openaigo.Function
 		return nil
 	}
 
-	// NOTE: 'additionalProperties' is required to be supplied and to be false
-	parameters := call.RequestType{AdditionalProperties: false}
+	var parameters call.RequestType
 	_ = json.Unmarshal(function.Parameters, &parameters)
+
+	// NOTE: 'required' is required to be supplied and to be an array including every key in properties
+	parameters.Required = hmap.FromMap(parameters.Properties).Keys()
+	// NOTE: 'additionalProperties' is required to be supplied and to be false
+	parameters.AdditionalProperties = false
 
 	return &openaigo.FunctionDefinition{
 		Name:        function.Name,
-		Description: safe.Value(function.Description),
-		Strict:      safe.Value(function.Strict),
+		Description: utils.Value(function.Description),
+		Strict:      utils.Value(function.Strict),
 		Parameters:  &parameters,
 	}
 }
@@ -123,7 +128,7 @@ func NewOpenAIGoFunction(function *openai.FunctionDefinition) *openaigo.Function
 func NewOpenAIGoListFunction(functions []*openai.FunctionDefinition) []openaigo.FunctionDefinition {
 	result := make([]openaigo.FunctionDefinition, len(functions))
 	for i, function := range functions {
-		result[i] = safe.Value(NewOpenAIGoFunction(function))
+		result[i] = utils.Value(NewOpenAIGoFunction(function))
 	}
 
 	return result
@@ -135,7 +140,7 @@ func NewOpenAIGoStreamOptions(streamOptions *openai.StreamOptions) *openaigo.Str
 	}
 
 	return &openaigo.StreamOptions{
-		IncludeUsage: safe.Value(streamOptions.IncludeUsage),
+		IncludeUsage: utils.Value(streamOptions.IncludeUsage),
 	}
 }
 
@@ -168,8 +173,8 @@ func NewOpenAIResponseChoice(choice *openaigo.ChatCompletionStreamChoice) *opena
 
 func NewOpenAIResponseDelta(delta *openaigo.ChatCompletionStreamChoiceDelta) *openai.ChatCompletionStreamChoiceDelta {
 	return &openai.ChatCompletionStreamChoiceDelta{
-		Content:      safe.OptionalPointer(delta.Content),
-		Role:         safe.OptionalPointer(delta.Role),
+		Content:      utils.OptionalPointer(delta.Content),
+		Role:         utils.OptionalPointer(delta.Role),
 		FunctionCall: NewOpenAIFunctionCall(delta.FunctionCall),
 	}
 }
@@ -180,8 +185,8 @@ func NewOpenAIFunctionCall(functionCall *openaigo.FunctionCall) *openai.Function
 	}
 
 	return &openai.FunctionCall{
-		Name:      safe.OptionalPointer(functionCall.Name),
-		Arguments: safe.OptionalPointer(functionCall.Arguments),
+		Name:      utils.OptionalPointer(functionCall.Name),
+		Arguments: utils.OptionalPointer(functionCall.Arguments),
 	}
 }
 
