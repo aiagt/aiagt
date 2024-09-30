@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"path/filepath"
+
 	appcontroller "github.com/aiagt/aiagt/apps/app/controller"
 	chatcontroller "github.com/aiagt/aiagt/apps/chat/controller"
 	modelcontroller "github.com/aiagt/aiagt/apps/model/controller"
@@ -14,7 +16,6 @@ import (
 	"github.com/hertz-contrib/logger/accesslog"
 	"github.com/hertz-contrib/monitor-prometheus"
 	"github.com/hertz-contrib/obs-opentelemetry/tracing"
-	"path/filepath"
 )
 
 var conf = new(ServerConf)

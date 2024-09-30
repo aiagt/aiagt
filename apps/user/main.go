@@ -1,13 +1,14 @@
 package main
 
 import (
+	"log"
+
 	"github.com/aiagt/aiagt/common/observability"
 	"github.com/aiagt/aiagt/pkg/logerr"
 	ktcenter "github.com/aiagt/kitextool/conf/center"
 	ktlog "github.com/aiagt/kitextool/option/server/log"
 	ktregistry "github.com/aiagt/kitextool/option/server/registry"
 	"gorm.io/plugin/opentelemetry/tracing"
-	"log"
 
 	"github.com/aiagt/aiagt/apps/user/conf"
 	"github.com/aiagt/aiagt/apps/user/dal/cache"

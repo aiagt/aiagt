@@ -3,9 +3,10 @@ package db
 import (
 	"context"
 	"fmt"
-	ktdb "github.com/aiagt/kitextool/option/server/db"
 	"math"
 	"strings"
+
+	ktdb "github.com/aiagt/kitextool/option/server/db"
 
 	"github.com/aiagt/aiagt/apps/plugin/model"
 	"github.com/aiagt/aiagt/kitex_gen/base"

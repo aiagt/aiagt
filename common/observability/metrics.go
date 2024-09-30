@@ -1,6 +1,9 @@
 package observability
 
 import (
+	"net"
+	"net/http"
+
 	"github.com/aiagt/aiagt/pkg/logerr"
 	"github.com/cloudwego/kitex/pkg/registry"
 	"github.com/cloudwego/kitex/server"
@@ -8,8 +11,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"net"
-	"net/http"
 )
 
 var Registry *prometheus.Registry

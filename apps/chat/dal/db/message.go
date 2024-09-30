@@ -2,8 +2,9 @@ package db
 
 import (
 	"context"
-	ktdb "github.com/aiagt/kitextool/option/server/db"
 	"math"
+
+	ktdb "github.com/aiagt/kitextool/option/server/db"
 
 	"github.com/aiagt/aiagt/apps/chat/model"
 	"github.com/aiagt/aiagt/kitex_gen/base"

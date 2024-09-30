@@ -1,6 +1,8 @@
 package rpc
 
 import (
+	"path/filepath"
+
 	"github.com/aiagt/aiagt/common/kitex/clientsuite"
 	appsvc "github.com/aiagt/aiagt/kitex_gen/appsvc/appservice"
 	chatsvc "github.com/aiagt/aiagt/kitex_gen/chatsvc/chatservice"
@@ -10,7 +12,6 @@ import (
 	ktconf "github.com/aiagt/kitextool/conf"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/client/streamclient"
-	"path/filepath"
 )
 
 var (
