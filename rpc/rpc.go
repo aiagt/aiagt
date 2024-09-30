@@ -7,10 +7,10 @@ import (
 	modelsvc "github.com/aiagt/aiagt/kitex_gen/modelsvc/modelservice"
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc/pluginservice"
 	usersvc "github.com/aiagt/aiagt/kitex_gen/usersvc/userservice"
-	ktclient "github.com/aiagt/kitextool/suite/client"
+	ktconf "github.com/aiagt/kitextool/conf"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/client/streamclient"
-	"github.com/cloudwego/kitex/transport"
+	"path/filepath"
 )
 
 var (
@@ -21,48 +21,22 @@ var (
 	ChatStreamCli  chatsvc.StreamClient
 	ModelCli       modelsvc.Client
 	ModelStreamCli modelsvc.StreamClient
+
+	conf = new(ktconf.MultiClientConf)
 )
 
 func init() {
-	UserCli = usersvc.MustNewClient("user",
-		client.WithHostPorts(":8931"),
-		client.WithSuite(clientsuite.NewClientSuite()),
-		client.WithSuite(ktclient.NewKitexToolSuite(nil, ktclient.WithTransport(transport.TTHeaderFramed))),
-	)
+	ktconf.LoadFiles(conf, "conf.yaml", filepath.Join("rpc", "conf.yaml"))
 
-	PluginCli = pluginsvc.MustNewClient("plugin",
-		client.WithHostPorts(":8932"),
-		client.WithSuite(clientsuite.NewClientSuite()),
-		client.WithSuite(ktclient.NewKitexToolSuite(nil, ktclient.WithTransport(transport.TTHeaderFramed))),
-	)
+	UserCli = usersvc.MustNewClient("user", client.WithSuite(clientsuite.NewClientSuite(conf, "user")))
 
-	AppCli = appsvc.MustNewClient("app",
-		client.WithHostPorts(":8933"),
-		client.WithSuite(clientsuite.NewClientSuite()),
-		client.WithSuite(ktclient.NewKitexToolSuite(nil, ktclient.WithTransport(transport.TTHeaderFramed))),
-	)
+	PluginCli = pluginsvc.MustNewClient("plugin", client.WithSuite(clientsuite.NewClientSuite(conf, "plugin")))
 
-	ChatCli = chatsvc.MustNewClient("app",
-		client.WithHostPorts(":8934"),
-		client.WithSuite(clientsuite.NewClientSuite()),
-		client.WithSuite(ktclient.NewKitexToolSuite(nil, ktclient.WithTransport(transport.TTHeaderFramed))),
-	)
+	AppCli = appsvc.MustNewClient("app", client.WithSuite(clientsuite.NewClientSuite(conf, "app")))
 
-	ChatStreamCli = chatsvc.MustNewStreamClient("app",
-		streamclient.WithHostPorts(":8934"),
-		streamclient.WithSuite(clientsuite.NewClientSuite()),
-		streamclient.WithSuite(ktclient.NewKitexToolSuite(nil, ktclient.WithTransport(transport.TTHeaderFramed))),
-	)
+	ChatCli = chatsvc.MustNewClient("chat", client.WithSuite(clientsuite.NewClientSuite(conf, "chat")))
+	ChatStreamCli = chatsvc.MustNewStreamClient("chat", streamclient.WithSuite(clientsuite.NewClientSuite(conf, "chat")))
 
-	ModelCli = modelsvc.MustNewClient("model",
-		client.WithHostPorts(":8935"),
-		client.WithSuite(clientsuite.NewClientSuite()),
-		client.WithSuite(ktclient.NewKitexToolSuite(nil, ktclient.WithTransport(transport.TTHeaderFramed))),
-	)
-
-	ModelStreamCli = modelsvc.MustNewStreamClient("model",
-		streamclient.WithHostPorts(":8935"),
-		streamclient.WithSuite(clientsuite.NewClientSuite()),
-		streamclient.WithSuite(ktclient.NewKitexToolSuite(nil, ktclient.WithTransport(transport.TTHeaderFramed))),
-	)
+	ModelCli = modelsvc.MustNewClient("model", client.WithSuite(clientsuite.NewClientSuite(conf, "model")))
+	ModelStreamCli = modelsvc.MustNewStreamClient("model", streamclient.WithSuite(clientsuite.NewClientSuite(conf, "model")))
 }

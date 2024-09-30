@@ -1,0 +1,24 @@
+user:
+  resolver:
+    address:
+      - localhost:8500
+
+plugin:
+  resolver:
+    address:
+      - localhost:8500
+
+app:
+  resolver:
+    address:
+      - localhost:8500
+
+chat:
+  resolver:
+    address:
+      - localhost:8500
+
+model:
+  resolver:
+    address:
+      - localhost:8500

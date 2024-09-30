@@ -5,7 +5,7 @@ import (
 
 	"github.com/aiagt/aiagt/common/bizerr"
 
-	"github.com/aiagt/aiagt/app/user/pkg/jwt"
+	"github.com/aiagt/aiagt/apps/user/pkg/jwt"
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 	"github.com/cloudwego/kitex/client/callopt"

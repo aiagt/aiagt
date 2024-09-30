@@ -1,0 +1,29 @@
+server:
+  name: user
+  address: ":8931"
+
+config_center:
+  port: 8500
+
+registry:
+  address:
+    - ":8500"
+
+db:
+  dsn: "root:root@tcp(127.0.0.1:3306)/aiagt?charset=utf8mb4&parseTime=True&loc=Local"
+
+redis:
+  address: "127.0.0.1:6379"
+
+email:
+  smtp_addr: smtp.feishu.cn:587
+  smtp_host: smtp.feishu.cn
+  email_from: "Aiagt <no-reply@aiagt.cn>"
+  email_address: no-reply@aiagt.cn
+  auth: xxx
+
+auth:
+  encrypt_salt: xxx
+  snowflake_node: 1
+  jwt_key: xxx
+  jwt_expire: 720  # hour

@@ -1,0 +1,16 @@
+server:
+  name: plugin
+  address: ":8932"
+
+config_center:
+  port: 8500
+
+registry:
+  address:
+    - ":8500"
+
+db:
+  dsn: "root:root@tcp(127.0.0.1:3306)/aiagt?charset=utf8mb4&parseTime=True&loc=Local"
+
+redis:
+  address: "127.0.0.1:26379"
