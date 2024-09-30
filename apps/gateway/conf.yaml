@@ -1,6 +1,6 @@
 server:
-  name: plugin
-  address: ":8932"
+  name: gateway
+  address: ":8930"
 
 config_center:
   port: 8500
@@ -13,7 +13,7 @@ db:
   dsn: "root:root@tcp(127.0.0.1:3306)/aiagt?charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:
-  address: "127.0.0.1:26379"
+  address: "127.0.0.1:6379"
 
 metrics:
-  addr: ":9932"
+  addr: ":9930"

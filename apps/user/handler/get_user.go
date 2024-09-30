@@ -2,6 +2,8 @@ package handler
 
 import (
 	"context"
+	"github.com/cloudwego/kitex/pkg/klog"
+	"go.uber.org/zap"
 
 	"github.com/aiagt/aiagt/apps/user/mapper"
 	"github.com/aiagt/aiagt/common/bizerr"
@@ -22,6 +24,8 @@ func (s *UserServiceImpl) GetUser(ctx context.Context) (resp *usersvc.User, err 
 	}
 
 	resp = mapper.NewGenUser(user)
+
+	klog.Infof("%#v", zap.String("user", resp.Username))
 
 	return
 }

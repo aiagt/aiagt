@@ -2,10 +2,10 @@ package db
 
 import (
 	"context"
+	ktdb "github.com/aiagt/kitextool/option/server/db"
 	"math"
 
 	"github.com/aiagt/aiagt/apps/chat/model"
-	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/chatsvc"
 	"github.com/pkg/errors"
@@ -23,7 +23,7 @@ func NewConversationDao() *ConversationDao {
 }
 
 func (d *ConversationDao) db(ctx context.Context) *gorm.DB {
-	return ctxutil.Tx(ctx)
+	return ktdb.DBCtx(ctx)
 }
 
 // GetByID get conversation by id

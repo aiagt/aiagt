@@ -13,13 +13,8 @@ func (m *Middleware) Transaction(next endpoint.Endpoint) endpoint.Endpoint {
 	return func(ctx context.Context, req, resp interface{}) (err error) {
 		const defaultDBName = ""
 
-		db, err := ktdb.GetDBCtx(ctx, defaultDBName)
-		if err != nil {
-			return next(ctx, req, resp)
-		}
-
 		// start transaction
-		tx := db.Begin()
+		tx := ktdb.DB().Begin()
 		ctx = ctxutil.WithTx(ctx, tx)
 
 		err = next(ctx, req, resp)

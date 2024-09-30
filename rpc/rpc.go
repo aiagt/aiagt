@@ -14,11 +14,15 @@ import (
 )
 
 var (
-	UserCli        usersvc.Client
-	PluginCli      pluginsvc.Client
-	AppCli         appsvc.Client
-	ChatCli        chatsvc.Client
-	ChatStreamCli  chatsvc.StreamClient
+	UserCli usersvc.Client
+
+	PluginCli pluginsvc.Client
+
+	AppCli appsvc.Client
+
+	ChatCli       chatsvc.Client
+	ChatStreamCli chatsvc.StreamClient
+
 	ModelCli       modelsvc.Client
 	ModelStreamCli modelsvc.StreamClient
 

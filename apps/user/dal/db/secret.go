@@ -2,9 +2,9 @@ package db
 
 import (
 	"context"
+	ktdb "github.com/aiagt/kitextool/option/server/db"
 	"math"
 
-	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 
 	"github.com/aiagt/aiagt/apps/user/model"
@@ -24,7 +24,7 @@ func NewSecretDao() *SecretDao {
 }
 
 func (d *SecretDao) db(ctx context.Context) *gorm.DB {
-	return ctxutil.Tx(ctx)
+	return ktdb.DBCtx(ctx)
 }
 
 // GetByID get secret by id

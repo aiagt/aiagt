@@ -21,4 +21,10 @@ func Conf() *ServerConf {
 
 type ServerConf struct {
 	ktconf.ServerConf
+
+	Metrics Metrics `yaml:"metrics"`
+}
+
+type Metrics struct {
+	Addr string `yaml:"addr"`
 }

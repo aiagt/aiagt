@@ -25,5 +25,5 @@ func Tx(ctx context.Context) (tx *gorm.DB) {
 		tx, _ = ctx.Value(TxKey).(*gorm.DB)
 	}
 
-	return tx
+	return tx.WithContext(ctx)
 }

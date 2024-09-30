@@ -22,7 +22,7 @@ func (m *Middleware) Middlewares() []server.Option {
 	middles := []endpoint.Middleware{
 		m.StreamingStatus,
 		m.Logger,
-		m.Transaction,
+		//m.Transaction,
 		m.Auth,
 	}
 

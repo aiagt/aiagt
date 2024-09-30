@@ -3,10 +3,10 @@ package db
 import (
 	"context"
 	"fmt"
+	ktdb "github.com/aiagt/kitextool/option/server/db"
 	"math"
 
 	"github.com/aiagt/aiagt/apps/plugin/model"
-	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
 	"github.com/pkg/errors"
@@ -23,7 +23,7 @@ func NewLabelDao() *LabelDao {
 }
 
 func (d *LabelDao) db(ctx context.Context) *gorm.DB {
-	return ctxutil.Tx(ctx)
+	return ktdb.DBCtx(ctx)
 }
 
 // GetByID get plugin label by id

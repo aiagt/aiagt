@@ -27,3 +27,6 @@ auth:
   snowflake_node: 1
   jwt_key: xxx
   jwt_expire: 720  # hour
+
+metrics:
+  addr: ":9931"

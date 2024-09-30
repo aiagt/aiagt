@@ -3,11 +3,11 @@ package db
 import (
 	"context"
 	"fmt"
+	ktdb "github.com/aiagt/kitextool/option/server/db"
 	"math"
 	"strings"
 
 	"github.com/aiagt/aiagt/apps/plugin/model"
-	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc"
 	"github.com/pkg/errors"
@@ -25,7 +25,7 @@ func NewPluginDao() *PluginDao {
 }
 
 func (d *PluginDao) db(ctx context.Context) *gorm.DB {
-	return ctxutil.Tx(ctx)
+	return ktdb.DBCtx(ctx)
 }
 
 // GetByID get plugin by id

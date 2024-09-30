@@ -25,8 +25,9 @@ func Conf() *ServerConf {
 type ServerConf struct {
 	ktconf.ServerConf
 
-	Email Email `yaml:"email"`
-	Auth  Auth  `yaml:"auth"`
+	Email   Email   `yaml:"email"`
+	Auth    Auth    `yaml:"auth"`
+	Metrics Metrics `yaml:"metrics"`
 }
 
 type Email struct {
@@ -42,4 +43,8 @@ type Auth struct {
 	SnowflakeNode int           `yaml:"snowflake_node"`
 	JWTKey        string        `yaml:"jwt_key"`
 	JWTExpire     time.Duration `yaml:"jwt_expire"`
+}
+
+type Metrics struct {
+	Addr string `yaml:"addr"`
 }

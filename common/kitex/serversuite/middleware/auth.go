@@ -43,7 +43,7 @@ func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 		id, err := jwt.ParseToken(token)
 		if err != nil {
 			biz := bizerr.NewBiz(serviceName, "auth", 40000)
-			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized))
+			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized).Log("jwt parse token error"))
 		}
 
 		return next(ctxutil.WithUserID(ctx, id), req, resp)
