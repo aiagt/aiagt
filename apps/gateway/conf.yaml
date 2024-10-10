@@ -2,6 +2,10 @@ server:
   name: gateway
   address: ":8930"
 
+log:
+  level: debug
+  file_name: deploy/log/gateway.log
+
 config_center:
   port: 8500
 

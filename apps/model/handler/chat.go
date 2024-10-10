@@ -2,6 +2,8 @@ package handler
 
 import (
 	"errors"
+	"github.com/aiagt/aiagt/common/ctxutil"
+	"go.opentelemetry.io/otel/trace"
 	"io"
 
 	"github.com/aiagt/aiagt/apps/model/mapper"
@@ -11,26 +13,27 @@ import (
 
 func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelService_ChatServer) (err error) {
 	ctx := stream.Context()
+	ctx = trace.ContextWithSpan(ctx, ctxutil.Span(ctx))
 
 	model, err := s.modelDao.GetByID(ctx, req.ModelId)
 	if err != nil {
-		return bizChat.CallErr(err)
+		return bizChat.CallErr(err).Log(ctx, "get model by id failed")
 	}
 
 	chatReq := mapper.NewOpenAIGoRequest(req.OpenaiReq, model.ModelKey)
 
 	ok, err := s.callTokenCache.Decr(ctx, req.Token)
 	if err != nil {
-		return bizChat.NewErr(err).Log("call token decr failed")
+		return bizChat.NewErr(err).Log(ctx, "call token decr failed")
 	}
 
 	if !ok {
-		return bizChat.NewCodeErr(11, errors.New("call limit reached")).Log("call limit reached")
+		return bizChat.NewCodeErr(11, errors.New("call limit reached")).Log(ctx, "call limit reached")
 	}
 
 	chatStream, err := s.openaiCli.CreateChatCompletionStream(ctx, *chatReq)
 	if err != nil {
-		return bizChat.NewErr(err).Log("create chat completion stream failed")
+		return bizChat.NewErr(err).Log(ctx, "create chat completion stream failed")
 	}
 	defer closer.Close(chatStream)
 
@@ -41,7 +44,7 @@ func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelServ
 		}
 
 		if err != nil {
-			return bizChat.NewErr(err).Log("chat stream recv failed")
+			return bizChat.NewErr(err).Log(ctx, "chat stream recv failed")
 		}
 
 		openaiResp := mapper.NewOpenAIResponse(&r)
@@ -50,7 +53,7 @@ func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelServ
 			OpenaiResp: openaiResp,
 		})
 		if err != nil {
-			return bizChat.NewErr(err).Log("chat stream send failed")
+			return bizChat.NewErr(err).Log(ctx, "chat stream send failed")
 		}
 	}
 }

@@ -24,7 +24,7 @@ func (s *ModelServiceImpl) GenToken(ctx context.Context, req *modelsvc.GenTokenR
 
 	err = s.callTokenCache.Set(ctx, token, val)
 	if err != nil {
-		return nil, bizGenToken.NewErr(err).Log("set call token cache failed")
+		return nil, bizGenToken.NewErr(err).Log(ctx, "set call token cache failed")
 	}
 
 	resp = &modelsvc.GenTokenResp{

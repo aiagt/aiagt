@@ -17,11 +17,11 @@ import (
 func (s *AppServiceImpl) PublishApp(ctx context.Context, req *appsvc.PublishAppReq) (resp *base.Empty, err error) {
 	app, err := s.appDao.GetByID(ctx, req.Id)
 	if err != nil {
-		return nil, bizPublishApp.NewErr(err)
+		return nil, bizPublishApp.NewErr(err).Log(ctx, "get app by id failed")
 	}
 
 	if ctxutil.Forbidden(ctx, app.AuthorID) {
-		return nil, bizPublishApp.CodeErr(bizerr.ErrCodeForbidden)
+		return nil, bizPublishApp.CodeErr(bizerr.ErrCodeForbidden).Log(ctx, "forbidden")
 	}
 
 	err = s.appDao.Update(ctx, req.Id, &model.AppOptional{
@@ -29,7 +29,7 @@ func (s *AppServiceImpl) PublishApp(ctx context.Context, req *appsvc.PublishAppR
 		Version:     utils.Pointer(req.Version),
 	})
 	if err != nil {
-		return nil, bizPublishApp.NewErr(err)
+		return nil, bizPublishApp.NewErr(err).Log(ctx, "update app failed")
 	}
 
 	return

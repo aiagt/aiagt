@@ -2,6 +2,10 @@ server:
   name: model
   address: ":8935"
 
+log:
+  level: debug
+  file_name: deploy/log/model.log
+
 config_center:
   port: 8500
 

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/aiagt/aiagt/common/logger"
+	ktlog "github.com/aiagt/kitextool/option/server/log"
 	"log"
 
 	"github.com/aiagt/aiagt/common/observability"
@@ -23,7 +25,15 @@ import (
 )
 
 func main() {
-	handle := handler.NewChatService(db.NewConversationDao(), db.NewMessageDao(), rpc.UserCli, rpc.AppCli, rpc.PluginCli, rpc.ModelCli, rpc.ModelStreamCli)
+	handle := handler.NewChatService(
+		db.NewConversationDao(),
+		db.NewMessageDao(),
+		rpc.UserCli,
+		rpc.AppCli,
+		rpc.PluginCli,
+		rpc.ModelCli,
+		rpc.ModelStreamCli,
+	)
 
 	config := conf.Conf()
 	observability.InitMetrics(config.Server.Name, config.Metrics.Addr, config.Registry.Address[0])
@@ -32,6 +42,7 @@ func main() {
 	svr := chatsvc.NewServer(handle,
 		server.WithSuite(ktserver.NewKitexToolSuite(
 			config,
+			ktlog.WithLogger(logger.Logger()),
 			ktserver.WithDynamicConfig(ktcenter.WithConsulConfigCenter(nil)),
 			ktregistry.WithRegistry(ktregistry.NewConsulRegistry()),
 			ktdb.WithDB(ktdb.NewMySQLDial(), ktdb.WithGormConf(&gorm.Config{TranslateError: true})),

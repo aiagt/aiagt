@@ -56,5 +56,5 @@ services:
     image: grafana/promtail:2.9.2
     volumes:
       - ./config/promtail.yml:/etc/promtail/config.yml
-      - ./user.log:/logs/user.log
+      - ./log:/logs
     command: -config.file=/etc/promtail/config.yml

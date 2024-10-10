@@ -1,12 +1,13 @@
 package bizerr
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"runtime"
-
-	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/aiagt/aiagt/common/logger"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"runtime"
 )
 
 type Biz struct {
@@ -91,16 +92,27 @@ func (e *BizError) Error() string {
 	return fmt.Sprintf("[bizerr] service_name: %s, interface_name: %s, code: %d, error: %s", e.ServiceName, e.InterfaceName, e.Code, e.Err.Error())
 }
 
-func (e *BizError) Log(msg string) *BizError {
+func (e *BizError) logger(ctx context.Context, file string, line int, msg string) {
+	logger.With(
+		zap.String("service_name", e.ServiceName),
+		zap.String("interface_name", e.InterfaceName),
+		zap.String("file", file),
+		zap.Int("line", line),
+		zap.Int("code", int(e.Code)),
+		zap.String("error", e.Err.Error()),
+	).CtxErrorf(ctx, msg)
+}
+
+func (e *BizError) Log(ctx context.Context, args ...any) *BizError {
 	_, file, line, _ := runtime.Caller(1)
-	klog.Errorf("position: %s:%d, %s, msg: %s", file, line, e.Error(), msg)
+	e.logger(ctx, file, line, fmt.Sprint(args...))
 
 	return e
 }
 
-func (e *BizError) Logf(format string, args ...any) *BizError {
+func (e *BizError) Logf(ctx context.Context, format string, args ...any) *BizError {
 	_, file, line, _ := runtime.Caller(1)
-	klog.Errorf("position: %s:%d, %s, msg: %s", file, line, e.Error(), fmt.Sprintf(format, args...))
+	e.logger(ctx, file, line, fmt.Sprintf(format, args...))
 
 	return e
 }

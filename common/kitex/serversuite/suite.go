@@ -27,9 +27,6 @@ func NewServerSuite(conf *ktconf.ServerConf, authSvc middleware.AuthService) *Se
 	opts = append(opts, server.WithMetaHandler(metahandler.NewStreamingMetaHandler()))
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: conf.Server.Name}))
 
-	m := middleware.NewMiddleware(authSvc)
-	opts = append(opts, m.Middlewares()...)
-
 	opts = append(opts, server.WithTracer(prometheus.NewServerTracer(
 		"",
 		"",
@@ -38,6 +35,9 @@ func NewServerSuite(conf *ktconf.ServerConf, authSvc middleware.AuthService) *Se
 	))
 
 	opts = append(opts, server.WithSuite(tracing.NewServerSuite()))
+
+	m := middleware.NewMiddleware(authSvc)
+	opts = append(opts, m.Middlewares()...)
 
 	return &ServerSuite{opts: opts}
 }

@@ -3,9 +3,6 @@ package handler
 import (
 	"context"
 
-	"github.com/cloudwego/kitex/pkg/klog"
-	"go.uber.org/zap"
-
 	"github.com/aiagt/aiagt/apps/user/mapper"
 	"github.com/aiagt/aiagt/common/bizerr"
 	"github.com/aiagt/aiagt/common/ctxutil"
@@ -16,17 +13,15 @@ import (
 func (s *UserServiceImpl) GetUser(ctx context.Context) (resp *usersvc.User, err error) {
 	id, ok := ctxutil.GetUserID(ctx)
 	if !ok {
-		return nil, bizGetUser.CodeErr(bizerr.ErrCodeUnauthorized)
+		return nil, bizGetUser.CodeErr(bizerr.ErrCodeUnauthorized).Log(ctx, "get user id fail")
 	}
 
 	user, err := s.userDao.GetByID(ctx, id)
 	if err != nil {
-		return nil, bizGetUser.NewErr(err)
+		return nil, bizGetUser.NewErr(err).Log(ctx, "get user fail")
 	}
 
 	resp = mapper.NewGenUser(user)
-
-	klog.Infof("%#v", zap.String("user", resp.Username))
 
 	return
 }

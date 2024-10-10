@@ -2,6 +2,10 @@ server:
   name: user
   address: ":8931"
 
+log:
+  level: debug
+  file_name: deploy/log/user.log
+
 config_center:
   port: 8500
 

@@ -2,6 +2,10 @@ server:
   name: app
   address: ":8933"
 
+log:
+  level: debug
+  file_name: deploy/log/app.log
+
 config_center:
   port: 8500
 

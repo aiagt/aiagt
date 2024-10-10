@@ -12,9 +12,7 @@ func NewMiddleware() *Middleware {
 }
 
 func (m *Middleware) Middlewares() []client.Option {
-	middles := []endpoint.Middleware{
-		m.RequestID,
-	}
+	var middles []endpoint.Middleware
 
 	opts := make([]client.Option, len(middles))
 	for i, middle := range middles {

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/aiagt/aiagt/common/logger"
+	ktlog "github.com/aiagt/kitextool/option/server/log"
 	"log"
 
 	"github.com/aiagt/aiagt/common/observability"
@@ -36,6 +38,7 @@ func main() {
 	svr := modelsvc.NewServer(handle,
 		server.WithSuite(ktserver.NewKitexToolSuite(
 			config,
+			ktlog.WithLogger(logger.Logger()),
 			ktserver.WithDynamicConfig(ktcenter.WithConsulConfigCenter(nil)),
 			ktregistry.WithRegistry(ktregistry.NewConsulRegistry()),
 			ktdb.WithDB(ktdb.NewMySQLDial(), ktdb.WithGormConf(&gorm.Config{TranslateError: true})),
