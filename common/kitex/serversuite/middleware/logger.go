@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 
 	"go.uber.org/zap"
@@ -32,6 +33,7 @@ func (m *Middleware) Logger(next endpoint.Endpoint) endpoint.Endpoint {
 				zap.String("service", serviceName),
 				zap.String("method", methodName),
 			).CtxInfof(ctx, "streaming request")
+
 			return next(ctx, req, resp)
 		}
 
@@ -51,6 +53,7 @@ func (m *Middleware) Logger(next endpoint.Endpoint) endpoint.Endpoint {
 				zap.String("method", methodName),
 				zap.String("error", err.Error()),
 			).CtxErrorf(ctx, "response error")
+
 			return err
 		}
 

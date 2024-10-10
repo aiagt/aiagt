@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"github.com/aiagt/aiagt/common/logger"
 	ktlog "github.com/aiagt/kitextool/option/server/log"
-	"log"
 
 	"github.com/aiagt/aiagt/common/observability"
 	"github.com/aiagt/aiagt/pkg/logerr"

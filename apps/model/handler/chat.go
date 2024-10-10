@@ -2,9 +2,10 @@ package handler
 
 import (
 	"errors"
+	"io"
+
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"go.opentelemetry.io/otel/trace"
-	"io"
 
 	"github.com/aiagt/aiagt/apps/model/mapper"
 	modelsvc "github.com/aiagt/aiagt/kitex_gen/modelsvc"

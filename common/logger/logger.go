@@ -18,5 +18,6 @@ func Logger() *kitexzap.Logger {
 func With(args ...interface{}) *kitexzap.Logger {
 	t := *logger
 	t.SugaredLogger = t.With(args...)
+
 	return &t
 }

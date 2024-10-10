@@ -2,15 +2,18 @@ package ctxutil
 
 import (
 	"context"
+	"unsafe"
+
 	"github.com/bytedance/gopkg/cloud/metainfo"
 	"go.opentelemetry.io/otel/trace"
-	"unsafe"
 )
 
-const currentSpanKey CtxKey = "currentSpanKey"
-const parentSpanIDKey = "PARENT_SPAN_ID"
-const spanIDHeader = "OT_TRACER_SPANID"
-const smallSpanIDHeader = "ot-tracer-spanid"
+const (
+	currentSpanKey    CtxKey = "currentSpanKey"
+	parentSpanIDKey          = "PARENT_SPAN_ID"
+	spanIDHeader             = "OT_TRACER_SPANID"
+	smallSpanIDHeader        = "ot-tracer-spanid"
+)
 
 func WithSpan(ctx context.Context, span trace.Span) context.Context {
 	return WithMapValue(ctx, currentSpanKey, span)
@@ -29,6 +32,7 @@ func WithParentSpanID(ctx context.Context) context.Context {
 func ResetParentSpanID(ctx context.Context) context.Context {
 	ctx = metainfo.WithValue(ctx, spanIDHeader, ParentSpanID(ctx))
 	ctx = metainfo.WithValue(ctx, smallSpanIDHeader, ParentSpanID(ctx))
+
 	return ctx
 }
 

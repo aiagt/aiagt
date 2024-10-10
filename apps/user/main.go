@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/aiagt/aiagt/common/logger"
 	"log"
+
+	"github.com/aiagt/aiagt/common/logger"
 
 	"github.com/aiagt/aiagt/common/observability"
 	"github.com/aiagt/aiagt/pkg/logerr"
