@@ -5,7 +5,7 @@ import (
 
 	"github.com/aiagt/aiagt/common/bizerr"
 
-	"github.com/aiagt/aiagt/app/user/pkg/jwt"
+	"github.com/aiagt/aiagt/apps/user/pkg/jwt"
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 	"github.com/cloudwego/kitex/client/callopt"
@@ -43,7 +43,7 @@ func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 		id, err := jwt.ParseToken(token)
 		if err != nil {
 			biz := bizerr.NewBiz(serviceName, "auth", 40000)
-			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized))
+			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized).Log(ctx, "jwt parse token error"))
 		}
 
 		return next(ctxutil.WithUserID(ctx, id), req, resp)
