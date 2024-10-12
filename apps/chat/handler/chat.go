@@ -5,8 +5,6 @@ import (
 	"io"
 	"strings"
 
-	"go.opentelemetry.io/otel/trace"
-
 	"github.com/aiagt/aiagt/pkg/hash/hmap"
 	"github.com/aiagt/aiagt/pkg/utils"
 	"github.com/pkg/errors"
@@ -26,8 +24,7 @@ import (
 )
 
 func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_ChatServer) (err error) {
-	ctx := stream.Context()
-	ctx = trace.ContextWithSpan(ctx, ctxutil.Span(ctx))
+	ctx := ctxutil.ApplySpan(stream.Context())
 
 	userID := ctxutil.UserID(ctx)
 

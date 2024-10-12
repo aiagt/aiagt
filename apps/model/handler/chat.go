@@ -4,17 +4,14 @@ import (
 	"errors"
 	"io"
 
-	"github.com/aiagt/aiagt/common/ctxutil"
-	"go.opentelemetry.io/otel/trace"
-
 	"github.com/aiagt/aiagt/apps/model/mapper"
+	"github.com/aiagt/aiagt/common/ctxutil"
 	modelsvc "github.com/aiagt/aiagt/kitex_gen/modelsvc"
 	"github.com/aiagt/aiagt/pkg/closer"
 )
 
 func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelService_ChatServer) (err error) {
-	ctx := stream.Context()
-	ctx = trace.ContextWithSpan(ctx, ctxutil.Span(ctx))
+	ctx := ctxutil.ApplySpan(stream.Context())
 
 	model, err := s.modelDao.GetByID(ctx, req.ModelId)
 	if err != nil {
