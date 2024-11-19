@@ -60,8 +60,9 @@ struct ChatReq {
 }
 
 struct ChatResp {
-    1: required list<ChatRespMessage> messages
+    1: required list<Message> messages
     2: required i64 conversation_id
+    3: optional string conversation_title
 }
 
 struct ChatRespMessage {
@@ -92,6 +93,11 @@ struct UpdateMessageReq {
     2: required MessageContent message
 }
 
+struct DeleteMessageReq {
+    1: required i64 id (go.tag='path:"id"')
+    2: optional i8 more (go.tag='query:"more"')
+}
+
 struct ListMessageReq {
     1: required base.PaginationReq pagination
     2: required i64 conversation_id (go.tag='query:"conversation_id"')
@@ -117,15 +123,25 @@ struct ListConversationResp {
     2: required list<Conversation> conversations
 }
 
+struct InitDevelopReq {
+    1: required i64 app_id
+}
+
+struct InitDevelopResp {
+    1: required Conversation conversation
+    2: required list<Message> messages
+}
+
 service ChatService {
     ChatResp Chat(1: ChatReq req) (streaming.mode="server")
 
     base.Empty UpdateMessage(1: UpdateMessageReq req)
-    base.Empty DeleteMessage(1: base.IDReq req)
+    base.Empty DeleteMessage(1: DeleteMessageReq req)
     ListMessageResp ListMessage(1: ListMessageReq req)
 
     base.Empty UpdateConversation(1: UpdateConversationReq req)
     base.Empty DeleteConversation(1: base.IDReq req)
     Conversation GetConversationByID(1: base.IDReq req)
     ListConversationResp ListConversation(1: ListConversationReq req)
+    InitDevelopResp InitDevelop(1: InitDevelopReq req)
 }

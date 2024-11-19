@@ -119,11 +119,25 @@ struct ListAppLabelResp {
     2: required list<AppLabel> labels
 }
 
+struct GetAppByIDReq {
+    1: required i64 id (go.tag='path:"id"')
+    2: optional bool unfold
+}
+
+struct GetAppByIDResp {
+    1: required App app
+    2: optional GetAppByIDRespExtend ext
+}
+
+struct GetAppByIDRespExtend {
+    1: required i32 private_tools_count
+}
+
 service AppService {
     base.Empty CreateApp(1: CreateAppReq req)
     base.Empty UpdateApp(1: UpdateAppReq req)
     base.Empty DeleteApp(1: base.IDReq req)
-    App GetAppByID(1: base.IDReq req)
+    GetAppByIDResp GetAppByID(1: GetAppByIDReq req)
     ListAppResp ListApp(1: ListAppReq req)
 
     base.Empty PublishApp(1: PublishAppReq req)

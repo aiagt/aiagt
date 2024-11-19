@@ -2,6 +2,8 @@ package mapper
 
 import (
 	"encoding/json"
+	"github.com/aiagt/aiagt/pkg/hash/hmap"
+	"github.com/aiagt/aiagt/tools/utils/lists"
 
 	"github.com/aiagt/aiagt/pkg/utils"
 
@@ -74,10 +76,13 @@ func NewGenModelConfig(modelConfig *model.ModelConfig) *appsvc.ModelConfig {
 	return result
 }
 
-func NewGenListApp(apps []*model.App) []*appsvc.App {
+func NewGenListApp(apps []*model.App, labels hmap.Map[int64, *appsvc.AppLabel]) []*appsvc.App {
 	result := make([]*appsvc.App, len(apps))
 	for i, app := range apps {
-		result[i] = NewGenApp(app, nil, nil, nil)
+		appLabels := lists.Map(app.LabelIDs, func(t int64) *appsvc.AppLabel { return labels[t] })
+		appLabels = lists.Filter(appLabels, func(t *appsvc.AppLabel) bool { return t != nil })
+
+		result[i] = NewGenApp(app, nil, nil, appLabels)
 	}
 
 	return result

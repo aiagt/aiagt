@@ -33,7 +33,7 @@ func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 		switch serviceName {
 		case "user":
 			switch methodName {
-			case "Login", "Register", "SendCaptcha":
+			case "Login", "Register", "SendCaptcha", "ResetPassword":
 				return next(ctx, req, resp)
 			}
 		}
@@ -43,7 +43,7 @@ func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 		id, err := jwt.ParseToken(token)
 		if err != nil {
 			biz := bizerr.NewBiz(serviceName, "auth", 40000)
-			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized).Log(ctx, "jwt parse token error"))
+			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized).Logf(ctx, "jwt parse token error: %v", err.Error()))
 		}
 
 		return next(ctxutil.WithUserID(ctx, id), req, resp)

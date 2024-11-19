@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 
 	"github.com/aiagt/aiagt/kitex_gen/base"
 
@@ -15,12 +16,16 @@ import (
 
 // ResetPassword implements the UserServiceImpl interface.
 func (s *UserServiceImpl) ResetPassword(ctx context.Context, req *usersvc.ResetPasswordReq) (resp *base.Empty, err error) {
+	if !validatePassword(req.Password) {
+		return nil, bizResetPassword.NewCodeErr(12, errors.New("invalid password"))
+	}
+
 	captcha, err := s.captchaCache.GetAndDel(ctx, cache.CaptchaTypeReset, req.Email)
 	if err != nil {
 		return nil, bizResetPassword.NewErr(err)
 	}
 
-	if captcha == req.Captcha {
+	if captcha != req.Captcha {
 		return nil, bizResetPassword.CodeErr(bizerr.ErrCodeWrongAuth)
 	}
 

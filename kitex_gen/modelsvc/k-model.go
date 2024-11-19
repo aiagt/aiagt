@@ -907,6 +907,9 @@ func (p *Model) FastRead(buf []byte) (int, error) {
 	var issetDescription bool = false
 	var issetSource bool = false
 	var issetModelKey bool = false
+	var issetLogo bool = false
+	var issetInputPrice bool = false
+	var issetOutputPrice bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -998,6 +1001,51 @@ func (p *Model) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 6:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField6(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetLogo = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 7:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField7(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetInputPrice = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 8:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField8(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetOutputPrice = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -1040,6 +1088,21 @@ func (p *Model) FastRead(buf []byte) (int, error) {
 
 	if !issetModelKey {
 		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetLogo {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetInputPrice {
+		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetOutputPrice {
+		fieldId = 8
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -1139,6 +1202,54 @@ func (p *Model) FastReadField5(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *Model) FastReadField6(buf []byte) (int, error) {
+	offset := 0
+
+	var _field string
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		_field = v
+
+	}
+	p.Logo = _field
+	return offset, nil
+}
+
+func (p *Model) FastReadField7(buf []byte) (int, error) {
+	offset := 0
+
+	var _field string
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		_field = v
+
+	}
+	p.InputPrice = _field
+	return offset, nil
+}
+
+func (p *Model) FastReadField8(buf []byte) (int, error) {
+	offset := 0
+
+	var _field string
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		_field = v
+
+	}
+	p.OutputPrice = _field
+	return offset, nil
+}
+
 // for compatibility
 func (p *Model) FastWrite(buf []byte) int {
 	return 0
@@ -1153,6 +1264,9 @@ func (p *Model) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter) i
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 		offset += p.fastWriteField5(buf[offset:], binaryWriter)
+		offset += p.fastWriteField6(buf[offset:], binaryWriter)
+		offset += p.fastWriteField7(buf[offset:], binaryWriter)
+		offset += p.fastWriteField8(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -1168,6 +1282,9 @@ func (p *Model) BLength() int {
 		l += p.field3Length()
 		l += p.field4Length()
 		l += p.field5Length()
+		l += p.field6Length()
+		l += p.field7Length()
+		l += p.field8Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -1214,6 +1331,30 @@ func (p *Model) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryWriter) i
 	return offset
 }
 
+func (p *Model) fastWriteField6(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "logo", thrift.STRING, 6)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.Logo)
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *Model) fastWriteField7(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "input_price", thrift.STRING, 7)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.InputPrice)
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *Model) fastWriteField8(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "output_price", thrift.STRING, 8)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.OutputPrice)
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *Model) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("id", thrift.I64, 1)
@@ -1254,6 +1395,30 @@ func (p *Model) field5Length() int {
 	return l
 }
 
+func (p *Model) field6Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("logo", thrift.STRING, 6)
+	l += bthrift.Binary.StringLengthNocopy(p.Logo)
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *Model) field7Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("input_price", thrift.STRING, 7)
+	l += bthrift.Binary.StringLengthNocopy(p.InputPrice)
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *Model) field8Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("output_price", thrift.STRING, 8)
+	l += bthrift.Binary.StringLengthNocopy(p.OutputPrice)
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
 func (p *CreateModelReq) FastRead(buf []byte) (int, error) {
 	var err error
 	var offset int
@@ -1264,6 +1429,9 @@ func (p *CreateModelReq) FastRead(buf []byte) (int, error) {
 	var issetDescription bool = false
 	var issetSource bool = false
 	var issetModelKey bool = false
+	var issetLogo bool = false
+	var issetInputPrice bool = false
+	var issetOutputPrice bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -1340,6 +1508,51 @@ func (p *CreateModelReq) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 5:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField5(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetLogo = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 6:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField6(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetInputPrice = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 7:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField7(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetOutputPrice = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -1377,6 +1590,21 @@ func (p *CreateModelReq) FastRead(buf []byte) (int, error) {
 
 	if !issetModelKey {
 		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetLogo {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetInputPrice {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetOutputPrice {
+		fieldId = 7
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -1460,6 +1688,54 @@ func (p *CreateModelReq) FastReadField4(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *CreateModelReq) FastReadField5(buf []byte) (int, error) {
+	offset := 0
+
+	var _field string
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		_field = v
+
+	}
+	p.Logo = _field
+	return offset, nil
+}
+
+func (p *CreateModelReq) FastReadField6(buf []byte) (int, error) {
+	offset := 0
+
+	var _field string
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		_field = v
+
+	}
+	p.InputPrice = _field
+	return offset, nil
+}
+
+func (p *CreateModelReq) FastReadField7(buf []byte) (int, error) {
+	offset := 0
+
+	var _field string
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		_field = v
+
+	}
+	p.OutputPrice = _field
+	return offset, nil
+}
+
 // for compatibility
 func (p *CreateModelReq) FastWrite(buf []byte) int {
 	return 0
@@ -1473,6 +1749,9 @@ func (p *CreateModelReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.Binary
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
+		offset += p.fastWriteField5(buf[offset:], binaryWriter)
+		offset += p.fastWriteField6(buf[offset:], binaryWriter)
+		offset += p.fastWriteField7(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -1487,6 +1766,9 @@ func (p *CreateModelReq) BLength() int {
 		l += p.field2Length()
 		l += p.field3Length()
 		l += p.field4Length()
+		l += p.field5Length()
+		l += p.field6Length()
+		l += p.field7Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -1525,6 +1807,30 @@ func (p *CreateModelReq) fastWriteField4(buf []byte, binaryWriter bthrift.Binary
 	return offset
 }
 
+func (p *CreateModelReq) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "logo", thrift.STRING, 5)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.Logo)
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *CreateModelReq) fastWriteField6(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "input_price", thrift.STRING, 6)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.InputPrice)
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *CreateModelReq) fastWriteField7(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "output_price", thrift.STRING, 7)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.OutputPrice)
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *CreateModelReq) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("name", thrift.STRING, 1)
@@ -1553,6 +1859,30 @@ func (p *CreateModelReq) field4Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("model_key", thrift.STRING, 4)
 	l += bthrift.Binary.StringLengthNocopy(p.ModelKey)
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *CreateModelReq) field5Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("logo", thrift.STRING, 5)
+	l += bthrift.Binary.StringLengthNocopy(p.Logo)
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *CreateModelReq) field6Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("input_price", thrift.STRING, 6)
+	l += bthrift.Binary.StringLengthNocopy(p.InputPrice)
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *CreateModelReq) field7Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("output_price", thrift.STRING, 7)
+	l += bthrift.Binary.StringLengthNocopy(p.OutputPrice)
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
@@ -1640,6 +1970,48 @@ func (p *UpdateModelReq) FastRead(buf []byte) (int, error) {
 		case 5:
 			if fieldTypeId == thrift.STRING {
 				l, err = p.FastReadField5(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 6:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField6(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 7:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField7(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 8:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField8(buf[offset:])
 				offset += l
 				if err != nil {
 					goto ReadFieldError
@@ -1768,6 +2140,51 @@ func (p *UpdateModelReq) FastReadField5(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *UpdateModelReq) FastReadField6(buf []byte) (int, error) {
+	offset := 0
+
+	var _field *string
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+		_field = &v
+
+	}
+	p.Logo = _field
+	return offset, nil
+}
+
+func (p *UpdateModelReq) FastReadField7(buf []byte) (int, error) {
+	offset := 0
+
+	var _field *string
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+		_field = &v
+
+	}
+	p.InputPrice = _field
+	return offset, nil
+}
+
+func (p *UpdateModelReq) FastReadField8(buf []byte) (int, error) {
+	offset := 0
+
+	var _field *string
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+		_field = &v
+
+	}
+	p.OutputPrice = _field
+	return offset, nil
+}
+
 // for compatibility
 func (p *UpdateModelReq) FastWrite(buf []byte) int {
 	return 0
@@ -1782,6 +2199,9 @@ func (p *UpdateModelReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.Binary
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 		offset += p.fastWriteField5(buf[offset:], binaryWriter)
+		offset += p.fastWriteField6(buf[offset:], binaryWriter)
+		offset += p.fastWriteField7(buf[offset:], binaryWriter)
+		offset += p.fastWriteField8(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -1797,6 +2217,9 @@ func (p *UpdateModelReq) BLength() int {
 		l += p.field3Length()
 		l += p.field4Length()
 		l += p.field5Length()
+		l += p.field6Length()
+		l += p.field7Length()
+		l += p.field8Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -1851,6 +2274,36 @@ func (p *UpdateModelReq) fastWriteField5(buf []byte, binaryWriter bthrift.Binary
 	return offset
 }
 
+func (p *UpdateModelReq) fastWriteField6(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	if p.IsSetLogo() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "logo", thrift.STRING, 6)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Logo)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
+	return offset
+}
+
+func (p *UpdateModelReq) fastWriteField7(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	if p.IsSetInputPrice() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "input_price", thrift.STRING, 7)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.InputPrice)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
+	return offset
+}
+
+func (p *UpdateModelReq) fastWriteField8(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	if p.IsSetOutputPrice() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "output_price", thrift.STRING, 8)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.OutputPrice)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
+	return offset
+}
+
 func (p *UpdateModelReq) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("id", thrift.I64, 1)
@@ -1894,6 +2347,36 @@ func (p *UpdateModelReq) field5Length() int {
 	if p.IsSetModelKey() {
 		l += bthrift.Binary.FieldBeginLength("model_key", thrift.STRING, 5)
 		l += bthrift.Binary.StringLengthNocopy(*p.ModelKey)
+		l += bthrift.Binary.FieldEndLength()
+	}
+	return l
+}
+
+func (p *UpdateModelReq) field6Length() int {
+	l := 0
+	if p.IsSetLogo() {
+		l += bthrift.Binary.FieldBeginLength("logo", thrift.STRING, 6)
+		l += bthrift.Binary.StringLengthNocopy(*p.Logo)
+		l += bthrift.Binary.FieldEndLength()
+	}
+	return l
+}
+
+func (p *UpdateModelReq) field7Length() int {
+	l := 0
+	if p.IsSetInputPrice() {
+		l += bthrift.Binary.FieldBeginLength("input_price", thrift.STRING, 7)
+		l += bthrift.Binary.StringLengthNocopy(*p.InputPrice)
+		l += bthrift.Binary.FieldEndLength()
+	}
+	return l
+}
+
+func (p *UpdateModelReq) field8Length() int {
+	l := 0
+	if p.IsSetOutputPrice() {
+		l += bthrift.Binary.FieldBeginLength("output_price", thrift.STRING, 8)
+		l += bthrift.Binary.StringLengthNocopy(*p.OutputPrice)
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l

@@ -6,9 +6,9 @@ install:
 	cd tools/init_service && go install . && cd ../..
 
 gen-rpc:
-	@mkdir -p app/${svc} && \
+	@mkdir -p apps/${svc} && \
 	kitex -module github.com/aiagt/aiagt idl/${svc}.thrift && \
-	cd app/${svc} && \
+	cd apps/${svc} && \
 	kitex -module github.com/aiagt/aiagt -service ${svc}service -use github.com/aiagt/aiagt/kitex_gen -I ../../idl/ ../../idl/${svc}.thrift && \
 	gen_handler --service_path=. --remove_handler=true
 
@@ -16,6 +16,6 @@ model_list = $(foreach model,$(models),-model $(model))
 skip_default_model ?= false
 
 init-rpc:
-	@cd app/${svc} && \
+	@cd apps/${svc} && \
 	gen_handler --service_path=. --remove_handler=true && \
 	init_service --service_path=. --service_name=${svc} ${model_list} --skip_default_model=${skip_default_model}

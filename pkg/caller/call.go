@@ -25,16 +25,16 @@ type RequestBody struct {
 }
 
 // Call calling external api
-func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *RequestType, responseType *ResponseType, reqBody []byte) ([]byte, error) {
+func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *RequestType, responseType *ResponseType, reqBody []byte) ([]byte, int, error) {
 	bodyPretty := utils.Pretty(body, 1<<10)
 	klog.Infof("[CALL] request body: %s, extension: %s", string(utils.SafeSlice[byte](reqBody, 0, 1000)), bodyPretty)
 
 	// verify request body
 	var requestBody interface{}
 
-	err := VerifySchemaAndUnmarshal(requestType, reqBody, &requestBody)
+	err := VerifySchemaAndUnmarshal(requestType.Def(), reqBody, &requestBody)
 	if err != nil {
-		return nil, errors.Wrap(err, "request body validation error")
+		return nil, 0, errors.Wrap(err, "request body validation error")
 	}
 
 	// set request body
@@ -42,13 +42,13 @@ func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *Re
 
 	bodyBytes, err := json.Marshal(body)
 	if err != nil {
-		return nil, errors.Wrap(err, "json marshal request body error")
+		return nil, 0, errors.Wrap(err, "json marshal request body error")
 	}
 
 	// create http request
 	req, err := http.NewRequest(http.MethodPost, apiURL, bytes.NewBuffer(bodyBytes))
 	if err != nil {
-		return nil, errors.Wrap(err, "new request error")
+		return nil, 0, errors.Wrap(err, "new request error")
 	}
 
 	// set request header
@@ -57,14 +57,14 @@ func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *Re
 	// send http request
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, errors.Wrap(err, "http request error")
+		return nil, 0, errors.Wrap(err, "http request error")
 	}
 	defer closer.Close(resp.Body)
 
 	// read http response
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, errors.Wrap(err, "read http response error")
+		return nil, 0, errors.Wrap(err, "read http response error")
 	}
 
 	klog.Infof("[CALL] response body: %s, extension: %s", string(utils.SafeSlice[byte](respBody, 0, 1000)), bodyPretty)
@@ -72,10 +72,10 @@ func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *Re
 	// verify response body
 	var responseBody interface{}
 
-	err = VerifySchemaAndUnmarshal(responseType, respBody, responseBody)
+	err = VerifySchemaAndUnmarshal(responseType.Def(), respBody, responseBody)
 	if err != nil {
-		return nil, errors.Wrap(err, "response body validation error")
+		return respBody, resp.StatusCode, errors.Wrap(err, "response body validation error")
 	}
 
-	return respBody, nil
+	return respBody, resp.StatusCode, nil
 }

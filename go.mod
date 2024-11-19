@@ -28,7 +28,8 @@ require (
 	github.com/prometheus/client_golang v1.17.0
 	github.com/redis/go-redis/v9 v9.5.3
 	github.com/samber/lo v1.47.0
-	github.com/sashabaranov/go-openai v1.29.2
+	github.com/sashabaranov/go-openai v1.32.5
+	github.com/shopspring/decimal v1.4.0
 	github.com/stretchr/testify v1.9.0
 	go.opentelemetry.io/otel/trace v1.20.0
 	go.uber.org/zap v1.27.0

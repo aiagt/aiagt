@@ -14,7 +14,9 @@ import (
 	"github.com/aiagt/aiagt/kitex_gen/base"
 )
 
-var _ = base.KitexUnusedProtection
+var (
+	_ = base.KitexUnusedProtection
+)
 
 // unused protection
 var (
@@ -1174,8 +1176,6 @@ func (p *RegisterReq) FastRead(buf []byte) (int, error) {
 	var fieldId int16
 	var issetEmail bool = false
 	var issetCaptcha bool = false
-	var issetUsername bool = false
-	var issetPassword bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -1229,7 +1229,6 @@ func (p *RegisterReq) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
-				issetUsername = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1244,7 +1243,6 @@ func (p *RegisterReq) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
-				issetPassword = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1279,16 +1277,6 @@ func (p *RegisterReq) FastRead(buf []byte) (int, error) {
 
 	if !issetCaptcha {
 		fieldId = 2
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetUsername {
-		fieldId = 3
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetPassword {
-		fieldId = 4
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -1343,13 +1331,12 @@ func (p *RegisterReq) FastReadField2(buf []byte) (int, error) {
 func (p *RegisterReq) FastReadField3(buf []byte) (int, error) {
 	offset := 0
 
-	var _field string
+	var _field *string
 	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
-
-		_field = v
+		_field = &v
 
 	}
 	p.Username = _field
@@ -1359,13 +1346,12 @@ func (p *RegisterReq) FastReadField3(buf []byte) (int, error) {
 func (p *RegisterReq) FastReadField4(buf []byte) (int, error) {
 	offset := 0
 
-	var _field string
+	var _field *string
 	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
-
-		_field = v
+		_field = &v
 
 	}
 	p.Password = _field
@@ -1423,17 +1409,21 @@ func (p *RegisterReq) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWri
 
 func (p *RegisterReq) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "username", thrift.STRING, 3)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.Username)
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	if p.IsSetUsername() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "username", thrift.STRING, 3)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Username)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
 	return offset
 }
 
 func (p *RegisterReq) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "password", thrift.STRING, 4)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.Password)
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	if p.IsSetPassword() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "password", thrift.STRING, 4)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Password)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
 	return offset
 }
 
@@ -1455,17 +1445,21 @@ func (p *RegisterReq) field2Length() int {
 
 func (p *RegisterReq) field3Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("username", thrift.STRING, 3)
-	l += bthrift.Binary.StringLengthNocopy(p.Username)
-	l += bthrift.Binary.FieldEndLength()
+	if p.IsSetUsername() {
+		l += bthrift.Binary.FieldBeginLength("username", thrift.STRING, 3)
+		l += bthrift.Binary.StringLengthNocopy(*p.Username)
+		l += bthrift.Binary.FieldEndLength()
+	}
 	return l
 }
 
 func (p *RegisterReq) field4Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("password", thrift.STRING, 4)
-	l += bthrift.Binary.StringLengthNocopy(p.Password)
-	l += bthrift.Binary.FieldEndLength()
+	if p.IsSetPassword() {
+		l += bthrift.Binary.FieldBeginLength("password", thrift.STRING, 4)
+		l += bthrift.Binary.StringLengthNocopy(*p.Password)
+		l += bthrift.Binary.FieldEndLength()
+	}
 	return l
 }
 

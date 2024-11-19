@@ -11,10 +11,11 @@ const (
 	bizCodeDeleteConversation  = 1
 	bizCodeDeleteMessage       = 2
 	bizCodeGetConversationByID = 3
-	bizCodeListConversation    = 4
-	bizCodeListMessage         = 5
-	bizCodeUpdateConversation  = 6
-	bizCodeUpdateMessage       = 7
+	bizCodeInitDevelop         = 4
+	bizCodeListConversation    = 5
+	bizCodeListMessage         = 6
+	bizCodeUpdateConversation  = 7
+	bizCodeUpdateMessage       = 8
 )
 
 var (
@@ -22,6 +23,7 @@ var (
 	bizDeleteConversation  *bizerr.Biz
 	bizDeleteMessage       *bizerr.Biz
 	bizGetConversationByID *bizerr.Biz
+	bizInitDevelop         *bizerr.Biz
 	bizListConversation    *bizerr.Biz
 	bizListMessage         *bizerr.Biz
 	bizUpdateConversation  *bizerr.Biz
@@ -35,6 +37,7 @@ func initServiceBusiness(serviceCode int) {
 	bizDeleteConversation = bizerr.NewBiz(ServiceName, "delete_conversation", baseCode+bizCodeDeleteConversation)
 	bizDeleteMessage = bizerr.NewBiz(ServiceName, "delete_message", baseCode+bizCodeDeleteMessage)
 	bizGetConversationByID = bizerr.NewBiz(ServiceName, "get_conversation_by_id", baseCode+bizCodeGetConversationByID)
+	bizInitDevelop = bizerr.NewBiz(ServiceName, "init_develop", baseCode+bizCodeInitDevelop)
 	bizListConversation = bizerr.NewBiz(ServiceName, "list_conversation", baseCode+bizCodeListConversation)
 	bizListMessage = bizerr.NewBiz(ServiceName, "list_message", baseCode+bizCodeListMessage)
 	bizUpdateConversation = bizerr.NewBiz(ServiceName, "update_conversation", baseCode+bizCodeUpdateConversation)

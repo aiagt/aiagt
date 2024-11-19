@@ -105,7 +105,14 @@ func (d *ToolDao) Create(ctx context.Context, m *model.PluginTool) error {
 
 // Update plugin tool by id
 func (d *ToolDao) Update(ctx context.Context, id int64, m *model.PluginToolOptional) error {
-	err := d.db(ctx).Model(d.m).Where("id = ?", id).Updates(m).Error
+	var testedAt map[string]interface{}
+	if m.TestedAt == nil {
+		testedAt = map[string]interface{}{
+			"tested_at": nil,
+		}
+	}
+
+	err := d.db(ctx).Model(d.m).Where("id = ?", id).Updates(testedAt).Updates(m).Error
 	if err != nil {
 		return errors.Wrap(err, "plugin tool dao update error")
 	}
@@ -118,6 +125,16 @@ func (d *ToolDao) Delete(ctx context.Context, id int64) error {
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).Delete(d.m).Error
 	if err != nil {
 		return errors.Wrap(err, "plugin tool dao delete error")
+	}
+
+	return nil
+}
+
+// DeleteByPluginID delete plugin tool by plugin
+func (d *ToolDao) DeleteByPluginID(ctx context.Context, pluginID int64) error {
+	err := d.db(ctx).Model(d.m).Where("plugin_id = ?", pluginID).Delete(d.m).Error
+	if err != nil {
+		return errors.Wrap(err, "plugin tool dao delete by plugin error")
 	}
 
 	return nil

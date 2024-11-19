@@ -1,9 +1,15 @@
 package handler
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
 	"io"
 	"strings"
+	"sync"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 
 	"github.com/aiagt/aiagt/pkg/hash/hmap"
 	"github.com/aiagt/aiagt/pkg/utils"
@@ -25,17 +31,22 @@ import (
 
 func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_ChatServer) (err error) {
 	ctx := ctxutil.ApplySpan(stream.Context())
-
 	userID := ctxutil.UserID(ctx)
 
+	user, err := s.userCli.GetUserByID(ctx, &base.IDReq{Id: userID})
+	if err != nil {
+		return bizChat.CallErr(err).Log(ctx, "get user failed")
+	}
+
 	// get app information
-	app, err := s.appCli.GetAppByID(ctx, &base.IDReq{Id: req.AppId})
+	getAppResp, err := s.appCli.GetAppByID(ctx, &appsvc.GetAppByIDReq{Id: req.AppId, Unfold: utils.Pointer(true)})
 	if err != nil {
 		return bizChat.CallErr(err).Log(ctx, "get app by id error")
 	}
+	var app = getAppResp.App
 
 	// verify that the user has access rights to the app
-	if app.AuthorId != userID {
+	if app.IsPrivate && app.AuthorId != userID {
 		return bizChat.CodeErr(bizerr.ErrCodeForbidden).Log(ctx, "user does not have access rights to the app")
 	}
 
@@ -56,29 +67,66 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 			return bizChat.NewErr(err).Log(ctx, "get conversation by id error")
 		}
 	} else {
-		const newConversationTitle = "New Conversation"
+		const defaultConversationTitle = "New Conversation"
 		conversation = &model.Conversation{
-			Title:  newConversationTitle,
+			Title:  defaultConversationTitle,
 			UserID: userID,
 			AppID:  req.AppId,
 		}
 
 		err = s.conversationDao.Create(ctx, conversation)
 		if err != nil {
-			return bizChat.CallErr(err).Log(ctx, "create conversation error")
+			return bizChat.NewErr(err).Log(ctx, "create conversation error")
 		}
 
 		req.ConversationId = &conversation.ID
+
+		wg := new(sync.WaitGroup)
+		defer wg.Wait()
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			msg, _ := json.Marshal(req.Messages)
+
+			const (
+				modelGPT35Turbo0125ID = 1
+				modelGPT35TurboID     = 2
+				modelGPT35Turbo16kID  = 3
+				modelGPT4oID          = 4
+			)
+
+			var retryModelIDs = []int64{modelGPT35Turbo0125ID, modelGPT4oID}
+
+			// generate title, retry with different model
+			for _, modelID := range retryModelIDs {
+				ok := s.generateNewTitle(ctx, stream, string(msg), *req.ConversationId, modelID)
+				if ok {
+					break
+				}
+			}
+		}()
 	}
 
 	newMsgs := mapper.NewModelChatMessage(*req.ConversationId, req.Messages)
 
-	err = s.messageDao.CreateBatch(ctx, newMsgs)
-	if err != nil {
-		return bizChat.NewErr(err).Log(ctx, "create message batch error")
-	}
+	if len(newMsgs) > 0 {
+		err = s.messageDao.CreateBatch(ctx, newMsgs)
+		if err != nil {
+			return bizChat.NewErr(err).Log(ctx, "create message batch error")
+		}
 
-	msgs = append(msgs, newMsgs...)
+		msgs = append(msgs, newMsgs...)
+
+		err = stream.Send(&chatsvc.ChatResp{
+			Messages:       mapper.NewGenListMessage(newMsgs),
+			ConversationId: conversation.ID,
+		})
+		if err != nil {
+			return bizChat.CallErr(err).Log(ctx, "send user text message error")
+		}
+	}
 
 	// verify that the user has access rights to the conversation
 	if conversation.UserID != userID {
@@ -86,19 +134,28 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 	}
 
 	// generate token for model call
-	genTokenResp, err := s.modelCli.GenToken(ctx, &modelsvc.GenTokenReq{
-		AppId:          req.AppId,
-		ConversationId: *req.ConversationId,
-		CallLimit:      10,
-	})
+	callToken, err := s.genToken(ctx, req.AppId, *req.ConversationId, 10)
 	if err != nil {
 		return bizChat.CallErr(err).Log(ctx, "generate token error")
 	}
 
-	return s.chat(ctx, *req.ConversationId, msgs, app, genTokenResp.Token, stream)
+	return s.chat(ctx, *req.ConversationId, user, msgs, app, callToken, stream)
 }
 
-func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs []*model.Message, app *appsvc.App, token string, stream chatsvc.ChatService_ChatServer) (err error) {
+func (s *ChatServiceImpl) genToken(ctx context.Context, appID, conversationID int64, callLimit int32) (string, error) {
+	genTokenResp, err := s.modelCli.GenToken(ctx, &modelsvc.GenTokenReq{
+		AppId:          appID,
+		ConversationId: conversationID,
+		CallLimit:      callLimit,
+	})
+	if err != nil {
+		return "", bizChat.CallErr(err).Log(ctx, "generate token error")
+	}
+
+	return genTokenResp.Token, nil
+}
+
+func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *usersvc.User, msgs []*model.Message, app *appsvc.App, token string, stream chatsvc.ChatService_ChatServer) (err error) {
 	var (
 		messages    = mapper.NewOpenAIListMessage(msgs)
 		modelConfig = app.ModelConfig
@@ -111,7 +168,10 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 		Token:   token,
 		ModelId: app.ModelId,
 		OpenaiReq: &openai.ChatCompletionRequest{
-			Messages:         messages,
+			Messages: append([]*openai.ChatCompletionMessage{{
+				Role:    "system",
+				Content: utils.Pointer(fmt.Sprintf(`You are an agent on the ai agent platform "Aiagt", your identity information is:\nName: %s,\nDescription: "%s",\nAuthor: %s`, app.Name, app.Description, app.Author.Username)),
+			}}, messages...),
 			MaxTokens:        modelConfig.MaxTokens,
 			Temperature:      modelConfig.Temperature,
 			TopP:             modelConfig.TopP,
@@ -125,7 +185,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 			LogitBias:        modelConfig.LogitBias,
 			Logprobs:         modelConfig.Logprobs,
 			TopLogprobs:      modelConfig.TopLogprobs,
-			User:             modelConfig.User,
+			User:             &user.Username,
 			Functions:        functions,
 			StreamOptions:    modelConfig.StreamOptions,
 		},
@@ -163,7 +223,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 
 				// send text message
 				err = stream.Send(&chatsvc.ChatResp{
-					Messages: []*chatsvc.ChatRespMessage{{
+					Messages: []*chatsvc.Message{{
 						Role: chatsvc.MessageRole_ASSISTANT,
 						Content: &chatsvc.MessageContent{
 							Type:    chatsvc.MessageType_TEXT,
@@ -183,7 +243,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 
 				// send function call message
 				err := stream.Send(&chatsvc.ChatResp{
-					Messages: []*chatsvc.ChatRespMessage{{
+					Messages: []*chatsvc.Message{{
 						Role: chatsvc.MessageRole_ASSISTANT,
 						Content: &chatsvc.MessageContent{
 							Type: chatsvc.MessageType_FUNCTION_CALL,
@@ -224,7 +284,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 
 				msgs = append(msgs, msg)
 
-				return s.handleFunctionCall(ctx, functionCall, tool, conversationID, msgs, app, token, stream)
+				return s.handleFunctionCall(ctx, functionCall, tool, conversationID, user, msgs, app, token, stream)
 			case choice.FinishReason == "stop":
 				msg := &model.Message{
 					MessageContent: model.MessageContent{
@@ -242,13 +302,24 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, msgs [
 					return bizChat.NewErr(err).Log(ctx, "create text message error")
 				}
 
+				stopMsg := mapper.NewGenMessage(msg)
+				stopMsg.Content.Content.Text = &chatsvc.MessageContentValueText{}
+
+				err := stream.Send(&chatsvc.ChatResp{
+					Messages:       []*chatsvc.Message{stopMsg},
+					ConversationId: conversationID,
+				})
+				if err != nil {
+					return bizChat.CallErr(err).Log(ctx, "send stop text message error")
+				}
+
 				return nil
 			}
 		}
 	}
 }
 
-func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *openai.FunctionCall, tool *pluginsvc.PluginTool, conversationID int64, msgs []*model.Message, app *appsvc.App, token string, stream chatsvc.ChatService_ChatServer) error {
+func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *openai.FunctionCall, tool *pluginsvc.PluginTool, conversationID int64, user *usersvc.User, msgs []*model.Message, app *appsvc.App, token string, stream chatsvc.ChatService_ChatServer) error {
 	// get user secrets
 	const maxSecrets = 100
 
@@ -293,7 +364,7 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 
 	// send function result message
 	err = stream.Send(&chatsvc.ChatResp{
-		Messages: []*chatsvc.ChatRespMessage{{
+		Messages: []*chatsvc.Message{{
 			Role: chatsvc.MessageRole_FUNCTION,
 			Content: &chatsvc.MessageContent{
 				Type: chatsvc.MessageType_FUNCTION,
@@ -311,5 +382,93 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 
 	msgs = append(msgs, msg)
 
-	return s.chat(ctx, conversationID, msgs, app, token, stream)
+	return s.chat(ctx, conversationID, user, msgs, app, token, stream)
+}
+
+// the return value determines whether a retry is required
+func (s *ChatServiceImpl) generateNewTitle(ctx context.Context, stream chatsvc.ChatService_ChatServer, msg string, conversationID int64, modelId int64) bool {
+	if len(msg) == 0 {
+		return true
+	}
+
+	type responseFormat struct {
+		Title string `json:"title"`
+	}
+
+	callToken, err := s.genToken(ctx, 0, 0, 1)
+	if err != nil {
+		return true
+	}
+
+	chatStream, err := s.modelStreamCli.Chat(ctx, &modelsvc.ChatReq{
+		Token:   callToken,
+		ModelId: modelId,
+		OpenaiReq: &openai.ChatCompletionRequest{
+			Messages: []*openai.ChatCompletionMessage{
+				{
+					Role:    mapper.NewOpenAIMessageRole(model.MessageRoleSystem),
+					Content: utils.Pointer("Create a short title based on the user's conversation content. The number of characters should not exceed 32. The English word should not exceed 5 words. Try to keep it within 4. The language of the title content should be consistent with the language of the conversation content."),
+				},
+				{
+					Role:    mapper.NewOpenAIMessageRole(model.MessageRoleUser),
+					Content: &msg,
+				},
+			},
+			ResponseFormat: &openai.ChatCompletionResponseFormat{
+				Type: openai.ChatCompletionResponseFormatType_JSON_SCHEMA,
+				JsonSchema: &openai.ChatCompletionResponseFormatJSONSchema{
+					Name:        "TitleResponse",
+					Description: utils.Pointer("JSON schema for title response"),
+					Schema:      `{ "type": "object", "properties": { "title": { "type": "string", "description": "Conversation title" } }, "required": [ "title" ], "additionalProperties": false }`,
+					Strict:      utils.Pointer(true),
+				}},
+		},
+	})
+
+	if err != nil {
+		klog.CtxErrorf(ctx, "generate new title request chat err: %v", err)
+		return false
+	}
+
+	var title bytes.Buffer
+
+	for {
+		resp, err := chatStream.Recv()
+
+		if err == io.EOF {
+			var result responseFormat
+
+			err = json.Unmarshal(title.Bytes(), &result)
+			if err != nil {
+				klog.CtxErrorf(ctx, "generate new title parse result err: %v", err)
+				return false
+			}
+
+			err = s.conversationDao.Update(ctx, conversationID, &model.ConversationOptional{Title: &result.Title})
+			if err != nil {
+				klog.CtxErrorf(ctx, "save new title err: %v", err)
+				return true
+			}
+
+			if len(result.Title) > 0 {
+				err = stream.Send(&chatsvc.ChatResp{ConversationTitle: &result.Title})
+
+				if err != nil {
+					klog.CtxErrorf(ctx, "generate new title send result title err: %v", err)
+					return true
+				}
+			}
+
+			return true
+		}
+
+		if err != nil {
+			klog.CtxErrorf(ctx, "build new title stream recv err: %v", err)
+			return false
+		}
+
+		if resp != nil && resp.OpenaiResp != nil && len(resp.OpenaiResp.Choices) > 0 && resp.OpenaiResp.Choices[0].Delta != nil {
+			title.WriteString(utils.Value(resp.OpenaiResp.Choices[0].Delta.Content))
+		}
+	}
 }

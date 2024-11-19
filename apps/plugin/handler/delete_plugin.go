@@ -20,6 +20,11 @@ func (s *PluginServiceImpl) DeletePlugin(ctx context.Context, req *base.IDReq) (
 		return nil, bizDeletePlugin.CodeErr(bizerr.ErrCodeForbidden)
 	}
 
+	err = s.toolDao.DeleteByPluginID(ctx, req.Id)
+	if err != nil {
+		return nil, bizDeletePlugin.NewErr(err)
+	}
+
 	err = s.pluginDao.Delete(ctx, req.Id)
 	if err != nil {
 		return nil, bizDeletePlugin.NewErr(err)

@@ -42,7 +42,7 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *usersvc.LoginReq) (res
 			return nil, bizLogin.NewErr(err)
 		}
 
-		if user.Password != encrypt.Encrypt(*req.Password) {
+		if len(user.Password) == 0 || user.Password != encrypt.Encrypt(*req.Password) {
 			return nil, bizLogin.CodeErr(bizerr.ErrCodeWrongAuth)
 		}
 	default:

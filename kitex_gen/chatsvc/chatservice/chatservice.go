@@ -72,6 +72,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"InitDevelop": kitex.NewMethodInfo(
+		initDevelopHandler,
+		newChatServiceInitDevelopArgs,
+		newChatServiceInitDevelopResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 }
 
 var (
@@ -309,6 +316,24 @@ func newChatServiceListConversationResult() interface{} {
 	return chatsvc.NewChatServiceListConversationResult()
 }
 
+func initDevelopHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*chatsvc.ChatServiceInitDevelopArgs)
+	realResult := result.(*chatsvc.ChatServiceInitDevelopResult)
+	success, err := handler.(chatsvc.ChatService).InitDevelop(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newChatServiceInitDevelopArgs() interface{} {
+	return chatsvc.NewChatServiceInitDevelopArgs()
+}
+
+func newChatServiceInitDevelopResult() interface{} {
+	return chatsvc.NewChatServiceInitDevelopResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -350,7 +375,7 @@ func (p *kClient) UpdateMessage(ctx context.Context, req *chatsvc.UpdateMessageR
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) DeleteMessage(ctx context.Context, req *base.IDReq) (r *base.Empty, err error) {
+func (p *kClient) DeleteMessage(ctx context.Context, req *chatsvc.DeleteMessageReq) (r *base.Empty, err error) {
 	var _args chatsvc.ChatServiceDeleteMessageArgs
 	_args.Req = req
 	var _result chatsvc.ChatServiceDeleteMessageResult
@@ -405,6 +430,16 @@ func (p *kClient) ListConversation(ctx context.Context, req *chatsvc.ListConvers
 	_args.Req = req
 	var _result chatsvc.ChatServiceListConversationResult
 	if err = p.c.Call(ctx, "ListConversation", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) InitDevelop(ctx context.Context, req *chatsvc.InitDevelopReq) (r *chatsvc.InitDevelopResp, err error) {
+	var _args chatsvc.ChatServiceInitDevelopArgs
+	_args.Req = req
+	var _result chatsvc.ChatServiceInitDevelopResult
+	if err = p.c.Call(ctx, "InitDevelop", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

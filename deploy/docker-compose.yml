@@ -3,6 +3,9 @@ services:
     image: mysql:8.3.0
     ports:
       - 3306:3306
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf/my.cnf:/etc/my.cnf
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: aiagt
@@ -11,6 +14,7 @@ services:
     image: redis:latest
     ports:
       - 6379:6379
+    user: root
 
   consul:
     image: hashicorp/consul:latest
@@ -27,6 +31,7 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
     ports:
       - "9090:9090"
+    user: root
 
   grafana:
     image: grafana/grafana:latest
@@ -36,6 +41,7 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
     ports:
       - "3000:3000"
+    user: root
 
   jaeger-all-in-one:
     container_name: jaeger-all-in-one
@@ -51,6 +57,7 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     ports:
       - "3100:3100"
+    user: root
 
   promtail:
     image: grafana/promtail:2.9.2

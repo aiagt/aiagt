@@ -46,6 +46,8 @@ type StreamOptions struct {
 }
 
 type AppOptional struct {
+	Base
+
 	Name            *string      `gorm:"column:name"`
 	Description     *string      `gorm:"column:description"`
 	DescriptionMd   *string      `gorm:"column:description_md;type:text"`
