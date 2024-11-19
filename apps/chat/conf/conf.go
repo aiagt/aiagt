@@ -11,7 +11,7 @@ var conf = new(ServerConf)
 func init() {
 	ktconf.LoadFiles(conf,
 		filepath.Join("conf", "conf.yaml"),
-		filepath.Join("apps", "plugin", "conf", "conf.yaml"),
+		filepath.Join("apps", "chat", "conf", "conf.yaml"),
 	)
 }
 
