@@ -15,7 +15,7 @@ type Client interface {
 	CreateApp(ctx context.Context, req *appsvc.CreateAppReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	UpdateApp(ctx context.Context, req *appsvc.UpdateAppReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	DeleteApp(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
-	GetAppByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *appsvc.App, err error)
+	GetAppByID(ctx context.Context, req *appsvc.GetAppByIDReq, callOptions ...callopt.Option) (r *appsvc.GetAppByIDResp, err error)
 	ListApp(ctx context.Context, req *appsvc.ListAppReq, callOptions ...callopt.Option) (r *appsvc.ListAppResp, err error)
 	PublishApp(ctx context.Context, req *appsvc.PublishAppReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	ListAppLabel(ctx context.Context, req *appsvc.ListAppLabelReq, callOptions ...callopt.Option) (r *appsvc.ListAppLabelResp, err error)
@@ -65,7 +65,7 @@ func (p *kAppServiceClient) DeleteApp(ctx context.Context, req *base.IDReq, call
 	return p.kClient.DeleteApp(ctx, req)
 }
 
-func (p *kAppServiceClient) GetAppByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *appsvc.App, err error) {
+func (p *kAppServiceClient) GetAppByID(ctx context.Context, req *appsvc.GetAppByIDReq, callOptions ...callopt.Option) (r *appsvc.GetAppByIDResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetAppByID(ctx, req)
 }

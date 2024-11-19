@@ -2,9 +2,8 @@ package db
 
 import (
 	"context"
-	"math"
-
 	ktdb "github.com/aiagt/kitextool/option/server/db"
+	"math"
 
 	"github.com/aiagt/aiagt/apps/chat/model"
 	"github.com/aiagt/aiagt/kitex_gen/base"
@@ -126,6 +125,24 @@ func (d *MessageDao) CreateBatch(ctx context.Context, ms []*model.Message) error
 	err := d.db(ctx).Model(d.m).CreateInBatches(ms, 100).Error
 	if err != nil {
 		return errors.Wrap(err, "message dao create batch error")
+	}
+
+	return nil
+}
+
+func (d *MessageDao) DeleteGtID(ctx context.Context, id int64, conversationID int64) error {
+	err := d.db(ctx).Model(d.m).Where("id > ? AND conversation_id = ?", id, conversationID).Delete(d.m).Error
+	if err != nil {
+		return errors.Wrap(err, "message dao delete by created at error")
+	}
+
+	return nil
+}
+
+func (d *MessageDao) DeleteGteID(ctx context.Context, id int64, conversationID int64) error {
+	err := d.db(ctx).Model(d.m).Where("id >= ? AND conversation_id = ?", id, conversationID).Delete(d.m).Error
+	if err != nil {
+		return errors.Wrap(err, "message dao delete by created at error")
 	}
 
 	return nil

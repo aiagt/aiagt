@@ -3,6 +3,10 @@ package handler
 import (
 	"context"
 
+	"github.com/aiagt/aiagt/apps/plugin/model"
+	"github.com/aiagt/aiagt/pkg/hash/hmap"
+	"github.com/aiagt/aiagt/tools/utils/lists"
+
 	"github.com/aiagt/aiagt/common/ctxutil"
 
 	"github.com/aiagt/aiagt/apps/plugin/mapper"
@@ -18,8 +22,17 @@ func (s *PluginServiceImpl) ListPlugin(ctx context.Context, req *pluginsvc.ListP
 		return nil, bizListPlugin.NewErr(err)
 	}
 
+	labelIDs := lists.FlatMap(plugins, func(t *model.Plugin) []int64 {
+		return t.LabelIDs
+	})
+	labels, err := s.labelDao.GetByIDs(ctx, labelIDs)
+
+	labelMap := hmap.FromSliceEntries(labels, func(t *model.PluginLabel) (int64, *pluginsvc.PluginLabel, bool) {
+		return t.ID, mapper.NewGenPluginLabel(t), true
+	})
+
 	resp = &pluginsvc.ListPluginResp{
-		Plugins:    mapper.NewGenListPlugin(plugins),
+		Plugins:    mapper.NewGenListPlugin(plugins, labelMap),
 		Pagination: page,
 	}
 

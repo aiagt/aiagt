@@ -7,50 +7,59 @@ import "github.com/aiagt/aiagt/common/bizerr"
 const (
 	ServiceName = "plugin"
 
-	bizCodeCallPluginTool  = 0
-	bizCodeCreatePlugin    = 1
-	bizCodeCreateTool      = 2
-	bizCodeDeletePlugin    = 3
-	bizCodeDeleteTool      = 4
-	bizCodeGetPluginByID   = 5
-	bizCodeGetToolByID     = 6
-	bizCodeListPlugin      = 7
-	bizCodeListPluginLabel = 8
-	bizCodeListPluginTool  = 9
-	bizCodePublishPlugin   = 10
-	bizCodeTestPluginTool  = 11
-	bizCodeUpdatePlugin    = 12
-	bizCodeUpdateTool      = 13
+	bizCodeAllPluginTool     = 0
+	bizCodeCallPluginTool    = 1
+	bizCodeCreatePlugin      = 2
+	bizCodeCreateTool        = 3
+	bizCodeDeletePlugin      = 4
+	bizCodeDeleteTool        = 5
+	bizCodeGetPluginByID     = 6
+	bizCodeGetPluginByKey    = 7
+	bizCodeGetToolByID       = 8
+	bizCodeListPlugin        = 9
+	bizCodeListPluginByTools = 10
+	bizCodeListPluginLabel   = 11
+	bizCodeListPluginTool    = 12
+	bizCodePublishPlugin     = 13
+	bizCodeTestPluginTool    = 14
+	bizCodeUpdatePlugin      = 15
+	bizCodeUpdateTool        = 16
 )
 
 var (
-	bizCallPluginTool  *bizerr.Biz
-	bizCreatePlugin    *bizerr.Biz
-	bizCreateTool      *bizerr.Biz
-	bizDeletePlugin    *bizerr.Biz
-	bizDeleteTool      *bizerr.Biz
-	bizGetPluginByID   *bizerr.Biz
-	bizGetToolByID     *bizerr.Biz
-	bizListPlugin      *bizerr.Biz
-	bizListPluginLabel *bizerr.Biz
-	bizListPluginTool  *bizerr.Biz
-	bizPublishPlugin   *bizerr.Biz
-	bizTestPluginTool  *bizerr.Biz
-	bizUpdatePlugin    *bizerr.Biz
-	bizUpdateTool      *bizerr.Biz
+	bizAllPluginTool     *bizerr.Biz
+	bizCallPluginTool    *bizerr.Biz
+	bizCreatePlugin      *bizerr.Biz
+	bizCreateTool        *bizerr.Biz
+	bizDeletePlugin      *bizerr.Biz
+	bizDeleteTool        *bizerr.Biz
+	bizGetPluginByID     *bizerr.Biz
+	bizGetPluginByKey    *bizerr.Biz
+	bizGetToolByID       *bizerr.Biz
+	bizListPlugin        *bizerr.Biz
+	bizListPluginByTools *bizerr.Biz
+	bizListPluginLabel   *bizerr.Biz
+	bizListPluginTool    *bizerr.Biz
+	bizPublishPlugin     *bizerr.Biz
+	bizTestPluginTool    *bizerr.Biz
+	bizUpdatePlugin      *bizerr.Biz
+	bizUpdateTool        *bizerr.Biz
 )
 
 func initServiceBusiness(serviceCode int) {
 	baseCode := (serviceCode + 100) * 100
 
+	bizAllPluginTool = bizerr.NewBiz(ServiceName, "all_plugin_tool", baseCode+bizCodeAllPluginTool)
 	bizCallPluginTool = bizerr.NewBiz(ServiceName, "call_plugin_tool", baseCode+bizCodeCallPluginTool)
 	bizCreatePlugin = bizerr.NewBiz(ServiceName, "create_plugin", baseCode+bizCodeCreatePlugin)
 	bizCreateTool = bizerr.NewBiz(ServiceName, "create_tool", baseCode+bizCodeCreateTool)
 	bizDeletePlugin = bizerr.NewBiz(ServiceName, "delete_plugin", baseCode+bizCodeDeletePlugin)
 	bizDeleteTool = bizerr.NewBiz(ServiceName, "delete_tool", baseCode+bizCodeDeleteTool)
 	bizGetPluginByID = bizerr.NewBiz(ServiceName, "get_plugin_by_id", baseCode+bizCodeGetPluginByID)
+	bizGetPluginByKey = bizerr.NewBiz(ServiceName, "get_plugin_by_key", baseCode+bizCodeGetPluginByKey)
 	bizGetToolByID = bizerr.NewBiz(ServiceName, "get_tool_by_id", baseCode+bizCodeGetToolByID)
 	bizListPlugin = bizerr.NewBiz(ServiceName, "list_plugin", baseCode+bizCodeListPlugin)
+	bizListPluginByTools = bizerr.NewBiz(ServiceName, "list_plugin_by_tools", baseCode+bizCodeListPluginByTools)
 	bizListPluginLabel = bizerr.NewBiz(ServiceName, "list_plugin_label", baseCode+bizCodeListPluginLabel)
 	bizListPluginTool = bizerr.NewBiz(ServiceName, "list_plugin_tool", baseCode+bizCodeListPluginTool)
 	bizPublishPlugin = bizerr.NewBiz(ServiceName, "publish_plugin", baseCode+bizCodePublishPlugin)

@@ -38,9 +38,10 @@ func (s *PluginServiceImpl) CallPluginTool(ctx context.Context, req *pluginsvc.C
 		return nil, bizCallPluginTool.NewErr(err)
 	}
 
-	if plugin.AuthorID != userID {
-		return nil, bizCallPluginTool.CodeErr(bizerr.ErrCodeForbidden)
-	}
+	// plugin call do not require permission verification
+	//if plugin.AuthorID != userID {
+	//	return nil, bizCallPluginTool.CodeErr(bizerr.ErrCodeForbidden)
+	//}
 
 	listSecret, err := s.userCli.ListSecret(ctx, &usersvc.ListSecretReq{
 		Pagination: &base.PaginationReq{
@@ -55,7 +56,7 @@ func (s *PluginServiceImpl) CallPluginTool(ctx context.Context, req *pluginsvc.C
 	secretDefs := hset.FromSlice(plugin.Secrets, func(t *model.PluginSecret) string { return t.Name })
 
 	userSecretMap := hmap.FromSliceEntries(listSecret.Secrets, func(t *usersvc.Secret) (string, string, bool) {
-		return t.Name, t.Value, secretDefs.Has(t.Name)
+		return t.Name, t.Value, t.PluginId == plugin.ID && secretDefs.Has(t.Name)
 	})
 
 	body := &caller.RequestBody{
@@ -65,14 +66,13 @@ func (s *PluginServiceImpl) CallPluginTool(ctx context.Context, req *pluginsvc.C
 		Secrets:  userSecretMap,
 	}
 
-	callResp, err := caller.Call(ctx, body, tool.ApiURL, tool.RequestType, tool.ResponseType, req.Request)
+	callResp, callRespCode, err := caller.Call(ctx, body, tool.ApiURL, tool.RequestType, tool.ResponseType, req.Request)
+
+	resp = &pluginsvc.CallPluginToolResp{Response: callResp, HttpCode: int64(callRespCode)}
 	if err != nil {
-		return nil, bizCallPluginTool.NewErr(err)
+		resp.Code = -1
+		resp.Msg = err.Error()
 	}
 
-	resp = &pluginsvc.CallPluginToolResp{
-		Response: callResp,
-	}
-
-	return
+	return resp, nil
 }

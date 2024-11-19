@@ -43,7 +43,7 @@ func main() {
 		)),
 		server.WithSuite(serversuite.NewServerSuite(config.GetServerConf(), rpc.UserCli)))
 
-	logerr.Fatal(ktdb.DB().AutoMigrate(new(model.PluginTool), new(model.PluginLabel), new(model.PluginTool)))
+	logerr.Fatal(ktdb.DB().AutoMigrate(new(model.PluginTool), new(model.PluginLabel), new(model.Plugin)))
 	logerr.Fatal(ktdb.DB().Use(tracing.NewPlugin(tracing.WithoutMetrics())))
 
 	err := svr.Run()

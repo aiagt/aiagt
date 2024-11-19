@@ -31,7 +31,7 @@ var (
 )
 
 func init() {
-	ktconf.LoadFiles(conf, "conf.yaml", filepath.Join("rpc", "conf.yaml"))
+	ktconf.LoadFiles(conf, "conf.yaml", filepath.Join("rpc", "conf.yaml"), "/Users/user/Code/aiagt/rpc/conf.yaml")
 
 	UserCli = usersvc.MustNewClient("user", client.WithSuite(clientsuite.NewClientSuite(conf, "user")))
 

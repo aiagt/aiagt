@@ -41,6 +41,18 @@ func (d *PluginDao) GetByID(ctx context.Context, id int64) (*model.Plugin, error
 	return &result, nil
 }
 
+// GetByIDs get plugin list by ids
+func (d *PluginDao) GetByIDs(ctx context.Context, ids []int64) ([]*model.Plugin, error) {
+	var result []*model.Plugin
+
+	err := d.db(ctx).Model(d.m).Where("id in ?", ids).Find(&result).Error
+	if err != nil {
+		return nil, errors.Wrap(err, "plugin dao get by ids error")
+	}
+
+	return result, nil
+}
+
 // List get plugin list
 func (d *PluginDao) List(ctx context.Context, req *pluginsvc.ListPluginReq, userID int64) ([]*model.Plugin, *base.PaginationResp, error) {
 	var (
@@ -111,4 +123,16 @@ func (d *PluginDao) Delete(ctx context.Context, id int64) error {
 	}
 
 	return nil
+}
+
+// GetByKey get plugin by key
+func (d *PluginDao) GetByKey(ctx context.Context, key int64) (*model.Plugin, error) {
+	var result model.Plugin
+
+	err := d.db(ctx).Model(d.m).Where("`key` = ?", key).First(&result).Error
+	if err != nil {
+		return nil, errors.Wrap(err, "plugin dao get by key error")
+	}
+
+	return &result, nil
 }

@@ -2,8 +2,10 @@ package mapper
 
 import (
 	"encoding/json"
-
 	"github.com/aiagt/aiagt/pkg/caller"
+	"github.com/aiagt/aiagt/pkg/hash/hmap"
+	"github.com/aiagt/aiagt/pkg/snowflake"
+	"github.com/aiagt/aiagt/tools/utils/lists"
 
 	"github.com/aiagt/aiagt/apps/plugin/model"
 	"github.com/aiagt/aiagt/common/baseutil"
@@ -46,10 +48,13 @@ func NewGenPlugin(plugin *model.Plugin, author *usersvc.User, labels []*pluginsv
 	return result
 }
 
-func NewGenListPlugin(list []*model.Plugin) []*pluginsvc.Plugin {
+func NewGenListPlugin(list []*model.Plugin, labels hmap.Map[int64, *pluginsvc.PluginLabel]) []*pluginsvc.Plugin {
 	result := make([]*pluginsvc.Plugin, len(list))
 	for i, plugin := range list {
-		result[i] = NewGenPlugin(plugin, nil, nil, nil)
+		pluginLabels := lists.Map(plugin.LabelIDs, func(t int64) *pluginsvc.PluginLabel { return labels[t] })
+		pluginLabels = lists.Filter(pluginLabels, func(t *pluginsvc.PluginLabel) bool { return t != nil })
+
+		result[i] = NewGenPlugin(plugin, nil, pluginLabels, nil)
 	}
 
 	return result
@@ -108,6 +113,16 @@ func NewGenListPluginTool(list []*model.PluginTool) []*pluginsvc.PluginTool {
 	return result
 }
 
+func NewGenListPluginToolWithPlugin(list []*model.PluginTool, pluginMap map[int64]*model.Plugin) []*pluginsvc.PluginTool {
+	result := make([]*pluginsvc.PluginTool, len(list))
+	for i, tool := range list {
+		result[i] = NewGenPluginTool(tool)
+		result[i].Plugin = NewGenPlugin(pluginMap[tool.PluginID], nil, nil, nil)
+	}
+
+	return result
+}
+
 func NewGenPluginLabel(label *model.PluginLabel) *pluginsvc.PluginLabel {
 	return &pluginsvc.PluginLabel{
 		Id:        label.ID,
@@ -144,8 +159,13 @@ func NewModelListPluginSecret(list []*pluginsvc.PluginSecret) []*model.PluginSec
 }
 
 func NewModelCreatePlugin(plugin *pluginsvc.CreatePluginReq, userID int64, labelIDs []int64) *model.Plugin {
+	var key = plugin.Key
+	if key == 0 {
+		key = snowflake.Generate().Int64()
+	}
+
 	return &model.Plugin{
-		Key:           plugin.Key,
+		Key:           key,
 		Name:          plugin.Name,
 		Description:   plugin.Description,
 		DescriptionMd: plugin.DescriptionMd,
@@ -234,5 +254,6 @@ func NewModelUpdatePluginTool(tool *pluginsvc.UpdatePluginToolReq) *model.Plugin
 		ResponseType:  responseType,
 		ApiURL:        tool.ApiUrl,
 		ImportModelID: tool.ImportModelId,
+		TestedAt:      nil,
 	}
 }

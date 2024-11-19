@@ -19,6 +19,7 @@ func RegisterRouter(r *route.RouterGroup, cli chatsvc.Client, streamCli chatsvc.
 	router.GET(conversationRouter, "/:id", cli.GetConversationByID)
 	router.PUT(conversationRouter, "/:id", cli.UpdateConversation)
 	router.DELETE(conversationRouter, "/:id", cli.DeleteConversation)
+	router.POST(conversationRouter, "/develop", cli.InitDevelop)
 
 	router.SSE(chatRouter, "/chat", streamCli.Chat)
 }

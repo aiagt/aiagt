@@ -295,7 +295,7 @@ func (p *kClient) DeleteApp(ctx context.Context, req *base.IDReq) (r *base.Empty
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) GetAppByID(ctx context.Context, req *base.IDReq) (r *appsvc.App, err error) {
+func (p *kClient) GetAppByID(ctx context.Context, req *appsvc.GetAppByIDReq) (r *appsvc.GetAppByIDResp, err error) {
 	var _args appsvc.AppServiceGetAppByIDArgs
 	_args.Req = req
 	var _result appsvc.AppServiceGetAppByIDResult

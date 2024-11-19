@@ -27,6 +27,14 @@ func (s *ChatServiceImpl) UpdateMessage(ctx context.Context, req *chatsvc.Update
 	}
 
 	err = s.messageDao.Update(ctx, req.Id, mapper.NewModelUpdateMessage(req))
+	if err != nil {
+		return nil, bizUpdateMessage.NewErr(err)
+	}
+
+	err = s.messageDao.DeleteGtID(ctx, message.ID, conversation.ID)
+	if err != nil {
+		return nil, bizUpdateMessage.NewErr(err)
+	}
 
 	return
 }

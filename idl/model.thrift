@@ -38,6 +38,9 @@ struct Model {
     3: required string description
     4: required string source
     5: required string model_key
+    6: required string logo
+    7: required string input_price
+    8: required string output_price
 }
 
 struct CreateModelReq {
@@ -45,6 +48,9 @@ struct CreateModelReq {
     2: required string description
     3: required string source
     4: required string model_key
+    5: required string logo
+    6: required string input_price
+    7: required string output_price
 }
 
 struct UpdateModelReq {
@@ -53,6 +59,9 @@ struct UpdateModelReq {
     3: optional string description
     4: optional string source
     5: optional string model_key
+    6: optional string logo
+    7: optional string input_price
+    8: optional string output_price
 }
 
 struct ListModelReq {

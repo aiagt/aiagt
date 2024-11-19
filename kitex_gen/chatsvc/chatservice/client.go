@@ -17,12 +17,13 @@ import (
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
 	UpdateMessage(ctx context.Context, req *chatsvc.UpdateMessageReq, callOptions ...callopt.Option) (r *base.Empty, err error)
-	DeleteMessage(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
+	DeleteMessage(ctx context.Context, req *chatsvc.DeleteMessageReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	ListMessage(ctx context.Context, req *chatsvc.ListMessageReq, callOptions ...callopt.Option) (r *chatsvc.ListMessageResp, err error)
 	UpdateConversation(ctx context.Context, req *chatsvc.UpdateConversationReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	DeleteConversation(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	GetConversationByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *chatsvc.Conversation, err error)
 	ListConversation(ctx context.Context, req *chatsvc.ListConversationReq, callOptions ...callopt.Option) (r *chatsvc.ListConversationResp, err error)
+	InitDevelop(ctx context.Context, req *chatsvc.InitDevelopReq, callOptions ...callopt.Option) (r *chatsvc.InitDevelopResp, err error)
 }
 
 // StreamClient is designed to provide Interface for Streaming APIs.
@@ -69,7 +70,7 @@ func (p *kChatServiceClient) UpdateMessage(ctx context.Context, req *chatsvc.Upd
 	return p.kClient.UpdateMessage(ctx, req)
 }
 
-func (p *kChatServiceClient) DeleteMessage(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
+func (p *kChatServiceClient) DeleteMessage(ctx context.Context, req *chatsvc.DeleteMessageReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.DeleteMessage(ctx, req)
 }
@@ -97,6 +98,11 @@ func (p *kChatServiceClient) GetConversationByID(ctx context.Context, req *base.
 func (p *kChatServiceClient) ListConversation(ctx context.Context, req *chatsvc.ListConversationReq, callOptions ...callopt.Option) (r *chatsvc.ListConversationResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.ListConversation(ctx, req)
+}
+
+func (p *kChatServiceClient) InitDevelop(ctx context.Context, req *chatsvc.InitDevelopReq, callOptions ...callopt.Option) (r *chatsvc.InitDevelopResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.InitDevelop(ctx, req)
 }
 
 // NewStreamClient creates a stream client for the service's streaming APIs defined in IDL.

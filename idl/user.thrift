@@ -29,8 +29,8 @@ struct Secret {
 struct RegisterReq {
     1: required string email
     2: required string captcha
-    3: required string username
-    4: required string password
+    3: optional string username
+    4: optional string password
 }
 
 struct RegisterResp {
