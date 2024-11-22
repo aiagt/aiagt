@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/aiagt/aiagt/common/confutil"
 	"github.com/aiagt/aiagt/common/hertz/result"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"
@@ -39,8 +40,10 @@ import (
 var conf = new(ServerConf)
 
 func init() {
-	ktconf.LoadFiles(conf, "conf.yaml",
-		filepath.Join("apps", "gateway", "conf.yaml"))
+	confutil.LoadConf(conf,
+		".",
+		filepath.Join("apps", "gateway"),
+	)
 }
 
 func main() {

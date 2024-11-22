@@ -1,0 +1,24 @@
+server:
+  name: app
+  address: ":8933"
+
+log:
+  level: debug
+  file_name: deploy/log/app.log
+
+config_center:
+  host: consul
+  port: 8500
+
+registry:
+  address:
+    - "consul:8500"
+
+db:
+  dsn: "root:123456@tcp(mysql:3306)/aiagt?charset=utf8mb4&parseTime=True&loc=Local"
+
+redis:
+  address: "127.0.0.1:6379"
+
+metrics:
+  addr: ":9933"

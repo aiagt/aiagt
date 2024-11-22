@@ -1,0 +1,24 @@
+user:
+  resolver:
+    address:
+      - consul:8500
+
+plugin:
+  resolver:
+    address:
+      - consul:8500
+
+app:
+  resolver:
+    address:
+      - consul:8500
+
+chat:
+  resolver:
+    address:
+      - consul:8500
+
+model:
+  resolver:
+    address:
+      - consul:8500

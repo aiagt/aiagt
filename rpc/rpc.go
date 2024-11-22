@@ -1,8 +1,7 @@
 package rpc
 
 import (
-	"path/filepath"
-
+	"github.com/aiagt/aiagt/common/confutil"
 	"github.com/aiagt/aiagt/common/kitex/clientsuite"
 	appsvc "github.com/aiagt/aiagt/kitex_gen/appsvc/appservice"
 	chatsvc "github.com/aiagt/aiagt/kitex_gen/chatsvc/chatservice"
@@ -31,7 +30,7 @@ var (
 )
 
 func init() {
-	ktconf.LoadFiles(conf, "conf.yaml", filepath.Join("rpc", "conf.yaml"))
+	confutil.LoadConf(conf, ".", "rpc")
 
 	UserCli = usersvc.MustNewClient("user", client.WithSuite(clientsuite.NewClientSuite(conf, "user")))
 

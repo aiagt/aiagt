@@ -2,13 +2,13 @@ package handler
 
 import (
 	"context"
+	"github.com/aiagt/aiagt/pkg/lists"
 
 	"github.com/aiagt/aiagt/apps/app/mapper"
 	"github.com/aiagt/aiagt/apps/app/model"
 	"github.com/aiagt/aiagt/common/ctxutil"
 	appsvc "github.com/aiagt/aiagt/kitex_gen/appsvc"
 	"github.com/aiagt/aiagt/pkg/hash/hmap"
-	"github.com/aiagt/aiagt/tools/utils/lists"
 )
 
 // ListApp implements the AppServiceImpl interface.

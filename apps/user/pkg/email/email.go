@@ -22,7 +22,7 @@ func Send(subject, html string, toEmails ...string) error {
 }
 
 func SendAuthCaptcha(captcha string, toEmails ...string) error {
-	subject := "【Aiagt】邮箱验证"
+	subject := fmt.Sprintf("【Aiagt】邮箱验证码 %s", captcha)
 	html := fmt.Sprintf(`<div style="text-align: center;">
 		<h2 style="color: #333;">欢迎使用，你的验证码为：</h2>
 		<h1 style="margin: 1.2em 0;">%s</h1>

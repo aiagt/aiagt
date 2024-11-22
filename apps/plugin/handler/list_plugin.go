@@ -2,12 +2,11 @@ package handler
 
 import (
 	"context"
+	"github.com/aiagt/aiagt/pkg/lists"
 
 	"github.com/aiagt/aiagt/apps/plugin/model"
-	"github.com/aiagt/aiagt/pkg/hash/hmap"
-	"github.com/aiagt/aiagt/tools/utils/lists"
-
 	"github.com/aiagt/aiagt/common/ctxutil"
+	"github.com/aiagt/aiagt/pkg/hash/hmap"
 
 	"github.com/aiagt/aiagt/apps/plugin/mapper"
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc"

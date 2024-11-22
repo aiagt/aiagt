@@ -37,7 +37,7 @@ func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelServ
 
 	start := time.Now()
 	klog.CtxInfof(ctx, "create chat complation starting")
-	chatStream, err := s.openaiCli.CreateChatCompletionStream(ctx, *chatReq)
+	chatStream, err := s.openaiCli().CreateChatCompletionStream(ctx, *chatReq)
 	klog.CtxInfof(ctx, "create chat complation time consuming: %.2fs", float64(time.Since(start).Milliseconds())/float64(1000))
 	if err != nil {
 		return bizChat.NewErr(err).Log(ctx, "create chat completion stream failed")

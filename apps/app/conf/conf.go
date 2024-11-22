@@ -1,17 +1,17 @@
 package conf
 
 import (
-	"path/filepath"
-
+	"github.com/aiagt/aiagt/common/confutil"
 	ktconf "github.com/aiagt/kitextool/conf"
+	"path/filepath"
 )
 
 var conf = new(ServerConf)
 
 func init() {
-	ktconf.LoadFiles(conf,
-		filepath.Join("conf", "conf.yaml"),
-		filepath.Join("apps", "app", "conf", "conf.yaml"),
+	confutil.LoadConf(conf,
+		filepath.Join("conf"),
+		filepath.Join("apps", "app", "conf"),
 	)
 }
 
