@@ -4,7 +4,7 @@ server:
 
 log:
   level: debug
-  file_name: deploy/log/user.log
+  file_name: log/user.log
 
 config_center:
   port: 8500

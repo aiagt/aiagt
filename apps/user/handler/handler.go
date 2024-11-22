@@ -31,6 +31,6 @@ func NewAuthService(handler usersvc.UserService) *AuthServiceImpl {
 	return &AuthServiceImpl{handler: handler}
 }
 
-func (a *AuthServiceImpl) GetUser(ctx context.Context, _ ...callopt.Option) (r *usersvc.User, err error) {
-	return a.handler.GetUser(ctx)
+func (a *AuthServiceImpl) ParseToken(ctx context.Context, token string, _ ...callopt.Option) (resp int64, err error) {
+	return a.handler.ParseToken(ctx, token)
 }

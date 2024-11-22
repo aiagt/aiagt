@@ -1,6 +1,6 @@
 services:
   gateway:
-    image: aiagt/aiagt-gateway:latest
+    image: aiagt-gateway:latest
     networks:
       - aiagt-network
     volumes:
@@ -10,7 +10,7 @@ services:
       - 8930:80
 
   user:
-    image: aiagt/aiagt-user:latest
+    image: aiagt-user:latest
     networks:
       - aiagt-network
     volumes:
@@ -19,7 +19,7 @@ services:
       - 8931:80
 
   plugin:
-    image: aiagt/aiagt-plugin:latest
+    image: aiagt-plugin:latest
     networks:
       - aiagt-network
     volumes:
@@ -28,7 +28,7 @@ services:
       - 8932:80
 
   app:
-    image: aiagt/aiagt-app:latest
+    image: aiagt-app:latest
     networks:
       - aiagt-network
     volumes:
@@ -37,7 +37,7 @@ services:
       - 8933:80
 
   chat:
-    image: aiagt/aiagt-chat:latest
+    image: aiagt-chat:latest
     networks:
       - aiagt-network
     volumes:
@@ -46,7 +46,7 @@ services:
       - 8934:80
 
   model:
-    image: aiagt/aiagt-model:latest
+    image: aiagt-model:latest
     networks:
       - aiagt-network
     volumes:

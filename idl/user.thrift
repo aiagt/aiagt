@@ -109,6 +109,7 @@ struct SendCaptchaResp {
 service UserService {
     RegisterResp Register(1: RegisterReq req)
     LoginResp Login(1: LoginReq req)
+    i64 ParseToken(1: string token)
     base.Empty ResetPassword(1: ResetPasswordReq req)
     SendCaptchaResp SendCaptcha(1: SendCaptchaReq req)
 

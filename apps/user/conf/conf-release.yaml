@@ -1,6 +1,6 @@
 server:
   name: user
-  address: ":8931"
+  address: ":80"
 
 log:
   level: debug

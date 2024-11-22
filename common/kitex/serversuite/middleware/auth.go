@@ -5,9 +5,7 @@ import (
 
 	"github.com/aiagt/aiagt/common/bizerr"
 
-	"github.com/aiagt/aiagt/apps/user/pkg/jwt"
 	"github.com/aiagt/aiagt/common/ctxutil"
-	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 	"github.com/cloudwego/kitex/client/callopt"
 	"github.com/cloudwego/kitex/pkg/endpoint"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
@@ -15,7 +13,7 @@ import (
 )
 
 type AuthService interface {
-	GetUser(ctx context.Context, callOptions ...callopt.Option) (r *usersvc.User, err error)
+	ParseToken(ctx context.Context, token string, callOptions ...callopt.Option) (resp int64, err error)
 }
 
 func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
@@ -33,17 +31,17 @@ func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 		switch serviceName {
 		case "user":
 			switch methodName {
-			case "Login", "Register", "SendCaptcha", "ResetPassword":
+			case "Login", "Register", "ParseToken", "SendCaptcha", "ResetPassword":
 				return next(ctx, req, resp)
 			}
 		}
 
 		token := ctxutil.Token(ctx)
 
-		id, err := jwt.ParseToken(token)
+		id, err := m.authSvc.ParseToken(ctx, token)
 		if err != nil {
 			biz := bizerr.NewBiz(serviceName, "auth", 40000)
-			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized).Logf(ctx, "jwt parse token error: %v", err.Error()))
+			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized).Logf(ctx, "parse token error: %v", err.Error()))
 		}
 
 		return next(ctxutil.WithUserID(ctx, id), req, resp)

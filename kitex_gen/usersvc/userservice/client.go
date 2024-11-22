@@ -14,6 +14,7 @@ import (
 type Client interface {
 	Register(ctx context.Context, req *usersvc.RegisterReq, callOptions ...callopt.Option) (r *usersvc.RegisterResp, err error)
 	Login(ctx context.Context, req *usersvc.LoginReq, callOptions ...callopt.Option) (r *usersvc.LoginResp, err error)
+	ParseToken(ctx context.Context, token string, callOptions ...callopt.Option) (r int64, err error)
 	ResetPassword(ctx context.Context, req *usersvc.ResetPasswordReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	SendCaptcha(ctx context.Context, req *usersvc.SendCaptchaReq, callOptions ...callopt.Option) (r *usersvc.SendCaptchaResp, err error)
 	UpdateUser(ctx context.Context, req *usersvc.UpdateUserReq, callOptions ...callopt.Option) (r *base.Empty, err error)
@@ -63,6 +64,11 @@ func (p *kUserServiceClient) Register(ctx context.Context, req *usersvc.Register
 func (p *kUserServiceClient) Login(ctx context.Context, req *usersvc.LoginReq, callOptions ...callopt.Option) (r *usersvc.LoginResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.Login(ctx, req)
+}
+
+func (p *kUserServiceClient) ParseToken(ctx context.Context, token string, callOptions ...callopt.Option) (r int64, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.ParseToken(ctx, token)
 }
 
 func (p *kUserServiceClient) ResetPassword(ctx context.Context, req *usersvc.ResetPasswordReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
