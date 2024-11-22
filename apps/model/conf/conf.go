@@ -26,6 +26,7 @@ type ServerConf struct {
 
 	OpenAI  OpenAI  `yaml:"openai"`
 	Metrics Metrics `yaml:"metrics"`
+	Tracing Tracing `yaml:"tracing"`
 }
 
 type OpenAI struct {
@@ -35,4 +36,8 @@ type OpenAI struct {
 
 type Metrics struct {
 	Addr string `yaml:"addr"`
+}
+
+type Tracing struct {
+	ExportAddr string `yaml:"export_addr"`
 }

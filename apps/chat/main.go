@@ -38,7 +38,7 @@ func main() {
 
 	config := conf.Conf()
 	observability.InitMetrics(config.Server.Name, config.Metrics.Addr, config.Registry.Address[0])
-	observability.InitTracing(config.Server.Name)
+	observability.InitTracing(config.Server.Name, config.Tracing.ExportAddr)
 
 	svr := chatsvc.NewServer(handle,
 		server.WithSuite(ktserver.NewKitexToolSuite(

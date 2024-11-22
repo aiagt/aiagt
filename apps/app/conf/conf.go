@@ -24,8 +24,13 @@ type ServerConf struct {
 	ktconf.ServerConf
 
 	Metrics Metrics `yaml:"metrics"`
+	Tracing Tracing `yaml:"tracing"`
 }
 
 type Metrics struct {
 	Addr string `yaml:"addr"`
+}
+
+type Tracing struct {
+	ExportAddr string `yaml:"export_addr"`
 }

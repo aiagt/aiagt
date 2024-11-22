@@ -28,6 +28,7 @@ type ServerConf struct {
 	Email   Email   `yaml:"email"`
 	Auth    Auth    `yaml:"auth"`
 	Metrics Metrics `yaml:"metrics"`
+	Tracing Tracing `yaml:"tracing"`
 }
 
 type Email struct {
@@ -47,4 +48,8 @@ type Auth struct {
 
 type Metrics struct {
 	Addr string `yaml:"addr"`
+}
+
+type Tracing struct {
+	ExportAddr string `yaml:"export_addr"`
 }
