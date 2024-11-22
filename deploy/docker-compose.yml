@@ -3,13 +3,18 @@ services:
     image: aiagt/aiagt-gateway:latest
     networks:
       - aiagt-network
+    volumes:
+      - ./assets:/app/assets
+      - ./log/gateway.log:/app/log/gateway.log
     ports:
-      - 80:80
+      - 8930:80
 
   user:
     image: aiagt/aiagt-user:latest
     networks:
       - aiagt-network
+    volumes:
+      - ./log/user.log:/app/log/user.log
     ports:
       - 8931:80
 
@@ -17,6 +22,8 @@ services:
     image: aiagt/aiagt-plugin:latest
     networks:
       - aiagt-network
+    volumes:
+      - ./log/plugin.log:/app/log/plugin.log
     ports:
       - 8932:80
 
@@ -24,6 +31,8 @@ services:
     image: aiagt/aiagt-app:latest
     networks:
       - aiagt-network
+    volumes:
+      - ./log/app.log:/app/log/app.log
     ports:
       - 8933:80
 
@@ -31,6 +40,8 @@ services:
     image: aiagt/aiagt-chat:latest
     networks:
       - aiagt-network
+    volumes:
+      - ./log/chat.log:/app/log/chat.log
     ports:
       - 8934:80
 
@@ -38,6 +49,8 @@ services:
     image: aiagt/aiagt-model:latest
     networks:
       - aiagt-network
+    volumes:
+      - ./log/model.log:/app/log/model.log
     ports:
       - 8935:80
 
