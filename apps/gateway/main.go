@@ -82,8 +82,9 @@ func main() {
 
 	h.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
-		AllowHeaders:     []string{"Authorization", "Content-Type"},
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"*"},
+		AllowWildcard:    true,
 		AllowCredentials: true,
 	}))
 	h.Use(tracing.ServerMiddleware(cfg))
