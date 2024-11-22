@@ -7,26 +7,14 @@ fi
 
 SVC=$1
 
-SRC_DIR="apps/$SVC"
-DEST_DIR="."
+DOCKER_FILE="apps/$SVC/Dockerfile"
 
-if [ ! -d "$SRC_DIR" ]; then
-  echo "Error: Service directory $SRC_DIR does not exist."
+if [ ! -f "$DOCKER_FILE" ]; then
+  echo "Error: Dockerfile does not exist."
   exit 1
 fi
-
-if [ ! -f "$SRC_DIR/Dockerfile" ]; then
-  echo "Error: Dockerfile does not exist in $SRC_DIR."
-  exit 1
-fi
-
-echo "Moving Dockerfile from $SRC_DIR to $DEST_DIR..."
-mv "$SRC_DIR/Dockerfile" "$DEST_DIR/Dockerfile"
 
 echo "Building Docker image for $SVC..."
-docker build -t "aiagt-$SVC" "$DEST_DIR"
-
-echo "Moving Dockerfile back to $SRC_DIR..."
-mv "$DEST_DIR/Dockerfile" "$SRC_DIR/Dockerfile"
+docker build -t "aiagt-$SVC" -f "$DOCKER_FILE" .
 
 echo "Docker build for $SVC completed."
