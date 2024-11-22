@@ -17,6 +17,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/google/uuid"
+	"github.com/hertz-contrib/cors"
 
 	"github.com/aiagt/aiagt/pkg/logerr"
 
@@ -79,6 +80,12 @@ func main() {
 		)),
 		tracer)
 
+	h.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
+		AllowHeaders:     []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+	}))
 	h.Use(tracing.ServerMiddleware(cfg))
 	h.Use(accesslog.New())
 

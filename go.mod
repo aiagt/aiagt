@@ -13,6 +13,7 @@ require (
 	github.com/cloudwego/kitex v0.10.3
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0
+	github.com/hertz-contrib/cors v0.1.0
 	github.com/hertz-contrib/logger/accesslog v0.0.0-20240623133421-6fb592ed8d10
 	github.com/hertz-contrib/monitor-prometheus v0.1.2
 	github.com/hertz-contrib/obs-opentelemetry/logging/zap v0.0.0-20240705015228-9abdf96254a2
@@ -20,6 +21,7 @@ require (
 	github.com/hertz-contrib/sse v0.0.5
 	github.com/iancoleman/strcase v0.2.0
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
+	github.com/json-iterator/go v1.1.12
 	github.com/kitex-contrib/monitor-prometheus v0.2.0
 	github.com/kitex-contrib/obs-opentelemetry v0.2.7
 	github.com/kitex-contrib/obs-opentelemetry/logging/zap v0.0.0-20240515092919-1f776656cb66
@@ -87,7 +89,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
-	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kitex-contrib/config-consul v0.1.3 // indirect
 	github.com/kitex-contrib/config-nacos v0.4.0 // indirect
 	github.com/kitex-contrib/obs-opentelemetry/logging/logrus v0.0.0-20240515092919-1f776656cb66 // indirect
