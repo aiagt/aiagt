@@ -28,6 +28,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"ParseToken": kitex.NewMethodInfo(
+		parseTokenHandler,
+		newUserServiceParseTokenArgs,
+		newUserServiceParseTokenResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 	"ResetPassword": kitex.NewMethodInfo(
 		resetPasswordHandler,
 		newUserServiceResetPasswordArgs,
@@ -198,6 +205,24 @@ func newUserServiceLoginArgs() interface{} {
 
 func newUserServiceLoginResult() interface{} {
 	return usersvc.NewUserServiceLoginResult()
+}
+
+func parseTokenHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*usersvc.UserServiceParseTokenArgs)
+	realResult := result.(*usersvc.UserServiceParseTokenResult)
+	success, err := handler.(usersvc.UserService).ParseToken(ctx, realArg.Token)
+	if err != nil {
+		return err
+	}
+	realResult.Success = &success
+	return nil
+}
+func newUserServiceParseTokenArgs() interface{} {
+	return usersvc.NewUserServiceParseTokenArgs()
+}
+
+func newUserServiceParseTokenResult() interface{} {
+	return usersvc.NewUserServiceParseTokenResult()
 }
 
 func resetPasswordHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -405,6 +430,16 @@ func (p *kClient) Login(ctx context.Context, req *usersvc.LoginReq) (r *usersvc.
 	_args.Req = req
 	var _result usersvc.UserServiceLoginResult
 	if err = p.c.Call(ctx, "Login", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) ParseToken(ctx context.Context, token string) (r int64, err error) {
+	var _args usersvc.UserServiceParseTokenArgs
+	_args.Token = token
+	var _result usersvc.UserServiceParseTokenResult
+	if err = p.c.Call(ctx, "ParseToken", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

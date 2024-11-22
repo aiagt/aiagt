@@ -14,11 +14,12 @@ const (
 	bizCodeGetUserByIds  = 4
 	bizCodeListSecret    = 5
 	bizCodeLogin         = 6
-	bizCodeRegister      = 7
-	bizCodeResetPassword = 8
-	bizCodeSendCaptcha   = 9
-	bizCodeUpdateSecret  = 10
-	bizCodeUpdateUser    = 11
+	bizCodeParseToken    = 7
+	bizCodeRegister      = 8
+	bizCodeResetPassword = 9
+	bizCodeSendCaptcha   = 10
+	bizCodeUpdateSecret  = 11
+	bizCodeUpdateUser    = 12
 )
 
 var (
@@ -29,6 +30,7 @@ var (
 	bizGetUserByIds  *bizerr.Biz
 	bizListSecret    *bizerr.Biz
 	bizLogin         *bizerr.Biz
+	bizParseToken    *bizerr.Biz
 	bizRegister      *bizerr.Biz
 	bizResetPassword *bizerr.Biz
 	bizSendCaptcha   *bizerr.Biz
@@ -46,6 +48,7 @@ func initServiceBusiness(serviceCode int) {
 	bizGetUserByIds = bizerr.NewBiz(ServiceName, "get_user_by_ids", baseCode+bizCodeGetUserByIds)
 	bizListSecret = bizerr.NewBiz(ServiceName, "list_secret", baseCode+bizCodeListSecret)
 	bizLogin = bizerr.NewBiz(ServiceName, "login", baseCode+bizCodeLogin)
+	bizParseToken = bizerr.NewBiz(ServiceName, "parse_token", baseCode+bizCodeParseToken)
 	bizRegister = bizerr.NewBiz(ServiceName, "register", baseCode+bizCodeRegister)
 	bizResetPassword = bizerr.NewBiz(ServiceName, "reset_password", baseCode+bizCodeResetPassword)
 	bizSendCaptcha = bizerr.NewBiz(ServiceName, "send_captcha", baseCode+bizCodeSendCaptcha)

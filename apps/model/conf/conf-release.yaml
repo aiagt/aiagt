@@ -1,10 +1,10 @@
 server:
   name: model
-  address: ":8935"
+  address: ":80"
 
 log:
   level: debug
-  file_name: deploy/log/model.log
+  file_name: log/model.log
 
 config_center:
   host: consul

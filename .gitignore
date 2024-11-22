@@ -3,5 +3,8 @@
 **/*.log
 **/.DS_Store
 **/conf-local.yaml
-deploy/mysql
 assets
+deploy/mysql
+deploy/consul
+deploy/redis
+deploy/grafana

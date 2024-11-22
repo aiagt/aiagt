@@ -1,10 +1,10 @@
 server:
   name: chat
-  address: ":8934"
+  address: ":80"
 
 log:
   level: debug
-  file_name: deploy/log/chat.log
+  file_name: log/chat.log
 
 config_center:
   host: consul

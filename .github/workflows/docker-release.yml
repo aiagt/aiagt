@@ -35,11 +35,15 @@ jobs:
               service_name=$(basename "$dir")
               echo "Building and pushing image for $service_name with tag $TAG_VERSION"
           
-              docker build -t ${DOCKER_USERNAME}/aiagt-${service_name}:${TAG_VERSION} -f $dir/Dockerfile $dir
+              mv "$dir/Dockerfile" ./Dockerfile
+
+              docker build -t ${DOCKER_USERNAME}/aiagt-${service_name}:${TAG_VERSION} -f ./Dockerfile "$dir"
               docker tag ${DOCKER_USERNAME}/aiagt-${service_name}:${TAG_VERSION} ${DOCKER_USERNAME}/aiagt-${service_name}:latest
-          
+
               docker push ${DOCKER_USERNAME}/aiagt-${service_name}:${TAG_VERSION}
               docker push ${DOCKER_USERNAME}/aiagt-${service_name}:latest
+
+              mv ./Dockerfile "$dir/Dockerfile"
             else
               echo "No Dockerfile found in $dir, skipping..."
             fi
