@@ -3,11 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	jsoniter "github.com/json-iterator/go"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
+	"unsafe"
 
 	"github.com/aiagt/aiagt/common/confutil"
 	"github.com/aiagt/aiagt/common/hertz/result"
@@ -19,6 +22,7 @@ import (
 
 	ktlog "github.com/aiagt/kitextool/option/server/log"
 	ktutils "github.com/aiagt/kitextool/utils"
+	"github.com/cloudwego/hertz/pkg/app/server/binding"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -58,7 +62,15 @@ func main() {
 	p := observability.InitTracing(conf.Server.Name, conf.Tracing.ExportAddr)
 	tracer, cfg := tracing.NewServerTracer()
 
+	bindConfig := binding.NewBindConfig()
+	bindConfig.UseThirdPartyJSONUnmarshaler(func(data []byte, v interface{}) error {
+		json := jsoniter.Config{TagKey: "json"}.Froze()
+		json.RegisterExtension(&int64Extension{})
+		return json.Unmarshal(data, v)
+	})
+
 	h := server.Default(server.WithHostPorts(conf.Server.Address),
+		server.WithBindConfig(bindConfig),
 		server.WithTracer(prometheus.NewServerTracer(
 			"",
 			"",
@@ -157,4 +169,32 @@ func UploadAssets(ctx context.Context, c *app.RequestContext) {
 	}
 
 	c.JSON(http.StatusOK, result.Success(utils.H{"filename": filename}))
+}
+
+type int64Extension struct {
+	jsoniter.DummyExtension
+}
+
+func (ext *int64Extension) UpdateStructDescriptor(structDescriptor *jsoniter.StructDescriptor) {
+	for _, field := range structDescriptor.Fields {
+		if field.Field.Type().String() == "int64" {
+			field.Decoder = &int64Decoder{}
+		}
+	}
+}
+
+type int64Decoder struct{}
+
+func (decoder *int64Decoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
+	if iter.WhatIsNext() == jsoniter.StringValue {
+		str := iter.ReadString()
+		val, err := strconv.ParseInt(str, 10, 64)
+		if err != nil {
+			iter.ReportError("DecodeInt64", "invalid int64 value: "+str)
+			return
+		}
+		*((*int64)(ptr)) = val
+	} else {
+		*((*int64)(ptr)) = iter.ReadInt64()
+	}
 }
