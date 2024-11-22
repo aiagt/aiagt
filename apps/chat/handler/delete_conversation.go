@@ -20,12 +20,12 @@ func (s *ChatServiceImpl) DeleteConversation(ctx context.Context, req *base.IDRe
 		return nil, bizDeleteConversation.CodeErr(bizerr.ErrCodeForbidden)
 	}
 
-	err = s.conversationDao.Delete(ctx, req.Id)
+	err = s.messageDao.DeleteByConversationID(ctx, req.Id)
 	if err != nil {
 		return nil, bizDeleteConversation.NewErr(err)
 	}
 
-	err = s.messageDao.DeleteByConversationID(ctx, req.Id)
+	err = s.conversationDao.Delete(ctx, req.Id)
 	if err != nil {
 		return nil, bizDeleteConversation.NewErr(err)
 	}

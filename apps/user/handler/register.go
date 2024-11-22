@@ -4,6 +4,9 @@ import (
 	"context"
 	"regexp"
 
+	"github.com/aiagt/aiagt/apps/user/pkg/encrypt"
+	"github.com/aiagt/aiagt/pkg/snowflake"
+
 	"github.com/aiagt/aiagt/apps/user/mapper"
 	"github.com/aiagt/aiagt/apps/user/pkg/jwt"
 	"github.com/aiagt/aiagt/common/baseutil"
@@ -11,7 +14,6 @@ import (
 	"github.com/aiagt/aiagt/apps/user/dal/cache"
 
 	"github.com/aiagt/aiagt/apps/user/model"
-	"github.com/aiagt/aiagt/apps/user/pkg/encrypt"
 	"github.com/aiagt/aiagt/common/bizerr"
 	usersvc "github.com/aiagt/aiagt/kitex_gen/usersvc"
 	"github.com/pkg/errors"
@@ -23,11 +25,11 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *usersvc.RegisterReq
 		return nil, bizRegister.NewCodeErr(11, errors.New("invalid email"))
 	}
 
-	if !validatePassword(req.Password) {
+	if req.Password != nil && !validatePassword(*req.Password) {
 		return nil, bizRegister.NewCodeErr(12, errors.New("invalid password"))
 	}
 
-	if !validateUsername(req.Username) {
+	if req.Username != nil && !validateUsername(*req.Username) {
 		return nil, bizRegister.NewCodeErr(13, errors.New("invalid username"))
 	}
 
@@ -41,9 +43,18 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *usersvc.RegisterReq
 	}
 
 	user := &model.User{
-		Email:    req.Email,
-		Username: req.Username,
-		Password: encrypt.Encrypt(req.Password),
+		Base:  model.Base{ID: snowflake.Generate().Int64()},
+		Email: req.Email,
+	}
+
+	if req.Username != nil {
+		user.Username = *req.Username
+	} else {
+		user.Username = req.Email
+	}
+
+	if req.Password != nil {
+		user.Password = encrypt.Encrypt(*req.Password)
 	}
 
 	err = s.userDao.Create(ctx, user)

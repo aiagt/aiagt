@@ -3,3 +3,5 @@
 **/*.log
 **/.DS_Store
 **/conf-local.yaml
+deploy/mysql
+assets

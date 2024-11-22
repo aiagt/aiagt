@@ -4,9 +4,16 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/aiagt/aiagt/common/confutil"
+	"github.com/aiagt/aiagt/common/hertz/result"
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/utils"
+	"github.com/google/uuid"
 
 	"github.com/aiagt/aiagt/pkg/logerr"
 
@@ -34,8 +41,10 @@ import (
 var conf = new(ServerConf)
 
 func init() {
-	ktconf.LoadFiles(conf, "conf.yaml",
-		filepath.Join("apps", "gateway", "conf.yaml"))
+	confutil.LoadConf(conf,
+		".",
+		filepath.Join("apps", "gateway"),
+	)
 }
 
 func main() {
@@ -73,6 +82,12 @@ func main() {
 	plugincontroller.RegisterRouter(r, rpc.PluginCli)
 	appcontroller.RegisterRouter(r, rpc.AppCli)
 	chatcontroller.RegisterRouter(r, rpc.ChatCli, rpc.ChatStreamCli)
+
+	r.StaticFS("/assets", &app.FS{
+		Root:        "./assets",
+		PathRewrite: app.NewPathSlashesStripper(3),
+	})
+	r.POST("/assets", UploadAssets)
 
 	h.Spin()
 }
@@ -117,4 +132,24 @@ func SetLoggerOutput(conf *ktconf.ServerConf) *zapcore.BufferedWriteSyncer {
 	hlog.SetOutput(output)
 
 	return asyncWriter
+}
+
+func UploadAssets(ctx context.Context, c *app.RequestContext) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, err)
+
+		return
+	}
+
+	filename := uuid.New().String() + filepath.Ext(file.Filename)
+
+	err = c.SaveUploadedFile(file, fmt.Sprintf("assets/%s", filename))
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, err)
+
+		return
+	}
+
+	c.JSON(http.StatusOK, result.Success(utils.H{"filename": filename}))
 }

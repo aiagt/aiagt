@@ -42,10 +42,24 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"GetPluginByKey": kitex.NewMethodInfo(
+		getPluginByKeyHandler,
+		newPluginServiceGetPluginByKeyArgs,
+		newPluginServiceGetPluginByKeyResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 	"ListPlugin": kitex.NewMethodInfo(
 		listPluginHandler,
 		newPluginServiceListPluginArgs,
 		newPluginServiceListPluginResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"ListPluginByTools": kitex.NewMethodInfo(
+		listPluginByToolsHandler,
+		newPluginServiceListPluginByToolsArgs,
+		newPluginServiceListPluginByToolsResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -88,6 +102,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		listPluginToolHandler,
 		newPluginServiceListPluginToolArgs,
 		newPluginServiceListPluginToolResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"AllPluginTool": kitex.NewMethodInfo(
+		allPluginToolHandler,
+		newPluginServiceAllPluginToolArgs,
+		newPluginServiceAllPluginToolResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -250,6 +271,24 @@ func newPluginServiceGetPluginByIDResult() interface{} {
 	return pluginsvc.NewPluginServiceGetPluginByIDResult()
 }
 
+func getPluginByKeyHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceGetPluginByKeyArgs)
+	realResult := result.(*pluginsvc.PluginServiceGetPluginByKeyResult)
+	success, err := handler.(pluginsvc.PluginService).GetPluginByKey(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newPluginServiceGetPluginByKeyArgs() interface{} {
+	return pluginsvc.NewPluginServiceGetPluginByKeyArgs()
+}
+
+func newPluginServiceGetPluginByKeyResult() interface{} {
+	return pluginsvc.NewPluginServiceGetPluginByKeyResult()
+}
+
 func listPluginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*pluginsvc.PluginServiceListPluginArgs)
 	realResult := result.(*pluginsvc.PluginServiceListPluginResult)
@@ -266,6 +305,24 @@ func newPluginServiceListPluginArgs() interface{} {
 
 func newPluginServiceListPluginResult() interface{} {
 	return pluginsvc.NewPluginServiceListPluginResult()
+}
+
+func listPluginByToolsHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceListPluginByToolsArgs)
+	realResult := result.(*pluginsvc.PluginServiceListPluginByToolsResult)
+	success, err := handler.(pluginsvc.PluginService).ListPluginByTools(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newPluginServiceListPluginByToolsArgs() interface{} {
+	return pluginsvc.NewPluginServiceListPluginByToolsArgs()
+}
+
+func newPluginServiceListPluginByToolsResult() interface{} {
+	return pluginsvc.NewPluginServiceListPluginByToolsResult()
 }
 
 func publishPluginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -376,6 +433,24 @@ func newPluginServiceListPluginToolResult() interface{} {
 	return pluginsvc.NewPluginServiceListPluginToolResult()
 }
 
+func allPluginToolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceAllPluginToolArgs)
+	realResult := result.(*pluginsvc.PluginServiceAllPluginToolResult)
+	success, err := handler.(pluginsvc.PluginService).AllPluginTool(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newPluginServiceAllPluginToolArgs() interface{} {
+	return pluginsvc.NewPluginServiceAllPluginToolArgs()
+}
+
+func newPluginServiceAllPluginToolResult() interface{} {
+	return pluginsvc.NewPluginServiceAllPluginToolResult()
+}
+
 func listPluginLabelHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*pluginsvc.PluginServiceListPluginLabelArgs)
 	realResult := result.(*pluginsvc.PluginServiceListPluginLabelResult)
@@ -480,11 +555,31 @@ func (p *kClient) GetPluginByID(ctx context.Context, req *base.IDReq) (r *plugin
 	return _result.GetSuccess(), nil
 }
 
+func (p *kClient) GetPluginByKey(ctx context.Context, req *pluginsvc.GetPluginByKeyReq) (r *pluginsvc.Plugin, err error) {
+	var _args pluginsvc.PluginServiceGetPluginByKeyArgs
+	_args.Req = req
+	var _result pluginsvc.PluginServiceGetPluginByKeyResult
+	if err = p.c.Call(ctx, "GetPluginByKey", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
 func (p *kClient) ListPlugin(ctx context.Context, req *pluginsvc.ListPluginReq) (r *pluginsvc.ListPluginResp, err error) {
 	var _args pluginsvc.PluginServiceListPluginArgs
 	_args.Req = req
 	var _result pluginsvc.PluginServiceListPluginResult
 	if err = p.c.Call(ctx, "ListPlugin", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) ListPluginByTools(ctx context.Context, req *pluginsvc.ListPluginByToolsReq) (r *pluginsvc.ListPluginByToolsResp, err error) {
+	var _args pluginsvc.PluginServiceListPluginByToolsArgs
+	_args.Req = req
+	var _result pluginsvc.PluginServiceListPluginByToolsResult
+	if err = p.c.Call(ctx, "ListPluginByTools", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
@@ -545,6 +640,16 @@ func (p *kClient) ListPluginTool(ctx context.Context, req *pluginsvc.ListPluginT
 	_args.Req = req
 	var _result pluginsvc.PluginServiceListPluginToolResult
 	if err = p.c.Call(ctx, "ListPluginTool", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) AllPluginTool(ctx context.Context, req *pluginsvc.AllPluginToolReq) (r []*pluginsvc.PluginTool, err error) {
+	var _args pluginsvc.PluginServiceAllPluginToolArgs
+	_args.Req = req
+	var _result pluginsvc.PluginServiceAllPluginToolResult
+	if err = p.c.Call(ctx, "AllPluginTool", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

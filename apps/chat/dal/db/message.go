@@ -130,3 +130,21 @@ func (d *MessageDao) CreateBatch(ctx context.Context, ms []*model.Message) error
 
 	return nil
 }
+
+func (d *MessageDao) DeleteGtID(ctx context.Context, id int64, conversationID int64) error {
+	err := d.db(ctx).Model(d.m).Where("id > ? AND conversation_id = ?", id, conversationID).Delete(d.m).Error
+	if err != nil {
+		return errors.Wrap(err, "message dao delete by created at error")
+	}
+
+	return nil
+}
+
+func (d *MessageDao) DeleteGteID(ctx context.Context, id int64, conversationID int64) error {
+	err := d.db(ctx).Model(d.m).Where("id >= ? AND conversation_id = ?", id, conversationID).Delete(d.m).Error
+	if err != nil {
+		return errors.Wrap(err, "message dao delete by created at error")
+	}
+
+	return nil
+}

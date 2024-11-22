@@ -11,9 +11,9 @@ import (
 var conf = new(ServerConf)
 
 func init() {
-	ktconf.LoadFiles(conf,
-		filepath.Join("conf", "conf.yaml"),
-		filepath.Join("app", "{{ .Service.Name }}", "conf", "conf.yaml"),
+	confutil.LoadConf(conf,
+		filepath.Join("conf"),
+		filepath.Join("apps", "{{ .Service.Name }}", "conf"),
 	)
 }
 

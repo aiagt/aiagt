@@ -70,7 +70,7 @@ func (d *ModelDao) List(ctx context.Context, req *modelsvc.ListModelReq) ([]*mod
 			db = db.Where("source = ?", req.Source)
 		}
 		return db
-	}).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
+	}).Count(&total).Order("name").Offset(offset).Limit(limit).Find(&list).Error
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "model dao get page error")
 	}

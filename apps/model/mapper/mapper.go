@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"strings"
 
+	"github.com/shopspring/decimal"
+
 	"github.com/aiagt/aiagt/pkg/hash/hmap"
 
 	"github.com/aiagt/aiagt/apps/model/model"
@@ -35,6 +37,7 @@ func NewOpenAIGoRequest(req *openai.ChatCompletionRequest, modelKey string) *ope
 		User:             utils.Value(req.User),
 		Functions:        NewOpenAIGoListFunction(req.Functions),
 		StreamOptions:    NewOpenAIGoStreamOptions(req.StreamOptions),
+		ResponseFormat:   NewOpenAIGoResponseFormat(req.ResponseFormat),
 		// FunctionCall: safe.Value(req.FunctionCall),
 		// Tools: NewOpenAIGoListTool(req.Tools),
 		// ToolChoice: NewOpenAIGoToolChoice(req.ToolChoice),
@@ -42,6 +45,37 @@ func NewOpenAIGoRequest(req *openai.ChatCompletionRequest, modelKey string) *ope
 	}
 
 	return result
+}
+
+func NewOpenAIGoResponseFormat(format *openai.ChatCompletionResponseFormat) *openaigo.ChatCompletionResponseFormat {
+	if format == nil {
+		return nil
+	}
+
+	var typ openaigo.ChatCompletionResponseFormatType
+	switch format.Type {
+	case openai.ChatCompletionResponseFormatType_TEXT:
+		typ = openaigo.ChatCompletionResponseFormatTypeText
+	case openai.ChatCompletionResponseFormatType_JSON_OBJECT:
+		typ = openaigo.ChatCompletionResponseFormatTypeJSONObject
+	case openai.ChatCompletionResponseFormatType_JSON_SCHEMA:
+		typ = openaigo.ChatCompletionResponseFormatTypeJSONSchema
+	}
+
+	var jsonSchema *openaigo.ChatCompletionResponseFormatJSONSchema
+	if format.JsonSchema != nil {
+		jsonSchema = &openaigo.ChatCompletionResponseFormatJSONSchema{
+			Name:        format.JsonSchema.Name,
+			Description: utils.Value(format.JsonSchema.Description),
+			Schema:      StringMarshaler(format.JsonSchema.Schema),
+			Strict:      utils.Value(format.JsonSchema.Strict),
+		}
+	}
+
+	return &openaigo.ChatCompletionResponseFormat{
+		Type:       typ,
+		JSONSchema: jsonSchema,
+	}
 }
 
 func NewOpenAIGoMessage(message *openai.ChatCompletionMessage) *openaigo.ChatCompletionMessage {
@@ -296,6 +330,9 @@ func NewGenModel(model *model.Models) *modelsvc.Model {
 		Description: model.Description,
 		Source:      model.Source,
 		ModelKey:    model.ModelKey,
+		Logo:        model.Logo,
+		InputPrice:  model.InputPrice.String(),
+		OutputPrice: model.OutputPrice.String(),
 	}
 }
 
@@ -314,6 +351,9 @@ func NewModelCreateModel(req *modelsvc.CreateModelReq) *model.Models {
 		Description: req.Description,
 		Source:      req.Source,
 		ModelKey:    req.ModelKey,
+		Logo:        req.Logo,
+		InputPrice:  str2Dec(req.InputPrice),
+		OutputPrice: str2Dec(req.OutputPrice),
 	}
 }
 
@@ -323,5 +363,32 @@ func NewModelUpdateModel(req *modelsvc.UpdateModelReq) *model.ModelsOptional {
 		Description: req.Description,
 		Source:      req.Source,
 		ModelKey:    req.ModelKey,
+		Logo:        req.Logo,
+		InputPrice:  str2DecPtr(req.InputPrice),
+		OutputPrice: str2DecPtr(req.OutputPrice),
 	}
+}
+
+func str2Dec(s string) decimal.Decimal {
+	result, _ := decimal.NewFromString(s)
+	return result
+}
+
+func str2DecPtr(s *string) *decimal.Decimal {
+	if s == nil {
+		return nil
+	}
+
+	result, err := decimal.NewFromString(*s)
+	if err != nil {
+		return nil
+	}
+
+	return &result
+}
+
+type StringMarshaler string
+
+func (s StringMarshaler) MarshalJSON() ([]byte, error) {
+	return []byte(s), nil
 }

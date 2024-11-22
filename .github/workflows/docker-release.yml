@@ -1,0 +1,46 @@
+name: Docker Release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env:
+      SERVICE_DIRS: "apps/gateway apps/user apps/plugin apps/app apps/chat apps/model"
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Images
+        run: |
+          set -e
+          echo "Building services: $SERVICE_DIRS"
+          TAG_VERSION=${{ github.event.release.tag_name }}
+          
+          for dir in $SERVICE_DIRS; do
+            if [ -f "$dir/Dockerfile" ]; then
+              service_name=$(basename "$dir")
+              echo "Building and pushing image for $service_name with tag $TAG_VERSION"
+          
+              docker build -t ${DOCKER_USERNAME}/aiagt-${service_name}:${TAG_VERSION} -f $dir/Dockerfile $dir
+              docker tag ${DOCKER_USERNAME}/aiagt-${service_name}:${TAG_VERSION} ${DOCKER_USERNAME}/aiagt-${service_name}:latest
+          
+              docker push ${DOCKER_USERNAME}/aiagt-${service_name}:${TAG_VERSION}
+              docker push ${DOCKER_USERNAME}/aiagt-${service_name}:latest
+            else
+              echo "No Dockerfile found in $dir, skipping..."
+            fi
+          done

@@ -37,19 +37,24 @@ struct PluginTool {
     2: required string name
     3: required string description
     4: required i64 plugin_id
-    5: required binary request_type
-    6: required binary response_type
-    7: required string api_url
-    8: optional i64 import_model_id
-    9: required base.Time created_at
-    10: required base.Time updated_at
-    11: optional base.Time tested_at
+    5: optional Plugin plugin
+    6: required binary request_type
+    7: required binary response_type
+    8: required string api_url
+    9: optional i64 import_model_id
+    10: required base.Time created_at
+    11: required base.Time updated_at
+    12: optional base.Time tested_at
 }
 
 struct PluginLabel {
     1: required i64 id
     2: required string text
     3: required base.Time created_at
+}
+
+struct GetPluginByKeyReq {
+    1: required i64 key (go.tag='query:"key"')
 }
 
 struct ListPluginLabelReq {
@@ -138,6 +143,10 @@ struct ListPluginToolResp {
     2: required base.PaginationResp pagination;
 }
 
+struct AllPluginToolReq {
+    1: required list<i64> tool_ids
+}
+
 struct CallPluginToolReq {
     1: required i64 plugin_id
     2: required i64 tool_id
@@ -149,12 +158,22 @@ struct CallPluginToolResp {
     1: required i64 code
     2: required string msg
     3: required binary response
+    4: required i64 http_code
 }
 
 struct TestPluginToolResp {
-    1: required bool code
+    1: required i64 code
     2: required string msg
     3: required binary response
+    4: required i64 http_code
+}
+
+struct ListPluginByToolsReq {
+    1: required list<i64> tool_ids
+}
+
+struct ListPluginByToolsResp {
+    1: required list<Plugin> plugins
 }
 
 service PluginService {
@@ -162,7 +181,9 @@ service PluginService {
     base.Empty UpdatePlugin(1: UpdatePluginReq req)
     base.Empty DeletePlugin(1: base.IDReq req)
     Plugin GetPluginByID(1: base.IDReq req)
+    Plugin GetPluginByKey(1:  GetPluginByKeyReq req)
     ListPluginResp ListPlugin(1: ListPluginReq req)
+    ListPluginByToolsResp ListPluginByTools(1: ListPluginByToolsReq req)
 
     base.Empty PublishPlugin(1: base.IDReq req)
 
@@ -171,6 +192,7 @@ service PluginService {
     base.Empty DeleteTool(1: base.IDReq req)
     PluginTool GetToolByID(1: base.IDReq req)
     ListPluginToolResp ListPluginTool(1: ListPluginToolReq req)
+    list<PluginTool> AllPluginTool(1: AllPluginToolReq req)
 
     ListPluginLabelResp ListPluginLabel(1: ListPluginLabelReq req)
 

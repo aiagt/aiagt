@@ -17,6 +17,8 @@ type PluginTool struct {
 	ApiURL        string               `gorm:"column:api_url"`
 	ImportModelID *int64               `gorm:"column:import_model_id"`
 	TestedAt      *time.Time           `gorm:"column:tested_at"`
+
+	IsPrivate *bool `gorm:"column:is_private;-:migration;<-:false"`
 }
 
 type PluginToolOptional struct {

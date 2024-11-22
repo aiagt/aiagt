@@ -16,13 +16,16 @@ type Client interface {
 	UpdatePlugin(ctx context.Context, req *pluginsvc.UpdatePluginReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	DeletePlugin(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	GetPluginByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *pluginsvc.Plugin, err error)
+	GetPluginByKey(ctx context.Context, req *pluginsvc.GetPluginByKeyReq, callOptions ...callopt.Option) (r *pluginsvc.Plugin, err error)
 	ListPlugin(ctx context.Context, req *pluginsvc.ListPluginReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginResp, err error)
+	ListPluginByTools(ctx context.Context, req *pluginsvc.ListPluginByToolsReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginByToolsResp, err error)
 	PublishPlugin(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	CreateTool(ctx context.Context, req *pluginsvc.CreatePluginToolReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	UpdateTool(ctx context.Context, req *pluginsvc.UpdatePluginToolReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	DeleteTool(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	GetToolByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *pluginsvc.PluginTool, err error)
 	ListPluginTool(ctx context.Context, req *pluginsvc.ListPluginToolReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginToolResp, err error)
+	AllPluginTool(ctx context.Context, req *pluginsvc.AllPluginToolReq, callOptions ...callopt.Option) (r []*pluginsvc.PluginTool, err error)
 	ListPluginLabel(ctx context.Context, req *pluginsvc.ListPluginLabelReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginLabelResp, err error)
 	CallPluginTool(ctx context.Context, req *pluginsvc.CallPluginToolReq, callOptions ...callopt.Option) (r *pluginsvc.CallPluginToolResp, err error)
 	TestPluginTool(ctx context.Context, req *pluginsvc.CallPluginToolReq, callOptions ...callopt.Option) (r *pluginsvc.TestPluginToolResp, err error)
@@ -77,9 +80,19 @@ func (p *kPluginServiceClient) GetPluginByID(ctx context.Context, req *base.IDRe
 	return p.kClient.GetPluginByID(ctx, req)
 }
 
+func (p *kPluginServiceClient) GetPluginByKey(ctx context.Context, req *pluginsvc.GetPluginByKeyReq, callOptions ...callopt.Option) (r *pluginsvc.Plugin, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetPluginByKey(ctx, req)
+}
+
 func (p *kPluginServiceClient) ListPlugin(ctx context.Context, req *pluginsvc.ListPluginReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.ListPlugin(ctx, req)
+}
+
+func (p *kPluginServiceClient) ListPluginByTools(ctx context.Context, req *pluginsvc.ListPluginByToolsReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginByToolsResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.ListPluginByTools(ctx, req)
 }
 
 func (p *kPluginServiceClient) PublishPlugin(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
@@ -110,6 +123,11 @@ func (p *kPluginServiceClient) GetToolByID(ctx context.Context, req *base.IDReq,
 func (p *kPluginServiceClient) ListPluginTool(ctx context.Context, req *pluginsvc.ListPluginToolReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginToolResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.ListPluginTool(ctx, req)
+}
+
+func (p *kPluginServiceClient) AllPluginTool(ctx context.Context, req *pluginsvc.AllPluginToolReq, callOptions ...callopt.Option) (r []*pluginsvc.PluginTool, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.AllPluginTool(ctx, req)
 }
 
 func (p *kPluginServiceClient) ListPluginLabel(ctx context.Context, req *pluginsvc.ListPluginLabelReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginLabelResp, err error) {

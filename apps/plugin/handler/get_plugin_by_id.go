@@ -3,6 +3,8 @@ package handler
 import (
 	"context"
 
+	"github.com/aiagt/aiagt/common/ctxutil"
+
 	"github.com/aiagt/aiagt/apps/plugin/mapper"
 	"github.com/aiagt/aiagt/common/bizerr"
 
@@ -17,13 +19,14 @@ func (s *PluginServiceImpl) GetPluginByID(ctx context.Context, req *base.IDReq) 
 		return nil, bizGetPluginByID.NewErr(err).Log(ctx, "get plugin by id failed")
 	}
 
-	user, err := s.userCli.GetUser(ctx)
-	if err != nil {
-		return nil, bizGetPluginByID.CallErr(err).Log(ctx, "get user failed")
+	userID := ctxutil.UserID(ctx)
+	if plugin.IsPrivate && plugin.AuthorID != userID {
+		return nil, bizGetPluginByID.CodeErr(bizerr.ErrCodeForbidden).Log(ctx, "forbidden")
 	}
 
-	if plugin.IsPrivate && plugin.AuthorID != user.Id {
-		return nil, bizGetPluginByID.CodeErr(bizerr.ErrCodeForbidden).Log(ctx, "forbidden")
+	author, err := s.userCli.GetUserByID(ctx, &base.IDReq{Id: plugin.AuthorID})
+	if err != nil {
+		return nil, bizGetPluginByID.CallErr(err).Log(ctx, "get user failed")
 	}
 
 	labels, err := s.labelDao.GetByIDs(ctx, plugin.LabelIDs)
@@ -38,7 +41,7 @@ func (s *PluginServiceImpl) GetPluginByID(ctx context.Context, req *base.IDReq) 
 
 	resp = mapper.NewGenPlugin(
 		plugin,
-		user,
+		author,
 		mapper.NewGenListPluginLabel(labels),
 		mapper.NewGenListPluginTool(tools),
 	)

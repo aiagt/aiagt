@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aiagt/aiagt/pkg/logerr"
+
 	"github.com/aiagt/aiagt/pkg/locker"
 
 	"github.com/redis/go-redis/v9"
 
-	"github.com/aiagt/aiagt/pkg/logerr"
 	ktrdb "github.com/aiagt/kitextool/option/server/redis"
 )
 
@@ -71,6 +72,11 @@ func (c *CallTokenCache) Get(ctx context.Context, token string) (*CallTokenValue
 	return &val, nil
 }
 
+func (c *CallTokenCache) Del(ctx context.Context, token string) {
+	key := fmt.Sprintf("%s:%s", CallTokenKey, token)
+	c.rdb().Del(ctx, key)
+}
+
 func (c *CallTokenCache) Decr(ctx context.Context, token string) (bool, error) {
 	var (
 		key  = fmt.Sprintf("%s:%s", CallTokenKey, token)
@@ -81,18 +87,26 @@ func (c *CallTokenCache) Decr(ctx context.Context, token string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	defer logerr.Log(lock.Unlock())
+	defer func() {
+		logerr.Log(lock.Unlock())
+	}()
 
 	val, err := c.Get(ctx, token)
 	if err != nil {
 		return false, err
 	}
 
-	if val.CallLimit <= 0 {
+	if val == nil || val.CallLimit <= 0 {
 		return false, nil
 	}
 
 	val.CallLimit--
+
+	if val.CallLimit == 0 {
+		c.Del(ctx, token)
+
+		return true, nil
+	}
 
 	return true, c.Set(ctx, token, val)
 }
