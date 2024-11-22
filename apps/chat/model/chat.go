@@ -4,5 +4,4 @@ type Chat struct {
 	Base
 }
 
-type ChatOptional struct {
-}
+type ChatOptional struct{}

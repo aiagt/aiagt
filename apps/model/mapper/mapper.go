@@ -2,8 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	"github.com/shopspring/decimal"
 	"strings"
+
+	"github.com/shopspring/decimal"
 
 	"github.com/aiagt/aiagt/pkg/hash/hmap"
 

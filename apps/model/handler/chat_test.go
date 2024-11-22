@@ -3,13 +3,14 @@ package handler
 import (
 	"context"
 	"fmt"
+	"io"
+	"testing"
+
 	"github.com/aiagt/aiagt/apps/model/conf"
 	"github.com/aiagt/aiagt/pkg/utils"
 	"github.com/pkg/errors"
 	"github.com/sashabaranov/go-openai"
 	"github.com/stretchr/testify/require"
-	"io"
-	"testing"
 )
 
 func TestOpenAIChat(t *testing.T) {

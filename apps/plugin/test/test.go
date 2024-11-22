@@ -23,10 +23,10 @@ func main() {
 		logger(nil, err)
 	}
 
-	// logger(GetPlugin(ctx))
+	logger(GetPlugin(ctx))
 	// logger(ListPlugin(ctx))
 	// logger(CreatePlugigTool(ctx))
-	logger(UpdatePluginTool(ctx))
+	//logger(UpdatePluginTool(ctx))
 }
 
 func login(ctx context.Context) (context.Context, error) {
@@ -97,7 +97,7 @@ func ListPlugin(ctx context.Context) (any, error) {
 func CreatePlugigTool(ctx context.Context) (any, error) {
 	reqType := caller.RequestType{
 		Type: jsonschema.Object,
-		Properties: map[string]jsonschema.Definition{
+		Properties: map[string]caller.Definition{
 			"location": {
 				Type:        jsonschema.String,
 				Description: "The city and state, e.g. San Francisco, CA",
@@ -125,49 +125,49 @@ func CreatePlugigTool(ctx context.Context) (any, error) {
 	})
 }
 
-func UpdatePluginTool(ctx context.Context) (any, error) {
-	reqType := &caller.RequestType{
-		Type: jsonschema.Object,
-		Properties: map[string]jsonschema.Definition{
-			"location": {
-				Type:        jsonschema.String,
-				Description: "The city and state, e.g. San Francisco, CA",
-			},
-			"unit": {
-				Type:        jsonschema.String,
-				Description: "The unit of the weather information, e.g. Celsius, Fahrenheit",
-			},
-		},
-		Required: []string{"location", "unit"},
-	}
-
-	requestType, _ := reqType.MarshalJSON()
-
-	respType := &caller.ResponseType{
-		Type: jsonschema.Object,
-		Properties: map[string]jsonschema.Definition{
-			"code": {
-				Type: jsonschema.Integer,
-			},
-			"message": {
-				Type: jsonschema.String,
-			},
-			"data": {
-				Type: jsonschema.Object,
-				Properties: map[string]jsonschema.Definition{
-					"temperature": {
-						Type: jsonschema.Number,
-					},
-				},
-			},
-		},
-		Required: []string{"code", "message"},
-	}
-	responseType, _ := respType.MarshalJSON()
-
-	return rpc.PluginCli.UpdateTool(ctx, &pluginsvc.UpdatePluginToolReq{
-		Id:           1,
-		RequestType:  requestType,
-		ResponseType: responseType,
-	})
-}
+//func UpdatePluginTool(ctx context.Context) (any, error) {
+//	reqType := &caller.RequestType{
+//		Type: jsonschema.Object,
+//		Properties: map[string]jsonschema.Definition{
+//			"location": {
+//				Type:        jsonschema.String,
+//				Description: "The city and state, e.g. San Francisco, CA",
+//			},
+//			"unit": {
+//				Type:        jsonschema.String,
+//				Description: "The unit of the weather information, e.g. Celsius, Fahrenheit",
+//			},
+//		},
+//		Required: []string{"location", "unit"},
+//	}
+//
+//	requestType, _ := reqType.MarshalJSON()
+//
+//	respType := &caller.ResponseType{
+//		Type: jsonschema.Object,
+//		Properties: map[string]jsonschema.Definition{
+//			"code": {
+//				Type: jsonschema.Integer,
+//			},
+//			"message": {
+//				Type: jsonschema.String,
+//			},
+//			"data": {
+//				Type: jsonschema.Object,
+//				Properties: map[string]jsonschema.Definition{
+//					"temperature": {
+//						Type: jsonschema.Number,
+//					},
+//				},
+//			},
+//		},
+//		Required: []string{"code", "message"},
+//	}
+//	responseType, _ := respType.MarshalJSON()
+//
+//	return rpc.PluginCli.UpdateTool(ctx, &pluginsvc.UpdatePluginToolReq{
+//		Id:           1,
+//		RequestType:  requestType,
+//		ResponseType: responseType,
+//	})
+//}

@@ -6,7 +6,6 @@ import (
 
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/appsvc"
-	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 	"github.com/aiagt/aiagt/rpc"
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -47,7 +46,7 @@ func logger(resp any, err error) {
 }
 
 func GetApp(ctx context.Context) (any, error) {
-	return rpc.AppCli.GetAppByID(ctx, &base.IDReq{Id: 1})
+	return rpc.AppCli.GetAppByID(ctx, &appsvc.GetAppByIDReq{Id: 1})
 }
 
 func ListApp(ctx context.Context) (any, error) {

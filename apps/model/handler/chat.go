@@ -3,10 +3,11 @@ package handler
 import (
 	"errors"
 	"fmt"
-	"github.com/aiagt/aiagt/pkg/utils"
-	"github.com/cloudwego/kitex/pkg/klog"
 	"io"
 	"time"
+
+	"github.com/aiagt/aiagt/pkg/utils"
+	"github.com/cloudwego/kitex/pkg/klog"
 
 	"github.com/aiagt/aiagt/apps/model/mapper"
 	"github.com/aiagt/aiagt/common/ctxutil"

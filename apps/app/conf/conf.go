@@ -1,9 +1,10 @@
 package conf
 
 import (
+	"path/filepath"
+
 	"github.com/aiagt/aiagt/common/confutil"
 	ktconf "github.com/aiagt/kitextool/conf"
-	"path/filepath"
 )
 
 var conf = new(ServerConf)

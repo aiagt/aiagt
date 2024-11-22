@@ -11,7 +11,7 @@ func First[T any](list []T) T {
 
 func SafeSlice[E any, T []E](s T, start, end int) T {
 	start = min(max(start, 0), len(s))
-	end = min(max(start, 0), len(s))
+	end = min(max(end, 0), len(s))
 
 	return s[start:end]
 }

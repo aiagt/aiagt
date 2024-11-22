@@ -1,8 +1,9 @@
 package conf
 
 import (
-	"github.com/aiagt/aiagt/common/confutil"
 	"path/filepath"
+
+	"github.com/aiagt/aiagt/common/confutil"
 
 	ktconf "github.com/aiagt/kitextool/conf"
 )

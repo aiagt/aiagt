@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"encoding/json"
+
 	"github.com/aiagt/aiagt/apps/plugin/model"
 	"github.com/aiagt/aiagt/common/baseutil"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
@@ -158,7 +159,7 @@ func NewModelListPluginSecret(list []*pluginsvc.PluginSecret) []*model.PluginSec
 }
 
 func NewModelCreatePlugin(plugin *pluginsvc.CreatePluginReq, userID int64, labelIDs []int64) *model.Plugin {
-	var key = plugin.Key
+	key := plugin.Key
 	if key == 0 {
 		key = snowflake.Generate().Int64()
 	}

@@ -1,9 +1,10 @@
 package confutil
 
 import (
-	ktconf "github.com/aiagt/kitextool/conf"
 	"os"
 	"path/filepath"
+
+	ktconf "github.com/aiagt/kitextool/conf"
 )
 
 func LoadConf(conf ktconf.Conf, dirs ...string) {

@@ -34,10 +34,8 @@ func SendCaptcha(ctx context.Context) (any, error) {
 
 func Register(ctx context.Context) (any, error) {
 	return rpc.UserCli.Register(ctx, &usersvc.RegisterReq{
-		Email:    "ahao_study@163.com",
-		Captcha:  "14819",
-		Username: "ahaostudy",
-		Password: "au199108",
+		Email:   "ahao_study@163.com",
+		Captcha: "14819",
 	})
 }
 

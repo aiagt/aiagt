@@ -43,7 +43,7 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 	if err != nil {
 		return bizChat.CallErr(err).Log(ctx, "get app by id error")
 	}
-	var app = getAppResp.App
+	app := getAppResp.App
 
 	// verify that the user has access rights to the app
 	if app.IsPrivate && app.AuthorId != userID {
@@ -97,7 +97,7 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 				modelGPT4oID          = 4
 			)
 
-			var retryModelIDs = []int64{modelGPT35Turbo0125ID, modelGPT4oID}
+			retryModelIDs := []int64{modelGPT35Turbo0125ID, modelGPT4oID}
 
 			// generate title, retry with different model
 			for _, modelID := range retryModelIDs {
@@ -421,10 +421,10 @@ func (s *ChatServiceImpl) generateNewTitle(ctx context.Context, stream chatsvc.C
 					Description: utils.Pointer("JSON schema for title response"),
 					Schema:      `{ "type": "object", "properties": { "title": { "type": "string", "description": "Conversation title" } }, "required": [ "title" ], "additionalProperties": false }`,
 					Strict:      utils.Pointer(true),
-				}},
+				},
+			},
 		},
 	})
-
 	if err != nil {
 		klog.CtxErrorf(ctx, "generate new title request chat err: %v", err)
 		return false
@@ -452,7 +452,6 @@ func (s *ChatServiceImpl) generateNewTitle(ctx context.Context, stream chatsvc.C
 
 			if len(result.Title) > 0 {
 				err = stream.Send(&chatsvc.ChatResp{ConversationTitle: &result.Title})
-
 				if err != nil {
 					klog.CtxErrorf(ctx, "generate new title send result title err: %v", err)
 					return true

@@ -2,6 +2,7 @@ package caller
 
 import (
 	"errors"
+
 	"github.com/sashabaranov/go-openai/jsonschema"
 )
 

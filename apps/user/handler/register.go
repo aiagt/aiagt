@@ -2,9 +2,10 @@ package handler
 
 import (
 	"context"
+	"regexp"
+
 	"github.com/aiagt/aiagt/apps/user/pkg/encrypt"
 	"github.com/aiagt/aiagt/pkg/snowflake"
-	"regexp"
 
 	"github.com/aiagt/aiagt/apps/user/mapper"
 	"github.com/aiagt/aiagt/apps/user/pkg/jwt"
