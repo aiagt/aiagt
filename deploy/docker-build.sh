@@ -15,6 +15,6 @@ if [ ! -f "$DOCKER_FILE" ]; then
 fi
 
 echo "Building Docker image for $SVC..."
-docker build -t "aiagt-$SVC" -f "$DOCKER_FILE" .
+docker build --build-arg GOPROXY=https://goproxy.cn,direct -t "aiagt-$SVC" -f "$DOCKER_FILE" .
 
 echo "Docker build for $SVC completed."
