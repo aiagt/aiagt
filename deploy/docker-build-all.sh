@@ -8,10 +8,6 @@ if [ "$current_dir" == "deploy" ]; then
 fi
 
 for svc in "${services[@]}"; do
-  (
-    "./deploy/docker-build.sh" "$svc" && echo "Build $svc success" || echo "Build $svc failed"
-  ) &
+  "./deploy/docker-build.sh" "$svc"
+  echo "Build $svc success"
 done
-
-wait
-echo "All builds completed"
