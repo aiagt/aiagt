@@ -22,3 +22,6 @@ redis:
 
 metrics:
   addr: ":9932"
+
+tracing:
+  export_addr: "jaeger-all-in-one:4317"

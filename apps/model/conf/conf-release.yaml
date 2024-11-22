@@ -26,3 +26,6 @@ openai:
 
 metrics:
   addr: ":9935"
+
+tracing:
+  export_addr: "jaeger-all-in-one:4317"

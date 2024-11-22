@@ -55,7 +55,7 @@ func main() {
 	asyncWriter := SetLoggerOutput(&conf.ServerConf)
 
 	consul, registryInfo := observability.InitMetrics(conf.Server.Name, conf.Metrics.Addr, conf.Registry.Address[0])
-	p := observability.InitTracing(conf.Server.Name)
+	p := observability.InitTracing(conf.Server.Name, conf.Tracing.ExportAddr)
 	tracer, cfg := tracing.NewServerTracer()
 
 	h := server.Default(server.WithHostPorts(conf.Server.Address),
@@ -96,10 +96,15 @@ type ServerConf struct {
 	ktconf.ServerConf
 
 	Metrics Metrics `yaml:"metrics"`
+	Tracing Tracing `yaml:"tracing"`
 }
 
 type Metrics struct {
 	Addr string `yaml:"addr"`
+}
+
+type Tracing struct {
+	ExportAddr string `yaml:"export_addr"`
 }
 
 func SetLoggerOutput(conf *ktconf.ServerConf) *zapcore.BufferedWriteSyncer {

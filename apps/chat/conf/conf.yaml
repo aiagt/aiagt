@@ -21,3 +21,6 @@ redis:
 
 metrics:
   addr: ":9934"
+
+tracing:
+  export_addr: "localhost:4317"

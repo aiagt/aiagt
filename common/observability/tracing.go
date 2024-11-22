@@ -8,10 +8,10 @@ import (
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 )
 
-func InitTracing(dest string) provider.OtelProvider {
+func InitTracing(dest string, exportAddr string) provider.OtelProvider {
 	p := provider.NewOpenTelemetryProvider(
 		provider.WithServiceName(dest),
-		provider.WithExportEndpoint("localhost:4317"),
+		provider.WithExportEndpoint(exportAddr),
 		provider.WithInsecure(),
 		provider.WithEnableMetrics(false),
 	)

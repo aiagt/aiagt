@@ -25,3 +25,6 @@ openai:
 
 metrics:
   addr: ":9935"
+
+tracing:
+  export_addr: "localhost:4317"

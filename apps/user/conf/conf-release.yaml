@@ -35,3 +35,6 @@ auth:
 
 metrics:
   addr: ":9931"
+
+tracing:
+  export_addr: "jaeger-all-in-one:4317"

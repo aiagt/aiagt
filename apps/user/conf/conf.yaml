@@ -34,3 +34,6 @@ auth:
 
 metrics:
   addr: ":9931"
+
+tracing:
+  export_addr: "localhost:4317"
