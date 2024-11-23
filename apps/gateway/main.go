@@ -4,15 +4,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/aiagt/aiagt/pkg/jsonutil"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 	"time"
-	"unsafe"
-
-	jsoniter "github.com/json-iterator/go"
 
 	"github.com/aiagt/aiagt/common/confutil"
 	"github.com/aiagt/aiagt/common/hertz/result"
@@ -65,10 +62,7 @@ func main() {
 
 	bindConfig := binding.NewBindConfig()
 	bindConfig.UseThirdPartyJSONUnmarshaler(func(data []byte, v interface{}) error {
-		json := jsoniter.Config{TagKey: "json"}.Froze()
-		json.RegisterExtension(&int64Extension{})
-
-		return json.Unmarshal(data, v)
+		return jsonutil.Unmarshal(data, v)
 	})
 
 	h := server.Default(server.WithHostPorts(conf.Server.Address),
@@ -189,36 +183,6 @@ func UploadAssets(ctx context.Context, c *app.RequestContext) {
 	}
 
 	c.JSON(http.StatusOK, result.Success(utils.H{"filename": filename}))
-}
-
-type int64Extension struct {
-	jsoniter.DummyExtension
-}
-
-func (ext *int64Extension) UpdateStructDescriptor(structDescriptor *jsoniter.StructDescriptor) {
-	for _, field := range structDescriptor.Fields {
-		if field.Field.Type().String() == "int64" {
-			field.Decoder = &int64Decoder{}
-		}
-	}
-}
-
-type int64Decoder struct{}
-
-func (decoder *int64Decoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	if iter.WhatIsNext() == jsoniter.StringValue {
-		str := iter.ReadString()
-		val, err := strconv.ParseInt(str, 10, 64)
-
-		if err != nil {
-			iter.ReportError("DecodeInt64", "invalid int64 value: "+str)
-			return
-		}
-
-		*((*int64)(ptr)) = val
-	} else {
-		*((*int64)(ptr)) = iter.ReadInt64()
-	}
 }
 
 func StaticFSLimiter(ctx context.Context, c *app.RequestContext) {
