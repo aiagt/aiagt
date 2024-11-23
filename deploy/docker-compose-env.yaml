@@ -89,6 +89,17 @@ services:
     networks:
       - aiagt-network
 
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/certs:/etc/nginx/certs
+    networks:
+      - aiagt-network
+
 networks:
   aiagt-network:
     name: aiagt-network

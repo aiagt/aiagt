@@ -53,6 +53,7 @@ func NewOpenAIGoResponseFormat(format *openai.ChatCompletionResponseFormat) *ope
 	}
 
 	var typ openaigo.ChatCompletionResponseFormatType
+
 	switch format.Type {
 	case openai.ChatCompletionResponseFormatType_TEXT:
 		typ = openaigo.ChatCompletionResponseFormatTypeText

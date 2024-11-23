@@ -43,6 +43,7 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 	if err != nil {
 		return bizChat.CallErr(err).Log(ctx, "get app by id error")
 	}
+
 	app := getAppResp.App
 
 	// verify that the user has access rights to the app
@@ -85,6 +86,7 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 		defer wg.Wait()
 
 		wg.Add(1)
+
 		go func() {
 			defer wg.Done()
 

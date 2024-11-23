@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	jsoniter "github.com/json-iterator/go"
 	"io"
 	"net/http"
 	"os"
@@ -12,14 +11,14 @@ import (
 	"time"
 	"unsafe"
 
+	jsoniter "github.com/json-iterator/go"
+
 	"github.com/aiagt/aiagt/common/confutil"
 	"github.com/aiagt/aiagt/common/hertz/result"
+	"github.com/aiagt/aiagt/pkg/logerr"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/google/uuid"
-	"github.com/hertz-contrib/cors"
-
-	"github.com/aiagt/aiagt/pkg/logerr"
 
 	ktlog "github.com/aiagt/kitextool/option/server/log"
 	ktutils "github.com/aiagt/kitextool/utils"
@@ -67,6 +66,7 @@ func main() {
 	bindConfig.UseThirdPartyJSONUnmarshaler(func(data []byte, v interface{}) error {
 		json := jsoniter.Config{TagKey: "json"}.Froze()
 		json.RegisterExtension(&int64Extension{})
+
 		return json.Unmarshal(data, v)
 	})
 
@@ -80,13 +80,22 @@ func main() {
 		)),
 		tracer)
 
-	h.Use(cors.New(cors.Config{
-		AllowAllOrigins:  true,
-		AllowMethods:     []string{"*"},
-		AllowHeaders:     []string{"*"},
-		AllowWildcard:    true,
-		AllowCredentials: true,
-	}))
+	h.Use(func(ctx context.Context, c *app.RequestContext) {
+		c.Response.Header.Set("Access-Control-Allow-Origin", "*")
+
+		if string(c.Method()) == http.MethodOptions {
+			c.Response.Header.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+			c.Response.Header.Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, X-Forwarded-For, X-Frame-Options, Accept, Cache-Control")
+			c.Response.Header.Set("Access-Control-Allow-Credentials", "true")
+			c.Response.Header.Set("Access-Control-Max-Age", "86400")
+
+			c.AbortWithStatus(http.StatusNoContent)
+
+			return
+		}
+
+		c.Next(ctx)
+	})
 	h.Use(tracing.ServerMiddleware(cfg))
 	h.Use(accesslog.New())
 
@@ -197,10 +206,12 @@ func (decoder *int64Decoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator)
 	if iter.WhatIsNext() == jsoniter.StringValue {
 		str := iter.ReadString()
 		val, err := strconv.ParseInt(str, 10, 64)
+
 		if err != nil {
 			iter.ReportError("DecodeInt64", "invalid int64 value: "+str)
 			return
 		}
+
 		*((*int64)(ptr)) = val
 	} else {
 		*((*int64)(ptr)) = iter.ReadInt64()

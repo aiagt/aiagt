@@ -13,7 +13,6 @@ require (
 	github.com/cloudwego/kitex v0.10.3
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0
-	github.com/hertz-contrib/cors v0.1.0
 	github.com/hertz-contrib/logger/accesslog v0.0.0-20240623133421-6fb592ed8d10
 	github.com/hertz-contrib/monitor-prometheus v0.1.2
 	github.com/hertz-contrib/obs-opentelemetry/logging/zap v0.0.0-20240705015228-9abdf96254a2

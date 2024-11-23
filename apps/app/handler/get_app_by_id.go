@@ -48,6 +48,7 @@ func (s *AppServiceImpl) GetAppByID(ctx context.Context, req *appsvc.GetAppByIDR
 				publicTools = append(publicTools, tool)
 			}
 		}
+
 		tools = publicTools
 	}
 
