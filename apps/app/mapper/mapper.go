@@ -78,6 +78,7 @@ func NewGenModelConfig(modelConfig *model.ModelConfig) *appsvc.ModelConfig {
 
 func NewGenListApp(apps []*model.App, labels hmap.Map[int64, *appsvc.AppLabel]) []*appsvc.App {
 	result := make([]*appsvc.App, len(apps))
+
 	for i, app := range apps {
 		appLabels := lists.Map(app.LabelIDs, func(t int64) *appsvc.AppLabel { return labels[t] })
 		appLabels = lists.Filter(appLabels, func(t *appsvc.AppLabel) bool { return t != nil })

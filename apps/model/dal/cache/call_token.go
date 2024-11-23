@@ -87,6 +87,7 @@ func (c *CallTokenCache) Decr(ctx context.Context, token string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+
 	defer func() {
 		logerr.Log(lock.Unlock())
 	}()

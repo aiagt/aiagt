@@ -8,3 +8,5 @@ deploy/mysql
 deploy/consul
 deploy/redis
 deploy/grafana
+deploy/nginx
+!deploy/nginx/nginx.example.conf

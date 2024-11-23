@@ -26,7 +26,7 @@ func main() {
 	logger(GetPlugin(ctx))
 	// logger(ListPlugin(ctx))
 	// logger(CreatePlugigTool(ctx))
-	//logger(UpdatePluginTool(ctx))
+	// logger(UpdatePluginTool(ctx))
 }
 
 func login(ctx context.Context) (context.Context, error) {

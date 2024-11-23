@@ -57,6 +57,7 @@ func (t *RequestType) Def() *Definition {
 	}
 
 	result := Definition(*t)
+
 	return &result
 }
 
@@ -68,6 +69,7 @@ func (t *ResponseType) Def() *Definition {
 	}
 
 	result := Definition(*t)
+
 	return &result
 }
 

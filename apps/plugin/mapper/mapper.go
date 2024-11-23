@@ -50,6 +50,7 @@ func NewGenPlugin(plugin *model.Plugin, author *usersvc.User, labels []*pluginsv
 
 func NewGenListPlugin(list []*model.Plugin, labels hmap.Map[int64, *pluginsvc.PluginLabel]) []*pluginsvc.Plugin {
 	result := make([]*pluginsvc.Plugin, len(list))
+
 	for i, plugin := range list {
 		pluginLabels := lists.Map(plugin.LabelIDs, func(t int64) *pluginsvc.PluginLabel { return labels[t] })
 		pluginLabels = lists.Filter(pluginLabels, func(t *pluginsvc.PluginLabel) bool { return t != nil })
