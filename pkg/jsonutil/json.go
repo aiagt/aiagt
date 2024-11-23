@@ -1,14 +1,13 @@
 package jsonutil
 
 import (
-	jsoniter "github.com/json-iterator/go"
 	"strconv"
 	"unsafe"
+
+	jsoniter "github.com/json-iterator/go"
 )
 
-var (
-	jsonAPI jsoniter.API
-)
+var jsonAPI jsoniter.API
 
 func init() {
 	jsonAPI = jsoniter.Config{TagKey: "json"}.Froze()
@@ -25,7 +24,7 @@ type int64Extension struct {
 
 func (ext *int64Extension) UpdateStructDescriptor(structDescriptor *jsoniter.StructDescriptor) {
 	for _, field := range structDescriptor.Fields {
-		var fieldType = field.Field.Type().String()
+		fieldType := field.Field.Type().String()
 
 		if fieldType == "int64" || fieldType == "*int64" {
 			field.Decoder = &int64Decoder{}
@@ -36,18 +35,28 @@ func (ext *int64Extension) UpdateStructDescriptor(structDescriptor *jsoniter.Str
 type int64Decoder struct{}
 
 func (decoder *int64Decoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	whatIsNext := iter.WhatIsNext()
-
-	if whatIsNext == jsoniter.StringValue {
+	if iter.WhatIsNext() == jsoniter.StringValue {
 		str := iter.ReadString()
-
 		val, err := strconv.ParseInt(str, 10, 64)
+
 		if err != nil {
 			iter.ReportError("DecodeInt64", "invalid int64 value: "+str)
 			return
 		}
-		*((*int64)(ptr)) = val
+
+		decoder.setValue(ptr, val)
 	} else {
-		*((*int64)(ptr)) = iter.ReadInt64()
+		val := iter.ReadInt64()
+		decoder.setValue(ptr, val)
+	}
+}
+
+func (decoder *int64Decoder) setValue(ptr unsafe.Pointer, val int64) {
+	if **(**uintptr)(unsafe.Pointer(&ptr)) == 0 {
+		newVal := new(int64)
+		*newVal = val
+		*((*unsafe.Pointer)(ptr)) = unsafe.Pointer(newVal)
+	} else {
+		*((*int64)(ptr)) = val
 	}
 }
