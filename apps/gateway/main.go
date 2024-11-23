@@ -165,11 +165,17 @@ func SetLoggerOutput(conf *ktconf.ServerConf) *zapcore.BufferedWriteSyncer {
 	return asyncWriter
 }
 
+const maxFileSize = 5 * 1024 * 1024
+
 func UploadAssets(ctx context.Context, c *app.RequestContext) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
 
+	if file.Size > maxFileSize {
+		_ = c.AbortWithError(http.StatusRequestEntityTooLarge, fmt.Errorf("file size exceeds the limit of %d bytes", maxFileSize))
 		return
 	}
 
@@ -177,8 +183,7 @@ func UploadAssets(ctx context.Context, c *app.RequestContext) {
 
 	err = c.SaveUploadedFile(file, fmt.Sprintf("assets/%s", filename))
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
-
+		_ = c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
@@ -186,23 +191,18 @@ func UploadAssets(ctx context.Context, c *app.RequestContext) {
 }
 
 func StaticFSLimiter(ctx context.Context, c *app.RequestContext) {
-	const maxFileSize = 5 * 1024 * 1024
+	if string(c.Request.Method()) == http.MethodGet && bytes.HasPrefix(c.Request.URI().Path(), []byte("/api/v1/assets")) {
+		filePath := "./assets" + string(c.Request.URI().Path())
+		fileInfo, err := os.Stat(filePath)
+		if err != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+			return
+		}
 
-	if !bytes.HasPrefix(c.Request.URI().Path(), []byte("/api/v1/assets")) {
-		c.Next(ctx)
-		return
-	}
-
-	filePath := "./assets" + string(c.Request.URI().Path())
-	fileInfo, err := os.Stat(filePath)
-	if err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
-		return
-	}
-
-	if fileInfo.Size() > maxFileSize {
-		c.AbortWithMsg(fmt.Sprintf("file size exceeds the maximum limit of %d bytes", maxFileSize), http.StatusForbidden)
-		return
+		if fileInfo.Size() > maxFileSize {
+			c.AbortWithMsg(fmt.Sprintf("file size exceeds the maximum limit of %d bytes", maxFileSize), http.StatusForbidden)
+			return
+		}
 	}
 
 	c.Next(ctx)
