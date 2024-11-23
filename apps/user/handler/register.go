@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"regexp"
 
 	"github.com/aiagt/aiagt/apps/user/pkg/encrypt"
@@ -43,8 +44,9 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *usersvc.RegisterReq
 	}
 
 	user := &model.User{
-		Base:  model.Base{ID: snowflake.Generate().Int64()},
-		Email: req.Email,
+		Base:   model.Base{ID: snowflake.Generate().Int64()},
+		Email:  req.Email,
+		Avatar: fmt.Sprintf("https://api.multiavatar.com/%s.svg", req.Email),
 	}
 
 	if req.Username != nil {
