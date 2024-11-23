@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -112,6 +113,8 @@ func main() {
 	appcontroller.RegisterRouter(r, rpc.AppCli)
 	chatcontroller.RegisterRouter(r, rpc.ChatCli, rpc.ChatStreamCli)
 
+	r.Use(StaticFSLimiter)
+
 	r.StaticFS("/assets", &app.FS{
 		Root:        "./assets",
 		PathRewrite: app.NewPathSlashesStripper(3),
@@ -216,4 +219,27 @@ func (decoder *int64Decoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator)
 	} else {
 		*((*int64)(ptr)) = iter.ReadInt64()
 	}
+}
+
+func StaticFSLimiter(ctx context.Context, c *app.RequestContext) {
+	const maxFileSize = 5 * 1024 * 1024
+
+	if !bytes.HasPrefix(c.Request.URI().Path(), []byte("/api/v1/assets")) {
+		c.Next(ctx)
+		return
+	}
+
+	filePath := "./assets" + string(c.Request.URI().Path())
+	fileInfo, err := os.Stat(filePath)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if fileInfo.Size() > maxFileSize {
+		c.AbortWithMsg(fmt.Sprintf("file size exceeds the maximum limit of %d bytes", maxFileSize), http.StatusForbidden)
+		return
+	}
+
+	c.Next(ctx)
 }
