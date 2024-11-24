@@ -1,5 +1,6 @@
 .idea
 .vscode
+.git
 **/*.log
 **/.DS_Store
 **/conf-local.yaml

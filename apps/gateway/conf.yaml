@@ -24,3 +24,8 @@ metrics:
 
 tracing:
   export_addr: "localhost:4317"
+
+cos:
+  url: "xxx"
+  secret_id: "xxx"
+  secret_key: "xxx"

@@ -26,6 +26,5 @@ ARG GO_ENV=release
 ENV GO_ENV=$GO_ENV
 
 VOLUME /app/log
-VOLUME /app/assets
 
 CMD ["./main"]
