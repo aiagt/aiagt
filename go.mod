@@ -32,8 +32,10 @@ require (
 	github.com/sashabaranov/go-openai v1.32.5
 	github.com/shopspring/decimal v1.4.0
 	github.com/stretchr/testify v1.9.0
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.59
 	go.opentelemetry.io/otel/trace v1.20.0
 	go.uber.org/zap v1.27.0
+	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/gorm v1.25.11
 	gorm.io/plugin/opentelemetry v0.1.7
@@ -52,6 +54,7 @@ require (
 	github.com/bytedance/sonic/loader v0.2.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/configmanager v0.2.2 // indirect
 	github.com/cloudwego/dynamicgo v0.2.9 // indirect
@@ -72,6 +75,7 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/google/pprof v0.0.0-20230509042627-b1315fad0c5a // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.1 // indirect
 	github.com/hashicorp/consul/api v1.26.1 // indirect
@@ -102,6 +106,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/gls v0.0.0-20220109145502-612d0167dce5 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/mozillazg/go-httpheader v0.2.1 // indirect
 	github.com/nacos-group/nacos-sdk-go v1.1.4 // indirect
 	github.com/nyaruka/phonenumbers v1.3.0 // indirect
 	github.com/oleiade/lane v1.0.1 // indirect

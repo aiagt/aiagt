@@ -4,7 +4,7 @@ server:
 
 log:
   level: debug
-  file_name: log/chat.log
+  file_name: log/log.log
 
 config_center:
   host: consul

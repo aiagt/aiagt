@@ -1,10 +1,12 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"fmt"
+	"github.com/aiagt/aiagt/common/cos"
+	"github.com/aiagt/aiagt/pkg/closer"
 	"github.com/aiagt/aiagt/pkg/jsonutil"
+	"golang.org/x/time/rate"
 	"io"
 	"net/http"
 	"os"
@@ -107,13 +109,13 @@ func main() {
 	appcontroller.RegisterRouter(r, rpc.AppCli)
 	chatcontroller.RegisterRouter(r, rpc.ChatCli, rpc.ChatStreamCli)
 
-	r.Use(StaticFSLimiter)
+	cos.InitCos(conf.Cos.URL, conf.Cos.SecretID, conf.Cos.SecretKey)
 
-	r.StaticFS("/assets", &app.FS{
-		Root:        "./assets",
-		PathRewrite: app.NewPathSlashesStripper(3),
-	})
-	r.POST("/assets", UploadAssets)
+	r.GET("/assets/*name", CosAssets)
+
+	r.POST("/assets/avatar", UploadCos(cos.AvatarDir))
+	r.POST("/assets/app_logo", UploadCos(cos.AppLogoDir))
+	r.POST("/assets/plugin_logo", UploadCos(cos.PluginLogoDir))
 
 	h.Spin()
 }
@@ -123,6 +125,7 @@ type ServerConf struct {
 
 	Metrics Metrics `yaml:"metrics"`
 	Tracing Tracing `yaml:"tracing"`
+	Cos     Cos     `yaml:"cos"`
 }
 
 type Metrics struct {
@@ -131,6 +134,12 @@ type Metrics struct {
 
 type Tracing struct {
 	ExportAddr string `yaml:"export_addr"`
+}
+
+type Cos struct {
+	URL       string `yaml:"url"`
+	SecretID  string `yaml:"secret_id"`
+	SecretKey string `yaml:"secret_key"`
 }
 
 func SetLoggerOutput(conf *ktconf.ServerConf) *zapcore.BufferedWriteSyncer {
@@ -165,45 +174,74 @@ func SetLoggerOutput(conf *ktconf.ServerConf) *zapcore.BufferedWriteSyncer {
 	return asyncWriter
 }
 
-const maxFileSize = 5 * 1024 * 1024
+func UploadCos(dir string) app.HandlerFunc {
+	const maxFileSize = 5 * 1024 * 1024
 
-func UploadAssets(ctx context.Context, c *app.RequestContext) {
-	file, err := c.FormFile("file")
-	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
-		return
+	var uploadLimiter = []*rate.Limiter{
+		rate.NewLimiter(rate.Every(time.Second), 10),
+		rate.NewLimiter(rate.Every(time.Hour), 1000),
 	}
 
-	if file.Size > maxFileSize {
-		_ = c.AbortWithError(http.StatusRequestEntityTooLarge, fmt.Errorf("file size exceeds the limit of %d bytes", maxFileSize))
-		return
+	return func(ctx context.Context, c *app.RequestContext) {
+		for _, limiter := range uploadLimiter {
+			if !limiter.Allow() {
+				c.AbortWithStatus(http.StatusTooManyRequests)
+				return
+			}
+		}
+
+		file, err := c.FormFile("file")
+		if err != nil {
+			_ = c.AbortWithError(http.StatusBadRequest, err)
+			return
+		}
+
+		if file.Size > maxFileSize {
+			c.AbortWithMsg(fmt.Sprintf("file size exceeds the limit of %d bytes", maxFileSize), http.StatusRequestEntityTooLarge)
+			return
+		}
+
+		src, err := file.Open()
+		if err != nil {
+			_ = c.AbortWithError(http.StatusBadRequest, err)
+			return
+		}
+		defer closer.Close(src)
+
+		filename := uuid.New().String() + filepath.Ext(file.Filename)
+		path := filepath.Join(dir, filename)
+
+		_, err = cos.Cli.Object.Put(ctx, path, src, nil)
+		if err != nil {
+			hlog.CtxErrorf(ctx, "[COS] put cos file err: %v", err)
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+
+		hlog.CtxErrorf(ctx, "[COS] put cos file success")
+		c.JSON(http.StatusOK, result.Success(utils.H{"file_name": filename, "file_path": path}))
 	}
-
-	filename := uuid.New().String() + filepath.Ext(file.Filename)
-
-	err = c.SaveUploadedFile(file, fmt.Sprintf("assets/%s", filename))
-	if err != nil {
-		_ = c.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
-
-	c.JSON(http.StatusOK, result.Success(utils.H{"filename": filename}))
 }
 
-func StaticFSLimiter(ctx context.Context, c *app.RequestContext) {
-	if string(c.Request.Method()) == http.MethodGet && bytes.HasPrefix(c.Request.URI().Path(), []byte("/api/v1/assets")) {
-		filePath := "./assets" + string(c.Request.URI().Path())
-		fileInfo, err := os.Stat(filePath)
-		if err != nil {
-			c.AbortWithStatus(http.StatusNotFound)
-			return
-		}
-
-		if fileInfo.Size() > maxFileSize {
-			c.AbortWithMsg(fmt.Sprintf("file size exceeds the maximum limit of %d bytes", maxFileSize), http.StatusForbidden)
-			return
-		}
+func CosAssets(ctx context.Context, c *app.RequestContext) {
+	name := c.Param("name")
+	if len(name) == 0 {
+		c.AbortWithStatus(http.StatusBadRequest)
 	}
 
-	c.Next(ctx)
+	presignedURL, err := cos.Cli.Object.GetPresignedURL(
+		ctx,
+		http.MethodGet,
+		name,
+		conf.Cos.SecretID,
+		conf.Cos.SecretKey,
+		time.Hour,
+		nil)
+	if err != nil {
+		hlog.CtxErrorf(ctx, "[COS] get file %s error: %v", name, err)
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	c.Redirect(http.StatusFound, []byte(presignedURL.String()))
 }

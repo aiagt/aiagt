@@ -4,7 +4,7 @@ server:
 
 log:
   level: debug
-  file_name: log/gateway.log
+  file_name: log/log.log
 
 config_center:
   host: consul
@@ -25,3 +25,8 @@ metrics:
 
 tracing:
   export_addr: "jaeger-all-in-one:4317"
+
+cos:
+  url: "xxx"
+  secret_id: "xxx"
+  secret_key: "xxx"
