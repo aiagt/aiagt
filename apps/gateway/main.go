@@ -6,6 +6,7 @@ import (
 	"github.com/aiagt/aiagt/common/cos"
 	"github.com/aiagt/aiagt/pkg/closer"
 	"github.com/aiagt/aiagt/pkg/jsonutil"
+	ktcenter "github.com/aiagt/kitextool/conf/center"
 	"golang.org/x/time/rate"
 	"io"
 	"net/http"
@@ -48,6 +49,13 @@ func init() {
 	confutil.LoadConf(conf,
 		".",
 		filepath.Join("apps", "gateway"),
+	)
+
+	ktcenter.ApplyDynamicConfig(
+		ktcenter.WithConsulConfigCenter(nil),
+		&conf.ConfigCenter,
+		conf.Server.Name,
+		conf,
 	)
 }
 
