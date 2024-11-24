@@ -1,19 +1,63 @@
 package jsonutil
 
 import (
-	"github.com/aiagt/aiagt/kitex_gen/appsvc"
+	"encoding/json"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
 
+type unmarshalTesting[T any] struct {
+	desc string
+	raw  string
+	m    T
+}
+
+func (test unmarshalTesting[T]) run(t *testing.T) {
+	t.Run(test.desc, func(t *testing.T) {
+		err := Unmarshal([]byte(test.raw), &test.m)
+		require.NoError(t, err)
+
+		marshal, err := json.Marshal(&test.m)
+		require.NoError(t, err)
+
+		t.Logf("%v", string(marshal))
+	})
+}
+
 func TestUnmarshal(t *testing.T) {
-	var (
-		raw = []byte(`{"pagination":{"page":1,"page_size":20},"author_id":"1860037198749896704"}`)
-		v   appsvc.ListAppReq
-	)
+	type Int64Struct struct {
+		Num int64 `json:"num"`
+	}
 
-	err := Unmarshal(raw, &v)
-	require.NoError(t, err)
+	unmarshalTesting[Int64Struct]{
+		desc: "int64",
+		raw:  `{"num":"1860037198749896704"}`,
+	}.run(t)
 
-	t.Logf("%#v", v)
+	type Int64PointerStruct struct {
+		Num *int64 `json:"num"`
+	}
+
+	unmarshalTesting[Int64PointerStruct]{
+		desc: "int64 pointer",
+		raw:  `{"num":"1860037198749896704"}`,
+	}.run(t)
+
+	type Int64Slice struct {
+		Nums []int64 `json:"nums"`
+	}
+
+	unmarshalTesting[Int64Slice]{
+		desc: "int64 slice",
+		raw:  `{"nums":["1860037198749896704"]}`,
+	}.run(t)
+
+	type Int64PointerSlice struct {
+		Nums []*int64 `json:"nums"`
+	}
+
+	unmarshalTesting[Int64PointerSlice]{
+		desc: "int64 pointer slice",
+		raw:  `{"nums":["1860037198749896704"]}`,
+	}.run(t)
 }

@@ -1,6 +1,7 @@
 package jsonutil
 
 import (
+	"github.com/aiagt/aiagt/pkg/utils"
 	"strconv"
 	"unsafe"
 
@@ -26,8 +27,15 @@ func (ext *int64Extension) UpdateStructDescriptor(structDescriptor *jsoniter.Str
 	for _, field := range structDescriptor.Fields {
 		fieldType := field.Field.Type().String()
 
-		if fieldType == "int64" || fieldType == "*int64" {
+		switch fieldType {
+		case "int64":
 			field.Decoder = &int64Decoder{}
+		case "*int64":
+			field.Decoder = &int64PointerDecoder{}
+		case "[]int64":
+			field.Decoder = &int64SliceDecoder{}
+		case "[]*int64":
+			field.Decoder = &int64PointerSliceDecoder{}
 		}
 	}
 }
@@ -44,19 +52,82 @@ func (decoder *int64Decoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator)
 			return
 		}
 
-		decoder.setValue(ptr, val)
+		*((*int64)(ptr)) = val
 	} else {
-		val := iter.ReadInt64()
-		decoder.setValue(ptr, val)
+		*((*int64)(ptr)) = iter.ReadInt64()
 	}
 }
 
-func (decoder *int64Decoder) setValue(ptr unsafe.Pointer, val int64) {
-	if **(**uintptr)(unsafe.Pointer(&ptr)) == 0 {
-		newVal := new(int64)
-		*newVal = val
-		*((*unsafe.Pointer)(ptr)) = unsafe.Pointer(newVal)
+type int64PointerDecoder struct{}
+
+func (decoder *int64PointerDecoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
+	if iter.WhatIsNext() == jsoniter.StringValue {
+		str := iter.ReadString()
+		val, err := strconv.ParseInt(str, 10, 64)
+
+		if err != nil {
+			iter.ReportError("DecodeInt64Pointer", "invalid int64 value: "+str)
+			return
+		}
+
+		*((*unsafe.Pointer)(ptr)) = unsafe.Pointer(&val)
 	} else {
-		*((*int64)(ptr)) = val
+		*((*unsafe.Pointer)(ptr)) = unsafe.Pointer(utils.Pointer(iter.ReadInt64()))
 	}
+}
+
+type int64SliceDecoder struct{}
+
+func (decoder *int64SliceDecoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
+	if iter.WhatIsNext() != jsoniter.ArrayValue {
+		iter.ReportError("DecodeInt64Slice", "expecting array")
+		return
+	}
+
+	var result []int64
+
+	iter.ReadArrayCB(func(iter *jsoniter.Iterator) bool {
+		if iter.WhatIsNext() == jsoniter.StringValue {
+			str := iter.ReadString()
+			val, err := strconv.ParseInt(str, 10, 64)
+			if err != nil {
+				iter.ReportError("DecodeInt64Slice", "invalid int64 value in array: "+str)
+				return false
+			}
+			result = append(result, val)
+		} else {
+			result = append(result, iter.ReadInt64())
+		}
+		return true
+	})
+
+	*((*[]int64)(ptr)) = result
+}
+
+type int64PointerSliceDecoder struct{}
+
+func (decoder *int64PointerSliceDecoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
+	if iter.WhatIsNext() != jsoniter.ArrayValue {
+		iter.ReportError("DecodeInt64PointerSlice", "expecting array")
+		return
+	}
+
+	var result []*int64
+
+	iter.ReadArrayCB(func(iter *jsoniter.Iterator) bool {
+		if iter.WhatIsNext() == jsoniter.StringValue {
+			str := iter.ReadString()
+			val, err := strconv.ParseInt(str, 10, 64)
+			if err != nil {
+				iter.ReportError("DecodeInt64PointerSlice", "invalid int64 value in array: "+str)
+				return false
+			}
+			result = append(result, &val)
+		} else {
+			result = append(result, utils.Pointer(iter.ReadInt64()))
+		}
+		return true
+	})
+
+	*((*[]*int64)(ptr)) = result
 }
