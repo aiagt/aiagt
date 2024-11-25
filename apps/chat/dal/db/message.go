@@ -2,6 +2,8 @@ package db
 
 import (
 	"context"
+	"github.com/aiagt/aiagt/pkg/lists"
+	"github.com/aiagt/aiagt/pkg/snowflake"
 	"math"
 
 	ktdb "github.com/aiagt/kitextool/option/server/db"
@@ -74,6 +76,8 @@ func (d *MessageDao) List(ctx context.Context, req *chatsvc.ListMessageReq) ([]*
 
 // Create insert a message record
 func (d *MessageDao) Create(ctx context.Context, m *model.Message) error {
+	m.ID = snowflake.Generate().Int64()
+
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
 		return errors.Wrap(err, "message dao create error")
@@ -123,6 +127,11 @@ func (d *MessageDao) GetByConversationID(ctx context.Context, id int64) ([]*mode
 }
 
 func (d *MessageDao) CreateBatch(ctx context.Context, ms []*model.Message) error {
+	ms = lists.Map(ms, func(t *model.Message) *model.Message {
+		t.ID = snowflake.Generate().Int64()
+		return t
+	})
+
 	err := d.db(ctx).Model(d.m).CreateInBatches(ms, 100).Error
 	if err != nil {
 		return errors.Wrap(err, "message dao create batch error")

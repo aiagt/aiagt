@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/aiagt/aiagt/apps/user/pkg/encrypt"
-	"github.com/aiagt/aiagt/pkg/snowflake"
-
 	"github.com/aiagt/aiagt/apps/user/mapper"
+	"github.com/aiagt/aiagt/apps/user/pkg/encrypt"
 	"github.com/aiagt/aiagt/apps/user/pkg/jwt"
 	"github.com/aiagt/aiagt/common/baseutil"
 
@@ -44,7 +42,6 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *usersvc.RegisterReq
 	}
 
 	user := &model.User{
-		Base:   model.Base{ID: snowflake.Generate().Int64()},
 		Email:  req.Email,
 		Avatar: fmt.Sprintf("https://api.multiavatar.com/%s.svg", req.Email),
 	}

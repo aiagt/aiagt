@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	"github.com/aiagt/aiagt/pkg/snowflake"
 	"math"
 
 	ktdb "github.com/aiagt/kitextool/option/server/db"
@@ -90,6 +91,8 @@ func (d *AppDao) List(ctx context.Context, req *appsvc.ListAppReq, userID int64)
 
 // Create insert a app record
 func (d *AppDao) Create(ctx context.Context, m *model.App) error {
+	m.ID = snowflake.Generate().Int64()
+
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
 		return errors.Wrap(err, "app dao create error")

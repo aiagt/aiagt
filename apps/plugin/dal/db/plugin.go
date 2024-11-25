@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	"github.com/aiagt/aiagt/pkg/snowflake"
 	"math"
 	"strings"
 
@@ -97,6 +98,8 @@ func (d *PluginDao) List(ctx context.Context, req *pluginsvc.ListPluginReq, user
 
 // Create insert a plugin record
 func (d *PluginDao) Create(ctx context.Context, m *model.Plugin) error {
+	m.ID = snowflake.Generate().Int64()
+
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
 		return errors.Wrap(err, "plugin dao create error")

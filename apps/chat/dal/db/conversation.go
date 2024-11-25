@@ -9,6 +9,7 @@ import (
 	"github.com/aiagt/aiagt/apps/chat/model"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/chatsvc"
+	"github.com/aiagt/aiagt/pkg/snowflake"
 	"github.com/pkg/errors"
 
 	"gorm.io/gorm"
@@ -77,6 +78,8 @@ func (d *ConversationDao) List(ctx context.Context, req *chatsvc.ListConversatio
 
 // Create insert a conversation record
 func (d *ConversationDao) Create(ctx context.Context, m *model.Conversation) error {
+	m.ID = snowflake.Generate().Int64()
+
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
 		return errors.Wrap(err, "conversation dao create error")

@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	"github.com/aiagt/aiagt/pkg/snowflake"
 	"math"
 
 	ktdb "github.com/aiagt/kitextool/option/server/db"
@@ -83,6 +84,8 @@ func (d *ModelDao) List(ctx context.Context, req *modelsvc.ListModelReq) ([]*mod
 
 // Create insert a model record
 func (d *ModelDao) Create(ctx context.Context, m *model.Models) error {
+	m.ID = snowflake.Generate().Int64()
+
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
 		return errors.Wrap(err, "model dao create error")

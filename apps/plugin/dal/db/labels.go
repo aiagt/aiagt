@@ -3,6 +3,8 @@ package db
 import (
 	"context"
 	"fmt"
+	"github.com/aiagt/aiagt/pkg/lists"
+	"github.com/aiagt/aiagt/pkg/snowflake"
 	"math"
 
 	ktdb "github.com/aiagt/kitextool/option/server/db"
@@ -79,6 +81,8 @@ func (d *LabelDao) List(ctx context.Context, req *pluginsvc.ListPluginLabelReq) 
 
 // Create insert a plugin label record
 func (d *LabelDao) Create(ctx context.Context, m *model.PluginLabel) error {
+	m.ID = snowflake.Generate().Int64()
+
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
 		return errors.Wrap(err, "plugin label dao create error")
@@ -88,6 +92,11 @@ func (d *LabelDao) Create(ctx context.Context, m *model.PluginLabel) error {
 }
 
 func (d *LabelDao) CreateBatch(ctx context.Context, labels []*model.PluginLabel) error {
+	labels = lists.Map(labels, func(t *model.PluginLabel) *model.PluginLabel {
+		t.ID = snowflake.Generate().Int64()
+		return t
+	})
+
 	err := d.db(ctx).Model(d.m).CreateInBatches(&labels, 100).Error
 	if err != nil {
 		return errors.Wrap(err, "plugin label dao create batch error")
