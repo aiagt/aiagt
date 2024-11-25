@@ -4572,10 +4572,10 @@ func (p *ListAppReq) FastReadField5(buf []byte) (int, error) {
 	if err != nil {
 		return offset, err
 	}
-	_field := make([]string, 0, size)
+	_field := make([]int64, 0, size)
 	for i := 0; i < size; i++ {
-		var _elem string
-		if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		var _elem int64
+		if v, l, err := bthrift.Binary.ReadI64(buf[offset:]); err != nil {
 			return offset, err
 		} else {
 			offset += l
@@ -4591,7 +4591,7 @@ func (p *ListAppReq) FastReadField5(buf []byte) (int, error) {
 	} else {
 		offset += l
 	}
-	p.Labels = _field
+	p.LabelIds = _field
 	return offset, nil
 }
 
@@ -4687,16 +4687,16 @@ func (p *ListAppReq) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWrit
 
 func (p *ListAppReq) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetLabels() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "labels", thrift.LIST, 5)
+	if p.IsSetLabelIds() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "label_ids", thrift.LIST, 5)
 		listBeginOffset := offset
-		offset += bthrift.Binary.ListBeginLength(thrift.STRING, 0)
+		offset += bthrift.Binary.ListBeginLength(thrift.I64, 0)
 		var length int
-		for _, v := range p.Labels {
+		for _, v := range p.LabelIds {
 			length++
-			offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, v)
+			offset += bthrift.Binary.WriteI64(buf[offset:], v)
 		}
-		bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.STRING, length)
+		bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.I64, length)
 		offset += bthrift.Binary.WriteListEnd(buf[offset:])
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
@@ -4753,12 +4753,11 @@ func (p *ListAppReq) field4Length() int {
 
 func (p *ListAppReq) field5Length() int {
 	l := 0
-	if p.IsSetLabels() {
-		l += bthrift.Binary.FieldBeginLength("labels", thrift.LIST, 5)
-		l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.Labels))
-		for _, v := range p.Labels {
-			l += bthrift.Binary.StringLengthNocopy(v)
-		}
+	if p.IsSetLabelIds() {
+		l += bthrift.Binary.FieldBeginLength("label_ids", thrift.LIST, 5)
+		l += bthrift.Binary.ListBeginLength(thrift.I64, len(p.LabelIds))
+		var tmpV int64
+		l += bthrift.Binary.I64Length(int64(tmpV)) * len(p.LabelIds)
 		l += bthrift.Binary.ListEndLength()
 		l += bthrift.Binary.FieldEndLength()
 	}
@@ -5253,6 +5252,20 @@ func (p *AppLabel) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 4:
+			if fieldTypeId == thrift.I32 {
+				l, err = p.FastReadField4(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -5348,6 +5361,21 @@ func (p *AppLabel) FastReadField3(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *AppLabel) FastReadField4(buf []byte) (int, error) {
+	offset := 0
+
+	var _field *int32
+	if v, l, err := bthrift.Binary.ReadI32(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+		_field = &v
+
+	}
+	p.Pinned = _field
+	return offset, nil
+}
+
 // for compatibility
 func (p *AppLabel) FastWrite(buf []byte) int {
 	return 0
@@ -5358,6 +5386,7 @@ func (p *AppLabel) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "AppLabel")
 	if p != nil {
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
+		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 	}
@@ -5373,6 +5402,7 @@ func (p *AppLabel) BLength() int {
 		l += p.field1Length()
 		l += p.field2Length()
 		l += p.field3Length()
+		l += p.field4Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -5403,6 +5433,16 @@ func (p *AppLabel) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryWriter
 	return offset
 }
 
+func (p *AppLabel) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	if p.IsSetPinned() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "pinned", thrift.I32, 4)
+		offset += bthrift.Binary.WriteI32(buf[offset:], *p.Pinned)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
+	return offset
+}
+
 func (p *AppLabel) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("id", thrift.I64, 1)
@@ -5424,6 +5464,16 @@ func (p *AppLabel) field3Length() int {
 	l += bthrift.Binary.FieldBeginLength("created_at", thrift.STRUCT, 3)
 	l += p.CreatedAt.BLength()
 	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *AppLabel) field4Length() int {
+	l := 0
+	if p.IsSetPinned() {
+		l += bthrift.Binary.FieldBeginLength("pinned", thrift.I32, 4)
+		l += bthrift.Binary.I32Length(*p.Pinned)
+		l += bthrift.Binary.FieldEndLength()
+	}
 	return l
 }
 
@@ -5468,6 +5518,20 @@ func (p *ListAppLabelReq) FastRead(buf []byte) (int, error) {
 		case 2:
 			if fieldTypeId == thrift.STRING {
 				l, err = p.FastReadField2(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 3:
+			if fieldTypeId == thrift.BOOL {
+				l, err = p.FastReadField3(buf[offset:])
 				offset += l
 				if err != nil {
 					goto ReadFieldError
@@ -5547,6 +5611,21 @@ func (p *ListAppLabelReq) FastReadField2(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *ListAppLabelReq) FastReadField3(buf []byte) (int, error) {
+	offset := 0
+
+	var _field *bool
+	if v, l, err := bthrift.Binary.ReadBool(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+		_field = &v
+
+	}
+	p.Pinned = _field
+	return offset, nil
+}
+
 // for compatibility
 func (p *ListAppLabelReq) FastWrite(buf []byte) int {
 	return 0
@@ -5556,6 +5635,7 @@ func (p *ListAppLabelReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.Binar
 	offset := 0
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "ListAppLabelReq")
 	if p != nil {
+		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 	}
@@ -5570,6 +5650,7 @@ func (p *ListAppLabelReq) BLength() int {
 	if p != nil {
 		l += p.field1Length()
 		l += p.field2Length()
+		l += p.field3Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -5594,6 +5675,16 @@ func (p *ListAppLabelReq) fastWriteField2(buf []byte, binaryWriter bthrift.Binar
 	return offset
 }
 
+func (p *ListAppLabelReq) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	if p.IsSetPinned() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "pinned", thrift.BOOL, 3)
+		offset += bthrift.Binary.WriteBool(buf[offset:], *p.Pinned)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
+	return offset
+}
+
 func (p *ListAppLabelReq) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("pagination", thrift.STRUCT, 1)
@@ -5607,6 +5698,16 @@ func (p *ListAppLabelReq) field2Length() int {
 	if p.IsSetText() {
 		l += bthrift.Binary.FieldBeginLength("text", thrift.STRING, 2)
 		l += bthrift.Binary.StringLengthNocopy(*p.Text)
+		l += bthrift.Binary.FieldEndLength()
+	}
+	return l
+}
+
+func (p *ListAppLabelReq) field3Length() int {
+	l := 0
+	if p.IsSetPinned() {
+		l += bthrift.Binary.FieldBeginLength("pinned", thrift.BOOL, 3)
+		l += bthrift.Binary.BoolLength(*p.Pinned)
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/aiagt/aiagt/pkg/lists"
 	"github.com/aiagt/aiagt/pkg/snowflake"
+	"github.com/aiagt/aiagt/pkg/utils"
 	"math"
 
 	ktdb "github.com/aiagt/kitextool/option/server/db"
@@ -67,6 +68,9 @@ func (d *LabelDao) List(ctx context.Context, req *appsvc.ListAppLabelReq) ([]*mo
 	err := d.db(ctx).Model(d.m).Scopes(func(db *gorm.DB) *gorm.DB {
 		if req.Text != nil {
 			db = db.Where("text like ?", fmt.Sprintf("%%%s%%", *req.Text))
+		}
+		if utils.Value(req.Pinned) {
+			db = db.Where("pinned > ?", 0)
 		}
 		return db
 	}).Count(&total).Offset(offset).Limit(limit).Find(&list).Error

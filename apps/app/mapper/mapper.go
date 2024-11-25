@@ -147,6 +147,7 @@ func NewGenAppLabel(label *model.AppLabel) *appsvc.AppLabel {
 	return &appsvc.AppLabel{
 		Id:        label.ID,
 		Text:      label.Text,
+		Pinned:    utils.Pointer(label.Pinned),
 		CreatedAt: baseutil.NewBaseTime(label.CreatedAt),
 	}
 }

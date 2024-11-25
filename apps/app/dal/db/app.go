@@ -74,8 +74,8 @@ func (d *AppDao) List(ctx context.Context, req *appsvc.ListAppReq, userID int64)
 		if req.Description != nil {
 			db = db.Where("description LIKE ?", fmt.Sprintf("%%%s%%", *req.Description))
 		}
-		if req.Labels != nil {
-			db = db.Where("label_ids IN ?", req.Labels)
+		if req.LabelIds != nil {
+			db = db.Where("JSON_CONTAINS(label_ids, JSON_ARRAY(?))", req.LabelIds)
 		}
 		return db
 	}).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
