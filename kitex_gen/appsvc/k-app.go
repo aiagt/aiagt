@@ -4452,6 +4452,20 @@ func (p *ListAppReq) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 6:
+			if fieldTypeId == thrift.BOOL {
+				l, err = p.FastReadField6(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -4581,6 +4595,21 @@ func (p *ListAppReq) FastReadField5(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *ListAppReq) FastReadField6(buf []byte) (int, error) {
+	offset := 0
+
+	var _field *bool
+	if v, l, err := bthrift.Binary.ReadBool(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+		_field = &v
+
+	}
+	p.WithAuthor = _field
+	return offset, nil
+}
+
 // for compatibility
 func (p *ListAppReq) FastWrite(buf []byte) int {
 	return 0
@@ -4591,6 +4620,7 @@ func (p *ListAppReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWrit
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "ListAppReq")
 	if p != nil {
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
+		offset += p.fastWriteField6(buf[offset:], binaryWriter)
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
@@ -4610,6 +4640,7 @@ func (p *ListAppReq) BLength() int {
 		l += p.field3Length()
 		l += p.field4Length()
 		l += p.field5Length()
+		l += p.field6Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -4672,6 +4703,16 @@ func (p *ListAppReq) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryWrit
 	return offset
 }
 
+func (p *ListAppReq) fastWriteField6(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	if p.IsSetWithAuthor() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "with_author", thrift.BOOL, 6)
+		offset += bthrift.Binary.WriteBool(buf[offset:], *p.WithAuthor)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
+	return offset
+}
+
 func (p *ListAppReq) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("pagination", thrift.STRUCT, 1)
@@ -4719,6 +4760,16 @@ func (p *ListAppReq) field5Length() int {
 			l += bthrift.Binary.StringLengthNocopy(v)
 		}
 		l += bthrift.Binary.ListEndLength()
+		l += bthrift.Binary.FieldEndLength()
+	}
+	return l
+}
+
+func (p *ListAppReq) field6Length() int {
+	l := 0
+	if p.IsSetWithAuthor() {
+		l += bthrift.Binary.FieldBeginLength("with_author", thrift.BOOL, 6)
+		l += bthrift.Binary.BoolLength(*p.WithAuthor)
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l

@@ -5571,6 +5571,7 @@ type ListAppReq struct {
 	Name        *string             `thrift:"name,3,optional" frugal:"3,optional,string" json:"name,omitempty"`
 	Description *string             `thrift:"description,4,optional" frugal:"4,optional,string" json:"description,omitempty"`
 	Labels      []string            `thrift:"labels,5,optional" frugal:"5,optional,list<string>" json:"labels,omitempty"`
+	WithAuthor  *bool               `thrift:"with_author,6,optional" frugal:"6,optional,bool" json:"with_author,omitempty"`
 }
 
 func NewListAppReq() *ListAppReq {
@@ -5624,6 +5625,15 @@ func (p *ListAppReq) GetLabels() (v []string) {
 	}
 	return p.Labels
 }
+
+var ListAppReq_WithAuthor_DEFAULT bool
+
+func (p *ListAppReq) GetWithAuthor() (v bool) {
+	if !p.IsSetWithAuthor() {
+		return ListAppReq_WithAuthor_DEFAULT
+	}
+	return *p.WithAuthor
+}
 func (p *ListAppReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
 }
@@ -5639,6 +5649,9 @@ func (p *ListAppReq) SetDescription(val *string) {
 func (p *ListAppReq) SetLabels(val []string) {
 	p.Labels = val
 }
+func (p *ListAppReq) SetWithAuthor(val *bool) {
+	p.WithAuthor = val
+}
 
 var fieldIDToName_ListAppReq = map[int16]string{
 	1: "pagination",
@@ -5646,6 +5659,7 @@ var fieldIDToName_ListAppReq = map[int16]string{
 	3: "name",
 	4: "description",
 	5: "labels",
+	6: "with_author",
 }
 
 func (p *ListAppReq) IsSetPagination() bool {
@@ -5666,6 +5680,10 @@ func (p *ListAppReq) IsSetDescription() bool {
 
 func (p *ListAppReq) IsSetLabels() bool {
 	return p.Labels != nil
+}
+
+func (p *ListAppReq) IsSetWithAuthor() bool {
+	return p.WithAuthor != nil
 }
 
 func (p *ListAppReq) Read(iprot thrift.TProtocol) (err error) {
@@ -5724,6 +5742,14 @@ func (p *ListAppReq) Read(iprot thrift.TProtocol) (err error) {
 		case 5:
 			if fieldTypeId == thrift.LIST {
 				if err = p.ReadField5(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 6:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -5828,6 +5854,17 @@ func (p *ListAppReq) ReadField5(iprot thrift.TProtocol) error {
 	p.Labels = _field
 	return nil
 }
+func (p *ListAppReq) ReadField6(iprot thrift.TProtocol) error {
+
+	var _field *bool
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.WithAuthor = _field
+	return nil
+}
 
 func (p *ListAppReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -5853,6 +5890,10 @@ func (p *ListAppReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField5(oprot); err != nil {
 			fieldId = 5
+			goto WriteFieldError
+		}
+		if err = p.writeField6(oprot); err != nil {
+			fieldId = 6
 			goto WriteFieldError
 		}
 	}
@@ -5974,6 +6015,25 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
 }
 
+func (p *ListAppReq) writeField6(oprot thrift.TProtocol) (err error) {
+	if p.IsSetWithAuthor() {
+		if err = oprot.WriteFieldBegin("with_author", thrift.BOOL, 6); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteBool(*p.WithAuthor); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
+}
+
 func (p *ListAppReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -6001,6 +6061,9 @@ func (p *ListAppReq) DeepEqual(ano *ListAppReq) bool {
 		return false
 	}
 	if !p.Field5DeepEqual(ano.Labels) {
+		return false
+	}
+	if !p.Field6DeepEqual(ano.WithAuthor) {
 		return false
 	}
 	return true
@@ -6059,6 +6122,18 @@ func (p *ListAppReq) Field5DeepEqual(src []string) bool {
 		if strings.Compare(v, _src) != 0 {
 			return false
 		}
+	}
+	return true
+}
+func (p *ListAppReq) Field6DeepEqual(src *bool) bool {
+
+	if p.WithAuthor == src {
+		return true
+	} else if p.WithAuthor == nil || src == nil {
+		return false
+	}
+	if *p.WithAuthor != *src {
+		return false
 	}
 	return true
 }

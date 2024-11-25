@@ -91,6 +91,7 @@ struct ListAppReq {
     3: optional string name
     4: optional string description
     5: optional list<string> labels
+    6: optional bool with_author
 }
 
 struct ListAppResp {

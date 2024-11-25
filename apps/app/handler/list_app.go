@@ -2,6 +2,9 @@ package handler
 
 import (
 	"context"
+	"github.com/aiagt/aiagt/kitex_gen/base"
+	"github.com/aiagt/aiagt/kitex_gen/usersvc"
+	"github.com/aiagt/aiagt/pkg/utils"
 
 	"github.com/aiagt/aiagt/pkg/lists"
 
@@ -30,8 +33,23 @@ func (s *AppServiceImpl) ListApp(ctx context.Context, req *appsvc.ListAppReq) (r
 		return t.ID, mapper.NewGenAppLabel(t), true
 	})
 
+	var authorMap hmap.Map[int64, *usersvc.User]
+
+	if utils.Value(req.WithAuthor) {
+		authorIDs := lists.Map(apps, func(t *model.App) int64 { return t.AuthorID })
+
+		authors, err := s.userCli.GetUserByIds(ctx, &base.IDsReq{Ids: authorIDs})
+		if err != nil {
+			return nil, bizListApp.NewErr(err)
+		}
+
+		authorMap = hmap.FromSliceEntries(authors, func(t *usersvc.User) (int64, *usersvc.User, bool) {
+			return t.Id, t, true
+		})
+	}
+
 	resp = &appsvc.ListAppResp{
-		Apps:       mapper.NewGenListApp(apps, labelMap),
+		Apps:       mapper.NewGenListApp(apps, labelMap, authorMap),
 		Pagination: page,
 	}
 
