@@ -5570,7 +5570,8 @@ type ListAppReq struct {
 	AuthorId    *int64              `thrift:"author_id,2,optional" frugal:"2,optional,i64" json:"author_id,omitempty"`
 	Name        *string             `thrift:"name,3,optional" frugal:"3,optional,string" json:"name,omitempty"`
 	Description *string             `thrift:"description,4,optional" frugal:"4,optional,string" json:"description,omitempty"`
-	Labels      []string            `thrift:"labels,5,optional" frugal:"5,optional,list<string>" json:"labels,omitempty"`
+	LabelIds    []int64             `thrift:"label_ids,5,optional" frugal:"5,optional,list<i64>" json:"label_ids,omitempty"`
+	WithAuthor  *bool               `thrift:"with_author,6,optional" frugal:"6,optional,bool" json:"with_author,omitempty"`
 }
 
 func NewListAppReq() *ListAppReq {
@@ -5616,13 +5617,22 @@ func (p *ListAppReq) GetDescription() (v string) {
 	return *p.Description
 }
 
-var ListAppReq_Labels_DEFAULT []string
+var ListAppReq_LabelIds_DEFAULT []int64
 
-func (p *ListAppReq) GetLabels() (v []string) {
-	if !p.IsSetLabels() {
-		return ListAppReq_Labels_DEFAULT
+func (p *ListAppReq) GetLabelIds() (v []int64) {
+	if !p.IsSetLabelIds() {
+		return ListAppReq_LabelIds_DEFAULT
 	}
-	return p.Labels
+	return p.LabelIds
+}
+
+var ListAppReq_WithAuthor_DEFAULT bool
+
+func (p *ListAppReq) GetWithAuthor() (v bool) {
+	if !p.IsSetWithAuthor() {
+		return ListAppReq_WithAuthor_DEFAULT
+	}
+	return *p.WithAuthor
 }
 func (p *ListAppReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
@@ -5636,8 +5646,11 @@ func (p *ListAppReq) SetName(val *string) {
 func (p *ListAppReq) SetDescription(val *string) {
 	p.Description = val
 }
-func (p *ListAppReq) SetLabels(val []string) {
-	p.Labels = val
+func (p *ListAppReq) SetLabelIds(val []int64) {
+	p.LabelIds = val
+}
+func (p *ListAppReq) SetWithAuthor(val *bool) {
+	p.WithAuthor = val
 }
 
 var fieldIDToName_ListAppReq = map[int16]string{
@@ -5645,7 +5658,8 @@ var fieldIDToName_ListAppReq = map[int16]string{
 	2: "author_id",
 	3: "name",
 	4: "description",
-	5: "labels",
+	5: "label_ids",
+	6: "with_author",
 }
 
 func (p *ListAppReq) IsSetPagination() bool {
@@ -5664,8 +5678,12 @@ func (p *ListAppReq) IsSetDescription() bool {
 	return p.Description != nil
 }
 
-func (p *ListAppReq) IsSetLabels() bool {
-	return p.Labels != nil
+func (p *ListAppReq) IsSetLabelIds() bool {
+	return p.LabelIds != nil
+}
+
+func (p *ListAppReq) IsSetWithAuthor() bool {
+	return p.WithAuthor != nil
 }
 
 func (p *ListAppReq) Read(iprot thrift.TProtocol) (err error) {
@@ -5724,6 +5742,14 @@ func (p *ListAppReq) Read(iprot thrift.TProtocol) (err error) {
 		case 5:
 			if fieldTypeId == thrift.LIST {
 				if err = p.ReadField5(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 6:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -5810,11 +5836,11 @@ func (p *ListAppReq) ReadField5(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	_field := make([]string, 0, size)
+	_field := make([]int64, 0, size)
 	for i := 0; i < size; i++ {
 
-		var _elem string
-		if v, err := iprot.ReadString(); err != nil {
+		var _elem int64
+		if v, err := iprot.ReadI64(); err != nil {
 			return err
 		} else {
 			_elem = v
@@ -5825,7 +5851,18 @@ func (p *ListAppReq) ReadField5(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.Labels = _field
+	p.LabelIds = _field
+	return nil
+}
+func (p *ListAppReq) ReadField6(iprot thrift.TProtocol) error {
+
+	var _field *bool
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.WithAuthor = _field
 	return nil
 }
 
@@ -5853,6 +5890,10 @@ func (p *ListAppReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField5(oprot); err != nil {
 			fieldId = 5
+			goto WriteFieldError
+		}
+		if err = p.writeField6(oprot); err != nil {
+			fieldId = 6
 			goto WriteFieldError
 		}
 	}
@@ -5948,15 +5989,15 @@ WriteFieldEndError:
 }
 
 func (p *ListAppReq) writeField5(oprot thrift.TProtocol) (err error) {
-	if p.IsSetLabels() {
-		if err = oprot.WriteFieldBegin("labels", thrift.LIST, 5); err != nil {
+	if p.IsSetLabelIds() {
+		if err = oprot.WriteFieldBegin("label_ids", thrift.LIST, 5); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteListBegin(thrift.STRING, len(p.Labels)); err != nil {
+		if err := oprot.WriteListBegin(thrift.I64, len(p.LabelIds)); err != nil {
 			return err
 		}
-		for _, v := range p.Labels {
-			if err := oprot.WriteString(v); err != nil {
+		for _, v := range p.LabelIds {
+			if err := oprot.WriteI64(v); err != nil {
 				return err
 			}
 		}
@@ -5972,6 +6013,25 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
+func (p *ListAppReq) writeField6(oprot thrift.TProtocol) (err error) {
+	if p.IsSetWithAuthor() {
+		if err = oprot.WriteFieldBegin("with_author", thrift.BOOL, 6); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteBool(*p.WithAuthor); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
 }
 
 func (p *ListAppReq) String() string {
@@ -6000,7 +6060,10 @@ func (p *ListAppReq) DeepEqual(ano *ListAppReq) bool {
 	if !p.Field4DeepEqual(ano.Description) {
 		return false
 	}
-	if !p.Field5DeepEqual(ano.Labels) {
+	if !p.Field5DeepEqual(ano.LabelIds) {
+		return false
+	}
+	if !p.Field6DeepEqual(ano.WithAuthor) {
 		return false
 	}
 	return true
@@ -6049,16 +6112,28 @@ func (p *ListAppReq) Field4DeepEqual(src *string) bool {
 	}
 	return true
 }
-func (p *ListAppReq) Field5DeepEqual(src []string) bool {
+func (p *ListAppReq) Field5DeepEqual(src []int64) bool {
 
-	if len(p.Labels) != len(src) {
+	if len(p.LabelIds) != len(src) {
 		return false
 	}
-	for i, v := range p.Labels {
+	for i, v := range p.LabelIds {
 		_src := src[i]
-		if strings.Compare(v, _src) != 0 {
+		if v != _src {
 			return false
 		}
+	}
+	return true
+}
+func (p *ListAppReq) Field6DeepEqual(src *bool) bool {
+
+	if p.WithAuthor == src {
+		return true
+	} else if p.WithAuthor == nil || src == nil {
+		return false
+	}
+	if *p.WithAuthor != *src {
+		return false
 	}
 	return true
 }
@@ -6573,6 +6648,7 @@ type AppLabel struct {
 	Id        int64      `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
 	Text      string     `thrift:"text,2,required" frugal:"2,required,string" json:"text"`
 	CreatedAt *base.Time `thrift:"created_at,3,required" frugal:"3,required,base.Time" json:"created_at"`
+	Pinned    *int32     `thrift:"pinned,4,optional" frugal:"4,optional,i32" json:"pinned,omitempty"`
 }
 
 func NewAppLabel() *AppLabel {
@@ -6598,6 +6674,15 @@ func (p *AppLabel) GetCreatedAt() (v *base.Time) {
 	}
 	return p.CreatedAt
 }
+
+var AppLabel_Pinned_DEFAULT int32
+
+func (p *AppLabel) GetPinned() (v int32) {
+	if !p.IsSetPinned() {
+		return AppLabel_Pinned_DEFAULT
+	}
+	return *p.Pinned
+}
 func (p *AppLabel) SetId(val int64) {
 	p.Id = val
 }
@@ -6607,15 +6692,23 @@ func (p *AppLabel) SetText(val string) {
 func (p *AppLabel) SetCreatedAt(val *base.Time) {
 	p.CreatedAt = val
 }
+func (p *AppLabel) SetPinned(val *int32) {
+	p.Pinned = val
+}
 
 var fieldIDToName_AppLabel = map[int16]string{
 	1: "id",
 	2: "text",
 	3: "created_at",
+	4: "pinned",
 }
 
 func (p *AppLabel) IsSetCreatedAt() bool {
 	return p.CreatedAt != nil
+}
+
+func (p *AppLabel) IsSetPinned() bool {
+	return p.Pinned != nil
 }
 
 func (p *AppLabel) Read(iprot thrift.TProtocol) (err error) {
@@ -6664,6 +6757,14 @@ func (p *AppLabel) Read(iprot thrift.TProtocol) (err error) {
 					goto ReadFieldError
 				}
 				issetCreatedAt = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 4:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -6742,6 +6843,17 @@ func (p *AppLabel) ReadField3(iprot thrift.TProtocol) error {
 	p.CreatedAt = _field
 	return nil
 }
+func (p *AppLabel) ReadField4(iprot thrift.TProtocol) error {
+
+	var _field *int32
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.Pinned = _field
+	return nil
+}
 
 func (p *AppLabel) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -6759,6 +6871,10 @@ func (p *AppLabel) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 	}
@@ -6830,6 +6946,25 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
+func (p *AppLabel) writeField4(oprot thrift.TProtocol) (err error) {
+	if p.IsSetPinned() {
+		if err = oprot.WriteFieldBegin("pinned", thrift.I32, 4); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteI32(*p.Pinned); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
 func (p *AppLabel) String() string {
 	if p == nil {
 		return "<nil>"
@@ -6851,6 +6986,9 @@ func (p *AppLabel) DeepEqual(ano *AppLabel) bool {
 		return false
 	}
 	if !p.Field3DeepEqual(ano.CreatedAt) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.Pinned) {
 		return false
 	}
 	return true
@@ -6877,10 +7015,23 @@ func (p *AppLabel) Field3DeepEqual(src *base.Time) bool {
 	}
 	return true
 }
+func (p *AppLabel) Field4DeepEqual(src *int32) bool {
+
+	if p.Pinned == src {
+		return true
+	} else if p.Pinned == nil || src == nil {
+		return false
+	}
+	if *p.Pinned != *src {
+		return false
+	}
+	return true
+}
 
 type ListAppLabelReq struct {
 	Pagination *base.PaginationReq `thrift:"pagination,1,required" frugal:"1,required,base.PaginationReq" json:"pagination"`
 	Text       *string             `thrift:"text,2,optional" frugal:"2,optional,string" query:"text"`
+	Pinned     *bool               `thrift:"pinned,3,optional" frugal:"3,optional,bool" query:"pinned"`
 }
 
 func NewListAppLabelReq() *ListAppLabelReq {
@@ -6907,16 +7058,29 @@ func (p *ListAppLabelReq) GetText() (v string) {
 	}
 	return *p.Text
 }
+
+var ListAppLabelReq_Pinned_DEFAULT bool
+
+func (p *ListAppLabelReq) GetPinned() (v bool) {
+	if !p.IsSetPinned() {
+		return ListAppLabelReq_Pinned_DEFAULT
+	}
+	return *p.Pinned
+}
 func (p *ListAppLabelReq) SetPagination(val *base.PaginationReq) {
 	p.Pagination = val
 }
 func (p *ListAppLabelReq) SetText(val *string) {
 	p.Text = val
 }
+func (p *ListAppLabelReq) SetPinned(val *bool) {
+	p.Pinned = val
+}
 
 var fieldIDToName_ListAppLabelReq = map[int16]string{
 	1: "pagination",
 	2: "text",
+	3: "pinned",
 }
 
 func (p *ListAppLabelReq) IsSetPagination() bool {
@@ -6925,6 +7089,10 @@ func (p *ListAppLabelReq) IsSetPagination() bool {
 
 func (p *ListAppLabelReq) IsSetText() bool {
 	return p.Text != nil
+}
+
+func (p *ListAppLabelReq) IsSetPinned() bool {
+	return p.Pinned != nil
 }
 
 func (p *ListAppLabelReq) Read(iprot thrift.TProtocol) (err error) {
@@ -6959,6 +7127,14 @@ func (p *ListAppLabelReq) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -7018,6 +7194,17 @@ func (p *ListAppLabelReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Text = _field
 	return nil
 }
+func (p *ListAppLabelReq) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field *bool
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.Pinned = _field
+	return nil
+}
 
 func (p *ListAppLabelReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -7031,6 +7218,10 @@ func (p *ListAppLabelReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -7087,6 +7278,25 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
+func (p *ListAppLabelReq) writeField3(oprot thrift.TProtocol) (err error) {
+	if p.IsSetPinned() {
+		if err = oprot.WriteFieldBegin("pinned", thrift.BOOL, 3); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteBool(*p.Pinned); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
 func (p *ListAppLabelReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -7107,6 +7317,9 @@ func (p *ListAppLabelReq) DeepEqual(ano *ListAppLabelReq) bool {
 	if !p.Field2DeepEqual(ano.Text) {
 		return false
 	}
+	if !p.Field3DeepEqual(ano.Pinned) {
+		return false
+	}
 	return true
 }
 
@@ -7125,6 +7338,18 @@ func (p *ListAppLabelReq) Field2DeepEqual(src *string) bool {
 		return false
 	}
 	if strings.Compare(*p.Text, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *ListAppLabelReq) Field3DeepEqual(src *bool) bool {
+
+	if p.Pinned == src {
+		return true
+	} else if p.Pinned == nil || src == nil {
+		return false
+	}
+	if *p.Pinned != *src {
 		return false
 	}
 	return true

@@ -90,7 +90,8 @@ struct ListAppReq {
     2: optional i64 author_id
     3: optional string name
     4: optional string description
-    5: optional list<string> labels
+    5: optional list<i64> label_ids
+    6: optional bool with_author
 }
 
 struct ListAppResp {
@@ -107,11 +108,13 @@ struct AppLabel {
     1: required i64 id
     2: required string text
     3: required base.Time created_at
+    4: optional i32 pinned
 }
 
 struct ListAppLabelReq {
     1: required base.PaginationReq pagination
     2: optional string text (go.tag='query:"text"')
+    3: optional bool pinned (go.tag='query:"pinned"')
 }
 
 struct ListAppLabelResp {

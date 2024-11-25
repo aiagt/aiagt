@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	"github.com/aiagt/aiagt/pkg/snowflake"
 	"math"
 
 	ktdb "github.com/aiagt/kitextool/option/server/db"
@@ -73,8 +74,8 @@ func (d *AppDao) List(ctx context.Context, req *appsvc.ListAppReq, userID int64)
 		if req.Description != nil {
 			db = db.Where("description LIKE ?", fmt.Sprintf("%%%s%%", *req.Description))
 		}
-		if req.Labels != nil {
-			db = db.Where("label_ids IN ?", req.Labels)
+		if req.LabelIds != nil {
+			db = db.Where("JSON_CONTAINS(label_ids, JSON_ARRAY(?))", req.LabelIds)
 		}
 		return db
 	}).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
@@ -90,6 +91,8 @@ func (d *AppDao) List(ctx context.Context, req *appsvc.ListAppReq, userID int64)
 
 // Create insert a app record
 func (d *AppDao) Create(ctx context.Context, m *model.App) error {
+	m.ID = snowflake.Generate().Int64()
+
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
 		return errors.Wrap(err, "app dao create error")

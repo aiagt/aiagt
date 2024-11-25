@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"github.com/aiagt/aiagt/pkg/snowflake"
 	"math"
 
 	ktdb "github.com/aiagt/kitextool/option/server/db"
@@ -72,6 +73,8 @@ func (d *UserDao) List(ctx context.Context, page *base.PaginationReq) ([]*model.
 
 // Create insert a user record
 func (d *UserDao) Create(ctx context.Context, m *model.User) error {
+	m.ID = snowflake.Generate().Int64()
+
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
 		return errors.Wrap(err, "user dao create error")

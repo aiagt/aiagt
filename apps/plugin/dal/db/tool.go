@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"github.com/aiagt/aiagt/pkg/snowflake"
 	"math"
 
 	ktdb "github.com/aiagt/kitextool/option/server/db"
@@ -95,6 +96,8 @@ func (d *ToolDao) List(ctx context.Context, req *pluginsvc.ListPluginToolReq, us
 
 // Create insert a plugin tool record
 func (d *ToolDao) Create(ctx context.Context, m *model.PluginTool) error {
+	m.ID = snowflake.Generate().Int64()
+
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
 		return errors.Wrap(err, "plugin tool dao create error")

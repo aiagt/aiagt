@@ -3,6 +3,9 @@ package db
 import (
 	"context"
 	"fmt"
+	"github.com/aiagt/aiagt/pkg/lists"
+	"github.com/aiagt/aiagt/pkg/snowflake"
+	"github.com/aiagt/aiagt/pkg/utils"
 	"math"
 
 	ktdb "github.com/aiagt/kitextool/option/server/db"
@@ -66,6 +69,9 @@ func (d *LabelDao) List(ctx context.Context, req *appsvc.ListAppLabelReq) ([]*mo
 		if req.Text != nil {
 			db = db.Where("text like ?", fmt.Sprintf("%%%s%%", *req.Text))
 		}
+		if utils.Value(req.Pinned) {
+			db = db.Where("pinned > ?", 0)
+		}
 		return db
 	}).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
 	if err != nil {
@@ -80,6 +86,8 @@ func (d *LabelDao) List(ctx context.Context, req *appsvc.ListAppLabelReq) ([]*mo
 
 // Create insert a label record
 func (d *LabelDao) Create(ctx context.Context, m *model.AppLabel) error {
+	m.ID = snowflake.Generate().Int64()
+
 	err := d.db(ctx).Model(d.m).Create(m).Error
 	if err != nil {
 		return errors.Wrap(err, "label dao create error")
@@ -99,6 +107,11 @@ func (d *LabelDao) Delete(ctx context.Context, id int64) error {
 }
 
 func (d *LabelDao) CreateBatch(ctx context.Context, labels []*model.AppLabel) error {
+	labels = lists.Map(labels, func(t *model.AppLabel) *model.AppLabel {
+		t.ID = snowflake.Generate().Int64()
+		return t
+	})
+
 	err := d.db(ctx).Model(d.m).CreateInBatches(&labels, 100).Error
 	if err != nil {
 		return errors.Wrap(err, "app label dao create batch error")
@@ -112,10 +125,9 @@ func (d *LabelDao) UpdateLabels(ctx context.Context, labelIDs []int64, labelText
 		return labelIDs, nil
 	}
 
-	labels := make([]*model.AppLabel, len(labelTexts))
-	for i, text := range labelTexts {
-		labels[i] = &model.AppLabel{Text: text}
-	}
+	labels := lists.Map(labelTexts, func(t string) *model.AppLabel {
+		return &model.AppLabel{Text: t}
+	})
 
 	if err := d.CreateBatch(ctx, labels); err != nil {
 		return nil, errors.Wrap(err, "app label dao update labels error")
