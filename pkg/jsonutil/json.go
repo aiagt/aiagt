@@ -43,7 +43,8 @@ func (ext *int64Extension) UpdateStructDescriptor(structDescriptor *jsoniter.Str
 type int64Decoder struct{}
 
 func (decoder *int64Decoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	if iter.WhatIsNext() == jsoniter.StringValue {
+	switch iter.WhatIsNext() {
+	case jsoniter.StringValue:
 		str := iter.ReadString()
 		val, err := strconv.ParseInt(str, 10, 64)
 
@@ -53,15 +54,18 @@ func (decoder *int64Decoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator)
 		}
 
 		*((*int64)(ptr)) = val
-	} else {
+	case jsoniter.NumberValue:
 		*((*int64)(ptr)) = iter.ReadInt64()
+	default:
+		iter.ReportError("DecodeInt64", "unexpected value type")
 	}
 }
 
 type int64PointerDecoder struct{}
 
 func (decoder *int64PointerDecoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
-	if iter.WhatIsNext() == jsoniter.StringValue {
+	switch iter.WhatIsNext() {
+	case jsoniter.StringValue:
 		str := iter.ReadString()
 		val, err := strconv.ParseInt(str, 10, 64)
 
@@ -71,23 +75,35 @@ func (decoder *int64PointerDecoder) Decode(ptr unsafe.Pointer, iter *jsoniter.It
 		}
 
 		*((*unsafe.Pointer)(ptr)) = unsafe.Pointer(&val)
-	} else {
+	case jsoniter.NumberValue:
 		*((*unsafe.Pointer)(ptr)) = unsafe.Pointer(utils.Pointer(iter.ReadInt64()))
+	case jsoniter.NilValue:
+		iter.ReadNil()
+		*((*unsafe.Pointer)(ptr)) = nil
+	default:
+		iter.ReportError("DecodeInt64Pointer", "unexpected value type")
 	}
 }
 
 type int64SliceDecoder struct{}
 
 func (decoder *int64SliceDecoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
+	if iter.WhatIsNext() == jsoniter.NilValue {
+		iter.ReadNil()
+		*((*[]int64)(ptr)) = nil
+		return
+	}
+
 	if iter.WhatIsNext() != jsoniter.ArrayValue {
 		iter.ReportError("DecodeInt64Slice", "expecting array")
 		return
 	}
 
-	var result []int64
+	result := make([]int64, 0)
 
 	iter.ReadArrayCB(func(iter *jsoniter.Iterator) bool {
-		if iter.WhatIsNext() == jsoniter.StringValue {
+		switch iter.WhatIsNext() {
+		case jsoniter.StringValue:
 			str := iter.ReadString()
 			val, err := strconv.ParseInt(str, 10, 64)
 			if err != nil {
@@ -95,8 +111,11 @@ func (decoder *int64SliceDecoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iter
 				return false
 			}
 			result = append(result, val)
-		} else {
+		case jsoniter.NumberValue:
 			result = append(result, iter.ReadInt64())
+		default:
+			iter.ReportError("DecodeInt64Slice", "unexpected value type in array")
+			return false
 		}
 		return true
 	})
@@ -107,15 +126,22 @@ func (decoder *int64SliceDecoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iter
 type int64PointerSliceDecoder struct{}
 
 func (decoder *int64PointerSliceDecoder) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
+	if iter.WhatIsNext() == jsoniter.NilValue {
+		iter.ReadNil()
+		*((*[]int64)(ptr)) = nil
+		return
+	}
+
 	if iter.WhatIsNext() != jsoniter.ArrayValue {
 		iter.ReportError("DecodeInt64PointerSlice", "expecting array")
 		return
 	}
 
-	var result []*int64
+	result := make([]*int64, 0)
 
 	iter.ReadArrayCB(func(iter *jsoniter.Iterator) bool {
-		if iter.WhatIsNext() == jsoniter.StringValue {
+		switch iter.WhatIsNext() {
+		case jsoniter.StringValue:
 			str := iter.ReadString()
 			val, err := strconv.ParseInt(str, 10, 64)
 			if err != nil {
@@ -123,8 +149,15 @@ func (decoder *int64PointerSliceDecoder) Decode(ptr unsafe.Pointer, iter *jsonit
 				return false
 			}
 			result = append(result, &val)
-		} else {
-			result = append(result, utils.Pointer(iter.ReadInt64()))
+		case jsoniter.NumberValue:
+			val := iter.ReadInt64()
+			result = append(result, &val)
+		case jsoniter.NilValue:
+			iter.ReadNil()
+			result = append(result, nil)
+		default:
+			iter.ReportError("DecodeInt64PointerSlice", "unexpected value type in array")
+			return false
 		}
 		return true
 	})
