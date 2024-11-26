@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/aiagt/aiagt/pkg/utils"
 	"io"
 	"strings"
 
@@ -25,10 +26,14 @@ func PinPongHandler[Q, P any](handle PinPongHandle[Q, P]) app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		var req Q
 
+		hlog.CtxInfof(ctx, "uri: %s, request body: %s", string(c.Request.RequestURI()), utils.PrettyBytes(c.Request.Body(), 1<<10))
+
 		if err := c.BindAndValidate(&req); err != nil {
 			c.JSON(consts.StatusOK, result.Error(bizerr.ErrCodeBadRequest, err))
 			return
 		}
+
+		hlog.CtxInfof(ctx, "uri: %s, request: %s", string(c.Request.RequestURI()), utils.Pretty(&req, 1<<10))
 
 		authorization := c.Request.Header.Get("Authorization")
 		if len(authorization) > 0 {
@@ -43,6 +48,8 @@ func PinPongHandler[Q, P any](handle PinPongHandle[Q, P]) app.HandlerFunc {
 
 			return
 		}
+
+		hlog.CtxInfof(ctx, "uri: %s, response: %s", string(c.Request.RequestURI()), utils.Pretty(resp, 1<<10))
 
 		c.JSON(consts.StatusOK, result.Success(resp))
 	}
