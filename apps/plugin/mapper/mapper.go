@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"encoding/json"
+	"github.com/sashabaranov/go-openai/jsonschema"
 
 	"github.com/aiagt/aiagt/apps/plugin/model"
 	"github.com/aiagt/aiagt/common/baseutil"
@@ -198,8 +199,8 @@ func NewModelUpdatePlugin(plugin *pluginsvc.UpdatePluginReq, labelIDs []int64) *
 
 func NewModelCreatePluginTool(tool *pluginsvc.CreatePluginToolReq) *model.PluginTool {
 	var (
-		requestType  caller.RequestType
-		responseType caller.ResponseType
+		requestType  = caller.RequestType{Type: jsonschema.Object}
+		responseType = caller.ResponseType{Type: jsonschema.Object}
 	)
 
 	err := json.Unmarshal(tool.RequestType, &requestType)
