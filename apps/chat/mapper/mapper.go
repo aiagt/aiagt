@@ -35,6 +35,16 @@ func NewModelMessageContent(message *chatsvc.MessageContent) *model.MessageConte
 			Type:    model.MessageTypeFunctionCall,
 			Content: model.MessageContentValue{FuncCall: &model.MessageContentValueFuncCall{Name: message.Content.FuncCall.Name, Arguments: message.Content.FuncCall.Arguments}},
 		}
+	case chatsvc.MessageType_TOOL:
+		return &model.MessageContent{
+			Type:    model.MessageTypeTool,
+			Content: model.MessageContentValue{Tool: &model.MessageContentValueTool{ID: message.Content.Tool.Id, Name: message.Content.Tool.Name, Content: message.Content.Tool.Content}},
+		}
+	case chatsvc.MessageType_TOOL_CALL:
+		return &model.MessageContent{
+			Type:    model.MessageTypeToolCall,
+			Content: model.MessageContentValue{ToolCall: &model.MessageContentValueToolCall{ID: message.Content.ToolCall.Id, Name: message.Content.ToolCall.Name, Arguments: message.Content.ToolCall.Arguments}},
+		}
 	}
 
 	return nil
@@ -88,6 +98,19 @@ func NewOpenAIMessage(message *model.Message) *openai.ChatCompletionMessage {
 			Name:      &message.Content.FuncCall.Name,
 			Arguments: &message.Content.FuncCall.Arguments,
 		}
+	case model.MessageTypeTool:
+		result.Content = &message.Content.Tool.Content
+		result.ToolCallId = &message.Content.Tool.ID
+	case model.MessageTypeToolCall:
+		result.ToolCalls = []*openai.ToolCall{{
+			Id:   message.Content.ToolCall.ID,
+			Type: openai.ToolType_FUNCTION,
+			Function: &openai.FunctionCall{
+				Name:      &message.Content.ToolCall.Name,
+				Arguments: &message.Content.ToolCall.Arguments,
+			},
+		}}
+	default:
 	}
 
 	return &result
@@ -103,6 +126,9 @@ func NewOpenAIMessageRole(role model.MessageRole) string {
 		return "system"
 	case model.MessageRoleFunction:
 		return "function"
+	case model.MessageRoleTool:
+		return "tool"
+	default:
 	}
 
 	return ""
@@ -133,6 +159,23 @@ func NewOpenAIListFunctionDefinition(tools []*pluginsvc.PluginTool) []*openai.Fu
 
 	for i, t := range tools {
 		result[i] = NewOpenAIFunctionDefinition(t)
+	}
+
+	return result
+}
+
+func NewOpenAITool(tool *pluginsvc.PluginTool) *openai.Tool {
+	return &openai.Tool{
+		Type:     openai.ToolType_FUNCTION,
+		Function: NewOpenAIFunctionDefinition(tool),
+	}
+}
+
+func NewOpenAIListTool(tools []*pluginsvc.PluginTool) []*openai.Tool {
+	result := make([]*openai.Tool, len(tools))
+
+	for i, t := range tools {
+		result[i] = NewOpenAITool(t)
 	}
 
 	return result
@@ -203,6 +246,24 @@ func NewGenMessageContent(content *model.MessageContent) *chatsvc.MessageContent
 		return &chatsvc.MessageContent{
 			Type:    chatsvc.MessageType_FUNCTION_CALL,
 			Content: &chatsvc.MessageContentValue{FuncCall: &chatsvc.MessageContentValueFuncCall{Name: content.Content.FuncCall.Name, Arguments: content.Content.FuncCall.Arguments}},
+		}
+	case model.MessageTypeTool:
+		return &chatsvc.MessageContent{
+			Type: chatsvc.MessageType_TOOL,
+			Content: &chatsvc.MessageContentValue{Tool: &chatsvc.MessageContentValueTool{
+				Id:      content.Content.Tool.ID,
+				Name:    content.Content.Tool.Name,
+				Content: content.Content.Tool.Content,
+			}},
+		}
+	case model.MessageTypeToolCall:
+		return &chatsvc.MessageContent{
+			Type: chatsvc.MessageType_TOOL_CALL,
+			Content: &chatsvc.MessageContentValue{ToolCall: &chatsvc.MessageContentValueToolCall{
+				Id:        content.Content.ToolCall.ID,
+				Name:      content.Content.ToolCall.Name,
+				Arguments: content.Content.ToolCall.Arguments,
+			}},
 		}
 	}
 

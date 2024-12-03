@@ -1120,14 +1120,16 @@ func (p *GenTokenResp) Field2DeepEqual(src *base.Time) bool {
 }
 
 type Model struct {
-	Id          int64  `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
-	Name        string `thrift:"name,2,required" frugal:"2,required,string" json:"name"`
-	Description string `thrift:"description,3,required" frugal:"3,required,string" json:"description"`
-	Source      string `thrift:"source,4,required" frugal:"4,required,string" json:"source"`
-	ModelKey    string `thrift:"model_key,5,required" frugal:"5,required,string" json:"model_key"`
-	Logo        string `thrift:"logo,6,required" frugal:"6,required,string" json:"logo"`
-	InputPrice  string `thrift:"input_price,7,required" frugal:"7,required,string" json:"input_price"`
-	OutputPrice string `thrift:"output_price,8,required" frugal:"8,required,string" json:"output_price"`
+	Id          int64    `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Name        string   `thrift:"name,2,required" frugal:"2,required,string" json:"name"`
+	Description string   `thrift:"description,3,required" frugal:"3,required,string" json:"description"`
+	Source      string   `thrift:"source,4,required" frugal:"4,required,string" json:"source"`
+	ModelKey    string   `thrift:"model_key,5,required" frugal:"5,required,string" json:"model_key"`
+	Logo        string   `thrift:"logo,6,required" frugal:"6,required,string" json:"logo"`
+	InputPrice  string   `thrift:"input_price,7,required" frugal:"7,required,string" json:"input_price"`
+	OutputPrice string   `thrift:"output_price,8,required" frugal:"8,required,string" json:"output_price"`
+	MaxToken    int64    `thrift:"max_token,9,required" frugal:"9,required,i64" json:"max_token"`
+	Tags        []string `thrift:"tags,10,required" frugal:"10,required,list<string>" json:"tags"`
 }
 
 func NewModel() *Model {
@@ -1168,6 +1170,14 @@ func (p *Model) GetInputPrice() (v string) {
 func (p *Model) GetOutputPrice() (v string) {
 	return p.OutputPrice
 }
+
+func (p *Model) GetMaxToken() (v int64) {
+	return p.MaxToken
+}
+
+func (p *Model) GetTags() (v []string) {
+	return p.Tags
+}
 func (p *Model) SetId(val int64) {
 	p.Id = val
 }
@@ -1192,16 +1202,24 @@ func (p *Model) SetInputPrice(val string) {
 func (p *Model) SetOutputPrice(val string) {
 	p.OutputPrice = val
 }
+func (p *Model) SetMaxToken(val int64) {
+	p.MaxToken = val
+}
+func (p *Model) SetTags(val []string) {
+	p.Tags = val
+}
 
 var fieldIDToName_Model = map[int16]string{
-	1: "id",
-	2: "name",
-	3: "description",
-	4: "source",
-	5: "model_key",
-	6: "logo",
-	7: "input_price",
-	8: "output_price",
+	1:  "id",
+	2:  "name",
+	3:  "description",
+	4:  "source",
+	5:  "model_key",
+	6:  "logo",
+	7:  "input_price",
+	8:  "output_price",
+	9:  "max_token",
+	10: "tags",
 }
 
 func (p *Model) Read(iprot thrift.TProtocol) (err error) {
@@ -1216,6 +1234,8 @@ func (p *Model) Read(iprot thrift.TProtocol) (err error) {
 	var issetLogo bool = false
 	var issetInputPrice bool = false
 	var issetOutputPrice bool = false
+	var issetMaxToken bool = false
+	var issetTags bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1303,6 +1323,24 @@ func (p *Model) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 9:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetMaxToken = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 10:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField10(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetTags = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -1353,6 +1391,16 @@ func (p *Model) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetOutputPrice {
 		fieldId = 8
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetMaxToken {
+		fieldId = 9
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTags {
+		fieldId = 10
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -1461,6 +1509,40 @@ func (p *Model) ReadField8(iprot thrift.TProtocol) error {
 	p.OutputPrice = _field
 	return nil
 }
+func (p *Model) ReadField9(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.MaxToken = _field
+	return nil
+}
+func (p *Model) ReadField10(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	_field := make([]string, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem string
+		if v, err := iprot.ReadString(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.Tags = _field
+	return nil
+}
 
 func (p *Model) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -1498,6 +1580,14 @@ func (p *Model) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField8(oprot); err != nil {
 			fieldId = 8
+			goto WriteFieldError
+		}
+		if err = p.writeField9(oprot); err != nil {
+			fieldId = 9
+			goto WriteFieldError
+		}
+		if err = p.writeField10(oprot); err != nil {
+			fieldId = 10
 			goto WriteFieldError
 		}
 	}
@@ -1654,6 +1744,48 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
 }
 
+func (p *Model) writeField9(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("max_token", thrift.I64, 9); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.MaxToken); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
+func (p *Model) writeField10(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("tags", thrift.LIST, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.STRING, len(p.Tags)); err != nil {
+		return err
+	}
+	for _, v := range p.Tags {
+		if err := oprot.WriteString(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
 func (p *Model) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1690,6 +1822,12 @@ func (p *Model) DeepEqual(ano *Model) bool {
 		return false
 	}
 	if !p.Field8DeepEqual(ano.OutputPrice) {
+		return false
+	}
+	if !p.Field9DeepEqual(ano.MaxToken) {
+		return false
+	}
+	if !p.Field10DeepEqual(ano.Tags) {
 		return false
 	}
 	return true
@@ -1751,15 +1889,37 @@ func (p *Model) Field8DeepEqual(src string) bool {
 	}
 	return true
 }
+func (p *Model) Field9DeepEqual(src int64) bool {
+
+	if p.MaxToken != src {
+		return false
+	}
+	return true
+}
+func (p *Model) Field10DeepEqual(src []string) bool {
+
+	if len(p.Tags) != len(src) {
+		return false
+	}
+	for i, v := range p.Tags {
+		_src := src[i]
+		if strings.Compare(v, _src) != 0 {
+			return false
+		}
+	}
+	return true
+}
 
 type CreateModelReq struct {
-	Name        string `thrift:"name,1,required" frugal:"1,required,string" json:"name"`
-	Description string `thrift:"description,2,required" frugal:"2,required,string" json:"description"`
-	Source      string `thrift:"source,3,required" frugal:"3,required,string" json:"source"`
-	ModelKey    string `thrift:"model_key,4,required" frugal:"4,required,string" json:"model_key"`
-	Logo        string `thrift:"logo,5,required" frugal:"5,required,string" json:"logo"`
-	InputPrice  string `thrift:"input_price,6,required" frugal:"6,required,string" json:"input_price"`
-	OutputPrice string `thrift:"output_price,7,required" frugal:"7,required,string" json:"output_price"`
+	Name        string   `thrift:"name,1,required" frugal:"1,required,string" json:"name"`
+	Description string   `thrift:"description,2,required" frugal:"2,required,string" json:"description"`
+	Source      string   `thrift:"source,3,required" frugal:"3,required,string" json:"source"`
+	ModelKey    string   `thrift:"model_key,4,required" frugal:"4,required,string" json:"model_key"`
+	Logo        string   `thrift:"logo,5,required" frugal:"5,required,string" json:"logo"`
+	InputPrice  string   `thrift:"input_price,6,required" frugal:"6,required,string" json:"input_price"`
+	OutputPrice string   `thrift:"output_price,7,required" frugal:"7,required,string" json:"output_price"`
+	MaxToken    int64    `thrift:"max_token,8,required" frugal:"8,required,i64" json:"max_token"`
+	Tags        []string `thrift:"tags,9,required" frugal:"9,required,list<string>" json:"tags"`
 }
 
 func NewCreateModelReq() *CreateModelReq {
@@ -1796,6 +1956,14 @@ func (p *CreateModelReq) GetInputPrice() (v string) {
 func (p *CreateModelReq) GetOutputPrice() (v string) {
 	return p.OutputPrice
 }
+
+func (p *CreateModelReq) GetMaxToken() (v int64) {
+	return p.MaxToken
+}
+
+func (p *CreateModelReq) GetTags() (v []string) {
+	return p.Tags
+}
 func (p *CreateModelReq) SetName(val string) {
 	p.Name = val
 }
@@ -1817,6 +1985,12 @@ func (p *CreateModelReq) SetInputPrice(val string) {
 func (p *CreateModelReq) SetOutputPrice(val string) {
 	p.OutputPrice = val
 }
+func (p *CreateModelReq) SetMaxToken(val int64) {
+	p.MaxToken = val
+}
+func (p *CreateModelReq) SetTags(val []string) {
+	p.Tags = val
+}
 
 var fieldIDToName_CreateModelReq = map[int16]string{
 	1: "name",
@@ -1826,6 +2000,8 @@ var fieldIDToName_CreateModelReq = map[int16]string{
 	5: "logo",
 	6: "input_price",
 	7: "output_price",
+	8: "max_token",
+	9: "tags",
 }
 
 func (p *CreateModelReq) Read(iprot thrift.TProtocol) (err error) {
@@ -1839,6 +2015,8 @@ func (p *CreateModelReq) Read(iprot thrift.TProtocol) (err error) {
 	var issetLogo bool = false
 	var issetInputPrice bool = false
 	var issetOutputPrice bool = false
+	var issetMaxToken bool = false
+	var issetTags bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1917,6 +2095,24 @@ func (p *CreateModelReq) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 8:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField8(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetMaxToken = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 9:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetTags = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -1962,6 +2158,16 @@ func (p *CreateModelReq) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetOutputPrice {
 		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetMaxToken {
+		fieldId = 8
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTags {
+		fieldId = 9
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -2059,6 +2265,40 @@ func (p *CreateModelReq) ReadField7(iprot thrift.TProtocol) error {
 	p.OutputPrice = _field
 	return nil
 }
+func (p *CreateModelReq) ReadField8(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.MaxToken = _field
+	return nil
+}
+func (p *CreateModelReq) ReadField9(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	_field := make([]string, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem string
+		if v, err := iprot.ReadString(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.Tags = _field
+	return nil
+}
 
 func (p *CreateModelReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -2092,6 +2332,14 @@ func (p *CreateModelReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField7(oprot); err != nil {
 			fieldId = 7
+			goto WriteFieldError
+		}
+		if err = p.writeField8(oprot); err != nil {
+			fieldId = 8
+			goto WriteFieldError
+		}
+		if err = p.writeField9(oprot); err != nil {
+			fieldId = 9
 			goto WriteFieldError
 		}
 	}
@@ -2231,6 +2479,48 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
 }
 
+func (p *CreateModelReq) writeField8(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("max_token", thrift.I64, 8); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.MaxToken); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
+}
+
+func (p *CreateModelReq) writeField9(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("tags", thrift.LIST, 9); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.STRING, len(p.Tags)); err != nil {
+		return err
+	}
+	for _, v := range p.Tags {
+		if err := oprot.WriteString(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
 func (p *CreateModelReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -2264,6 +2554,12 @@ func (p *CreateModelReq) DeepEqual(ano *CreateModelReq) bool {
 		return false
 	}
 	if !p.Field7DeepEqual(ano.OutputPrice) {
+		return false
+	}
+	if !p.Field8DeepEqual(ano.MaxToken) {
+		return false
+	}
+	if !p.Field9DeepEqual(ano.Tags) {
 		return false
 	}
 	return true
@@ -2318,16 +2614,38 @@ func (p *CreateModelReq) Field7DeepEqual(src string) bool {
 	}
 	return true
 }
+func (p *CreateModelReq) Field8DeepEqual(src int64) bool {
+
+	if p.MaxToken != src {
+		return false
+	}
+	return true
+}
+func (p *CreateModelReq) Field9DeepEqual(src []string) bool {
+
+	if len(p.Tags) != len(src) {
+		return false
+	}
+	for i, v := range p.Tags {
+		_src := src[i]
+		if strings.Compare(v, _src) != 0 {
+			return false
+		}
+	}
+	return true
+}
 
 type UpdateModelReq struct {
-	Id          int64   `thrift:"id,1,required" frugal:"1,required,i64" path:"id"`
-	Name        *string `thrift:"name,2,optional" frugal:"2,optional,string" json:"name,omitempty"`
-	Description *string `thrift:"description,3,optional" frugal:"3,optional,string" json:"description,omitempty"`
-	Source      *string `thrift:"source,4,optional" frugal:"4,optional,string" json:"source,omitempty"`
-	ModelKey    *string `thrift:"model_key,5,optional" frugal:"5,optional,string" json:"model_key,omitempty"`
-	Logo        *string `thrift:"logo,6,optional" frugal:"6,optional,string" json:"logo,omitempty"`
-	InputPrice  *string `thrift:"input_price,7,optional" frugal:"7,optional,string" json:"input_price,omitempty"`
-	OutputPrice *string `thrift:"output_price,8,optional" frugal:"8,optional,string" json:"output_price,omitempty"`
+	Id          int64    `thrift:"id,1,required" frugal:"1,required,i64" path:"id"`
+	Name        *string  `thrift:"name,2,optional" frugal:"2,optional,string" json:"name,omitempty"`
+	Description *string  `thrift:"description,3,optional" frugal:"3,optional,string" json:"description,omitempty"`
+	Source      *string  `thrift:"source,4,optional" frugal:"4,optional,string" json:"source,omitempty"`
+	ModelKey    *string  `thrift:"model_key,5,optional" frugal:"5,optional,string" json:"model_key,omitempty"`
+	Logo        *string  `thrift:"logo,6,optional" frugal:"6,optional,string" json:"logo,omitempty"`
+	InputPrice  *string  `thrift:"input_price,7,optional" frugal:"7,optional,string" json:"input_price,omitempty"`
+	OutputPrice *string  `thrift:"output_price,8,optional" frugal:"8,optional,string" json:"output_price,omitempty"`
+	MaxToken    *int64   `thrift:"max_token,9,optional" frugal:"9,optional,i64" json:"max_token,omitempty"`
+	Tags        []string `thrift:"tags,10,optional" frugal:"10,optional,list<string>" json:"tags,omitempty"`
 }
 
 func NewUpdateModelReq() *UpdateModelReq {
@@ -2403,6 +2721,24 @@ func (p *UpdateModelReq) GetOutputPrice() (v string) {
 	}
 	return *p.OutputPrice
 }
+
+var UpdateModelReq_MaxToken_DEFAULT int64
+
+func (p *UpdateModelReq) GetMaxToken() (v int64) {
+	if !p.IsSetMaxToken() {
+		return UpdateModelReq_MaxToken_DEFAULT
+	}
+	return *p.MaxToken
+}
+
+var UpdateModelReq_Tags_DEFAULT []string
+
+func (p *UpdateModelReq) GetTags() (v []string) {
+	if !p.IsSetTags() {
+		return UpdateModelReq_Tags_DEFAULT
+	}
+	return p.Tags
+}
 func (p *UpdateModelReq) SetId(val int64) {
 	p.Id = val
 }
@@ -2427,16 +2763,24 @@ func (p *UpdateModelReq) SetInputPrice(val *string) {
 func (p *UpdateModelReq) SetOutputPrice(val *string) {
 	p.OutputPrice = val
 }
+func (p *UpdateModelReq) SetMaxToken(val *int64) {
+	p.MaxToken = val
+}
+func (p *UpdateModelReq) SetTags(val []string) {
+	p.Tags = val
+}
 
 var fieldIDToName_UpdateModelReq = map[int16]string{
-	1: "id",
-	2: "name",
-	3: "description",
-	4: "source",
-	5: "model_key",
-	6: "logo",
-	7: "input_price",
-	8: "output_price",
+	1:  "id",
+	2:  "name",
+	3:  "description",
+	4:  "source",
+	5:  "model_key",
+	6:  "logo",
+	7:  "input_price",
+	8:  "output_price",
+	9:  "max_token",
+	10: "tags",
 }
 
 func (p *UpdateModelReq) IsSetName() bool {
@@ -2465,6 +2809,14 @@ func (p *UpdateModelReq) IsSetInputPrice() bool {
 
 func (p *UpdateModelReq) IsSetOutputPrice() bool {
 	return p.OutputPrice != nil
+}
+
+func (p *UpdateModelReq) IsSetMaxToken() bool {
+	return p.MaxToken != nil
+}
+
+func (p *UpdateModelReq) IsSetTags() bool {
+	return p.Tags != nil
 }
 
 func (p *UpdateModelReq) Read(iprot thrift.TProtocol) (err error) {
@@ -2547,6 +2899,22 @@ func (p *UpdateModelReq) Read(iprot thrift.TProtocol) (err error) {
 		case 8:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField8(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 9:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 10:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -2675,6 +3043,40 @@ func (p *UpdateModelReq) ReadField8(iprot thrift.TProtocol) error {
 	p.OutputPrice = _field
 	return nil
 }
+func (p *UpdateModelReq) ReadField9(iprot thrift.TProtocol) error {
+
+	var _field *int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.MaxToken = _field
+	return nil
+}
+func (p *UpdateModelReq) ReadField10(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	_field := make([]string, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem string
+		if v, err := iprot.ReadString(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.Tags = _field
+	return nil
+}
 
 func (p *UpdateModelReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -2712,6 +3114,14 @@ func (p *UpdateModelReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField8(oprot); err != nil {
 			fieldId = 8
+			goto WriteFieldError
+		}
+		if err = p.writeField9(oprot); err != nil {
+			fieldId = 9
+			goto WriteFieldError
+		}
+		if err = p.writeField10(oprot); err != nil {
+			fieldId = 10
 			goto WriteFieldError
 		}
 	}
@@ -2882,6 +3292,52 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
 }
 
+func (p *UpdateModelReq) writeField9(oprot thrift.TProtocol) (err error) {
+	if p.IsSetMaxToken() {
+		if err = oprot.WriteFieldBegin("max_token", thrift.I64, 9); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteI64(*p.MaxToken); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
+func (p *UpdateModelReq) writeField10(oprot thrift.TProtocol) (err error) {
+	if p.IsSetTags() {
+		if err = oprot.WriteFieldBegin("tags", thrift.LIST, 10); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteListBegin(thrift.STRING, len(p.Tags)); err != nil {
+			return err
+		}
+		for _, v := range p.Tags {
+			if err := oprot.WriteString(v); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
 func (p *UpdateModelReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -2918,6 +3374,12 @@ func (p *UpdateModelReq) DeepEqual(ano *UpdateModelReq) bool {
 		return false
 	}
 	if !p.Field8DeepEqual(ano.OutputPrice) {
+		return false
+	}
+	if !p.Field9DeepEqual(ano.MaxToken) {
+		return false
+	}
+	if !p.Field10DeepEqual(ano.Tags) {
 		return false
 	}
 	return true
@@ -3011,6 +3473,31 @@ func (p *UpdateModelReq) Field8DeepEqual(src *string) bool {
 	}
 	if strings.Compare(*p.OutputPrice, *src) != 0 {
 		return false
+	}
+	return true
+}
+func (p *UpdateModelReq) Field9DeepEqual(src *int64) bool {
+
+	if p.MaxToken == src {
+		return true
+	} else if p.MaxToken == nil || src == nil {
+		return false
+	}
+	if *p.MaxToken != *src {
+		return false
+	}
+	return true
+}
+func (p *UpdateModelReq) Field10DeepEqual(src []string) bool {
+
+	if len(p.Tags) != len(src) {
+		return false
+	}
+	for i, v := range p.Tags {
+		_src := src[i]
+		if strings.Compare(v, _src) != 0 {
+			return false
+		}
 	}
 	return true
 }

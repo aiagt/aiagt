@@ -24,7 +24,7 @@ func TestChatServiceImpl_buildNewTitle(t *testing.T) {
 
 	svc.generateNewTitle(ctx, nil, `https://doc.tryfastgpt.ai/docs/guide/knowledge_base/rag/
 
-我想在参考文献中写这个网页中的内容，参考文献的部分应该怎么写，APA格式`, 0, 1)
+我想在参考文献中写这个网页中的内容，参考文献的部分应该怎么写，APA格式`, 0, "gpt-3.5-turbo")
 }
 
 func login(ctx context.Context) (context.Context, error) {

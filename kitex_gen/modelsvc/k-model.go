@@ -910,6 +910,8 @@ func (p *Model) FastRead(buf []byte) (int, error) {
 	var issetLogo bool = false
 	var issetInputPrice bool = false
 	var issetOutputPrice bool = false
+	var issetMaxToken bool = false
+	var issetTags bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -1046,6 +1048,36 @@ func (p *Model) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 9:
+			if fieldTypeId == thrift.I64 {
+				l, err = p.FastReadField9(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetMaxToken = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 10:
+			if fieldTypeId == thrift.LIST {
+				l, err = p.FastReadField10(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetTags = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -1103,6 +1135,16 @@ func (p *Model) FastRead(buf []byte) (int, error) {
 
 	if !issetOutputPrice {
 		fieldId = 8
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetMaxToken {
+		fieldId = 9
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTags {
+		fieldId = 10
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -1250,6 +1292,53 @@ func (p *Model) FastReadField8(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *Model) FastReadField9(buf []byte) (int, error) {
+	offset := 0
+
+	var _field int64
+	if v, l, err := bthrift.Binary.ReadI64(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		_field = v
+
+	}
+	p.MaxToken = _field
+	return offset, nil
+}
+
+func (p *Model) FastReadField10(buf []byte) (int, error) {
+	offset := 0
+
+	_, size, l, err := bthrift.Binary.ReadListBegin(buf[offset:])
+	offset += l
+	if err != nil {
+		return offset, err
+	}
+	_field := make([]string, 0, size)
+	for i := 0; i < size; i++ {
+		var _elem string
+		if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+			return offset, err
+		} else {
+			offset += l
+
+			_elem = v
+
+		}
+
+		_field = append(_field, _elem)
+	}
+	if l, err := bthrift.Binary.ReadListEnd(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+	}
+	p.Tags = _field
+	return offset, nil
+}
+
 // for compatibility
 func (p *Model) FastWrite(buf []byte) int {
 	return 0
@@ -1260,6 +1349,7 @@ func (p *Model) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter) i
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "Model")
 	if p != nil {
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
+		offset += p.fastWriteField9(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
@@ -1267,6 +1357,7 @@ func (p *Model) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter) i
 		offset += p.fastWriteField6(buf[offset:], binaryWriter)
 		offset += p.fastWriteField7(buf[offset:], binaryWriter)
 		offset += p.fastWriteField8(buf[offset:], binaryWriter)
+		offset += p.fastWriteField10(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -1285,6 +1376,8 @@ func (p *Model) BLength() int {
 		l += p.field6Length()
 		l += p.field7Length()
 		l += p.field8Length()
+		l += p.field9Length()
+		l += p.field10Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -1355,6 +1448,30 @@ func (p *Model) fastWriteField8(buf []byte, binaryWriter bthrift.BinaryWriter) i
 	return offset
 }
 
+func (p *Model) fastWriteField9(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "max_token", thrift.I64, 9)
+	offset += bthrift.Binary.WriteI64(buf[offset:], p.MaxToken)
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *Model) fastWriteField10(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "tags", thrift.LIST, 10)
+	listBeginOffset := offset
+	offset += bthrift.Binary.ListBeginLength(thrift.STRING, 0)
+	var length int
+	for _, v := range p.Tags {
+		length++
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, v)
+	}
+	bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.STRING, length)
+	offset += bthrift.Binary.WriteListEnd(buf[offset:])
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *Model) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("id", thrift.I64, 1)
@@ -1419,6 +1536,26 @@ func (p *Model) field8Length() int {
 	return l
 }
 
+func (p *Model) field9Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("max_token", thrift.I64, 9)
+	l += bthrift.Binary.I64Length(p.MaxToken)
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *Model) field10Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("tags", thrift.LIST, 10)
+	l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.Tags))
+	for _, v := range p.Tags {
+		l += bthrift.Binary.StringLengthNocopy(v)
+	}
+	l += bthrift.Binary.ListEndLength()
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
 func (p *CreateModelReq) FastRead(buf []byte) (int, error) {
 	var err error
 	var offset int
@@ -1432,6 +1569,8 @@ func (p *CreateModelReq) FastRead(buf []byte) (int, error) {
 	var issetLogo bool = false
 	var issetInputPrice bool = false
 	var issetOutputPrice bool = false
+	var issetMaxToken bool = false
+	var issetTags bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -1553,6 +1692,36 @@ func (p *CreateModelReq) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 8:
+			if fieldTypeId == thrift.I64 {
+				l, err = p.FastReadField8(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetMaxToken = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 9:
+			if fieldTypeId == thrift.LIST {
+				l, err = p.FastReadField9(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetTags = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -1605,6 +1774,16 @@ func (p *CreateModelReq) FastRead(buf []byte) (int, error) {
 
 	if !issetOutputPrice {
 		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetMaxToken {
+		fieldId = 8
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTags {
+		fieldId = 9
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -1736,6 +1915,53 @@ func (p *CreateModelReq) FastReadField7(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *CreateModelReq) FastReadField8(buf []byte) (int, error) {
+	offset := 0
+
+	var _field int64
+	if v, l, err := bthrift.Binary.ReadI64(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		_field = v
+
+	}
+	p.MaxToken = _field
+	return offset, nil
+}
+
+func (p *CreateModelReq) FastReadField9(buf []byte) (int, error) {
+	offset := 0
+
+	_, size, l, err := bthrift.Binary.ReadListBegin(buf[offset:])
+	offset += l
+	if err != nil {
+		return offset, err
+	}
+	_field := make([]string, 0, size)
+	for i := 0; i < size; i++ {
+		var _elem string
+		if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+			return offset, err
+		} else {
+			offset += l
+
+			_elem = v
+
+		}
+
+		_field = append(_field, _elem)
+	}
+	if l, err := bthrift.Binary.ReadListEnd(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+	}
+	p.Tags = _field
+	return offset, nil
+}
+
 // for compatibility
 func (p *CreateModelReq) FastWrite(buf []byte) int {
 	return 0
@@ -1745,6 +1971,7 @@ func (p *CreateModelReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.Binary
 	offset := 0
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "CreateModelReq")
 	if p != nil {
+		offset += p.fastWriteField8(buf[offset:], binaryWriter)
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
@@ -1752,6 +1979,7 @@ func (p *CreateModelReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.Binary
 		offset += p.fastWriteField5(buf[offset:], binaryWriter)
 		offset += p.fastWriteField6(buf[offset:], binaryWriter)
 		offset += p.fastWriteField7(buf[offset:], binaryWriter)
+		offset += p.fastWriteField9(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -1769,6 +1997,8 @@ func (p *CreateModelReq) BLength() int {
 		l += p.field5Length()
 		l += p.field6Length()
 		l += p.field7Length()
+		l += p.field8Length()
+		l += p.field9Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -1831,6 +2061,30 @@ func (p *CreateModelReq) fastWriteField7(buf []byte, binaryWriter bthrift.Binary
 	return offset
 }
 
+func (p *CreateModelReq) fastWriteField8(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "max_token", thrift.I64, 8)
+	offset += bthrift.Binary.WriteI64(buf[offset:], p.MaxToken)
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *CreateModelReq) fastWriteField9(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "tags", thrift.LIST, 9)
+	listBeginOffset := offset
+	offset += bthrift.Binary.ListBeginLength(thrift.STRING, 0)
+	var length int
+	for _, v := range p.Tags {
+		length++
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, v)
+	}
+	bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.STRING, length)
+	offset += bthrift.Binary.WriteListEnd(buf[offset:])
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *CreateModelReq) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("name", thrift.STRING, 1)
@@ -1883,6 +2137,26 @@ func (p *CreateModelReq) field7Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("output_price", thrift.STRING, 7)
 	l += bthrift.Binary.StringLengthNocopy(p.OutputPrice)
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *CreateModelReq) field8Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("max_token", thrift.I64, 8)
+	l += bthrift.Binary.I64Length(p.MaxToken)
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *CreateModelReq) field9Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("tags", thrift.LIST, 9)
+	l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.Tags))
+	for _, v := range p.Tags {
+		l += bthrift.Binary.StringLengthNocopy(v)
+	}
+	l += bthrift.Binary.ListEndLength()
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }
@@ -2012,6 +2286,34 @@ func (p *UpdateModelReq) FastRead(buf []byte) (int, error) {
 		case 8:
 			if fieldTypeId == thrift.STRING {
 				l, err = p.FastReadField8(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 9:
+			if fieldTypeId == thrift.I64 {
+				l, err = p.FastReadField9(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 10:
+			if fieldTypeId == thrift.LIST {
+				l, err = p.FastReadField10(buf[offset:])
 				offset += l
 				if err != nil {
 					goto ReadFieldError
@@ -2185,6 +2487,52 @@ func (p *UpdateModelReq) FastReadField8(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *UpdateModelReq) FastReadField9(buf []byte) (int, error) {
+	offset := 0
+
+	var _field *int64
+	if v, l, err := bthrift.Binary.ReadI64(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+		_field = &v
+
+	}
+	p.MaxToken = _field
+	return offset, nil
+}
+
+func (p *UpdateModelReq) FastReadField10(buf []byte) (int, error) {
+	offset := 0
+
+	_, size, l, err := bthrift.Binary.ReadListBegin(buf[offset:])
+	offset += l
+	if err != nil {
+		return offset, err
+	}
+	_field := make([]string, 0, size)
+	for i := 0; i < size; i++ {
+		var _elem string
+		if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+			return offset, err
+		} else {
+			offset += l
+
+			_elem = v
+
+		}
+
+		_field = append(_field, _elem)
+	}
+	if l, err := bthrift.Binary.ReadListEnd(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+	}
+	p.Tags = _field
+	return offset, nil
+}
+
 // for compatibility
 func (p *UpdateModelReq) FastWrite(buf []byte) int {
 	return 0
@@ -2195,6 +2543,7 @@ func (p *UpdateModelReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.Binary
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "UpdateModelReq")
 	if p != nil {
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
+		offset += p.fastWriteField9(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
@@ -2202,6 +2551,7 @@ func (p *UpdateModelReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.Binary
 		offset += p.fastWriteField6(buf[offset:], binaryWriter)
 		offset += p.fastWriteField7(buf[offset:], binaryWriter)
 		offset += p.fastWriteField8(buf[offset:], binaryWriter)
+		offset += p.fastWriteField10(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -2220,6 +2570,8 @@ func (p *UpdateModelReq) BLength() int {
 		l += p.field6Length()
 		l += p.field7Length()
 		l += p.field8Length()
+		l += p.field9Length()
+		l += p.field10Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -2304,6 +2656,34 @@ func (p *UpdateModelReq) fastWriteField8(buf []byte, binaryWriter bthrift.Binary
 	return offset
 }
 
+func (p *UpdateModelReq) fastWriteField9(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	if p.IsSetMaxToken() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "max_token", thrift.I64, 9)
+		offset += bthrift.Binary.WriteI64(buf[offset:], *p.MaxToken)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
+	return offset
+}
+
+func (p *UpdateModelReq) fastWriteField10(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	if p.IsSetTags() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "tags", thrift.LIST, 10)
+		listBeginOffset := offset
+		offset += bthrift.Binary.ListBeginLength(thrift.STRING, 0)
+		var length int
+		for _, v := range p.Tags {
+			length++
+			offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, v)
+		}
+		bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.STRING, length)
+		offset += bthrift.Binary.WriteListEnd(buf[offset:])
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
+	return offset
+}
+
 func (p *UpdateModelReq) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("id", thrift.I64, 1)
@@ -2377,6 +2757,30 @@ func (p *UpdateModelReq) field8Length() int {
 	if p.IsSetOutputPrice() {
 		l += bthrift.Binary.FieldBeginLength("output_price", thrift.STRING, 8)
 		l += bthrift.Binary.StringLengthNocopy(*p.OutputPrice)
+		l += bthrift.Binary.FieldEndLength()
+	}
+	return l
+}
+
+func (p *UpdateModelReq) field9Length() int {
+	l := 0
+	if p.IsSetMaxToken() {
+		l += bthrift.Binary.FieldBeginLength("max_token", thrift.I64, 9)
+		l += bthrift.Binary.I64Length(*p.MaxToken)
+		l += bthrift.Binary.FieldEndLength()
+	}
+	return l
+}
+
+func (p *UpdateModelReq) field10Length() int {
+	l := 0
+	if p.IsSetTags() {
+		l += bthrift.Binary.FieldBeginLength("tags", thrift.LIST, 10)
+		l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.Tags))
+		for _, v := range p.Tags {
+			l += bthrift.Binary.StringLengthNocopy(v)
+		}
+		l += bthrift.Binary.ListEndLength()
 		l += bthrift.Binary.FieldEndLength()
 	}
 	return l
