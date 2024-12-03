@@ -8,6 +8,8 @@ enum MessageType {
     FILE
     FUNCTION
     FUNCTION_CALL
+    TOOL
+    TOOL_CALL
 }
 
 enum MessageRole {
@@ -15,6 +17,7 @@ enum MessageRole {
     ASSISTANT
     SYSTEM
     FUNCTION
+    TOOL
 }
 
 union MessageContentValue {
@@ -23,6 +26,8 @@ union MessageContentValue {
     3: MessageContentValueFile file
     4: MessageContentValueFunc func
     5: MessageContentValueFuncCall func_call
+    6: MessageContentValueTool tool
+    7: MessageContentValueToolCall tool_call
 }
 
 struct MessageContentValueText {
@@ -46,6 +51,18 @@ struct MessageContentValueFunc {
 struct MessageContentValueFuncCall {
     1: required string name
     2: required string arguments  // JSON
+}
+
+struct MessageContentValueTool {
+    1: required string id
+    2: required string name
+    3: required string content
+}
+
+struct MessageContentValueToolCall {
+    1: required string id
+    2: required string name
+    3: required string arguments
 }
 
 struct MessageContent {

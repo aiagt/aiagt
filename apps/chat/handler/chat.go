@@ -93,17 +93,15 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 			msg, _ := json.Marshal(req.Messages)
 
 			const (
-				modelGPT35Turbo0125ID = 1
-				modelGPT35TurboID     = 2
-				modelGPT35Turbo16kID  = 3
-				modelGPT4oID          = 4
+				modelGPT4oMini  = "gpt-4o-mini"
+				modelGPT35Turbo = "gpt-3.5-turbo"
 			)
 
-			retryModelIDs := []int64{modelGPT35Turbo0125ID, modelGPT4oID}
+			retryModelKeys := []string{modelGPT4oMini, modelGPT35Turbo}
 
 			// generate title, retry with different model
-			for _, modelID := range retryModelIDs {
-				ok := s.generateNewTitle(ctx, stream, string(msg), *req.ConversationId, modelID)
+			for _, modelKey := range retryModelKeys {
+				ok := s.generateNewTitle(ctx, stream, string(msg), *req.ConversationId, modelKey)
 				if ok {
 					break
 				}
@@ -161,8 +159,9 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 	var (
 		messages    = mapper.NewOpenAIListMessage(msgs)
 		modelConfig = app.ModelConfig
-		functions   = mapper.NewOpenAIListFunctionDefinition(app.Tools)
-		toolMap     = hmap.FromSliceEntries(app.Tools, func(t *pluginsvc.PluginTool) (string, *pluginsvc.PluginTool, bool) { return t.Name, t, true })
+		//functions   = mapper.NewOpenAIListFunctionDefinition(app.Tools)
+		tools   = mapper.NewOpenAIListTool(app.Tools)
+		toolMap = hmap.FromSliceEntries(app.Tools, func(t *pluginsvc.PluginTool) (string, *pluginsvc.PluginTool, bool) { return t.Name, t, true })
 	)
 
 	// call model chat api
@@ -174,10 +173,10 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 				Role:    "system",
 				Content: utils.Pointer(fmt.Sprintf(`You are an agent on the ai agent platform "Aiagt", your identity information is:\nName: %s,\nDescription: "%s",\nAuthor: %s`, app.Name, app.Description, app.Author.Username)),
 			}}, messages...),
-			MaxTokens:        modelConfig.MaxTokens,
-			Temperature:      modelConfig.Temperature,
-			TopP:             modelConfig.TopP,
-			N:                &modelConfig.N,
+			MaxTokens:   modelConfig.MaxTokens,
+			Temperature: modelConfig.Temperature,
+			TopP:        modelConfig.TopP,
+			//N:                &modelConfig.N,
 			Stream:           &modelConfig.Stream,
 			Stop:             modelConfig.Stop,
 			PresencePenalty:  modelConfig.PresencePenalty,
@@ -188,8 +187,9 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 			Logprobs:         modelConfig.Logprobs,
 			TopLogprobs:      modelConfig.TopLogprobs,
 			User:             &user.Username,
-			Functions:        functions,
-			StreamOptions:    modelConfig.StreamOptions,
+			//Functions:        functions,
+			StreamOptions: modelConfig.StreamOptions,
+			Tools:         tools,
 		},
 	})
 	if err != nil {
@@ -200,6 +200,12 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 		functionCallName      strings.Builder
 		functionCallArguments strings.Builder
 		messageContent        strings.Builder
+
+		toolCallID        strings.Builder
+		toolCallName      strings.Builder
+		toolCallArguments strings.Builder
+
+		toolCalls []*openai.ToolCall
 	)
 	// traverse to receive and process result
 	for {
@@ -207,6 +213,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 		if err == io.EOF {
 			return nil
 		}
+		klog.CtxInfof(ctx, "chat stream recv: %s", utils.Pretty(resp, 1<<10))
 
 		if err != nil {
 			return bizChat.NewErr(err).Log(ctx, "receive chat stream error")
@@ -215,10 +222,6 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 		// parse each choice
 		for _, choice := range resp.OpenaiResp.Choices {
 			switch {
-			case choice.Delta.FunctionCall != nil:
-				functionCall := choice.Delta.FunctionCall
-				functionCallName.WriteString(functionCall.GetName())
-				functionCallArguments.WriteString(functionCall.GetArguments())
 			case choice.Delta.Content != nil:
 				content := choice.Delta.Content
 				messageContent.WriteString(*content)
@@ -237,11 +240,16 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 				if err != nil {
 					return bizChat.CallErr(err).Log(ctx, "send text message error")
 				}
+			case choice.Delta.FunctionCall != nil:
+				functionCall := choice.Delta.FunctionCall
+				functionCallName.WriteString(functionCall.GetName())
+				functionCallArguments.WriteString(functionCall.GetArguments())
 			case choice.FinishReason == "function_call":
 				functionCall := &openai.FunctionCall{
 					Name:      utils.Pointer(functionCallName.String()),
 					Arguments: utils.Pointer(functionCallArguments.String()),
 				}
+				klog.CtxInfof(ctx, "function call: %s", utils.Pretty(functionCall, 1<<10))
 
 				// send function call message
 				err := stream.Send(&chatsvc.ChatResp{
@@ -287,6 +295,85 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 				msgs = append(msgs, msg)
 
 				return s.handleFunctionCall(ctx, functionCall, tool, conversationID, user, msgs, app, token, stream)
+			case len(choice.Delta.ToolCalls) > 0:
+				toolCall := utils.First(choice.Delta.ToolCalls)
+				index := int(utils.Value(toolCall.Index))
+
+				if index > len(toolCalls) {
+					toolCalls = append(toolCalls, &openai.ToolCall{
+						Id: toolCallID.String(),
+						Function: &openai.FunctionCall{
+							Name:      utils.Pointer(toolCallName.String()),
+							Arguments: utils.Pointer(toolCallArguments.String()),
+						},
+					})
+
+					toolCallID.Reset()
+					toolCallName.Reset()
+					toolCallArguments.Reset()
+				}
+
+				toolCallID.WriteString(toolCall.Id)
+				toolCallName.WriteString(utils.Value(toolCall.Function.Name))
+				toolCallArguments.WriteString(utils.Value(toolCall.Function.Arguments))
+			case choice.FinishReason == "tool_calls":
+				toolCalls = append(toolCalls, &openai.ToolCall{
+					Id: toolCallID.String(),
+					Function: &openai.FunctionCall{
+						Name:      utils.Pointer(toolCallName.String()),
+						Arguments: utils.Pointer(toolCallArguments.String()),
+					}})
+
+				for _, toolCall := range toolCalls {
+					klog.CtxInfof(ctx, "tool call: %s", utils.Pretty(toolCall, 1<<10))
+
+					// Send tool call message
+					err := stream.Send(&chatsvc.ChatResp{
+						Messages: []*chatsvc.Message{{
+							Role: chatsvc.MessageRole_ASSISTANT,
+							Content: &chatsvc.MessageContent{
+								Type: chatsvc.MessageType_TOOL_CALL,
+								Content: &chatsvc.MessageContentValue{ToolCall: &chatsvc.MessageContentValueToolCall{
+									Id:        toolCallID.String(),
+									Name:      toolCall.Function.GetName(),
+									Arguments: toolCall.Function.GetArguments(),
+								}},
+							},
+						}},
+						ConversationId: conversationID,
+					})
+					if err != nil {
+						return bizChat.CallErr(err).Log(ctx, "send tool call message error")
+					}
+
+					tool, ok := toolMap[toolCall.Function.GetName()]
+					if !ok {
+						return bizChat.NewErr(errors.New("plugin tool not found")).Log(ctx, "plugin tool not found")
+					}
+
+					// Store tool call message
+					msg := &model.Message{
+						MessageContent: model.MessageContent{
+							Type: model.MessageTypeToolCall,
+							Content: model.MessageContentValue{ToolCall: &model.MessageContentValueToolCall{
+								ID:        toolCall.Id,
+								Name:      toolCall.Function.GetName(),
+								Arguments: toolCall.Function.GetArguments(),
+							}},
+						},
+						ConversationID: conversationID,
+						Role:           model.MessageRoleAssistant,
+					}
+
+					err = s.messageDao.Create(ctx, msg)
+					if err != nil {
+						return bizChat.NewErr(err).Log(ctx, "create tool call message error")
+					}
+
+					msgs = append(msgs, msg)
+
+					return s.handleToolCall(ctx, toolCall, tool, conversationID, user, msgs, app, token, stream)
+				}
 			case choice.FinishReason == "stop":
 				msg := &model.Message{
 					MessageContent: model.MessageContent{
@@ -298,6 +385,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 					ConversationID: conversationID,
 					Role:           model.MessageRoleAssistant,
 				}
+				klog.CtxInfof(ctx, "message: %s", utils.Pretty(msg, 1<<10))
 
 				err = s.messageDao.Create(ctx, msg)
 				if err != nil {
@@ -319,6 +407,83 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 			}
 		}
 	}
+}
+
+func (s *ChatServiceImpl) handleToolCall(ctx context.Context, toolCall *openai.ToolCall, tool *pluginsvc.PluginTool, conversationID int64, user *usersvc.User, msgs []*model.Message, app *appsvc.App, token string, stream chatsvc.ChatService_ChatServer) error {
+	// get user secrets
+	const maxSecrets = 100
+
+	listSecretResp, err := s.userCli.ListSecret(ctx, &usersvc.ListSecretReq{
+		Pagination: &base.PaginationReq{PageSize: maxSecrets},
+		PluginId:   &tool.PluginId,
+	})
+	if err != nil {
+		return bizChat.CallErr(err).Log(ctx, "list secret error")
+	}
+
+	secretMap := hmap.FromSliceEntries(listSecretResp.Secrets, func(t *usersvc.Secret) (string, string, bool) { return t.Name, t.Value, true })
+
+	// call plugin tool
+	callResp, err := s.pluginCli.CallPluginTool(ctx, &pluginsvc.CallPluginToolReq{
+		PluginId: tool.PluginId,
+		ToolId:   tool.Id,
+		Secrets:  secretMap,
+		Request:  []byte(*toolCall.Function.Arguments),
+	})
+	if err != nil {
+		return bizChat.CallErr(err).Log(ctx, "call plugin tool error")
+	}
+
+	var content string
+
+	const successCode = 0
+	if callResp.Code != successCode {
+		content = fmt.Sprintf("[error] code: %d, msg: %s, data: %s", callResp.Code, callResp.Msg, string(callResp.Response))
+	} else {
+		content = string(callResp.Response)
+	}
+
+	// store the result of the call
+	msg := &model.Message{
+		MessageContent: model.MessageContent{
+			Type: model.MessageTypeTool,
+			Content: model.MessageContentValue{Tool: &model.MessageContentValueTool{
+				ID:      toolCall.Id,
+				Name:    *toolCall.Function.Name,
+				Content: content,
+			}},
+		},
+		ConversationID: conversationID,
+		Role:           model.MessageRoleTool,
+	}
+
+	err = s.messageDao.Create(ctx, msg)
+	if err != nil {
+		return bizChat.NewErr(err).Log(ctx, "create function message error")
+	}
+
+	// send function result message
+	err = stream.Send(&chatsvc.ChatResp{
+		Messages: []*chatsvc.Message{{
+			Role: chatsvc.MessageRole_TOOL,
+			Content: &chatsvc.MessageContent{
+				Type: chatsvc.MessageType_TOOL,
+				Content: &chatsvc.MessageContentValue{Tool: &chatsvc.MessageContentValueTool{
+					Id:      toolCall.Id,
+					Name:    *toolCall.Function.Name,
+					Content: content,
+				}},
+			},
+		}},
+		ConversationId: conversationID,
+	})
+	if err != nil {
+		return bizChat.CallErr(err).Log(ctx, "send function result message error")
+	}
+
+	msgs = append(msgs, msg)
+
+	return s.chat(ctx, conversationID, user, msgs, app, token, stream)
 }
 
 func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *openai.FunctionCall, tool *pluginsvc.PluginTool, conversationID int64, user *usersvc.User, msgs []*model.Message, app *appsvc.App, token string, stream chatsvc.ChatService_ChatServer) error {
@@ -346,13 +511,22 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 		return bizChat.CallErr(err).Log(ctx, "call plugin tool error")
 	}
 
+	var content string
+
+	const successCode = 0
+	if callResp.Code != successCode {
+		content = fmt.Sprintf("[error] code: %d, msg: %s, data: %s", callResp.Code, callResp.Msg, string(callResp.Response))
+	} else {
+		content = string(callResp.Response)
+	}
+
 	// store the result of the call
 	msg := &model.Message{
 		MessageContent: model.MessageContent{
 			Type: model.MessageTypeFunction,
 			Content: model.MessageContentValue{Func: &model.MessageContentValueFunc{
 				Name:    *functionCall.Name,
-				Content: string(callResp.Response),
+				Content: content,
 			}},
 		},
 		ConversationID: conversationID,
@@ -372,7 +546,7 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 				Type: chatsvc.MessageType_FUNCTION,
 				Content: &chatsvc.MessageContentValue{Func: &chatsvc.MessageContentValueFunc{
 					Name:    *functionCall.Name,
-					Content: string(callResp.Response),
+					Content: content,
 				}},
 			},
 		}},
@@ -388,7 +562,7 @@ func (s *ChatServiceImpl) handleFunctionCall(ctx context.Context, functionCall *
 }
 
 // the return value determines whether a retry is required
-func (s *ChatServiceImpl) generateNewTitle(ctx context.Context, stream chatsvc.ChatService_ChatServer, msg string, conversationID int64, modelId int64) bool {
+func (s *ChatServiceImpl) generateNewTitle(ctx context.Context, stream chatsvc.ChatService_ChatServer, msg string, conversationID int64, modelKey string) bool {
 	if len(msg) == 0 {
 		return true
 	}
@@ -403,9 +577,9 @@ func (s *ChatServiceImpl) generateNewTitle(ctx context.Context, stream chatsvc.C
 	}
 
 	chatStream, err := s.modelStreamCli.Chat(ctx, &modelsvc.ChatReq{
-		Token:   callToken,
-		ModelId: modelId,
+		Token: callToken,
 		OpenaiReq: &openai.ChatCompletionRequest{
+			Model: modelKey,
 			Messages: []*openai.ChatCompletionMessage{
 				{
 					Role:    mapper.NewOpenAIMessageRole(model.MessageRoleSystem),

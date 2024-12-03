@@ -22,6 +22,7 @@ const (
 	MessageRoleAssistant
 	MessageRoleSystem
 	MessageRoleFunction
+	MessageRoleTool
 )
 
 type MessageType int
@@ -32,6 +33,8 @@ const (
 	MessageTypeFile
 	MessageTypeFunction
 	MessageTypeFunctionCall
+	MessageTypeTool
+	MessageTypeToolCall
 )
 
 type MessageContent struct {
@@ -45,6 +48,8 @@ type MessageContentValue struct {
 	File     *MessageContentValueFile     `json:"file,omitempty"`
 	Func     *MessageContentValueFunc     `json:"func,omitempty"`
 	FuncCall *MessageContentValueFuncCall `json:"func_call,omitempty"`
+	Tool     *MessageContentValueTool     `json:"tool,omitempty"`
+	ToolCall *MessageContentValueToolCall `json:"tool_call,omitempty"`
 }
 
 type MessageContentValueText struct {
@@ -66,6 +71,18 @@ type MessageContentValueFunc struct {
 }
 
 type MessageContentValueFuncCall struct {
+	Name      string `json:"name"`
+	Arguments string `json:"arguments"` // JSON format
+}
+
+type MessageContentValueTool struct {
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Content string `json:"content"` // JSON format
+}
+
+type MessageContentValueToolCall struct {
+	ID        string `json:"id"`
 	Name      string `json:"name"`
 	Arguments string `json:"arguments"` // JSON format
 }

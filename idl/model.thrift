@@ -41,6 +41,8 @@ struct Model {
     6: required string logo
     7: required string input_price
     8: required string output_price
+    9: required i64 max_token
+    10: required list<string> tags
 }
 
 struct CreateModelReq {
@@ -51,6 +53,8 @@ struct CreateModelReq {
     5: required string logo
     6: required string input_price
     7: required string output_price
+    8: required i64 max_token
+    9: required list<string> tags
 }
 
 struct UpdateModelReq {
@@ -62,6 +66,8 @@ struct UpdateModelReq {
     6: optional string logo
     7: optional string input_price
     8: optional string output_price
+    9: optional i64 max_token
+    10: optional list<string> tags
 }
 
 struct ListModelReq {

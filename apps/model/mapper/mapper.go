@@ -20,28 +20,28 @@ import (
 
 func NewOpenAIGoRequest(req *openai.ChatCompletionRequest, modelKey string) *openaigo.ChatCompletionRequest {
 	result := &openaigo.ChatCompletionRequest{
-		Model:            modelKey,
-		Messages:         NewOpenAIGoListMessage(req.Messages),
-		MaxTokens:        int(utils.Value(req.MaxTokens)),
-		Temperature:      float32(utils.Value(req.Temperature)),
-		TopP:             float32(utils.Value(req.TopP)),
-		N:                int(utils.Value(req.N)),
-		Stream:           utils.Value(req.Stream),
-		Stop:             req.Stop,
-		PresencePenalty:  float32(utils.Value(req.PresencePenalty)),
-		Seed:             utils.Pointer(int(utils.Value(req.Seed))),
-		FrequencyPenalty: float32(utils.Value(req.FrequencyPenalty)),
-		LogitBias:        lo.MapEntries(req.LogitBias, func(k string, v int32) (string, int) { return k, int(v) }),
-		LogProbs:         utils.Value(req.Logprobs),
-		TopLogProbs:      int(utils.Value(req.TopLogprobs)),
-		User:             utils.Value(req.User),
-		Functions:        NewOpenAIGoListFunction(req.Functions),
-		StreamOptions:    NewOpenAIGoStreamOptions(req.StreamOptions),
-		ResponseFormat:   NewOpenAIGoResponseFormat(req.ResponseFormat),
+		Model:             modelKey,
+		Messages:          NewOpenAIGoListMessage(req.Messages),
+		MaxTokens:         int(utils.Value(req.MaxTokens)),
+		Temperature:       float32(utils.Value(req.Temperature)),
+		TopP:              float32(utils.Value(req.TopP)),
+		N:                 int(utils.Value(req.N)),
+		Stream:            utils.Value(req.Stream),
+		Stop:              req.Stop,
+		PresencePenalty:   float32(utils.Value(req.PresencePenalty)),
+		Seed:              utils.Pointer(int(utils.Value(req.Seed))),
+		FrequencyPenalty:  float32(utils.Value(req.FrequencyPenalty)),
+		LogitBias:         lo.MapEntries(req.LogitBias, func(k string, v int32) (string, int) { return k, int(v) }),
+		LogProbs:          utils.Value(req.Logprobs),
+		TopLogProbs:       int(utils.Value(req.TopLogprobs)),
+		User:              utils.Value(req.User),
+		Functions:         NewOpenAIGoListFunction(req.Functions),
+		StreamOptions:     NewOpenAIGoStreamOptions(req.StreamOptions),
+		ResponseFormat:    NewOpenAIGoResponseFormat(req.ResponseFormat),
+		Tools:             NewOpenAIGoListTool(req.Tools),
+		ParallelToolCalls: false, // fixed false
 		// FunctionCall: safe.Value(req.FunctionCall),
-		// Tools: NewOpenAIGoListTool(req.Tools),
 		// ToolChoice: NewOpenAIGoToolChoice(req.ToolChoice),
-		// ParallelToolCalls: safe.Value(req.ParallelToolCalls),
 	}
 
 	return result
@@ -86,6 +86,8 @@ func NewOpenAIGoMessage(message *openai.ChatCompletionMessage) *openaigo.ChatCom
 		MultiContent: NewOpenAIGoMultiContent(message.MultiContent),
 		Name:         utils.Value(message.Name),
 		FunctionCall: NewOpenAIGoFunctionCall(message.FunctionCall),
+		ToolCallID:   utils.Value(message.ToolCallId),
+		ToolCalls:    NewOpenAIGoListToolCall(message.ToolCalls),
 	}
 }
 
@@ -131,6 +133,33 @@ func NewOpenAIGoFunctionCall(functionCall *openai.FunctionCall) *openaigo.Functi
 	}
 }
 
+func NewOpenAIGoToolCall(toolCall *openai.ToolCall) *openaigo.ToolCall {
+	if toolCall == nil {
+		return nil
+	}
+
+	var typ openaigo.ToolType
+	switch toolCall.Type {
+	case openai.ToolType_FUNCTION:
+		typ = openaigo.ToolTypeFunction
+	}
+
+	return &openaigo.ToolCall{
+		ID:       toolCall.Id,
+		Type:     typ,
+		Function: utils.Value(NewOpenAIGoFunctionCall(toolCall.Function)),
+	}
+}
+
+func NewOpenAIGoListToolCall(toolCalls []*openai.ToolCall) []openaigo.ToolCall {
+	result := make([]openaigo.ToolCall, len(toolCalls))
+	for i, call := range toolCalls {
+		result[i] = utils.Value(NewOpenAIGoToolCall(call))
+	}
+
+	return result
+}
+
 func NewOpenAIGoListMessage(messages []*openai.ChatCompletionMessage) []openaigo.ChatCompletionMessage {
 	result := make([]openaigo.ChatCompletionMessage, len(messages))
 	for i, msg := range messages {
@@ -168,6 +197,23 @@ func NewOpenAIGoListFunction(functions []*openai.FunctionDefinition) []openaigo.
 	}
 
 	return result
+}
+
+func NewOpenAIGoListTool(tools []*openai.Tool) []openaigo.Tool {
+	result := make([]openaigo.Tool, 0, len(tools))
+
+	for _, item := range tools {
+		result = append(result, *NewOpenAIGoTool(item))
+	}
+
+	return result
+}
+
+func NewOpenAIGoTool(tool *openai.Tool) *openaigo.Tool {
+	return &openaigo.Tool{
+		Type:     openaigo.ToolTypeFunction,
+		Function: NewOpenAIGoFunction(tool.Function),
+	}
 }
 
 func NewOpenAIGoStreamOptions(streamOptions *openai.StreamOptions) *openaigo.StreamOptions {
@@ -212,6 +258,7 @@ func NewOpenAIResponseDelta(delta *openaigo.ChatCompletionStreamChoiceDelta) *op
 		Content:      utils.OptionalPointer(delta.Content),
 		Role:         utils.OptionalPointer(delta.Role),
 		FunctionCall: NewOpenAIFunctionCall(delta.FunctionCall),
+		ToolCalls:    NewOpenAIListToolCall(delta.ToolCalls),
 	}
 }
 
@@ -224,6 +271,39 @@ func NewOpenAIFunctionCall(functionCall *openaigo.FunctionCall) *openai.Function
 		Name:      utils.OptionalPointer(functionCall.Name),
 		Arguments: utils.OptionalPointer(functionCall.Arguments),
 	}
+}
+
+func NewOpenAIToolCall(toolCall *openaigo.ToolCall) *openai.ToolCall {
+	if toolCall == nil {
+		return nil
+	}
+
+	var index *int32
+	if toolCall.Index != nil {
+		index = utils.Pointer(int32(*toolCall.Index))
+	}
+
+	var typ openai.ToolType
+	switch toolCall.Type {
+	case openaigo.ToolTypeFunction:
+		typ = openai.ToolType_FUNCTION
+	}
+
+	return &openai.ToolCall{
+		Index:    index,
+		Id:       toolCall.ID,
+		Type:     typ,
+		Function: NewOpenAIFunctionCall(&toolCall.Function),
+	}
+}
+
+func NewOpenAIListToolCall(toolCalls []openaigo.ToolCall) []*openai.ToolCall {
+	result := make([]*openai.ToolCall, len(toolCalls))
+	for i, call := range toolCalls {
+		result[i] = NewOpenAIToolCall(&call)
+	}
+
+	return result
 }
 
 func NewOpenAIContentFilterResults(results openaigo.ContentFilterResults) *openai.ContentFilterResults {
@@ -334,6 +414,8 @@ func NewGenModel(model *model.Models) *modelsvc.Model {
 		Logo:        model.Logo,
 		InputPrice:  model.InputPrice.String(),
 		OutputPrice: model.OutputPrice.String(),
+		MaxToken:    model.MaxToken,
+		Tags:        model.Tags,
 	}
 }
 
@@ -355,6 +437,8 @@ func NewModelCreateModel(req *modelsvc.CreateModelReq) *model.Models {
 		Logo:        req.Logo,
 		InputPrice:  str2Dec(req.InputPrice),
 		OutputPrice: str2Dec(req.OutputPrice),
+		MaxToken:    req.MaxToken,
+		Tags:        req.Tags,
 	}
 }
 
@@ -367,6 +451,8 @@ func NewModelUpdateModel(req *modelsvc.UpdateModelReq) *model.ModelsOptional {
 		Logo:        req.Logo,
 		InputPrice:  str2DecPtr(req.InputPrice),
 		OutputPrice: str2DecPtr(req.OutputPrice),
+		MaxToken:    req.MaxToken,
+		Tags:        req.Tags,
 	}
 }
 

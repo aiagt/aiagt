@@ -101,7 +101,7 @@ func (e *BizError) logger(ctx context.Context, file string, line int, msg string
 		zap.Int("line", line),
 		zap.Int("code", int(e.Code)),
 		zap.String("error", e.Err.Error()),
-	).CtxErrorf(ctx, msg)
+	).CtxErrorf(ctx, "%s: %s", msg, e.Err.Error())
 }
 
 func (e *BizError) Log(ctx context.Context, args ...any) *BizError {

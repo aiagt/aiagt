@@ -29,3 +29,11 @@ func FirstResult[T any](t T, _ any) T {
 func SecondResult[T any](_ any, t T, _ any) T {
 	return t
 }
+
+func Or[T comparable](v1, v2 T) T {
+	if IsZero(v1) {
+		return v2
+	}
+
+	return v1
+}
