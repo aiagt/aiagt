@@ -120,7 +120,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if vModelResp.Success == false {
+	if !vModelResp.Success {
 		log.Fatalf("get vmodel failed: %s", vModelResp.Message)
 	}
 
@@ -128,7 +128,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if pricingResp.Success == false {
+	if !pricingResp.Success {
 		log.Fatal("get pricing failed")
 	}
 
