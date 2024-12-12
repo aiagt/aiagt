@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/aiagt/aiagt/common/cos"
+	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/pkg/closer"
 	"github.com/aiagt/aiagt/pkg/jsonutil"
 	ktcenter "github.com/aiagt/kitextool/conf/center"
@@ -12,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/aiagt/aiagt/common/confutil"
@@ -121,9 +123,13 @@ func main() {
 
 	r.GET("/assets/*name", CosAssets)
 
-	r.POST("/assets/avatar", UploadCos(cos.AvatarDir))
-	r.POST("/assets/app_logo", UploadCos(cos.AppLogoDir))
-	r.POST("/assets/plugin_logo", UploadCos(cos.PluginLogoDir))
+	const megabyte = 1024 * 1024
+
+	r.Use(AuthMiddleware())
+	r.POST("/assets/avatar", UploadCos(cos.AvatarDir, 5*megabyte))
+	r.POST("/assets/app_logo", UploadCos(cos.AppLogoDir, 5*megabyte))
+	r.POST("/assets/plugin_logo", UploadCos(cos.PluginLogoDir, 5*megabyte))
+	r.POST("/assets/chat_file", UploadCos(cos.ChatFile, 5*megabyte))
 
 	h.Spin()
 }
@@ -182,15 +188,14 @@ func SetLoggerOutput(conf *ktconf.ServerConf) *zapcore.BufferedWriteSyncer {
 	return asyncWriter
 }
 
-func UploadCos(dir string) app.HandlerFunc {
-	const maxFileSize = 5 * 1024 * 1024
-
+func UploadCos(dir string, maxBytes int64) app.HandlerFunc {
 	var uploadLimiter = []*rate.Limiter{
 		rate.NewLimiter(rate.Every(time.Second), 10),
 		rate.NewLimiter(rate.Every(time.Hour), 1000),
 	}
 
 	return func(ctx context.Context, c *app.RequestContext) {
+
 		for _, limiter := range uploadLimiter {
 			if !limiter.Allow() {
 				c.AbortWithStatus(http.StatusTooManyRequests)
@@ -204,8 +209,8 @@ func UploadCos(dir string) app.HandlerFunc {
 			return
 		}
 
-		if file.Size > maxFileSize {
-			c.AbortWithMsg(fmt.Sprintf("file size exceeds the limit of %d bytes", maxFileSize), http.StatusRequestEntityTooLarge)
+		if file.Size > maxBytes {
+			c.AbortWithMsg(fmt.Sprintf("file size exceeds the limit of %d bytes", maxBytes), http.StatusRequestEntityTooLarge)
 			return
 		}
 
@@ -216,10 +221,11 @@ func UploadCos(dir string) app.HandlerFunc {
 		}
 		defer closer.Close(src)
 
-		filename := uuid.New().String() + filepath.Ext(file.Filename)
+		ext := filepath.Ext(file.Filename)
+		filename := uuid.New().String() + ext
 		path := filepath.Join(dir, filename)
 
-		_, err = cos.Cli.Object.Put(ctx, path, src, nil)
+		_, err = cos.Cli().Object.Put(ctx, path, src, nil)
 		if err != nil {
 			hlog.CtxErrorf(ctx, "[COS] put cos file err: %v", err)
 			c.AbortWithStatus(http.StatusInternalServerError)
@@ -227,7 +233,7 @@ func UploadCos(dir string) app.HandlerFunc {
 		}
 
 		hlog.CtxErrorf(ctx, "[COS] put cos file success")
-		c.JSON(http.StatusOK, result.Success(utils.H{"file_name": filename, "file_path": path}))
+		c.JSON(http.StatusOK, result.Success(utils.H{"file_name": filename, "file_path": path, "file_ext": ext}))
 	}
 }
 
@@ -237,7 +243,7 @@ func CosAssets(ctx context.Context, c *app.RequestContext) {
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
 
-	presignedURL, err := cos.Cli.Object.GetPresignedURL(
+	presignedURL, err := cos.Cli().Object.GetPresignedURL(
 		ctx,
 		http.MethodGet,
 		name,
@@ -252,4 +258,24 @@ func CosAssets(ctx context.Context, c *app.RequestContext) {
 	}
 
 	c.Redirect(http.StatusFound, []byte(presignedURL.String()))
+}
+
+func AuthMiddleware() app.HandlerFunc {
+	return func(ctx context.Context, c *app.RequestContext) {
+		authorization := c.Request.Header.Get("Authorization")
+		if len(authorization) == 0 {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		ctx = ctxutil.WithToken(ctx, strings.TrimPrefix(authorization, "Bearer "))
+
+		_, err := rpc.UserCli.GetUser(ctx)
+		if err != nil {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		c.Next(ctx)
+	}
 }

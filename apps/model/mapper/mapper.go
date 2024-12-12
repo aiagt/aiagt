@@ -97,14 +97,21 @@ func NewOpenAIGoMultiContent(multiContent []*openai.ChatMessagePart) []openaigo.
 	}
 
 	result := make([]openaigo.ChatMessagePart, len(multiContent))
+
 	for i, part := range multiContent {
 		result[i] = openaigo.ChatMessagePart{
 			Type: NewOpenAIGoMultiContentPartType(part.Type),
 			Text: utils.Value(part.Text),
-			ImageURL: &openaigo.ChatMessageImageURL{
-				URL:    part.ImageUrl.Url,
-				Detail: openaigo.ImageURLDetail(strings.ToLower(part.ImageUrl.Detail.String())),
-			},
+		}
+
+		if part.ImageUrl != nil {
+			imageUrl := &openaigo.ChatMessageImageURL{URL: part.ImageUrl.Url}
+
+			if part.ImageUrl.Detail != 0 {
+				imageUrl.Detail = openaigo.ImageURLDetail(strings.ToLower(part.ImageUrl.Detail.String()))
+			}
+
+			result[i].ImageURL = imageUrl
 		}
 	}
 

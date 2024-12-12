@@ -1,11 +1,13 @@
 package mapper
 
 import (
+	"encoding/json"
 	"github.com/aiagt/aiagt/apps/chat/model"
 	"github.com/aiagt/aiagt/common/baseutil"
 	"github.com/aiagt/aiagt/kitex_gen/chatsvc"
 	"github.com/aiagt/aiagt/kitex_gen/openai"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
+	"github.com/aiagt/aiagt/pkg/utils"
 )
 
 func NewModelMessageContent(message *chatsvc.MessageContent) *model.MessageContent {
@@ -89,7 +91,7 @@ func NewOpenAIMessage(message *model.Message) *openai.ChatCompletionMessage {
 			ImageUrl: &openai.ChatMessageImageURL{Url: message.Content.Image.URL},
 		})
 	case model.MessageTypeFile:
-		// TODO: file
+		result.MultiContent = append(result.MultiContent, MakeOpenAIFileMessage(message.Content.File))
 	case model.MessageTypeFunction:
 		result.Name = &message.Content.Func.Name
 		result.Content = &message.Content.Func.Content
@@ -114,6 +116,28 @@ func NewOpenAIMessage(message *model.Message) *openai.ChatCompletionMessage {
 	}
 
 	return &result
+}
+
+func MakeOpenAIFileMessage(file *model.MessageContentValueFile) *openai.ChatMessagePart {
+	switch file.Type {
+	case ".png", ".jpeg", ".jpg", ".webp", ".gif":
+		return &openai.ChatMessagePart{
+			Type:     openai.ChatMessagePartType_IMAGE_URL,
+			ImageUrl: &openai.ChatMessageImageURL{Url: file.URL},
+		}
+	default:
+		result := map[string]string{
+			"desc":     "upload file",
+			"file_url": file.URL,
+			"file_ext": file.Type,
+		}
+		resultBytes, _ := json.Marshal(result)
+
+		return &openai.ChatMessagePart{
+			Type: openai.ChatMessagePartType_TEXT,
+			Text: utils.Pointer(string(resultBytes)),
+		}
+	}
 }
 
 func NewOpenAIMessageRole(role model.MessageRole) string {
