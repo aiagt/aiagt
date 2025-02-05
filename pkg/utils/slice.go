@@ -9,6 +9,14 @@ func First[T any](list []T) T {
 	return list[0]
 }
 
+func FirstN[T any](list []T, n int) []T {
+	if n >= len(list) {
+		return list
+	}
+
+	return list[:n]
+}
+
 func SafeSlice[E any, T []E](s T, start, end int) T {
 	start = min(max(start, 0), len(s))
 	end = min(max(end, 0), len(s))
