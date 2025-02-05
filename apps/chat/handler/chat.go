@@ -211,6 +211,25 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 	for {
 		resp, err := chatStream.Recv()
 		if err == io.EOF {
+			if messageContent.Len() > 0 {
+				msg := &model.Message{
+					MessageContent: model.MessageContent{
+						Type: model.MessageTypeText,
+						Content: model.MessageContentValue{Text: &model.MessageContentValueText{
+							Text: messageContent.String(),
+						}},
+					},
+					ConversationID: conversationID,
+					Role:           model.MessageRoleAssistant,
+				}
+				klog.CtxInfof(ctx, "message: %s", utils.Pretty(msg, 1<<10))
+
+				err = s.messageDao.Create(ctx, msg)
+				if err != nil {
+					return bizChat.NewErr(err).Log(ctx, "create text message error")
+				}
+			}
+
 			return nil
 		}
 		klog.CtxInfof(ctx, "chat stream recv: %s", utils.Pretty(resp, 1<<10))
@@ -336,7 +355,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 								Content: &chatsvc.MessageContentValue{ToolCall: &chatsvc.MessageContentValueToolCall{
 									Id:        toolCallID.String(),
 									Name:      toolCall.Function.GetName(),
-									Arguments: toolCall.Function.GetArguments(),
+									Arguments: utils.SafeSubStr(toolCall.Function.GetArguments(), 0, 200),
 								}},
 							},
 						}},
@@ -402,6 +421,8 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 				if err != nil {
 					return bizChat.CallErr(err).Log(ctx, "send stop text message error")
 				}
+
+				messageContent.Reset()
 
 				return nil
 			}
@@ -471,7 +492,7 @@ func (s *ChatServiceImpl) handleToolCall(ctx context.Context, toolCall *openai.T
 				Content: &chatsvc.MessageContentValue{Tool: &chatsvc.MessageContentValueTool{
 					Id:      toolCall.Id,
 					Name:    *toolCall.Function.Name,
-					Content: content,
+					Content: utils.SafeSubStr(content, 0, 200),
 				}},
 			},
 		}},
