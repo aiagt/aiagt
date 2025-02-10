@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"fmt"
+	"github.com/aiagt/aiagt/pkg/caller"
 	"io"
 	"testing"
 
@@ -14,38 +15,50 @@ import (
 )
 
 func TestOpenAIChat(t *testing.T) {
-	conf.Conf().OpenAI = conf.OpenAI{
-		APIKey:  "sk-yjyY92xs9ivKwPd4B549C9B80eF74809BfF6887159944321",
-		BaseURL: "https://api.lqqq.cc/v1",
+	conf.Conf().APIKeys = conf.APIKeys{
+		"default": conf.APIKey{
+			APIKey:  "sk-",
+			BaseURL: "https://api.vveai.com/v1",
+		},
+		"deepseek": conf.APIKey{
+			APIKey:  "sk-",
+			BaseURL: "https://api.deepseek.com",
+		},
 	}
 
-	config := openai.DefaultConfig(conf.Conf().OpenAI.APIKey)
-	config.BaseURL = conf.Conf().OpenAI.BaseURL
+	config := openai.DefaultConfig(conf.Conf().APIKeys.Default().APIKey)
+	config.BaseURL = conf.Conf().APIKeys.Default().BaseURL
 
 	openaiCli := openai.NewClientWithConfig(config)
 
 	chatStream, err := openaiCli.CreateChatCompletionStream(context.Background(), openai.ChatCompletionRequest{
-		Model: "gpt-3.5-turbo-0125",
+		Model: "deepseek-chat",
 		Messages: []openai.ChatCompletionMessage{
 			{
 				Role:    openai.ChatMessageRoleUser,
-				Content: "你好，吃饭了吗",
+				Content: "今天北京天气怎么样",
 			},
+		},
+		Tools: []openai.Tool{
 			{
-				Role:    openai.ChatMessageRoleAssistant,
-				Content: "你好，我是一个人工智能助手，不需要进食。您需要什么帮助吗？",
-			},
-			{
-				Role:    openai.ChatMessageRoleUser,
-				Content: "今天开心吗",
-			},
-			{
-				Role:    openai.ChatMessageRoleAssistant,
-				Content: "作为人工智能助手，我没有情绪，但我很高兴能为您提供帮助。您有什么问题或需求可以告诉我吗？",
-			},
-			{
-				Role:    openai.ChatMessageRoleUser,
-				Content: "好的咧",
+				Type: openai.ToolTypeFunction,
+				Function: &openai.FunctionDefinition{
+					Name:        "GetWeather",
+					Description: "查询今天的天气",
+					Strict:      true,
+					Parameters: caller.Definition{
+						Type:                 "object",
+						Required:             []string{"location"},
+						AdditionalProperties: false,
+						Properties: map[string]caller.Definition{
+							"location": {
+								Type:        "string",
+								Description: "地点名称",
+							},
+						},
+						Items: nil,
+					},
+				},
 			},
 		},
 	})
@@ -61,6 +74,10 @@ func TestOpenAIChat(t *testing.T) {
 
 		require.NoError(t, err)
 
-		fmt.Print(utils.First(r.Choices).Delta.Content)
+		if utils.First(r.Choices).Delta.Content != "" {
+			fmt.Print(utils.First(r.Choices).Delta.Content)
+		} else {
+			fmt.Println(utils.Pretty(utils.First(r.Choices).Delta, 1<<16))
+		}
 	}
 }
