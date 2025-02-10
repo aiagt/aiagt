@@ -20,7 +20,10 @@ func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelServ
 
 	klog.CtxInfof(ctx, "chat req %v", utils.Pretty(req, 1<<10))
 
-	modelKey := req.OpenaiReq.Model
+	var (
+		modelKey    = req.OpenaiReq.Model
+		modelSource string
+	)
 
 	if utils.IsZero(modelKey) {
 		model, err := s.modelDao.GetByID(ctx, req.ModelId)
@@ -29,6 +32,7 @@ func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelServ
 		}
 
 		modelKey = model.ModelKey
+		modelSource = model.Source
 	}
 
 	chatReq := mapper.NewOpenAIGoRequest(req.OpenaiReq, modelKey)
@@ -45,7 +49,7 @@ func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelServ
 	start := time.Now()
 
 	klog.CtxDebugf(ctx, "create chat complation req: %s", utils.Pretty(chatReq, 1<<10))
-	chatStream, err := s.openaiCli().CreateChatCompletionStream(ctx, *chatReq)
+	chatStream, err := s.openaiCli(modelSource).CreateChatCompletionStream(ctx, *chatReq)
 	klog.CtxDebugf(ctx, "create chat complation time consuming: %.2fs", float64(time.Since(start).Milliseconds())/float64(1000))
 
 	if err != nil {

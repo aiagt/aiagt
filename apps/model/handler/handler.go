@@ -19,9 +19,13 @@ func NewModelService(modelDao *db.ModelDao, callTokenCache *cache.CallTokenCache
 	return &ModelServiceImpl{modelDao: modelDao, callTokenCache: callTokenCache}
 }
 
-func (*ModelServiceImpl) openaiCli() *openai.Client {
-	config := openai.DefaultConfig(conf.Conf().OpenAI.APIKey)
-	config.BaseURL = conf.Conf().OpenAI.BaseURL
+func (*ModelServiceImpl) openaiCli(source string) *openai.Client {
+	return newOpenaiCli(conf.Conf().APIKeys.GetOrDefault(source))
+}
+
+func newOpenaiCli(api *conf.APIKey) *openai.Client {
+	config := openai.DefaultConfig(api.APIKey)
+	config.BaseURL = api.BaseURL
 
 	return openai.NewClientWithConfig(config)
 }
