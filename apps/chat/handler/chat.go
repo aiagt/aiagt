@@ -318,7 +318,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 				toolCall := utils.First(choice.Delta.ToolCalls)
 				index := int(utils.Value(toolCall.Index))
 
-				if index > len(toolCalls) {
+				if index > len(toolCalls) || utils.NonZeroAndNotEqual(toolCall.Id, toolCallID.String()) {
 					toolCalls = append(toolCalls, &openai.ToolCall{
 						Id: toolCallID.String(),
 						Function: &openai.FunctionCall{
