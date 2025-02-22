@@ -30,7 +30,13 @@ func (s *UserServiceImpl) ListSecret(ctx context.Context, req *usersvc.ListSecre
 		return nil, bizListSecret.CallErr(err).Log(ctx, "get plugins by ids error")
 	}
 
-	pluginMap := hmap.FromSliceEntries(plugins, func(t *pluginsvc.Plugin) (int64, *pluginsvc.Plugin, bool) { return t.Id, t, true })
+	pluginMap := hmap.FromSliceEntries(plugins, func(t *pluginsvc.Plugin) (int64, *pluginsvc.Plugin, bool) {
+		if t.IsPrivate && t.AuthorId != userID {
+			return t.Id, nil, false
+		}
+
+		return t.Id, t, true
+	})
 
 	resp = &usersvc.ListSecretResp{
 		Pagination: page,
