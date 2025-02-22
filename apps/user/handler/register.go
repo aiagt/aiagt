@@ -32,12 +32,12 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *usersvc.RegisterReq
 		return nil, bizRegister.NewCodeErr(13, errors.New("invalid username"))
 	}
 
-	captcha, err := s.captchaCache.GetAndDel(ctx, cache.CaptchaTypeAuth, req.Email)
+	valid, err := s.captchaCache.Verify(ctx, cache.CaptchaTypeAuth, req.Email, req.Captcha)
 	if err != nil {
 		return nil, bizRegister.NewErr(err)
 	}
 
-	if captcha != req.Captcha {
+	if !valid {
 		return nil, bizRegister.CodeErr(bizerr.ErrCodeWrongAuth)
 	}
 
