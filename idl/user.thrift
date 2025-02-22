@@ -24,6 +24,8 @@ struct Secret {
     5: required string value
     6: required base.Time created_at
     7: required base.Time updated_at
+    8: optional string plugin_name
+    9: optional string plugin_logo
 }
 
 struct RegisterReq {

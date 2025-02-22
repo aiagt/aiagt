@@ -7,43 +7,47 @@ import "github.com/aiagt/aiagt/common/bizerr"
 const (
 	ServiceName = "plugin"
 
-	bizCodeAllPluginTool     = 0
-	bizCodeCallPluginTool    = 1
-	bizCodeCreatePlugin      = 2
-	bizCodeCreateTool        = 3
-	bizCodeDeletePlugin      = 4
-	bizCodeDeleteTool        = 5
-	bizCodeGetPluginByID     = 6
-	bizCodeGetPluginByKey    = 7
-	bizCodeGetToolByID       = 8
-	bizCodeListPlugin        = 9
-	bizCodeListPluginByTools = 10
-	bizCodeListPluginLabel   = 11
-	bizCodeListPluginTool    = 12
-	bizCodePublishPlugin     = 13
-	bizCodeTestPluginTool    = 14
-	bizCodeUpdatePlugin      = 15
-	bizCodeUpdateTool        = 16
+	bizCodeAllPluginTool           = 0
+	bizCodeCallPluginTool          = 1
+	bizCodeCreatePlugin            = 2
+	bizCodeCreateTool              = 3
+	bizCodeDeletePlugin            = 4
+	bizCodeDeleteTool              = 5
+	bizCodeGetPluginById           = 6
+	bizCodeGetPluginByIds          = 7
+	bizCodeGetPluginByKey          = 8
+	bizCodeGetPluginSecretsByTools = 9
+	bizCodeGetToolById             = 10
+	bizCodeListPlugin              = 11
+	bizCodeListPluginByTools       = 12
+	bizCodeListPluginLabel         = 13
+	bizCodeListPluginTool          = 14
+	bizCodePublishPlugin           = 15
+	bizCodeTestPluginTool          = 16
+	bizCodeUpdatePlugin            = 17
+	bizCodeUpdateTool              = 18
 )
 
 var (
-	bizAllPluginTool     *bizerr.Biz
-	bizCallPluginTool    *bizerr.Biz
-	bizCreatePlugin      *bizerr.Biz
-	bizCreateTool        *bizerr.Biz
-	bizDeletePlugin      *bizerr.Biz
-	bizDeleteTool        *bizerr.Biz
-	bizGetPluginByID     *bizerr.Biz
-	bizGetPluginByKey    *bizerr.Biz
-	bizGetToolByID       *bizerr.Biz
-	bizListPlugin        *bizerr.Biz
-	bizListPluginByTools *bizerr.Biz
-	bizListPluginLabel   *bizerr.Biz
-	bizListPluginTool    *bizerr.Biz
-	bizPublishPlugin     *bizerr.Biz
-	bizTestPluginTool    *bizerr.Biz
-	bizUpdatePlugin      *bizerr.Biz
-	bizUpdateTool        *bizerr.Biz
+	bizAllPluginTool           *bizerr.Biz
+	bizCallPluginTool          *bizerr.Biz
+	bizCreatePlugin            *bizerr.Biz
+	bizCreateTool              *bizerr.Biz
+	bizDeletePlugin            *bizerr.Biz
+	bizDeleteTool              *bizerr.Biz
+	bizGetPluginById           *bizerr.Biz
+	bizGetPluginByIds          *bizerr.Biz
+	bizGetPluginByKey          *bizerr.Biz
+	bizGetPluginSecretsByTools *bizerr.Biz
+	bizGetToolById             *bizerr.Biz
+	bizListPlugin              *bizerr.Biz
+	bizListPluginByTools       *bizerr.Biz
+	bizListPluginLabel         *bizerr.Biz
+	bizListPluginTool          *bizerr.Biz
+	bizPublishPlugin           *bizerr.Biz
+	bizTestPluginTool          *bizerr.Biz
+	bizUpdatePlugin            *bizerr.Biz
+	bizUpdateTool              *bizerr.Biz
 )
 
 func initServiceBusiness(serviceCode int) {
@@ -55,9 +59,11 @@ func initServiceBusiness(serviceCode int) {
 	bizCreateTool = bizerr.NewBiz(ServiceName, "create_tool", baseCode+bizCodeCreateTool)
 	bizDeletePlugin = bizerr.NewBiz(ServiceName, "delete_plugin", baseCode+bizCodeDeletePlugin)
 	bizDeleteTool = bizerr.NewBiz(ServiceName, "delete_tool", baseCode+bizCodeDeleteTool)
-	bizGetPluginByID = bizerr.NewBiz(ServiceName, "get_plugin_by_id", baseCode+bizCodeGetPluginByID)
+	bizGetPluginById = bizerr.NewBiz(ServiceName, "get_plugin_by_id", baseCode+bizCodeGetPluginById)
+	bizGetPluginByIds = bizerr.NewBiz(ServiceName, "get_plugin_by_i_ds", baseCode+bizCodeGetPluginByIds)
 	bizGetPluginByKey = bizerr.NewBiz(ServiceName, "get_plugin_by_key", baseCode+bizCodeGetPluginByKey)
-	bizGetToolByID = bizerr.NewBiz(ServiceName, "get_tool_by_id", baseCode+bizCodeGetToolByID)
+	bizGetPluginSecretsByTools = bizerr.NewBiz(ServiceName, "get_plugin_secrets_by_tools", baseCode+bizCodeGetPluginSecretsByTools)
+	bizGetToolById = bizerr.NewBiz(ServiceName, "get_tool_by_id", baseCode+bizCodeGetToolById)
 	bizListPlugin = bizerr.NewBiz(ServiceName, "list_plugin", baseCode+bizCodeListPlugin)
 	bizListPluginByTools = bizerr.NewBiz(ServiceName, "list_plugin_by_tools", baseCode+bizCodeListPluginByTools)
 	bizListPluginLabel = bizerr.NewBiz(ServiceName, "list_plugin_label", baseCode+bizCodeListPluginLabel)

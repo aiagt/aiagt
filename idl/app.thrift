@@ -28,6 +28,7 @@ struct App {
     20: required base.Time created_at
     21: required base.Time updated_at
     22: optional base.Time published_at
+    23: optional list<plugin.PluginSecrets> plugin_secrets
 }
 
 struct ModelConfig {

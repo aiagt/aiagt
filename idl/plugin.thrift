@@ -176,14 +176,25 @@ struct ListPluginByToolsResp {
     1: required list<Plugin> plugins
 }
 
+struct PluginSecrets {
+    1: required i64 plugin_id
+    2: required string plugin_name
+    3: required list<PluginSecret> secrets
+    4: required bool is_private
+    5: required i64 author_id
+    6: required string plugin_logo
+}
+
 service PluginService {
     base.Empty CreatePlugin(1: CreatePluginReq req)
     base.Empty UpdatePlugin(1: UpdatePluginReq req)
     base.Empty DeletePlugin(1: base.IDReq req)
     Plugin GetPluginByID(1: base.IDReq req)
+    list<Plugin> GetPluginByIDs(1: base.IDsReq req)
     Plugin GetPluginByKey(1:  GetPluginByKeyReq req)
     ListPluginResp ListPlugin(1: ListPluginReq req)
     ListPluginByToolsResp ListPluginByTools(1: ListPluginByToolsReq req)
+    list<PluginSecrets> GetPluginSecretsByTools(1: base.IDsReq req)
 
     base.Empty PublishPlugin(1: base.IDReq req)
 

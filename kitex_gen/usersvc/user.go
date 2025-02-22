@@ -898,13 +898,15 @@ func (p *User) Field11DeepEqual(src *base.Time) bool {
 }
 
 type Secret struct {
-	Id        int64      `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
-	UserId    int64      `thrift:"user_id,2,required" frugal:"2,required,i64" json:"user_id"`
-	PluginId  int64      `thrift:"plugin_id,3,required" frugal:"3,required,i64" json:"plugin_id"`
-	Name      string     `thrift:"name,4,required" frugal:"4,required,string" json:"name"`
-	Value     string     `thrift:"value,5,required" frugal:"5,required,string" json:"value"`
-	CreatedAt *base.Time `thrift:"created_at,6,required" frugal:"6,required,base.Time" json:"created_at"`
-	UpdatedAt *base.Time `thrift:"updated_at,7,required" frugal:"7,required,base.Time" json:"updated_at"`
+	Id         int64      `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	UserId     int64      `thrift:"user_id,2,required" frugal:"2,required,i64" json:"user_id"`
+	PluginId   int64      `thrift:"plugin_id,3,required" frugal:"3,required,i64" json:"plugin_id"`
+	Name       string     `thrift:"name,4,required" frugal:"4,required,string" json:"name"`
+	Value      string     `thrift:"value,5,required" frugal:"5,required,string" json:"value"`
+	CreatedAt  *base.Time `thrift:"created_at,6,required" frugal:"6,required,base.Time" json:"created_at"`
+	UpdatedAt  *base.Time `thrift:"updated_at,7,required" frugal:"7,required,base.Time" json:"updated_at"`
+	PluginName *string    `thrift:"plugin_name,8,optional" frugal:"8,optional,string" json:"plugin_name,omitempty"`
+	PluginLogo *string    `thrift:"plugin_logo,9,optional" frugal:"9,optional,string" json:"plugin_logo,omitempty"`
 }
 
 func NewSecret() *Secret {
@@ -951,6 +953,24 @@ func (p *Secret) GetUpdatedAt() (v *base.Time) {
 	}
 	return p.UpdatedAt
 }
+
+var Secret_PluginName_DEFAULT string
+
+func (p *Secret) GetPluginName() (v string) {
+	if !p.IsSetPluginName() {
+		return Secret_PluginName_DEFAULT
+	}
+	return *p.PluginName
+}
+
+var Secret_PluginLogo_DEFAULT string
+
+func (p *Secret) GetPluginLogo() (v string) {
+	if !p.IsSetPluginLogo() {
+		return Secret_PluginLogo_DEFAULT
+	}
+	return *p.PluginLogo
+}
 func (p *Secret) SetId(val int64) {
 	p.Id = val
 }
@@ -972,6 +992,12 @@ func (p *Secret) SetCreatedAt(val *base.Time) {
 func (p *Secret) SetUpdatedAt(val *base.Time) {
 	p.UpdatedAt = val
 }
+func (p *Secret) SetPluginName(val *string) {
+	p.PluginName = val
+}
+func (p *Secret) SetPluginLogo(val *string) {
+	p.PluginLogo = val
+}
 
 var fieldIDToName_Secret = map[int16]string{
 	1: "id",
@@ -981,6 +1007,8 @@ var fieldIDToName_Secret = map[int16]string{
 	5: "value",
 	6: "created_at",
 	7: "updated_at",
+	8: "plugin_name",
+	9: "plugin_logo",
 }
 
 func (p *Secret) IsSetCreatedAt() bool {
@@ -989,6 +1017,14 @@ func (p *Secret) IsSetCreatedAt() bool {
 
 func (p *Secret) IsSetUpdatedAt() bool {
 	return p.UpdatedAt != nil
+}
+
+func (p *Secret) IsSetPluginName() bool {
+	return p.PluginName != nil
+}
+
+func (p *Secret) IsSetPluginLogo() bool {
+	return p.PluginLogo != nil
 }
 
 func (p *Secret) Read(iprot thrift.TProtocol) (err error) {
@@ -1077,6 +1113,22 @@ func (p *Secret) Read(iprot thrift.TProtocol) (err error) {
 					goto ReadFieldError
 				}
 				issetUpdatedAt = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 8:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField8(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 9:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -1216,6 +1268,28 @@ func (p *Secret) ReadField7(iprot thrift.TProtocol) error {
 	p.UpdatedAt = _field
 	return nil
 }
+func (p *Secret) ReadField8(iprot thrift.TProtocol) error {
+
+	var _field *string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.PluginName = _field
+	return nil
+}
+func (p *Secret) ReadField9(iprot thrift.TProtocol) error {
+
+	var _field *string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.PluginLogo = _field
+	return nil
+}
 
 func (p *Secret) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -1249,6 +1323,14 @@ func (p *Secret) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField7(oprot); err != nil {
 			fieldId = 7
+			goto WriteFieldError
+		}
+		if err = p.writeField8(oprot); err != nil {
+			fieldId = 8
+			goto WriteFieldError
+		}
+		if err = p.writeField9(oprot); err != nil {
+			fieldId = 9
 			goto WriteFieldError
 		}
 	}
@@ -1388,6 +1470,44 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
 }
 
+func (p *Secret) writeField8(oprot thrift.TProtocol) (err error) {
+	if p.IsSetPluginName() {
+		if err = oprot.WriteFieldBegin("plugin_name", thrift.STRING, 8); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.PluginName); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
+}
+
+func (p *Secret) writeField9(oprot thrift.TProtocol) (err error) {
+	if p.IsSetPluginLogo() {
+		if err = oprot.WriteFieldBegin("plugin_logo", thrift.STRING, 9); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.PluginLogo); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
 func (p *Secret) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1421,6 +1541,12 @@ func (p *Secret) DeepEqual(ano *Secret) bool {
 		return false
 	}
 	if !p.Field7DeepEqual(ano.UpdatedAt) {
+		return false
+	}
+	if !p.Field8DeepEqual(ano.PluginName) {
+		return false
+	}
+	if !p.Field9DeepEqual(ano.PluginLogo) {
 		return false
 	}
 	return true
@@ -1471,6 +1597,30 @@ func (p *Secret) Field6DeepEqual(src *base.Time) bool {
 func (p *Secret) Field7DeepEqual(src *base.Time) bool {
 
 	if !p.UpdatedAt.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+func (p *Secret) Field8DeepEqual(src *string) bool {
+
+	if p.PluginName == src {
+		return true
+	} else if p.PluginName == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.PluginName, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *Secret) Field9DeepEqual(src *string) bool {
+
+	if p.PluginLogo == src {
+		return true
+	} else if p.PluginLogo == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.PluginLogo, *src) != 0 {
 		return false
 	}
 	return true

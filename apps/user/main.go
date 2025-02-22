@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/aiagt/aiagt/rpc"
 	"log"
 
 	"github.com/aiagt/aiagt/common/logger"
@@ -27,7 +28,7 @@ import (
 )
 
 func main() {
-	handle := handler.NewUserService(db.NewUserDao(), db.NewSecretDao(), cache.NewCaptchaCache())
+	handle := handler.NewUserService(db.NewUserDao(), db.NewSecretDao(), cache.NewCaptchaCache(), rpc.PluginCli)
 
 	config := conf.Conf()
 	observability.InitMetrics(config.Server.Name, config.Metrics.Addr, config.Registry.Address[0])
