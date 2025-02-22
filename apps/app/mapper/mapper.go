@@ -86,7 +86,7 @@ func NewGenListApp(apps []*model.App, labels hmap.Map[int64, *appsvc.AppLabel], 
 
 		author := authors[app.AuthorID]
 
-		result[i] = NewGenApp(app, author, nil, appLabels)
+		result[i] = NewGenApp(app, author, nil, appLabels, nil)
 	}
 
 	return result

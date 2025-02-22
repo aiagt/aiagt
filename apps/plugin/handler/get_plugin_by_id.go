@@ -16,27 +16,27 @@ import (
 func (s *PluginServiceImpl) GetPluginByID(ctx context.Context, req *base.IDReq) (resp *pluginsvc.Plugin, err error) {
 	plugin, err := s.pluginDao.GetByID(ctx, req.Id)
 	if err != nil {
-		return nil, bizGetPluginByID.NewErr(err).Log(ctx, "get plugin by id failed")
+		return nil, bizGetPluginById.NewErr(err).Log(ctx, "get plugin by id failed")
 	}
 
 	userID := ctxutil.UserID(ctx)
 	if plugin.IsPrivate && plugin.AuthorID != userID {
-		return nil, bizGetPluginByID.CodeErr(bizerr.ErrCodeForbidden).Log(ctx, "forbidden")
+		return nil, bizGetPluginById.CodeErr(bizerr.ErrCodeForbidden).Log(ctx, "forbidden")
 	}
 
 	author, err := s.userCli.GetUserByID(ctx, &base.IDReq{Id: plugin.AuthorID})
 	if err != nil {
-		return nil, bizGetPluginByID.CallErr(err).Log(ctx, "get user failed")
+		return nil, bizGetPluginById.CallErr(err).Log(ctx, "get user failed")
 	}
 
 	labels, err := s.labelDao.GetByIDs(ctx, plugin.LabelIDs)
 	if err != nil {
-		return nil, bizGetPluginByID.NewErr(err).Log(ctx, "get labels failed")
+		return nil, bizGetPluginById.NewErr(err).Log(ctx, "get labels failed")
 	}
 
 	tools, err := s.toolDao.GetByPluginID(ctx, plugin.ID)
 	if err != nil {
-		return nil, bizGetPluginByID.NewErr(err).Log(ctx, "get tools failed")
+		return nil, bizGetPluginById.NewErr(err).Log(ctx, "get tools failed")
 	}
 
 	resp = mapper.NewGenPlugin(
