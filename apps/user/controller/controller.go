@@ -20,8 +20,7 @@ func RegisterRouter(r *route.RouterGroup, cli userservice.Client) {
 	router.POST(r, "/", cli.GetUserByIds)
 	router.PUT(r, "/", cli.UpdateUser)
 
-	router.POST(r, "/secret", cli.CreateSecret)
-	router.PUT(r, "/secret/:id", cli.UpdateSecret)
+	router.POST(r, "/secret/batch_save", cli.SaveSecrets)
 	router.DELETE(r, "/secret/:id", cli.DeleteSecret)
-	router.GET(r, "/secret", cli.ListSecret)
+	router.POST(r, "/secret/list", cli.ListSecret)
 }

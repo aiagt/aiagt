@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+
 	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc/pluginservice"
 
 	"github.com/aiagt/aiagt/apps/user/dal/cache"
@@ -35,4 +36,8 @@ func NewAuthService(handler usersvc.UserService) *AuthServiceImpl {
 
 func (a *AuthServiceImpl) ParseToken(ctx context.Context, token string, _ ...callopt.Option) (resp int64, err error) {
 	return a.handler.ParseToken(ctx, token)
+}
+
+func (a *AuthServiceImpl) GenToken(ctx context.Context, id int64, _ ...callopt.Option) (resp string, err error) {
+	return a.handler.GenToken(ctx, id)
 }

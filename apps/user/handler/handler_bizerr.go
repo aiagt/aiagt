@@ -7,51 +7,51 @@ import "github.com/aiagt/aiagt/common/bizerr"
 const (
 	ServiceName = "user"
 
-	bizCodeCreateSecret  = 0
-	bizCodeDeleteSecret  = 1
+	bizCodeDeleteSecret  = 0
+	bizCodeGenToken      = 1
 	bizCodeGetUser       = 2
-	bizCodeGetUserByID   = 3
+	bizCodeGetUserById   = 3
 	bizCodeGetUserByIds  = 4
 	bizCodeListSecret    = 5
 	bizCodeLogin         = 6
 	bizCodeParseToken    = 7
 	bizCodeRegister      = 8
 	bizCodeResetPassword = 9
-	bizCodeSendCaptcha   = 10
-	bizCodeUpdateSecret  = 11
+	bizCodeSaveSecrets   = 10
+	bizCodeSendCaptcha   = 11
 	bizCodeUpdateUser    = 12
 )
 
 var (
-	bizCreateSecret  *bizerr.Biz
 	bizDeleteSecret  *bizerr.Biz
+	bizGenToken      *bizerr.Biz
 	bizGetUser       *bizerr.Biz
-	bizGetUserByID   *bizerr.Biz
+	bizGetUserById   *bizerr.Biz
 	bizGetUserByIds  *bizerr.Biz
 	bizListSecret    *bizerr.Biz
 	bizLogin         *bizerr.Biz
 	bizParseToken    *bizerr.Biz
 	bizRegister      *bizerr.Biz
 	bizResetPassword *bizerr.Biz
+	bizSaveSecrets   *bizerr.Biz
 	bizSendCaptcha   *bizerr.Biz
-	bizUpdateSecret  *bizerr.Biz
 	bizUpdateUser    *bizerr.Biz
 )
 
 func initServiceBusiness(serviceCode int) {
 	baseCode := (serviceCode + 100) * 100
 
-	bizCreateSecret = bizerr.NewBiz(ServiceName, "create_secret", baseCode+bizCodeCreateSecret)
 	bizDeleteSecret = bizerr.NewBiz(ServiceName, "delete_secret", baseCode+bizCodeDeleteSecret)
+	bizGenToken = bizerr.NewBiz(ServiceName, "gen_token", baseCode+bizCodeGenToken)
 	bizGetUser = bizerr.NewBiz(ServiceName, "get_user", baseCode+bizCodeGetUser)
-	bizGetUserByID = bizerr.NewBiz(ServiceName, "get_user_by_id", baseCode+bizCodeGetUserByID)
+	bizGetUserById = bizerr.NewBiz(ServiceName, "get_user_by_id", baseCode+bizCodeGetUserById)
 	bizGetUserByIds = bizerr.NewBiz(ServiceName, "get_user_by_ids", baseCode+bizCodeGetUserByIds)
 	bizListSecret = bizerr.NewBiz(ServiceName, "list_secret", baseCode+bizCodeListSecret)
 	bizLogin = bizerr.NewBiz(ServiceName, "login", baseCode+bizCodeLogin)
 	bizParseToken = bizerr.NewBiz(ServiceName, "parse_token", baseCode+bizCodeParseToken)
 	bizRegister = bizerr.NewBiz(ServiceName, "register", baseCode+bizCodeRegister)
 	bizResetPassword = bizerr.NewBiz(ServiceName, "reset_password", baseCode+bizCodeResetPassword)
+	bizSaveSecrets = bizerr.NewBiz(ServiceName, "save_secrets", baseCode+bizCodeSaveSecrets)
 	bizSendCaptcha = bizerr.NewBiz(ServiceName, "send_captcha", baseCode+bizCodeSendCaptcha)
-	bizUpdateSecret = bizerr.NewBiz(ServiceName, "update_secret", baseCode+bizCodeUpdateSecret)
 	bizUpdateUser = bizerr.NewBiz(ServiceName, "update_user", baseCode+bizCodeUpdateUser)
 }

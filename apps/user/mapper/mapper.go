@@ -75,19 +75,3 @@ func NewModelUpdateUser(user *usersvc.UpdateUserReq) *model.UserOptional {
 		Avatar:        user.Avatar,
 	}
 }
-
-func NewModelCreateSecret(secret *usersvc.CreateSecretReq) *model.Secret {
-	return &model.Secret{
-		PluginID: secret.PluginId,
-		Name:     secret.Name,
-		Value:    secret.Value,
-	}
-}
-
-func NewModelUpdateSecret(secret *usersvc.UpdateSecretReq) *model.SecretOptional {
-	return &model.SecretOptional{
-		PluginID: secret.PluginId,
-		Name:     secret.Name,
-		Value:    secret.Value,
-	}
-}

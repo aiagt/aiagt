@@ -17,7 +17,7 @@ func (s *PluginServiceImpl) GetPluginSecretsByTools(ctx context.Context, req *ba
 		return nil, bizGetPluginSecretsByTools.NewErr(err).Log(ctx, "get plugin tools by ids error")
 	}
 
-	pluginIDs := hset.FromSlice(pluginTools, func(t *model.PluginTool) int64 { return t.PluginID }).List()
+	pluginIDs := hset.FromSliceEntries(pluginTools, func(t *model.PluginTool) int64 { return t.PluginID }).List()
 
 	plugins, err := s.pluginDao.GetByIDs(ctx, pluginIDs)
 	if err != nil {

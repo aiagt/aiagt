@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+
 	"github.com/aiagt/aiagt/apps/user/model"
 	"github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
@@ -23,7 +24,7 @@ func (s *UserServiceImpl) ListSecret(ctx context.Context, req *usersvc.ListSecre
 		return nil, bizListSecret.NewErr(err).Log(ctx, "get secrets error")
 	}
 
-	pluginIDs := hset.FromSlice(list, func(t *model.Secret) int64 { return t.PluginID }).List()
+	pluginIDs := hset.FromSliceEntries(list, func(t *model.Secret) int64 { return t.PluginID }).List()
 
 	plugins, err := s.pluginCli.GetPluginByIDs(ctx, &base.IDsReq{Ids: pluginIDs})
 	if err != nil {

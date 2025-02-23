@@ -132,6 +132,7 @@ const (
 )
 
 var (
+	ErrServerFailure = errors.New("server failure")
 	ErrBadRequest    = errors.New("bad request")
 	ErrUnauthorized  = errors.New("unauthorized")
 	ErrForbidden     = errors.New("forbidden")
@@ -140,6 +141,7 @@ var (
 	ErrWrongAuth     = errors.New("validation information does not match")
 
 	ErrMap = map[ErrCode]error{
+		ErrCodeServerFailure: ErrServerFailure,
 		ErrCodeBadRequest:    ErrBadRequest,
 		ErrCodeUnauthorized:  ErrUnauthorized,
 		ErrCodeForbidden:     ErrForbidden,

@@ -143,7 +143,7 @@ func main() {
 			continue
 		}
 
-		tags := hset.FromSlice(item.Tags, func(t *getVModelRespDataTag) string { return t.Name })
+		tags := hset.FromSliceEntries(item.Tags, func(t *getVModelRespDataTag) string { return t.Name })
 		if !tags.Has("文本") || tags.Has("弃用") {
 			continue
 		}
