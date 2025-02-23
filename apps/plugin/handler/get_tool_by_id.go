@@ -16,16 +16,16 @@ import (
 func (s *PluginServiceImpl) GetToolByID(ctx context.Context, req *base.IDReq) (resp *pluginsvc.PluginTool, err error) {
 	tool, err := s.toolDao.GetByID(ctx, req.Id)
 	if err != nil {
-		return nil, bizGetToolByID.NewErr(err)
+		return nil, bizGetToolById.NewErr(err)
 	}
 
 	plugin, err := s.pluginDao.GetByID(ctx, tool.PluginID)
 	if err != nil {
-		return nil, bizGetToolByID.NewErr(err)
+		return nil, bizGetToolById.NewErr(err)
 	}
 
 	if plugin.IsPrivate && ctxutil.Forbidden(ctx, plugin.AuthorID) {
-		return nil, bizGetToolByID.CodeErr(bizerr.ErrCodeForbidden)
+		return nil, bizGetToolById.CodeErr(bizerr.ErrCodeForbidden)
 	}
 
 	resp = mapper.NewGenPluginTool(tool)

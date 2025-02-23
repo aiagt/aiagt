@@ -16,9 +16,11 @@ type Client interface {
 	UpdatePlugin(ctx context.Context, req *pluginsvc.UpdatePluginReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	DeletePlugin(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	GetPluginByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *pluginsvc.Plugin, err error)
+	GetPluginByIDs(ctx context.Context, req *base.IDsReq, callOptions ...callopt.Option) (r []*pluginsvc.Plugin, err error)
 	GetPluginByKey(ctx context.Context, req *pluginsvc.GetPluginByKeyReq, callOptions ...callopt.Option) (r *pluginsvc.Plugin, err error)
 	ListPlugin(ctx context.Context, req *pluginsvc.ListPluginReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginResp, err error)
 	ListPluginByTools(ctx context.Context, req *pluginsvc.ListPluginByToolsReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginByToolsResp, err error)
+	GetPluginSecretsByTools(ctx context.Context, req *base.IDsReq, callOptions ...callopt.Option) (r []*pluginsvc.PluginSecrets, err error)
 	PublishPlugin(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	CreateTool(ctx context.Context, req *pluginsvc.CreatePluginToolReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	UpdateTool(ctx context.Context, req *pluginsvc.UpdatePluginToolReq, callOptions ...callopt.Option) (r *base.Empty, err error)
@@ -80,6 +82,11 @@ func (p *kPluginServiceClient) GetPluginByID(ctx context.Context, req *base.IDRe
 	return p.kClient.GetPluginByID(ctx, req)
 }
 
+func (p *kPluginServiceClient) GetPluginByIDs(ctx context.Context, req *base.IDsReq, callOptions ...callopt.Option) (r []*pluginsvc.Plugin, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetPluginByIDs(ctx, req)
+}
+
 func (p *kPluginServiceClient) GetPluginByKey(ctx context.Context, req *pluginsvc.GetPluginByKeyReq, callOptions ...callopt.Option) (r *pluginsvc.Plugin, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetPluginByKey(ctx, req)
@@ -93,6 +100,11 @@ func (p *kPluginServiceClient) ListPlugin(ctx context.Context, req *pluginsvc.Li
 func (p *kPluginServiceClient) ListPluginByTools(ctx context.Context, req *pluginsvc.ListPluginByToolsReq, callOptions ...callopt.Option) (r *pluginsvc.ListPluginByToolsResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.ListPluginByTools(ctx, req)
+}
+
+func (p *kPluginServiceClient) GetPluginSecretsByTools(ctx context.Context, req *base.IDsReq, callOptions ...callopt.Option) (r []*pluginsvc.PluginSecrets, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetPluginSecretsByTools(ctx, req)
 }
 
 func (p *kPluginServiceClient) PublishPlugin(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error) {

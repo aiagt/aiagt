@@ -20,12 +20,12 @@ func (s *UserServiceImpl) ResetPassword(ctx context.Context, req *usersvc.ResetP
 		return nil, bizResetPassword.NewCodeErr(12, errors.New("invalid password"))
 	}
 
-	captcha, err := s.captchaCache.GetAndDel(ctx, cache.CaptchaTypeReset, req.Email)
+	valid, err := s.captchaCache.Verify(ctx, cache.CaptchaTypeReset, req.Email, req.Captcha)
 	if err != nil {
 		return nil, bizResetPassword.NewErr(err)
 	}
 
-	if captcha != req.Captcha {
+	if !valid {
 		return nil, bizResetPassword.CodeErr(bizerr.ErrCodeWrongAuth)
 	}
 

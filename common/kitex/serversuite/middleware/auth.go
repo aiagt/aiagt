@@ -2,8 +2,9 @@ package middleware
 
 import (
 	"context"
-
 	"github.com/aiagt/aiagt/common/bizerr"
+	"github.com/aiagt/aiagt/pkg/hash/hmap"
+	"github.com/aiagt/aiagt/pkg/hash/hset"
 
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/cloudwego/kitex/client/callopt"
@@ -13,6 +14,7 @@ import (
 )
 
 type AuthService interface {
+	GenToken(ctx context.Context, id int64, options ...callopt.Option) (resp string, err error)
 	ParseToken(ctx context.Context, token string, callOptions ...callopt.Option) (resp int64, err error)
 }
 
@@ -31,7 +33,7 @@ func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 		switch serviceName {
 		case "user":
 			switch methodName {
-			case "Login", "Register", "ParseToken", "SendCaptcha", "ResetPassword":
+			case "Login", "Register", "ParseToken", "GenToken", "SendCaptcha", "ResetPassword":
 				return next(ctx, req, resp)
 			}
 		}
@@ -39,11 +41,32 @@ func (m *Middleware) Auth(next endpoint.Endpoint) endpoint.Endpoint {
 		token := ctxutil.Token(ctx)
 
 		id, err := m.authSvc.ParseToken(ctx, token)
-		if err != nil {
-			biz := bizerr.NewBiz(serviceName, "auth", 40000)
-			return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized).Logf(ctx, "parse token error: %v", err.Error()))
+		if err == nil {
+			return next(ctxutil.WithUserID(ctx, id), req, resp)
 		}
 
-		return next(ctxutil.WithUserID(ctx, id), req, resp)
+		biz := bizerr.NewBiz(serviceName, "auth", 40000)
+
+		if serviceMethods, ok := withoutAuthenticationMethod[serviceName]; ok {
+			if _, ok := serviceMethods[methodName]; ok {
+				token, err = m.authSvc.GenToken(ctx, id)
+				if err != nil {
+					return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeServerFailure).Logf(ctx, "gen token error: %v", err.Error()))
+				}
+
+				ctx = ctxutil.WithToken(ctx, token)
+				ctx = ctxutil.WithUserID(ctx, id)
+
+				return next(ctx, req, resp)
+			}
+		}
+
+		return ReturnBizErr(ctx, biz.CodeErr(bizerr.ErrCodeUnauthorized).Logf(ctx, "parse token error: %v", err.Error()))
 	}
+}
+
+var withoutAuthenticationMethod = hmap.Map[string, hset.Set[string]]{
+	"app":   hset.FromValues("ListApp", "ListAppLabel", "GetAppByID"),
+	"chat":  hset.FromValues("ListConversation"),
+	"model": hset.FromValues("ListModel"),
 }

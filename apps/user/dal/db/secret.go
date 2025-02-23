@@ -69,6 +69,9 @@ func (d *SecretDao) List(ctx context.Context, req *usersvc.ListSecretReq, userID
 		if req.PluginId != nil {
 			db = db.Where("plugin_id = ?", req.PluginId)
 		}
+		if len(req.PluginIds) > 0 {
+			db = db.Where("plugin_id in (?)", req.PluginIds)
+		}
 		if req.Name != nil {
 			db = db.Where("name = ?", req.Name)
 		}
@@ -112,6 +115,39 @@ func (d *SecretDao) Delete(ctx context.Context, id int64) error {
 	err := d.db(ctx).Model(d.m).Where("id = ?", id).Delete(d.m).Error
 	if err != nil {
 		return errors.Wrap(err, "secret dao delete error")
+	}
+
+	return nil
+}
+
+// GetByPluginAndName get secret by plugin and name
+func (d *SecretDao) GetByPluginAndName(ctx context.Context, pluginID int64, name string) (*model.Secret, error) {
+	var result model.Secret
+
+	err := d.db(ctx).Model(d.m).Where("plugin_id = ? AND name = ?", pluginID, name).First(&result).Error
+	if err != nil {
+		return nil, errors.Wrap(err, "secret dao get by plugin and name error")
+	}
+
+	return &result, nil
+}
+
+// ListByPluginsAndNames list secret by plugins and names
+func (d *SecretDao) ListByPluginsAndNames(ctx context.Context, pluginIDs []int64, names []string) ([]*model.Secret, error) {
+	var result []*model.Secret
+
+	err := d.db(ctx).Model(d.m).Where("plugin_id in (?) AND name in (?)", pluginIDs, names).Find(&result).Error
+	if err != nil {
+		return nil, errors.Wrap(err, "secret dao list secret by plugins and names error")
+	}
+
+	return result, nil
+}
+
+func (d *SecretDao) Save(ctx context.Context, secret *model.Secret) error {
+	err := d.db(ctx).Save(secret).Error
+	if err != nil {
+		return errors.Wrap(err, "secret dao save secret error")
 	}
 
 	return nil

@@ -35,6 +35,11 @@ func (s *AppServiceImpl) GetAppByID(ctx context.Context, req *appsvc.GetAppByIDR
 		return nil, bizGetAppByID.CallErr(err)
 	}
 
+	pluginSecrets, err := s.pluginCli.GetPluginSecretsByTools(ctx, &base.IDsReq{Ids: app.ToolIDs})
+	if err != nil {
+		return nil, bizGetAppByID.CallErr(err).Log(ctx, "get plugin secrets by tool_ids error")
+	}
+
 	var (
 		publicTools       []*pluginsvc.PluginTool
 		privateToolsCount int32
@@ -50,6 +55,13 @@ func (s *AppServiceImpl) GetAppByID(ctx context.Context, req *appsvc.GetAppByIDR
 		}
 
 		tools = publicTools
+
+		for _, pluginSecret := range pluginSecrets {
+			if pluginSecret.IsPrivate && pluginSecret.AuthorId != userID {
+				pluginSecret.PluginName = ""
+				pluginSecret.PluginLogo = ""
+			}
+		}
 	}
 
 	labels, err := s.labelDao.GetByIDs(ctx, app.LabelIDs)
@@ -58,7 +70,7 @@ func (s *AppServiceImpl) GetAppByID(ctx context.Context, req *appsvc.GetAppByIDR
 	}
 
 	resp = &appsvc.GetAppByIDResp{
-		App: mapper.NewGenApp(app, author, tools, mapper.NewGenListAppLabel(labels)),
+		App: mapper.NewGenApp(app, author, tools, mapper.NewGenListAppLabel(labels), pluginSecrets),
 		Ext: &appsvc.GetAppByIDRespExtend{PrivateToolsCount: privateToolsCount},
 	}
 

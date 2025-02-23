@@ -53,7 +53,7 @@ func (s *PluginServiceImpl) CallPluginTool(ctx context.Context, req *pluginsvc.C
 		return nil, bizCallPluginTool.NewErr(err)
 	}
 
-	secretDefs := hset.FromSlice(plugin.Secrets, func(t *model.PluginSecret) string { return t.Name })
+	secretDefs := hset.FromSliceEntries(plugin.Secrets, func(t *model.PluginSecret) string { return t.Name })
 
 	userSecretMap := hmap.FromSliceEntries(listSecret.Secrets, func(t *usersvc.Secret) (string, string, bool) {
 		return t.Name, t.Value, t.PluginId == plugin.ID && secretDefs.Has(t.Name)

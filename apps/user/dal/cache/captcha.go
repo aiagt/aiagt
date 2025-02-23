@@ -51,15 +51,17 @@ func (c *CaptchaCache) Del(ctx context.Context, typ CaptchaType, email string) e
 	return c.rdb().Del(ctx, key).Err()
 }
 
-func (c *CaptchaCache) GetAndDel(ctx context.Context, typ CaptchaType, email string) (string, error) {
+func (c *CaptchaCache) Verify(ctx context.Context, typ CaptchaType, email string, captcha string) (bool, error) {
 	result, err := c.Get(ctx, typ, email)
 	if err != nil {
-		return "", err
+		return false, err
 	}
 
-	_ = c.Del(ctx, typ, email)
+	if result == captcha {
+		_ = c.Del(ctx, typ, email)
+	}
 
-	return result, nil
+	return result == captcha, nil
 }
 
 type CaptchaType string

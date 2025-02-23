@@ -13,7 +13,7 @@ import (
 func (s *UserServiceImpl) GetUserByID(ctx context.Context, req *base.IDReq) (resp *usersvc.User, err error) {
 	user, err := s.userDao.GetByID(ctx, req.Id)
 	if err != nil {
-		return nil, bizGetUserByID.NewErr(err)
+		return nil, bizGetUserById.NewErr(err)
 	}
 
 	resp = mapper.NewGenUser(user)

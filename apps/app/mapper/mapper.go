@@ -15,7 +15,7 @@ import (
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 )
 
-func NewGenApp(app *model.App, author *usersvc.User, tools []*pluginsvc.PluginTool, labels []*appsvc.AppLabel) *appsvc.App {
+func NewGenApp(app *model.App, author *usersvc.User, tools []*pluginsvc.PluginTool, labels []*appsvc.AppLabel, pluginSecrets []*pluginsvc.PluginSecrets) *appsvc.App {
 	return &appsvc.App{
 		Id:              app.ID,
 		Name:            app.Name,
@@ -39,6 +39,7 @@ func NewGenApp(app *model.App, author *usersvc.User, tools []*pluginsvc.PluginTo
 		CreatedAt:       baseutil.NewBaseTime(app.CreatedAt),
 		UpdatedAt:       baseutil.NewBaseTime(app.UpdatedAt),
 		PublishedAt:     baseutil.NewBaseTimeP(app.PublishedAt),
+		PluginSecrets:   pluginSecrets,
 	}
 }
 
@@ -85,7 +86,7 @@ func NewGenListApp(apps []*model.App, labels hmap.Map[int64, *appsvc.AppLabel], 
 
 		author := authors[app.AuthorID]
 
-		result[i] = NewGenApp(app, author, nil, appLabels)
+		result[i] = NewGenApp(app, author, nil, appLabels, nil)
 	}
 
 	return result

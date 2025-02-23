@@ -14,6 +14,7 @@ import (
 type Client interface {
 	Register(ctx context.Context, req *usersvc.RegisterReq, callOptions ...callopt.Option) (r *usersvc.RegisterResp, err error)
 	Login(ctx context.Context, req *usersvc.LoginReq, callOptions ...callopt.Option) (r *usersvc.LoginResp, err error)
+	GenToken(ctx context.Context, token int64, callOptions ...callopt.Option) (r string, err error)
 	ParseToken(ctx context.Context, token string, callOptions ...callopt.Option) (r int64, err error)
 	ResetPassword(ctx context.Context, req *usersvc.ResetPasswordReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	SendCaptcha(ctx context.Context, req *usersvc.SendCaptchaReq, callOptions ...callopt.Option) (r *usersvc.SendCaptchaResp, err error)
@@ -21,8 +22,7 @@ type Client interface {
 	GetUser(ctx context.Context, callOptions ...callopt.Option) (r *usersvc.User, err error)
 	GetUserByID(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *usersvc.User, err error)
 	GetUserByIds(ctx context.Context, req *base.IDsReq, callOptions ...callopt.Option) (r []*usersvc.User, err error)
-	CreateSecret(ctx context.Context, req *usersvc.CreateSecretReq, callOptions ...callopt.Option) (r *base.Empty, err error)
-	UpdateSecret(ctx context.Context, req *usersvc.UpdateSecretReq, callOptions ...callopt.Option) (r *base.Empty, err error)
+	SaveSecrets(ctx context.Context, req *usersvc.SaveSecretReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	DeleteSecret(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error)
 	ListSecret(ctx context.Context, req *usersvc.ListSecretReq, callOptions ...callopt.Option) (r *usersvc.ListSecretResp, err error)
 }
@@ -66,6 +66,11 @@ func (p *kUserServiceClient) Login(ctx context.Context, req *usersvc.LoginReq, c
 	return p.kClient.Login(ctx, req)
 }
 
+func (p *kUserServiceClient) GenToken(ctx context.Context, token int64, callOptions ...callopt.Option) (r string, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GenToken(ctx, token)
+}
+
 func (p *kUserServiceClient) ParseToken(ctx context.Context, token string, callOptions ...callopt.Option) (r int64, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.ParseToken(ctx, token)
@@ -101,14 +106,9 @@ func (p *kUserServiceClient) GetUserByIds(ctx context.Context, req *base.IDsReq,
 	return p.kClient.GetUserByIds(ctx, req)
 }
 
-func (p *kUserServiceClient) CreateSecret(ctx context.Context, req *usersvc.CreateSecretReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
+func (p *kUserServiceClient) SaveSecrets(ctx context.Context, req *usersvc.SaveSecretReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.CreateSecret(ctx, req)
-}
-
-func (p *kUserServiceClient) UpdateSecret(ctx context.Context, req *usersvc.UpdateSecretReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
-	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.UpdateSecret(ctx, req)
+	return p.kClient.SaveSecrets(ctx, req)
 }
 
 func (p *kUserServiceClient) DeleteSecret(ctx context.Context, req *base.IDReq, callOptions ...callopt.Option) (r *base.Empty, err error) {
