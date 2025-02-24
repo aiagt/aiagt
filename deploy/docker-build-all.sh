@@ -1,6 +1,6 @@
 #!/bin/bash
 
-services=("gateway" "user" "plugin" "app" "chat" "model")
+services=("gateway" "user" "plugin" "app" "chat" "model" "workflow")
 
 current_dir=$(basename "$PWD")
 if [ "$current_dir" == "deploy" ]; then

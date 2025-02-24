@@ -8,7 +8,7 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main ./apps/model
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main ./apps/workflow
 
 FROM alpine:3.18.2
 
@@ -18,7 +18,7 @@ WORKDIR /app
 
 COPY --from=builder /app/main .
 COPY --from=builder /app/rpc/conf-release.yaml ./rpc/conf-release.yaml
-COPY --from=builder /app/apps/model/conf/conf-release.yaml ./apps/model/conf/conf-release.yaml
+COPY --from=builder /app/apps/workflow/conf/conf-release.yaml ./apps/workflow/conf/conf-release.yaml
 
 EXPOSE 80
 
