@@ -2,13 +2,17 @@ package tests
 
 import (
 	"context"
+	"github.com/aiagt/aiagt/common/confutil"
 	"github.com/aiagt/aiagt/common/ctxutil"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
 	"github.com/aiagt/aiagt/pkg/utils"
 	"github.com/aiagt/aiagt/rpc"
+	ktconf "github.com/aiagt/kitextool/conf"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/mitchellh/mapstructure"
 	"log"
+	"os"
+	"regexp"
 )
 
 func InitTesting() (ctx context.Context) {
@@ -33,8 +37,12 @@ func RpcCallWrap(resp any, err error) {
 		return
 	}
 
+	Log(resp)
+}
+
+func Log(val any) {
 	var m map[string]interface{}
-	_ = mapstructure.Decode(resp, &m)
+	_ = mapstructure.Decode(val, &m)
 
 	for k, v := range m {
 		if bs, ok := v.([]byte); ok {
@@ -42,7 +50,19 @@ func RpcCallWrap(resp any, err error) {
 		}
 	}
 
-	klog.Infof("result: %v", utils.Pretty(m, 0))
+	klog.Infof("%v", utils.Pretty(m, 0))
+}
+
+func LoadConf(conf ktconf.Conf) {
+	workDir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	re := regexp.MustCompile(`^(.*?/apps/[^/]+/)[^/]+(/?)$`)
+	confDir := re.ReplaceAllString(workDir, "${1}conf")
+
+	confutil.LoadConf(conf, confDir)
 }
 
 func login(ctx context.Context, email, password string) (context.Context, error) {

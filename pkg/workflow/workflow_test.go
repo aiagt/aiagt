@@ -156,11 +156,6 @@ Now you need to find the code according to the user. Please return the path to t
 
 	ctx := context.Background()
 
-	type User struct {
-		Name string
-		Age  int
-	}
-
 	err := devops.Init(ctx, devops.AppendType(Object{}))
 	if err != nil {
 		log.Printf("[eino dev] init failed, err=%v", err)

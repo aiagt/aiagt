@@ -60,12 +60,12 @@ func (c Object) GetObject(key string) (Object, bool) {
 	switch v := c[key].(type) {
 	case Object:
 		return v, true
+	case map[string]any:
+		return v, true
 	case any:
 		if obj, ok := v.(Object); ok {
 			return obj, true
 		}
-	case map[string]any:
-		return v, true
 	}
 
 	return nil, false
