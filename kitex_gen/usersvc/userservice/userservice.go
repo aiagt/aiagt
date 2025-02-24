@@ -28,6 +28,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"GenToken": kitex.NewMethodInfo(
+		genTokenHandler,
+		newUserServiceGenTokenArgs,
+		newUserServiceGenTokenResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 	"ParseToken": kitex.NewMethodInfo(
 		parseTokenHandler,
 		newUserServiceParseTokenArgs,
@@ -77,17 +84,10 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"CreateSecret": kitex.NewMethodInfo(
-		createSecretHandler,
-		newUserServiceCreateSecretArgs,
-		newUserServiceCreateSecretResult,
-		false,
-		kitex.WithStreamingMode(kitex.StreamingNone),
-	),
-	"UpdateSecret": kitex.NewMethodInfo(
-		updateSecretHandler,
-		newUserServiceUpdateSecretArgs,
-		newUserServiceUpdateSecretResult,
+	"SaveSecrets": kitex.NewMethodInfo(
+		saveSecretsHandler,
+		newUserServiceSaveSecretsArgs,
+		newUserServiceSaveSecretsResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -205,6 +205,24 @@ func newUserServiceLoginArgs() interface{} {
 
 func newUserServiceLoginResult() interface{} {
 	return usersvc.NewUserServiceLoginResult()
+}
+
+func genTokenHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*usersvc.UserServiceGenTokenArgs)
+	realResult := result.(*usersvc.UserServiceGenTokenResult)
+	success, err := handler.(usersvc.UserService).GenToken(ctx, realArg.Token)
+	if err != nil {
+		return err
+	}
+	realResult.Success = &success
+	return nil
+}
+func newUserServiceGenTokenArgs() interface{} {
+	return usersvc.NewUserServiceGenTokenArgs()
+}
+
+func newUserServiceGenTokenResult() interface{} {
+	return usersvc.NewUserServiceGenTokenResult()
 }
 
 func parseTokenHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -333,40 +351,22 @@ func newUserServiceGetUserByIdsResult() interface{} {
 	return usersvc.NewUserServiceGetUserByIdsResult()
 }
 
-func createSecretHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*usersvc.UserServiceCreateSecretArgs)
-	realResult := result.(*usersvc.UserServiceCreateSecretResult)
-	success, err := handler.(usersvc.UserService).CreateSecret(ctx, realArg.Req)
+func saveSecretsHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*usersvc.UserServiceSaveSecretsArgs)
+	realResult := result.(*usersvc.UserServiceSaveSecretsResult)
+	success, err := handler.(usersvc.UserService).SaveSecrets(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newUserServiceCreateSecretArgs() interface{} {
-	return usersvc.NewUserServiceCreateSecretArgs()
+func newUserServiceSaveSecretsArgs() interface{} {
+	return usersvc.NewUserServiceSaveSecretsArgs()
 }
 
-func newUserServiceCreateSecretResult() interface{} {
-	return usersvc.NewUserServiceCreateSecretResult()
-}
-
-func updateSecretHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*usersvc.UserServiceUpdateSecretArgs)
-	realResult := result.(*usersvc.UserServiceUpdateSecretResult)
-	success, err := handler.(usersvc.UserService).UpdateSecret(ctx, realArg.Req)
-	if err != nil {
-		return err
-	}
-	realResult.Success = success
-	return nil
-}
-func newUserServiceUpdateSecretArgs() interface{} {
-	return usersvc.NewUserServiceUpdateSecretArgs()
-}
-
-func newUserServiceUpdateSecretResult() interface{} {
-	return usersvc.NewUserServiceUpdateSecretResult()
+func newUserServiceSaveSecretsResult() interface{} {
+	return usersvc.NewUserServiceSaveSecretsResult()
 }
 
 func deleteSecretHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -430,6 +430,16 @@ func (p *kClient) Login(ctx context.Context, req *usersvc.LoginReq) (r *usersvc.
 	_args.Req = req
 	var _result usersvc.UserServiceLoginResult
 	if err = p.c.Call(ctx, "Login", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GenToken(ctx context.Context, token int64) (r string, err error) {
+	var _args usersvc.UserServiceGenTokenArgs
+	_args.Token = token
+	var _result usersvc.UserServiceGenTokenResult
+	if err = p.c.Call(ctx, "GenToken", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
@@ -504,21 +514,11 @@ func (p *kClient) GetUserByIds(ctx context.Context, req *base.IDsReq) (r []*user
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) CreateSecret(ctx context.Context, req *usersvc.CreateSecretReq) (r *base.Empty, err error) {
-	var _args usersvc.UserServiceCreateSecretArgs
+func (p *kClient) SaveSecrets(ctx context.Context, req *usersvc.SaveSecretReq) (r *base.Empty, err error) {
+	var _args usersvc.UserServiceSaveSecretsArgs
 	_args.Req = req
-	var _result usersvc.UserServiceCreateSecretResult
-	if err = p.c.Call(ctx, "CreateSecret", &_args, &_result); err != nil {
-		return
-	}
-	return _result.GetSuccess(), nil
-}
-
-func (p *kClient) UpdateSecret(ctx context.Context, req *usersvc.UpdateSecretReq) (r *base.Empty, err error) {
-	var _args usersvc.UserServiceUpdateSecretArgs
-	_args.Req = req
-	var _result usersvc.UserServiceUpdateSecretResult
-	if err = p.c.Call(ctx, "UpdateSecret", &_args, &_result); err != nil {
+	var _result usersvc.UserServiceSaveSecretsResult
+	if err = p.c.Call(ctx, "SaveSecrets", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

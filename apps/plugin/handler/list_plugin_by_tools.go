@@ -16,7 +16,7 @@ func (s *PluginServiceImpl) ListPluginByTools(ctx context.Context, req *pluginsv
 		return nil, bizListPluginByTools.NewErr(err).Log(ctx, "get tools by ids error")
 	}
 
-	pluginIDs := hset.FromSlice(tools, func(t *model.PluginTool) int64 { return t.PluginID })
+	pluginIDs := hset.FromSliceEntries(tools, func(t *model.PluginTool) int64 { return t.PluginID })
 
 	plugins, err := s.pluginDao.GetByIDs(ctx, pluginIDs.List())
 	if err != nil {

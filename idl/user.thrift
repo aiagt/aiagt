@@ -24,6 +24,8 @@ struct Secret {
     5: required string value
     6: required base.Time created_at
     7: required base.Time updated_at
+    8: optional string plugin_name
+    9: optional string plugin_logo
 }
 
 struct RegisterReq {
@@ -68,23 +70,21 @@ struct ResetPasswordReq {
     3: required string password
 }
 
-struct CreateSecretReq {
+struct SaveSecretReqItem {
     1: required i64 plugin_id
     2: required string name
     3: required string value
 }
 
-struct UpdateSecretReq {
-    1: required i64 id (go.tag='path:"id"')
-    2: optional i64 plugin_id
-    3: optional string name
-    4: optional string value
+struct SaveSecretReq {
+    1: required list<SaveSecretReqItem> secrets
 }
 
 struct ListSecretReq {
     1: required base.PaginationReq pagination
-    2: optional i64 plugin_id (go.tag='query:"plugin_id"')
-    3: optional string name (go.tag='query:"name"')
+    2: optional i64 plugin_id
+    3: optional list<i64> plugin_ids
+    4: optional string name
 }
 
 struct ListSecretResp {
@@ -109,6 +109,7 @@ struct SendCaptchaResp {
 service UserService {
     RegisterResp Register(1: RegisterReq req)
     LoginResp Login(1: LoginReq req)
+    string GenToken(1: i64 token)
     i64 ParseToken(1: string token)
     base.Empty ResetPassword(1: ResetPasswordReq req)
     SendCaptchaResp SendCaptcha(1: SendCaptchaReq req)
@@ -118,8 +119,7 @@ service UserService {
     User GetUserByID(1: base.IDReq req)
     list<User> GetUserByIds(1: base.IDsReq req)
 
-    base.Empty CreateSecret(1: CreateSecretReq req)
-    base.Empty UpdateSecret(1: UpdateSecretReq req)
+    base.Empty SaveSecrets(1: SaveSecretReq req)
     base.Empty DeleteSecret(1: base.IDReq req)
     ListSecretResp ListSecret(1: ListSecretReq req)
 }

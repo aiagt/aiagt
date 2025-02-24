@@ -42,6 +42,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"GetPluginByIDs": kitex.NewMethodInfo(
+		getPluginByIDsHandler,
+		newPluginServiceGetPluginByIDsArgs,
+		newPluginServiceGetPluginByIDsResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 	"GetPluginByKey": kitex.NewMethodInfo(
 		getPluginByKeyHandler,
 		newPluginServiceGetPluginByKeyArgs,
@@ -60,6 +67,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		listPluginByToolsHandler,
 		newPluginServiceListPluginByToolsArgs,
 		newPluginServiceListPluginByToolsResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"GetPluginSecretsByTools": kitex.NewMethodInfo(
+		getPluginSecretsByToolsHandler,
+		newPluginServiceGetPluginSecretsByToolsArgs,
+		newPluginServiceGetPluginSecretsByToolsResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -271,6 +285,24 @@ func newPluginServiceGetPluginByIDResult() interface{} {
 	return pluginsvc.NewPluginServiceGetPluginByIDResult()
 }
 
+func getPluginByIDsHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceGetPluginByIDsArgs)
+	realResult := result.(*pluginsvc.PluginServiceGetPluginByIDsResult)
+	success, err := handler.(pluginsvc.PluginService).GetPluginByIDs(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newPluginServiceGetPluginByIDsArgs() interface{} {
+	return pluginsvc.NewPluginServiceGetPluginByIDsArgs()
+}
+
+func newPluginServiceGetPluginByIDsResult() interface{} {
+	return pluginsvc.NewPluginServiceGetPluginByIDsResult()
+}
+
 func getPluginByKeyHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*pluginsvc.PluginServiceGetPluginByKeyArgs)
 	realResult := result.(*pluginsvc.PluginServiceGetPluginByKeyResult)
@@ -323,6 +355,24 @@ func newPluginServiceListPluginByToolsArgs() interface{} {
 
 func newPluginServiceListPluginByToolsResult() interface{} {
 	return pluginsvc.NewPluginServiceListPluginByToolsResult()
+}
+
+func getPluginSecretsByToolsHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*pluginsvc.PluginServiceGetPluginSecretsByToolsArgs)
+	realResult := result.(*pluginsvc.PluginServiceGetPluginSecretsByToolsResult)
+	success, err := handler.(pluginsvc.PluginService).GetPluginSecretsByTools(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newPluginServiceGetPluginSecretsByToolsArgs() interface{} {
+	return pluginsvc.NewPluginServiceGetPluginSecretsByToolsArgs()
+}
+
+func newPluginServiceGetPluginSecretsByToolsResult() interface{} {
+	return pluginsvc.NewPluginServiceGetPluginSecretsByToolsResult()
 }
 
 func publishPluginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -555,6 +605,16 @@ func (p *kClient) GetPluginByID(ctx context.Context, req *base.IDReq) (r *plugin
 	return _result.GetSuccess(), nil
 }
 
+func (p *kClient) GetPluginByIDs(ctx context.Context, req *base.IDsReq) (r []*pluginsvc.Plugin, err error) {
+	var _args pluginsvc.PluginServiceGetPluginByIDsArgs
+	_args.Req = req
+	var _result pluginsvc.PluginServiceGetPluginByIDsResult
+	if err = p.c.Call(ctx, "GetPluginByIDs", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
 func (p *kClient) GetPluginByKey(ctx context.Context, req *pluginsvc.GetPluginByKeyReq) (r *pluginsvc.Plugin, err error) {
 	var _args pluginsvc.PluginServiceGetPluginByKeyArgs
 	_args.Req = req
@@ -580,6 +640,16 @@ func (p *kClient) ListPluginByTools(ctx context.Context, req *pluginsvc.ListPlug
 	_args.Req = req
 	var _result pluginsvc.PluginServiceListPluginByToolsResult
 	if err = p.c.Call(ctx, "ListPluginByTools", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetPluginSecretsByTools(ctx context.Context, req *base.IDsReq) (r []*pluginsvc.PluginSecrets, err error) {
+	var _args pluginsvc.PluginServiceGetPluginSecretsByToolsArgs
+	_args.Req = req
+	var _result pluginsvc.PluginServiceGetPluginSecretsByToolsResult
+	if err = p.c.Call(ctx, "GetPluginSecretsByTools", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

@@ -3,6 +3,8 @@ package handler
 import (
 	"context"
 
+	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc/pluginservice"
+
 	"github.com/aiagt/aiagt/apps/user/dal/cache"
 
 	"github.com/aiagt/aiagt/apps/user/dal/db"
@@ -15,12 +17,13 @@ type UserServiceImpl struct {
 	userDao      *db.UserDao
 	secretDao    *db.SecretDao
 	captchaCache *cache.CaptchaCache
+	pluginCli    pluginsvc.Client
 }
 
-func NewUserService(userDao *db.UserDao, secretDao *db.SecretDao, captchaCache *cache.CaptchaCache) *UserServiceImpl {
+func NewUserService(userDao *db.UserDao, secretDao *db.SecretDao, captchaCache *cache.CaptchaCache, pluginCli pluginsvc.Client) *UserServiceImpl {
 	initServiceBusiness(1)
 
-	return &UserServiceImpl{userDao: userDao, secretDao: secretDao, captchaCache: captchaCache}
+	return &UserServiceImpl{userDao: userDao, secretDao: secretDao, captchaCache: captchaCache, pluginCli: pluginCli}
 }
 
 type AuthServiceImpl struct {
@@ -33,4 +36,8 @@ func NewAuthService(handler usersvc.UserService) *AuthServiceImpl {
 
 func (a *AuthServiceImpl) ParseToken(ctx context.Context, token string, _ ...callopt.Option) (resp int64, err error) {
 	return a.handler.ParseToken(ctx, token)
+}
+
+func (a *AuthServiceImpl) GenToken(ctx context.Context, id int64, _ ...callopt.Option) (resp string, err error) {
+	return a.handler.GenToken(ctx, id)
 }

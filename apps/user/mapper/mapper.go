@@ -3,7 +3,9 @@ package mapper
 import (
 	"github.com/aiagt/aiagt/apps/user/model"
 	"github.com/aiagt/aiagt/common/baseutil"
+	pluginsvc "github.com/aiagt/aiagt/kitex_gen/pluginsvc"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
+	"github.com/aiagt/aiagt/pkg/hash/hmap"
 )
 
 func NewGenUser(user *model.User) *usersvc.User {
@@ -31,8 +33,8 @@ func NewGenListUser(users []*model.User) []*usersvc.User {
 	return result
 }
 
-func NewGenSecret(secret *model.Secret) *usersvc.Secret {
-	return &usersvc.Secret{
+func NewGenSecret(secret *model.Secret, plugin *pluginsvc.Plugin) *usersvc.Secret {
+	result := &usersvc.Secret{
 		Id:        secret.ID,
 		UserId:    secret.UserID,
 		PluginId:  secret.PluginID,
@@ -41,12 +43,21 @@ func NewGenSecret(secret *model.Secret) *usersvc.Secret {
 		CreatedAt: baseutil.NewBaseTime(secret.CreatedAt),
 		UpdatedAt: baseutil.NewBaseTime(secret.UpdatedAt),
 	}
+
+	if plugin != nil {
+		result.PluginName = &plugin.Name
+		result.PluginLogo = &plugin.Logo
+	}
+
+	return result
 }
 
-func NewGenListSecret(secrets []*model.Secret) []*usersvc.Secret {
+func NewGenListSecret(secrets []*model.Secret, pluginMap hmap.Map[int64, *pluginsvc.Plugin]) []*usersvc.Secret {
 	result := make([]*usersvc.Secret, len(secrets))
 	for i, secret := range secrets {
-		result[i] = NewGenSecret(secret)
+		plugin := pluginMap[secret.PluginID]
+
+		result[i] = NewGenSecret(secret, plugin)
 	}
 
 	return result
@@ -62,21 +73,5 @@ func NewModelUpdateUser(user *usersvc.UpdateUserReq) *model.UserOptional {
 		DescriptionMd: user.DescriptionMd,
 		Github:        user.Github,
 		Avatar:        user.Avatar,
-	}
-}
-
-func NewModelCreateSecret(secret *usersvc.CreateSecretReq) *model.Secret {
-	return &model.Secret{
-		PluginID: secret.PluginId,
-		Name:     secret.Name,
-		Value:    secret.Value,
-	}
-}
-
-func NewModelUpdateSecret(secret *usersvc.UpdateSecretReq) *model.SecretOptional {
-	return &model.SecretOptional{
-		PluginID: secret.PluginId,
-		Name:     secret.Name,
-		Value:    secret.Value,
 	}
 }

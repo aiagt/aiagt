@@ -21,14 +21,14 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *usersvc.LoginReq) (res
 
 	switch {
 	case req.Captcha != nil:
-		var captcha string
+		var valid bool
 
-		captcha, err = s.captchaCache.GetAndDel(ctx, cache.CaptchaTypeAuth, req.Email)
+		valid, err = s.captchaCache.Verify(ctx, cache.CaptchaTypeAuth, req.Email, *req.Captcha)
 		if err != nil {
 			return nil, bizLogin.NewErr(err)
 		}
 
-		if captcha != *req.Captcha {
+		if !valid {
 			return nil, bizLogin.CodeErr(bizerr.ErrCodeWrongAuth)
 		}
 

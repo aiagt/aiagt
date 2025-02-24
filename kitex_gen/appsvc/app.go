@@ -14,28 +14,29 @@ import (
 )
 
 type App struct {
-	Id              int64                   `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
-	Name            string                  `thrift:"name,2,required" frugal:"2,required,string" json:"name"`
-	Description     string                  `thrift:"description,3,required" frugal:"3,required,string" json:"description"`
-	DescriptionMd   string                  `thrift:"description_md,4,required" frugal:"4,required,string" json:"description_md"`
-	ModelId         int64                   `thrift:"model_id,5,required" frugal:"5,required,i64" json:"model_id"`
-	EnableImage     bool                    `thrift:"enable_image,6,required" frugal:"6,required,bool" json:"enable_image"`
-	EnableFile      bool                    `thrift:"enable_file,7,required" frugal:"7,required,bool" json:"enable_file"`
-	Version         string                  `thrift:"version,8,required" frugal:"8,required,string" json:"version"`
-	IsPrivate       bool                    `thrift:"is_private,9,required" frugal:"9,required,bool" json:"is_private"`
-	HomePage        string                  `thrift:"home_page,10,required" frugal:"10,required,string" json:"home_page"`
-	PresetQuestions []string                `thrift:"preset_questions,11,required" frugal:"11,required,list<string>" json:"preset_questions"`
-	ToolIds         []int64                 `thrift:"tool_ids,12,required" frugal:"12,required,list<i64>" json:"tool_ids"`
-	Tools           []*pluginsvc.PluginTool `thrift:"tools,13,optional" frugal:"13,optional,list<pluginsvc.PluginTool>" json:"tools,omitempty"`
-	Logo            string                  `thrift:"logo,14,required" frugal:"14,required,string" json:"logo"`
-	AuthorId        int64                   `thrift:"author_id,15,required" frugal:"15,required,i64" json:"author_id"`
-	Author          *usersvc.User           `thrift:"author,16,optional" frugal:"16,optional,usersvc.User" json:"author,omitempty"`
-	LabelIds        []int64                 `thrift:"label_ids,17,required" frugal:"17,required,list<i64>" json:"label_ids"`
-	Labels          []*AppLabel             `thrift:"labels,18,optional" frugal:"18,optional,list<AppLabel>" json:"labels,omitempty"`
-	ModelConfig     *ModelConfig            `thrift:"model_config,19,required" frugal:"19,required,ModelConfig" json:"model_config"`
-	CreatedAt       *base.Time              `thrift:"created_at,20,required" frugal:"20,required,base.Time" json:"created_at"`
-	UpdatedAt       *base.Time              `thrift:"updated_at,21,required" frugal:"21,required,base.Time" json:"updated_at"`
-	PublishedAt     *base.Time              `thrift:"published_at,22,optional" frugal:"22,optional,base.Time" json:"published_at,omitempty"`
+	Id              int64                      `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Name            string                     `thrift:"name,2,required" frugal:"2,required,string" json:"name"`
+	Description     string                     `thrift:"description,3,required" frugal:"3,required,string" json:"description"`
+	DescriptionMd   string                     `thrift:"description_md,4,required" frugal:"4,required,string" json:"description_md"`
+	ModelId         int64                      `thrift:"model_id,5,required" frugal:"5,required,i64" json:"model_id"`
+	EnableImage     bool                       `thrift:"enable_image,6,required" frugal:"6,required,bool" json:"enable_image"`
+	EnableFile      bool                       `thrift:"enable_file,7,required" frugal:"7,required,bool" json:"enable_file"`
+	Version         string                     `thrift:"version,8,required" frugal:"8,required,string" json:"version"`
+	IsPrivate       bool                       `thrift:"is_private,9,required" frugal:"9,required,bool" json:"is_private"`
+	HomePage        string                     `thrift:"home_page,10,required" frugal:"10,required,string" json:"home_page"`
+	PresetQuestions []string                   `thrift:"preset_questions,11,required" frugal:"11,required,list<string>" json:"preset_questions"`
+	ToolIds         []int64                    `thrift:"tool_ids,12,required" frugal:"12,required,list<i64>" json:"tool_ids"`
+	Tools           []*pluginsvc.PluginTool    `thrift:"tools,13,optional" frugal:"13,optional,list<pluginsvc.PluginTool>" json:"tools,omitempty"`
+	Logo            string                     `thrift:"logo,14,required" frugal:"14,required,string" json:"logo"`
+	AuthorId        int64                      `thrift:"author_id,15,required" frugal:"15,required,i64" json:"author_id"`
+	Author          *usersvc.User              `thrift:"author,16,optional" frugal:"16,optional,usersvc.User" json:"author,omitempty"`
+	LabelIds        []int64                    `thrift:"label_ids,17,required" frugal:"17,required,list<i64>" json:"label_ids"`
+	Labels          []*AppLabel                `thrift:"labels,18,optional" frugal:"18,optional,list<AppLabel>" json:"labels,omitempty"`
+	ModelConfig     *ModelConfig               `thrift:"model_config,19,required" frugal:"19,required,ModelConfig" json:"model_config"`
+	CreatedAt       *base.Time                 `thrift:"created_at,20,required" frugal:"20,required,base.Time" json:"created_at"`
+	UpdatedAt       *base.Time                 `thrift:"updated_at,21,required" frugal:"21,required,base.Time" json:"updated_at"`
+	PublishedAt     *base.Time                 `thrift:"published_at,22,optional" frugal:"22,optional,base.Time" json:"published_at,omitempty"`
+	PluginSecrets   []*pluginsvc.PluginSecrets `thrift:"plugin_secrets,23,optional" frugal:"23,optional,list<pluginsvc.PluginSecrets>" json:"plugin_secrets,omitempty"`
 }
 
 func NewApp() *App {
@@ -167,6 +168,15 @@ func (p *App) GetPublishedAt() (v *base.Time) {
 	}
 	return p.PublishedAt
 }
+
+var App_PluginSecrets_DEFAULT []*pluginsvc.PluginSecrets
+
+func (p *App) GetPluginSecrets() (v []*pluginsvc.PluginSecrets) {
+	if !p.IsSetPluginSecrets() {
+		return App_PluginSecrets_DEFAULT
+	}
+	return p.PluginSecrets
+}
 func (p *App) SetId(val int64) {
 	p.Id = val
 }
@@ -233,6 +243,9 @@ func (p *App) SetUpdatedAt(val *base.Time) {
 func (p *App) SetPublishedAt(val *base.Time) {
 	p.PublishedAt = val
 }
+func (p *App) SetPluginSecrets(val []*pluginsvc.PluginSecrets) {
+	p.PluginSecrets = val
+}
 
 var fieldIDToName_App = map[int16]string{
 	1:  "id",
@@ -257,6 +270,7 @@ var fieldIDToName_App = map[int16]string{
 	20: "created_at",
 	21: "updated_at",
 	22: "published_at",
+	23: "plugin_secrets",
 }
 
 func (p *App) IsSetTools() bool {
@@ -285,6 +299,10 @@ func (p *App) IsSetUpdatedAt() bool {
 
 func (p *App) IsSetPublishedAt() bool {
 	return p.PublishedAt != nil
+}
+
+func (p *App) IsSetPluginSecrets() bool {
+	return p.PluginSecrets != nil
 }
 
 func (p *App) Read(iprot thrift.TProtocol) (err error) {
@@ -512,6 +530,14 @@ func (p *App) Read(iprot thrift.TProtocol) (err error) {
 		case 22:
 			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField22(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 23:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField23(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -924,6 +950,29 @@ func (p *App) ReadField22(iprot thrift.TProtocol) error {
 	p.PublishedAt = _field
 	return nil
 }
+func (p *App) ReadField23(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	_field := make([]*pluginsvc.PluginSecrets, 0, size)
+	values := make([]pluginsvc.PluginSecrets, size)
+	for i := 0; i < size; i++ {
+		_elem := &values[i]
+		_elem.InitDefault()
+
+		if err := _elem.Read(iprot); err != nil {
+			return err
+		}
+
+		_field = append(_field, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	p.PluginSecrets = _field
+	return nil
+}
 
 func (p *App) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -1017,6 +1066,10 @@ func (p *App) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField22(oprot); err != nil {
 			fieldId = 22
+			goto WriteFieldError
+		}
+		if err = p.writeField23(oprot); err != nil {
+			fieldId = 23
 			goto WriteFieldError
 		}
 	}
@@ -1438,6 +1491,33 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 22 end error: ", p), err)
 }
 
+func (p *App) writeField23(oprot thrift.TProtocol) (err error) {
+	if p.IsSetPluginSecrets() {
+		if err = oprot.WriteFieldBegin("plugin_secrets", thrift.LIST, 23); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteListBegin(thrift.STRUCT, len(p.PluginSecrets)); err != nil {
+			return err
+		}
+		for _, v := range p.PluginSecrets {
+			if err := v.Write(oprot); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 23 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 23 end error: ", p), err)
+}
+
 func (p *App) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1516,6 +1596,9 @@ func (p *App) DeepEqual(ano *App) bool {
 		return false
 	}
 	if !p.Field22DeepEqual(ano.PublishedAt) {
+		return false
+	}
+	if !p.Field23DeepEqual(ano.PluginSecrets) {
 		return false
 	}
 	return true
@@ -1702,6 +1785,19 @@ func (p *App) Field22DeepEqual(src *base.Time) bool {
 
 	if !p.PublishedAt.DeepEqual(src) {
 		return false
+	}
+	return true
+}
+func (p *App) Field23DeepEqual(src []*pluginsvc.PluginSecrets) bool {
+
+	if len(p.PluginSecrets) != len(src) {
+		return false
+	}
+	for i, v := range p.PluginSecrets {
+		_src := src[i]
+		if !v.DeepEqual(_src) {
+			return false
+		}
 	}
 	return true
 }

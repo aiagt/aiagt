@@ -142,6 +142,26 @@ func NewGenListPluginLabel(list []*model.PluginLabel) []*pluginsvc.PluginLabel {
 	return result
 }
 
+func NewGenListPluginSecrets(list []*model.Plugin) []*pluginsvc.PluginSecrets {
+	result := make([]*pluginsvc.PluginSecrets, len(list))
+	for i, plugin := range list {
+		result[i] = NewGenPluginSecrets(plugin)
+	}
+
+	return result
+}
+
+func NewGenPluginSecrets(plugin *model.Plugin) *pluginsvc.PluginSecrets {
+	return &pluginsvc.PluginSecrets{
+		PluginId:   plugin.ID,
+		PluginName: plugin.Name,
+		PluginLogo: plugin.Logo,
+		Secrets:    NewGenListPluginSecret(plugin.Secrets),
+		IsPrivate:  plugin.IsPrivate,
+		AuthorId:   plugin.AuthorID,
+	}
+}
+
 func NewModelPluginSecret(secret *pluginsvc.PluginSecret) *model.PluginSecret {
 	return &model.PluginSecret{
 		Name:          secret.Name,

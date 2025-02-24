@@ -6,6 +6,15 @@ func NewSet[T comparable](cap int) Set[T] {
 	return make(Set[T], cap)
 }
 
+func FromValues[T comparable](vals ...T) Set[T] {
+	s := make(Set[T])
+	for _, val := range vals {
+		s[val] = struct{}{}
+	}
+
+	return s
+}
+
 func FromMap[K comparable, V any](m map[K]V) Set[K] {
 	s := make(Set[K], len(m))
 	for k := range m {
@@ -15,7 +24,16 @@ func FromMap[K comparable, V any](m map[K]V) Set[K] {
 	return s
 }
 
-func FromSlice[K comparable, T any](vals []T, fn func(T) K) Set[K] {
+func FromSlice[T comparable](vals []T) Set[T] {
+	s := make(Set[T])
+	for _, val := range vals {
+		s[val] = struct{}{}
+	}
+
+	return s
+}
+
+func FromSliceEntries[K comparable, T any](vals []T, fn func(T) K) Set[K] {
 	s := make(Set[K])
 	for _, val := range vals {
 		s[fn(val)] = struct{}{}
