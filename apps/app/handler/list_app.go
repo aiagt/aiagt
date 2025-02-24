@@ -36,7 +36,7 @@ func (s *AppServiceImpl) ListApp(ctx context.Context, req *appsvc.ListAppReq) (r
 
 	var authorMap hmap.Map[int64, *usersvc.User]
 
-	if utils.Value(req.WithAuthor) {
+	if utils.ValOf(req.WithAuthor) {
 		authorIDs := lists.Map(apps, func(t *model.App) int64 { return t.AuthorID })
 
 		authors, err := s.userCli.GetUserByIds(ctx, &base.IDsReq{Ids: authorIDs})

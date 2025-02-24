@@ -135,7 +135,7 @@ func MakeOpenAIFileMessage(file *model.MessageContentValueFile) *openai.ChatMess
 
 		return &openai.ChatMessagePart{
 			Type: openai.ChatMessagePartType_TEXT,
-			Text: utils.Pointer(string(resultBytes)),
+			Text: utils.PtrOf(string(resultBytes)),
 		}
 	}
 }

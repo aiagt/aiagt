@@ -2,13 +2,13 @@ package mapper
 
 import (
 	"encoding/json"
+	"github.com/aiagt/aiagt/pkg/caller"
 	"github.com/sashabaranov/go-openai/jsonschema"
 
 	"github.com/aiagt/aiagt/apps/plugin/model"
 	"github.com/aiagt/aiagt/common/baseutil"
 	"github.com/aiagt/aiagt/kitex_gen/pluginsvc"
 	"github.com/aiagt/aiagt/kitex_gen/usersvc"
-	"github.com/aiagt/aiagt/pkg/caller"
 	"github.com/aiagt/aiagt/pkg/hash/hmap"
 	"github.com/aiagt/aiagt/pkg/lists"
 	"github.com/aiagt/aiagt/pkg/snowflake"

@@ -69,7 +69,7 @@ func (d *LabelDao) List(ctx context.Context, req *appsvc.ListAppLabelReq) ([]*mo
 		if req.Text != nil {
 			db = db.Where("text like ?", fmt.Sprintf("%%%s%%", *req.Text))
 		}
-		if utils.Value(req.Pinned) {
+		if utils.ValOf(req.Pinned) {
 			db = db.Where("pinned > ?", 0)
 		}
 		return db

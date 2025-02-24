@@ -25,8 +25,8 @@ func (s *AppServiceImpl) PublishApp(ctx context.Context, req *appsvc.PublishAppR
 	}
 
 	err = s.appDao.Update(ctx, req.Id, &model.AppOptional{
-		PublishedAt: utils.Pointer(time.Now()),
-		Version:     utils.Pointer(req.Version),
+		PublishedAt: utils.PtrOf(time.Now()),
+		Version:     utils.PtrOf(req.Version),
 	})
 	if err != nil {
 		return nil, bizPublishApp.NewErr(err).Log(ctx, "update app failed")

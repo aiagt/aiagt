@@ -22,3 +22,8 @@ model:
   resolver:
     address:
       - consul:8500
+
+workflow:
+  resolver:
+    address:
+      - consul:8500

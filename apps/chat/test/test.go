@@ -50,7 +50,7 @@ func logger(resp any, err error) {
 func Chat(ctx context.Context) (any, error) {
 	stream, err := rpc.ChatStreamCli.Chat(ctx, &chatsvc.ChatReq{
 		AppId:          1,
-		ConversationId: utils.Pointer(int64(31)),
+		ConversationId: utils.PtrOf(int64(31)),
 		Messages: []*chatsvc.MessageContent{
 			{
 				Type: chatsvc.MessageType_TEXT,

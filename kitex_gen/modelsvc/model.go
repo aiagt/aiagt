@@ -4098,6 +4098,800 @@ func (p *ListModelResp) Field2DeepEqual(src []*Model) bool {
 	return true
 }
 
+type APIKey struct {
+	Id      int64  `thrift:"id,1,required" frugal:"1,required,i64" json:"id"`
+	Source  string `thrift:"source,2,required" frugal:"2,required,string" json:"source"`
+	BaseUrl string `thrift:"base_url,3,required" frugal:"3,required,string" json:"base_url"`
+	ApiKey  string `thrift:"api_key,4,required" frugal:"4,required,string" json:"api_key"`
+}
+
+func NewAPIKey() *APIKey {
+	return &APIKey{}
+}
+
+func (p *APIKey) InitDefault() {
+}
+
+func (p *APIKey) GetId() (v int64) {
+	return p.Id
+}
+
+func (p *APIKey) GetSource() (v string) {
+	return p.Source
+}
+
+func (p *APIKey) GetBaseUrl() (v string) {
+	return p.BaseUrl
+}
+
+func (p *APIKey) GetApiKey() (v string) {
+	return p.ApiKey
+}
+func (p *APIKey) SetId(val int64) {
+	p.Id = val
+}
+func (p *APIKey) SetSource(val string) {
+	p.Source = val
+}
+func (p *APIKey) SetBaseUrl(val string) {
+	p.BaseUrl = val
+}
+func (p *APIKey) SetApiKey(val string) {
+	p.ApiKey = val
+}
+
+var fieldIDToName_APIKey = map[int16]string{
+	1: "id",
+	2: "source",
+	3: "base_url",
+	4: "api_key",
+}
+
+func (p *APIKey) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetId bool = false
+	var issetSource bool = false
+	var issetBaseUrl bool = false
+	var issetApiKey bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetId = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetSource = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetBaseUrl = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 4:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetApiKey = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetId {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetSource {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetBaseUrl {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetApiKey {
+		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_APIKey[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_APIKey[fieldId]))
+}
+
+func (p *APIKey) ReadField1(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Id = _field
+	return nil
+}
+func (p *APIKey) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Source = _field
+	return nil
+}
+func (p *APIKey) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.BaseUrl = _field
+	return nil
+}
+func (p *APIKey) ReadField4(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.ApiKey = _field
+	return nil
+}
+
+func (p *APIKey) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("APIKey"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *APIKey) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("id", thrift.I64, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Id); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *APIKey) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("source", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Source); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *APIKey) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("base_url", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.BaseUrl); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *APIKey) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("api_key", thrift.STRING, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.ApiKey); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
+func (p *APIKey) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("APIKey(%+v)", *p)
+
+}
+
+func (p *APIKey) DeepEqual(ano *APIKey) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Id) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.Source) {
+		return false
+	}
+	if !p.Field3DeepEqual(ano.BaseUrl) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.ApiKey) {
+		return false
+	}
+	return true
+}
+
+func (p *APIKey) Field1DeepEqual(src int64) bool {
+
+	if p.Id != src {
+		return false
+	}
+	return true
+}
+func (p *APIKey) Field2DeepEqual(src string) bool {
+
+	if strings.Compare(p.Source, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *APIKey) Field3DeepEqual(src string) bool {
+
+	if strings.Compare(p.BaseUrl, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *APIKey) Field4DeepEqual(src string) bool {
+
+	if strings.Compare(p.ApiKey, src) != 0 {
+		return false
+	}
+	return true
+}
+
+type GetAPIKeyBySourceReq struct {
+	Source string `thrift:"source,1,required" frugal:"1,required,string" json:"source"`
+}
+
+func NewGetAPIKeyBySourceReq() *GetAPIKeyBySourceReq {
+	return &GetAPIKeyBySourceReq{}
+}
+
+func (p *GetAPIKeyBySourceReq) InitDefault() {
+}
+
+func (p *GetAPIKeyBySourceReq) GetSource() (v string) {
+	return p.Source
+}
+func (p *GetAPIKeyBySourceReq) SetSource(val string) {
+	p.Source = val
+}
+
+var fieldIDToName_GetAPIKeyBySourceReq = map[int16]string{
+	1: "source",
+}
+
+func (p *GetAPIKeyBySourceReq) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetSource bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetSource = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetSource {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_GetAPIKeyBySourceReq[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_GetAPIKeyBySourceReq[fieldId]))
+}
+
+func (p *GetAPIKeyBySourceReq) ReadField1(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Source = _field
+	return nil
+}
+
+func (p *GetAPIKeyBySourceReq) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("GetAPIKeyBySourceReq"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *GetAPIKeyBySourceReq) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("source", thrift.STRING, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Source); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *GetAPIKeyBySourceReq) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("GetAPIKeyBySourceReq(%+v)", *p)
+
+}
+
+func (p *GetAPIKeyBySourceReq) DeepEqual(ano *GetAPIKeyBySourceReq) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Source) {
+		return false
+	}
+	return true
+}
+
+func (p *GetAPIKeyBySourceReq) Field1DeepEqual(src string) bool {
+
+	if strings.Compare(p.Source, src) != 0 {
+		return false
+	}
+	return true
+}
+
+type GetAPIKeyByModelReq struct {
+	Model   *string `thrift:"model,1,optional" frugal:"1,optional,string" json:"model,omitempty"`
+	ModelId *int64  `thrift:"model_id,2,optional" frugal:"2,optional,i64" json:"model_id,omitempty"`
+}
+
+func NewGetAPIKeyByModelReq() *GetAPIKeyByModelReq {
+	return &GetAPIKeyByModelReq{}
+}
+
+func (p *GetAPIKeyByModelReq) InitDefault() {
+}
+
+var GetAPIKeyByModelReq_Model_DEFAULT string
+
+func (p *GetAPIKeyByModelReq) GetModel() (v string) {
+	if !p.IsSetModel() {
+		return GetAPIKeyByModelReq_Model_DEFAULT
+	}
+	return *p.Model
+}
+
+var GetAPIKeyByModelReq_ModelId_DEFAULT int64
+
+func (p *GetAPIKeyByModelReq) GetModelId() (v int64) {
+	if !p.IsSetModelId() {
+		return GetAPIKeyByModelReq_ModelId_DEFAULT
+	}
+	return *p.ModelId
+}
+func (p *GetAPIKeyByModelReq) SetModel(val *string) {
+	p.Model = val
+}
+func (p *GetAPIKeyByModelReq) SetModelId(val *int64) {
+	p.ModelId = val
+}
+
+var fieldIDToName_GetAPIKeyByModelReq = map[int16]string{
+	1: "model",
+	2: "model_id",
+}
+
+func (p *GetAPIKeyByModelReq) IsSetModel() bool {
+	return p.Model != nil
+}
+
+func (p *GetAPIKeyByModelReq) IsSetModelId() bool {
+	return p.ModelId != nil
+}
+
+func (p *GetAPIKeyByModelReq) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_GetAPIKeyByModelReq[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *GetAPIKeyByModelReq) ReadField1(iprot thrift.TProtocol) error {
+
+	var _field *string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.Model = _field
+	return nil
+}
+func (p *GetAPIKeyByModelReq) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field *int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = &v
+	}
+	p.ModelId = _field
+	return nil
+}
+
+func (p *GetAPIKeyByModelReq) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("GetAPIKeyByModelReq"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *GetAPIKeyByModelReq) writeField1(oprot thrift.TProtocol) (err error) {
+	if p.IsSetModel() {
+		if err = oprot.WriteFieldBegin("model", thrift.STRING, 1); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Model); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *GetAPIKeyByModelReq) writeField2(oprot thrift.TProtocol) (err error) {
+	if p.IsSetModelId() {
+		if err = oprot.WriteFieldBegin("model_id", thrift.I64, 2); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteI64(*p.ModelId); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *GetAPIKeyByModelReq) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("GetAPIKeyByModelReq(%+v)", *p)
+
+}
+
+func (p *GetAPIKeyByModelReq) DeepEqual(ano *GetAPIKeyByModelReq) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Model) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.ModelId) {
+		return false
+	}
+	return true
+}
+
+func (p *GetAPIKeyByModelReq) Field1DeepEqual(src *string) bool {
+
+	if p.Model == src {
+		return true
+	} else if p.Model == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Model, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *GetAPIKeyByModelReq) Field2DeepEqual(src *int64) bool {
+
+	if p.ModelId == src {
+		return true
+	} else if p.ModelId == nil || src == nil {
+		return false
+	}
+	if *p.ModelId != *src {
+		return false
+	}
+	return true
+}
+
 type ModelService interface {
 	GenToken(ctx context.Context, req *GenTokenReq) (r *GenTokenResp, err error)
 
@@ -4112,6 +4906,10 @@ type ModelService interface {
 	GetModelByID(ctx context.Context, req *base.IDReq) (r *Model, err error)
 
 	ListModel(ctx context.Context, req *ListModelReq) (r *ListModelResp, err error)
+
+	GetAPIKeyBySource(ctx context.Context, req *GetAPIKeyBySourceReq) (r *APIKey, err error)
+
+	GetAPIKeyByModel(ctx context.Context, req *GetAPIKeyByModelReq) (r *APIKey, err error)
 }
 
 type ModelService_ChatServer interface {
@@ -6493,6 +7291,686 @@ func (p *ModelServiceListModelResult) DeepEqual(ano *ModelServiceListModelResult
 }
 
 func (p *ModelServiceListModelResult) Field0DeepEqual(src *ListModelResp) bool {
+
+	if !p.Success.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type ModelServiceGetAPIKeyBySourceArgs struct {
+	Req *GetAPIKeyBySourceReq `thrift:"req,1" frugal:"1,default,GetAPIKeyBySourceReq" json:"req"`
+}
+
+func NewModelServiceGetAPIKeyBySourceArgs() *ModelServiceGetAPIKeyBySourceArgs {
+	return &ModelServiceGetAPIKeyBySourceArgs{}
+}
+
+func (p *ModelServiceGetAPIKeyBySourceArgs) InitDefault() {
+}
+
+var ModelServiceGetAPIKeyBySourceArgs_Req_DEFAULT *GetAPIKeyBySourceReq
+
+func (p *ModelServiceGetAPIKeyBySourceArgs) GetReq() (v *GetAPIKeyBySourceReq) {
+	if !p.IsSetReq() {
+		return ModelServiceGetAPIKeyBySourceArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *ModelServiceGetAPIKeyBySourceArgs) SetReq(val *GetAPIKeyBySourceReq) {
+	p.Req = val
+}
+
+var fieldIDToName_ModelServiceGetAPIKeyBySourceArgs = map[int16]string{
+	1: "req",
+}
+
+func (p *ModelServiceGetAPIKeyBySourceArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *ModelServiceGetAPIKeyBySourceArgs) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ModelServiceGetAPIKeyBySourceArgs[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyBySourceArgs) ReadField1(iprot thrift.TProtocol) error {
+	_field := NewGetAPIKeyBySourceReq()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Req = _field
+	return nil
+}
+
+func (p *ModelServiceGetAPIKeyBySourceArgs) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("GetAPIKeyBySource_args"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyBySourceArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Req.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyBySourceArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ModelServiceGetAPIKeyBySourceArgs(%+v)", *p)
+
+}
+
+func (p *ModelServiceGetAPIKeyBySourceArgs) DeepEqual(ano *ModelServiceGetAPIKeyBySourceArgs) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Req) {
+		return false
+	}
+	return true
+}
+
+func (p *ModelServiceGetAPIKeyBySourceArgs) Field1DeepEqual(src *GetAPIKeyBySourceReq) bool {
+
+	if !p.Req.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type ModelServiceGetAPIKeyBySourceResult struct {
+	Success *APIKey `thrift:"success,0,optional" frugal:"0,optional,APIKey" json:"success,omitempty"`
+}
+
+func NewModelServiceGetAPIKeyBySourceResult() *ModelServiceGetAPIKeyBySourceResult {
+	return &ModelServiceGetAPIKeyBySourceResult{}
+}
+
+func (p *ModelServiceGetAPIKeyBySourceResult) InitDefault() {
+}
+
+var ModelServiceGetAPIKeyBySourceResult_Success_DEFAULT *APIKey
+
+func (p *ModelServiceGetAPIKeyBySourceResult) GetSuccess() (v *APIKey) {
+	if !p.IsSetSuccess() {
+		return ModelServiceGetAPIKeyBySourceResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *ModelServiceGetAPIKeyBySourceResult) SetSuccess(x interface{}) {
+	p.Success = x.(*APIKey)
+}
+
+var fieldIDToName_ModelServiceGetAPIKeyBySourceResult = map[int16]string{
+	0: "success",
+}
+
+func (p *ModelServiceGetAPIKeyBySourceResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ModelServiceGetAPIKeyBySourceResult) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 0:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField0(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ModelServiceGetAPIKeyBySourceResult[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyBySourceResult) ReadField0(iprot thrift.TProtocol) error {
+	_field := NewAPIKey()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Success = _field
+	return nil
+}
+
+func (p *ModelServiceGetAPIKeyBySourceResult) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("GetAPIKeyBySource_result"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField0(oprot); err != nil {
+			fieldId = 0
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyBySourceResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Success.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyBySourceResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ModelServiceGetAPIKeyBySourceResult(%+v)", *p)
+
+}
+
+func (p *ModelServiceGetAPIKeyBySourceResult) DeepEqual(ano *ModelServiceGetAPIKeyBySourceResult) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field0DeepEqual(ano.Success) {
+		return false
+	}
+	return true
+}
+
+func (p *ModelServiceGetAPIKeyBySourceResult) Field0DeepEqual(src *APIKey) bool {
+
+	if !p.Success.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type ModelServiceGetAPIKeyByModelArgs struct {
+	Req *GetAPIKeyByModelReq `thrift:"req,1" frugal:"1,default,GetAPIKeyByModelReq" json:"req"`
+}
+
+func NewModelServiceGetAPIKeyByModelArgs() *ModelServiceGetAPIKeyByModelArgs {
+	return &ModelServiceGetAPIKeyByModelArgs{}
+}
+
+func (p *ModelServiceGetAPIKeyByModelArgs) InitDefault() {
+}
+
+var ModelServiceGetAPIKeyByModelArgs_Req_DEFAULT *GetAPIKeyByModelReq
+
+func (p *ModelServiceGetAPIKeyByModelArgs) GetReq() (v *GetAPIKeyByModelReq) {
+	if !p.IsSetReq() {
+		return ModelServiceGetAPIKeyByModelArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *ModelServiceGetAPIKeyByModelArgs) SetReq(val *GetAPIKeyByModelReq) {
+	p.Req = val
+}
+
+var fieldIDToName_ModelServiceGetAPIKeyByModelArgs = map[int16]string{
+	1: "req",
+}
+
+func (p *ModelServiceGetAPIKeyByModelArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *ModelServiceGetAPIKeyByModelArgs) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ModelServiceGetAPIKeyByModelArgs[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyByModelArgs) ReadField1(iprot thrift.TProtocol) error {
+	_field := NewGetAPIKeyByModelReq()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Req = _field
+	return nil
+}
+
+func (p *ModelServiceGetAPIKeyByModelArgs) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("GetAPIKeyByModel_args"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyByModelArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Req.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyByModelArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ModelServiceGetAPIKeyByModelArgs(%+v)", *p)
+
+}
+
+func (p *ModelServiceGetAPIKeyByModelArgs) DeepEqual(ano *ModelServiceGetAPIKeyByModelArgs) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Req) {
+		return false
+	}
+	return true
+}
+
+func (p *ModelServiceGetAPIKeyByModelArgs) Field1DeepEqual(src *GetAPIKeyByModelReq) bool {
+
+	if !p.Req.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type ModelServiceGetAPIKeyByModelResult struct {
+	Success *APIKey `thrift:"success,0,optional" frugal:"0,optional,APIKey" json:"success,omitempty"`
+}
+
+func NewModelServiceGetAPIKeyByModelResult() *ModelServiceGetAPIKeyByModelResult {
+	return &ModelServiceGetAPIKeyByModelResult{}
+}
+
+func (p *ModelServiceGetAPIKeyByModelResult) InitDefault() {
+}
+
+var ModelServiceGetAPIKeyByModelResult_Success_DEFAULT *APIKey
+
+func (p *ModelServiceGetAPIKeyByModelResult) GetSuccess() (v *APIKey) {
+	if !p.IsSetSuccess() {
+		return ModelServiceGetAPIKeyByModelResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *ModelServiceGetAPIKeyByModelResult) SetSuccess(x interface{}) {
+	p.Success = x.(*APIKey)
+}
+
+var fieldIDToName_ModelServiceGetAPIKeyByModelResult = map[int16]string{
+	0: "success",
+}
+
+func (p *ModelServiceGetAPIKeyByModelResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ModelServiceGetAPIKeyByModelResult) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 0:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField0(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ModelServiceGetAPIKeyByModelResult[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyByModelResult) ReadField0(iprot thrift.TProtocol) error {
+	_field := NewAPIKey()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Success = _field
+	return nil
+}
+
+func (p *ModelServiceGetAPIKeyByModelResult) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("GetAPIKeyByModel_result"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField0(oprot); err != nil {
+			fieldId = 0
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyByModelResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Success.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
+}
+
+func (p *ModelServiceGetAPIKeyByModelResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ModelServiceGetAPIKeyByModelResult(%+v)", *p)
+
+}
+
+func (p *ModelServiceGetAPIKeyByModelResult) DeepEqual(ano *ModelServiceGetAPIKeyByModelResult) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field0DeepEqual(ano.Success) {
+		return false
+	}
+	return true
+}
+
+func (p *ModelServiceGetAPIKeyByModelResult) Field0DeepEqual(src *APIKey) bool {
 
 	if !p.Success.DeepEqual(src) {
 		return false

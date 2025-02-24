@@ -113,3 +113,15 @@ func (d *ModelDao) Delete(ctx context.Context, id int64) error {
 
 	return nil
 }
+
+// GetByNameOrKey get model by name or key
+func (d *ModelDao) GetByNameOrKey(ctx context.Context, name string) (*model.Models, error) {
+	var result model.Models
+
+	err := d.db(ctx).Model(d.m).Where("name = ? OR key = ?", name, name).First(&result).Error
+	if err != nil {
+		return nil, errors.Wrap(err, "model dao get by name or key error")
+	}
+
+	return &result, nil
+}

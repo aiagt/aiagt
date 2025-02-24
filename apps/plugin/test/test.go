@@ -3,8 +3,9 @@ package main
 import (
 	"context"
 	"encoding/json"
-
 	"github.com/aiagt/aiagt/pkg/caller"
+	"github.com/aiagt/aiagt/pkg/schema"
+
 	"github.com/sashabaranov/go-openai/jsonschema"
 
 	"github.com/aiagt/aiagt/common/ctxutil"
@@ -97,7 +98,7 @@ func ListPlugin(ctx context.Context) (any, error) {
 func CreatePlugigTool(ctx context.Context) (any, error) {
 	reqType := caller.RequestType{
 		Type: jsonschema.Object,
-		Properties: map[string]caller.Definition{
+		Properties: map[string]schema.Definition{
 			"location": {
 				Type:        jsonschema.String,
 				Description: "The city and state, e.g. San Francisco, CA",

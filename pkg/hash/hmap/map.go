@@ -6,7 +6,7 @@ func NewMap[K comparable, V any](cap int) Map[K, V] {
 	return make(Map[K, V], cap)
 }
 
-func FromMap[K comparable, V any](m map[K]V) Map[K, V] {
+func Of[K comparable, V any](m map[K]V) Map[K, V] {
 	return m
 }
 

@@ -3,11 +3,12 @@ package handler
 import (
 	"context"
 	"fmt"
-	"github.com/aiagt/aiagt/pkg/caller"
+	"github.com/aiagt/aiagt/apps/model/model"
 	"io"
 	"testing"
 
-	"github.com/aiagt/aiagt/apps/model/conf"
+	"github.com/aiagt/aiagt/pkg/schema"
+
 	"github.com/aiagt/aiagt/pkg/utils"
 	"github.com/pkg/errors"
 	"github.com/sashabaranov/go-openai"
@@ -15,21 +16,10 @@ import (
 )
 
 func TestOpenAIChat(t *testing.T) {
-	conf.Conf().APIKeys = conf.APIKeys{
-		"default": conf.APIKey{
-			APIKey:  "sk-",
-			BaseURL: "https://api.vveai.com/v1",
-		},
-		"deepseek": conf.APIKey{
-			APIKey:  "sk-",
-			BaseURL: "https://api.deepseek.com",
-		},
-	}
-
-	config := openai.DefaultConfig(conf.Conf().APIKeys.Default().APIKey)
-	config.BaseURL = conf.Conf().APIKeys.Default().BaseURL
-
-	openaiCli := openai.NewClientWithConfig(config)
+	openaiCli := newOpenaiCli(&model.ApiKey{
+		APIKey:  "",
+		BaseURL: "",
+	})
 
 	chatStream, err := openaiCli.CreateChatCompletionStream(context.Background(), openai.ChatCompletionRequest{
 		Model: "deepseek-chat",
@@ -46,11 +36,11 @@ func TestOpenAIChat(t *testing.T) {
 					Name:        "GetWeather",
 					Description: "查询今天的天气",
 					Strict:      true,
-					Parameters: caller.Definition{
+					Parameters: schema.Definition{
 						Type:                 "object",
 						Required:             []string{"location"},
 						AdditionalProperties: false,
-						Properties: map[string]caller.Definition{
+						Properties: map[string]schema.Definition{
 							"location": {
 								Type:        "string",
 								Description: "地点名称",
