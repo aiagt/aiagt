@@ -10310,7 +10310,6 @@ var fieldIDToName_PluginSecrets = map[int16]string{
 }
 
 func (p *PluginSecrets) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetPluginId bool = false
@@ -10591,7 +10590,6 @@ WriteFieldBeginError:
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
-
 func (p *PluginSecrets) writeField2(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("plugin_name", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
@@ -10608,7 +10606,6 @@ WriteFieldBeginError:
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
-
 func (p *PluginSecrets) writeField3(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("secrets", thrift.LIST, 3); err != nil {
 		goto WriteFieldBeginError
@@ -10633,7 +10630,6 @@ WriteFieldBeginError:
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
-
 func (p *PluginSecrets) writeField4(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("is_private", thrift.BOOL, 4); err != nil {
 		goto WriteFieldBeginError
@@ -10650,7 +10646,6 @@ WriteFieldBeginError:
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
-
 func (p *PluginSecrets) writeField5(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("author_id", thrift.I64, 5); err != nil {
 		goto WriteFieldBeginError
@@ -10667,7 +10662,6 @@ WriteFieldBeginError:
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
 }
-
 func (p *PluginSecrets) writeField6(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("plugin_logo", thrift.STRING, 6); err != nil {
 		goto WriteFieldBeginError
@@ -12193,7 +12187,6 @@ func (p *PluginServiceGetPluginByIDsArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceGetPluginByIDsArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -12362,7 +12355,6 @@ func (p *PluginServiceGetPluginByIDsResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceGetPluginByIDsResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -13576,7 +13568,6 @@ func (p *PluginServiceGetPluginSecretsByToolsArgs) IsSetReq() bool {
 }
 
 func (p *PluginServiceGetPluginSecretsByToolsArgs) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 
@@ -13745,7 +13736,6 @@ func (p *PluginServiceGetPluginSecretsByToolsResult) IsSetSuccess() bool {
 }
 
 func (p *PluginServiceGetPluginSecretsByToolsResult) Read(iprot thrift.TProtocol) (err error) {
-
 	var fieldTypeId thrift.TType
 	var fieldId int16
 

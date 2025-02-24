@@ -1490,7 +1490,6 @@ WriteFieldBeginError:
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 22 end error: ", p), err)
 }
-
 func (p *App) writeField23(oprot thrift.TProtocol) (err error) {
 	if p.IsSetPluginSecrets() {
 		if err = oprot.WriteFieldBegin("plugin_secrets", thrift.LIST, 23); err != nil {
