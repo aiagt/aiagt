@@ -45,7 +45,7 @@ func (s *AppServiceImpl) GetAppByID(ctx context.Context, req *appsvc.GetAppByIDR
 		privateToolsCount int32
 	)
 
-	if !utils.Value(req.Unfold) {
+	if !utils.ValOf(req.Unfold) {
 		for _, tool := range tools {
 			if tool.Plugin.IsPrivate && tool.Plugin.AuthorId != userID {
 				privateToolsCount++

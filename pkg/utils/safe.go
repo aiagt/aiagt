@@ -1,6 +1,6 @@
 package utils
 
-func Value[T any](v *T) T {
+func ValOf[T any](v *T) T {
 	if v == nil {
 		var zero T
 		return zero
@@ -9,11 +9,11 @@ func Value[T any](v *T) T {
 	return *v
 }
 
-func Pointer[T any](v T) *T {
+func PtrOf[T any](v T) *T {
 	return &v
 }
 
-func OptionalPointer[T comparable](v T) *T {
+func OPtrOf[T comparable](v T) *T {
 	var zero T
 	if v == zero {
 		return nil

@@ -52,8 +52,8 @@ func NewGenModelConfig(modelConfig *model.ModelConfig) *appsvc.ModelConfig {
 		MaxTokens:        modelConfig.MaxTokens,
 		Temperature:      modelConfig.Temperature,
 		TopP:             modelConfig.TopP,
-		N:                utils.Value(modelConfig.N),
-		Stream:           utils.Value(modelConfig.Stream),
+		N:                utils.ValOf(modelConfig.N),
+		Stream:           utils.ValOf(modelConfig.Stream),
 		Stop:             modelConfig.Stop,
 		PresencePenalty:  modelConfig.PresencePenalty,
 		Seed:             modelConfig.Seed,
@@ -121,8 +121,8 @@ func NewModelModelConfig(modelConfig *appsvc.ModelConfig) *model.ModelConfig {
 		MaxTokens:        modelConfig.MaxTokens,
 		Temperature:      modelConfig.Temperature,
 		TopP:             modelConfig.TopP,
-		N:                utils.Pointer(modelConfig.N),
-		Stream:           utils.Pointer(modelConfig.Stream),
+		N:                utils.PtrOf(modelConfig.N),
+		Stream:           utils.PtrOf(modelConfig.Stream),
 		Stop:             modelConfig.Stop,
 		PresencePenalty:  modelConfig.PresencePenalty,
 		Seed:             modelConfig.Seed,
@@ -137,7 +137,7 @@ func NewModelModelConfig(modelConfig *appsvc.ModelConfig) *model.ModelConfig {
 	if modelConfig.ResponseFormat != nil {
 		responseFormat, err := json.Marshal(modelConfig.ResponseFormat)
 		if err == nil {
-			result.ResponseFormat = utils.Pointer(string(responseFormat))
+			result.ResponseFormat = utils.PtrOf(string(responseFormat))
 		}
 	}
 
@@ -148,7 +148,7 @@ func NewGenAppLabel(label *model.AppLabel) *appsvc.AppLabel {
 	return &appsvc.AppLabel{
 		Id:        label.ID,
 		Text:      label.Text,
-		Pinned:    utils.Pointer(label.Pinned),
+		Pinned:    utils.PtrOf(label.Pinned),
 		CreatedAt: baseutil.NewBaseTime(label.CreatedAt),
 	}
 }

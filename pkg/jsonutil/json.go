@@ -76,7 +76,7 @@ func (decoder *int64PointerDecoder) Decode(ptr unsafe.Pointer, iter *jsoniter.It
 
 		*((*unsafe.Pointer)(ptr)) = unsafe.Pointer(&val)
 	case jsoniter.NumberValue:
-		*((*unsafe.Pointer)(ptr)) = unsafe.Pointer(utils.Pointer(iter.ReadInt64()))
+		*((*unsafe.Pointer)(ptr)) = unsafe.Pointer(utils.PtrOf(iter.ReadInt64()))
 	case jsoniter.NilValue:
 		iter.ReadNil()
 		*((*unsafe.Pointer)(ptr)) = nil

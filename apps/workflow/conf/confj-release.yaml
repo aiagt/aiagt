@@ -1,0 +1,26 @@
+server:
+  name: workflow
+  address: ":8936"
+
+log:
+  level: debug
+  file_name: deploy/log/workflow.log
+
+config_center:
+  port: 8500
+
+registry:
+  address:
+    - ":8500"
+
+db:
+  dsn: "root:123456@tcp(127.0.0.1:3306)/aiagt?charset=utf8mb4&parseTime=True&loc=Local"
+
+redis:
+  address: "127.0.0.1:6379"
+
+metrics:
+  addr: ":9936"
+
+tracing:
+  export_addr: "localhost:4317"

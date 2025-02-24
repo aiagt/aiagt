@@ -31,3 +31,16 @@ func Filter[T any](t []T, f func(T) bool) []T {
 
 	return result
 }
+
+func AnyList[T any](list []T) []any {
+	if list == nil {
+		return nil
+	}
+
+	result := make([]any, len(list))
+	for i, item := range list {
+		result[i] = item
+	}
+
+	return result
+}

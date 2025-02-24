@@ -19,10 +19,6 @@ db:
 redis:
   address: "127.0.0.1:6379"
 
-openai:
-  api_key: "sk-xxx"
-  base_url: "https://api.openai.com/v1"
-
 metrics:
   addr: ":9935"
 

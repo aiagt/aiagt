@@ -81,6 +81,22 @@ struct ListModelResp {
     2: required list<Model> models
 }
 
+struct APIKey {
+    1: required i64 id
+    2: required string source
+    3: required string base_url
+    4: required string api_key
+}
+
+struct GetAPIKeyBySourceReq {
+    1: required string source
+}
+
+struct GetAPIKeyByModelReq {
+    1: optional string model
+    2: optional i64 model_id
+}
+
 service ModelService {
     GenTokenResp GenToken(1: GenTokenReq req)
     ChatResp Chat(1: ChatReq req) (streaming.mode="server")
@@ -90,4 +106,7 @@ service ModelService {
     base.Empty DeleteModel(1: base.IDReq req)
     Model GetModelByID(1: base.IDReq req)
     ListModelResp ListModel(1: ListModelReq req)
+
+    APIKey GetAPIKeyBySource(1: GetAPIKeyBySourceReq req)
+    APIKey GetAPIKeyByModel(1: GetAPIKeyByModelReq req)
 }

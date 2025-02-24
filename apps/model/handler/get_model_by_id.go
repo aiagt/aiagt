@@ -12,7 +12,7 @@ import (
 func (s *ModelServiceImpl) GetModelByID(ctx context.Context, req *base.IDReq) (resp *modelsvc.Model, err error) {
 	model, err := s.modelDao.GetByID(ctx, req.Id)
 	if err != nil {
-		return nil, bizGetModelByID.NewErr(err)
+		return nil, bizGetModelById.NewErr(err)
 	}
 
 	resp = mapper.NewGenModel(model)

@@ -3,6 +3,8 @@ package handler
 import (
 	"errors"
 	"fmt"
+	"github.com/aiagt/aiagt/apps/model/model"
+	"github.com/sashabaranov/go-openai"
 	"io"
 	"time"
 
@@ -22,17 +24,17 @@ func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelServ
 
 	var (
 		modelKey    = req.OpenaiReq.Model
-		modelSource string
+		modelSource = model.DefaultSource
 	)
 
 	if utils.IsZero(modelKey) {
-		model, err := s.modelDao.GetByID(ctx, req.ModelId)
+		m, err := s.modelDao.GetByID(ctx, req.ModelId)
 		if err != nil {
 			return bizChat.NewErr(err).Log(ctx, "get model by id failed")
 		}
 
-		modelKey = model.ModelKey
-		modelSource = model.Source
+		modelKey = m.ModelKey
+		modelSource = m.Source
 	}
 
 	chatReq := mapper.NewOpenAIGoRequest(req.OpenaiReq, modelKey)
@@ -46,10 +48,16 @@ func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelServ
 		return bizChat.NewCodeErr(11, errors.New("call limit reached")).Log(ctx, "call limit reached")
 	}
 
+	// get llm apikey
+	apiKey, err := s.apiKeyDao.GetBySourceOrDefault(ctx, modelSource)
+	if err != nil {
+		return bizChat.NewErr(err).Log(ctx, "get api key failed")
+	}
+
 	start := time.Now()
 
 	klog.CtxDebugf(ctx, "create chat complation req: %s", utils.Pretty(chatReq, 1<<10))
-	chatStream, err := s.openaiCli(modelSource).CreateChatCompletionStream(ctx, *chatReq)
+	chatStream, err := newOpenaiCli(apiKey).CreateChatCompletionStream(ctx, *chatReq)
 	klog.CtxDebugf(ctx, "create chat complation time consuming: %.2fs", float64(time.Since(start).Milliseconds())/float64(1000))
 
 	if err != nil {
@@ -80,4 +88,11 @@ func (s *ModelServiceImpl) Chat(req *modelsvc.ChatReq, stream modelsvc.ModelServ
 			return bizChat.NewErr(err).Log(ctx, "chat stream send failed")
 		}
 	}
+}
+
+func newOpenaiCli(apiKey *model.ApiKey) *openai.Client {
+	config := openai.DefaultConfig(apiKey.APIKey)
+	config.BaseURL = apiKey.BaseURL
+
+	return openai.NewClientWithConfig(config)
 }

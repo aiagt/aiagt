@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"encoding/json"
+	"github.com/aiagt/aiagt/pkg/caller"
 	"strings"
 
 	"github.com/shopspring/decimal"
@@ -9,7 +10,6 @@ import (
 	"github.com/aiagt/aiagt/pkg/hash/hmap"
 
 	"github.com/aiagt/aiagt/apps/model/model"
-	"github.com/aiagt/aiagt/pkg/caller"
 	"github.com/aiagt/aiagt/pkg/utils"
 
 	"github.com/aiagt/aiagt/kitex_gen/modelsvc"
@@ -22,25 +22,25 @@ func NewOpenAIGoRequest(req *openai.ChatCompletionRequest, modelKey string) *ope
 	result := &openaigo.ChatCompletionRequest{
 		Model:             modelKey,
 		Messages:          NewOpenAIGoListMessage(req.Messages),
-		MaxTokens:         int(utils.Value(req.MaxTokens)),
-		Temperature:       float32(utils.Value(req.Temperature)),
-		TopP:              float32(utils.Value(req.TopP)),
-		N:                 int(utils.Value(req.N)),
-		Stream:            utils.Value(req.Stream),
+		MaxTokens:         int(utils.ValOf(req.MaxTokens)),
+		Temperature:       float32(utils.ValOf(req.Temperature)),
+		TopP:              float32(utils.ValOf(req.TopP)),
+		N:                 int(utils.ValOf(req.N)),
+		Stream:            utils.ValOf(req.Stream),
 		Stop:              req.Stop,
-		PresencePenalty:   float32(utils.Value(req.PresencePenalty)),
-		Seed:              utils.Pointer(int(utils.Value(req.Seed))),
-		FrequencyPenalty:  float32(utils.Value(req.FrequencyPenalty)),
+		PresencePenalty:   float32(utils.ValOf(req.PresencePenalty)),
+		Seed:              utils.PtrOf(int(utils.ValOf(req.Seed))),
+		FrequencyPenalty:  float32(utils.ValOf(req.FrequencyPenalty)),
 		LogitBias:         lo.MapEntries(req.LogitBias, func(k string, v int32) (string, int) { return k, int(v) }),
-		LogProbs:          utils.Value(req.Logprobs),
-		TopLogProbs:       int(utils.Value(req.TopLogprobs)),
-		User:              utils.Value(req.User),
+		LogProbs:          utils.ValOf(req.Logprobs),
+		TopLogProbs:       int(utils.ValOf(req.TopLogprobs)),
+		User:              utils.ValOf(req.User),
 		Functions:         NewOpenAIGoListFunction(req.Functions),
 		StreamOptions:     NewOpenAIGoStreamOptions(req.StreamOptions),
 		ResponseFormat:    NewOpenAIGoResponseFormat(req.ResponseFormat),
 		Tools:             NewOpenAIGoListTool(req.Tools),
 		ParallelToolCalls: false, // fixed false
-		// FunctionCall: safe.Value(req.FunctionCall),
+		// FunctionCall: safe.ValOf(req.FunctionCall),
 		// ToolChoice: NewOpenAIGoToolChoice(req.ToolChoice),
 	}
 
@@ -67,9 +67,9 @@ func NewOpenAIGoResponseFormat(format *openai.ChatCompletionResponseFormat) *ope
 	if format.JsonSchema != nil {
 		jsonSchema = &openaigo.ChatCompletionResponseFormatJSONSchema{
 			Name:        format.JsonSchema.Name,
-			Description: utils.Value(format.JsonSchema.Description),
+			Description: utils.ValOf(format.JsonSchema.Description),
 			Schema:      StringMarshaler(format.JsonSchema.Schema),
-			Strict:      utils.Value(format.JsonSchema.Strict),
+			Strict:      utils.ValOf(format.JsonSchema.Strict),
 		}
 	}
 
@@ -82,11 +82,11 @@ func NewOpenAIGoResponseFormat(format *openai.ChatCompletionResponseFormat) *ope
 func NewOpenAIGoMessage(message *openai.ChatCompletionMessage) *openaigo.ChatCompletionMessage {
 	return &openaigo.ChatCompletionMessage{
 		Role:         message.Role,
-		Content:      utils.Value(message.Content),
+		Content:      utils.ValOf(message.Content),
 		MultiContent: NewOpenAIGoMultiContent(message.MultiContent),
-		Name:         utils.Value(message.Name),
+		Name:         utils.ValOf(message.Name),
 		FunctionCall: NewOpenAIGoFunctionCall(message.FunctionCall),
-		ToolCallID:   utils.Value(message.ToolCallId),
+		ToolCallID:   utils.ValOf(message.ToolCallId),
 		ToolCalls:    NewOpenAIGoListToolCall(message.ToolCalls),
 	}
 }
@@ -101,7 +101,7 @@ func NewOpenAIGoMultiContent(multiContent []*openai.ChatMessagePart) []openaigo.
 	for i, part := range multiContent {
 		result[i] = openaigo.ChatMessagePart{
 			Type: NewOpenAIGoMultiContentPartType(part.Type),
-			Text: utils.Value(part.Text),
+			Text: utils.ValOf(part.Text),
 		}
 
 		if part.ImageUrl != nil {
@@ -135,8 +135,8 @@ func NewOpenAIGoFunctionCall(functionCall *openai.FunctionCall) *openaigo.Functi
 	}
 
 	return &openaigo.FunctionCall{
-		Name:      utils.Value(functionCall.Name),
-		Arguments: utils.Value(functionCall.Arguments),
+		Name:      utils.ValOf(functionCall.Name),
+		Arguments: utils.ValOf(functionCall.Arguments),
 	}
 }
 
@@ -154,14 +154,14 @@ func NewOpenAIGoToolCall(toolCall *openai.ToolCall) *openaigo.ToolCall {
 	return &openaigo.ToolCall{
 		ID:       toolCall.Id,
 		Type:     typ,
-		Function: utils.Value(NewOpenAIGoFunctionCall(toolCall.Function)),
+		Function: utils.ValOf(NewOpenAIGoFunctionCall(toolCall.Function)),
 	}
 }
 
 func NewOpenAIGoListToolCall(toolCalls []*openai.ToolCall) []openaigo.ToolCall {
 	result := make([]openaigo.ToolCall, len(toolCalls))
 	for i, call := range toolCalls {
-		result[i] = utils.Value(NewOpenAIGoToolCall(call))
+		result[i] = utils.ValOf(NewOpenAIGoToolCall(call))
 	}
 
 	return result
@@ -170,7 +170,7 @@ func NewOpenAIGoListToolCall(toolCalls []*openai.ToolCall) []openaigo.ToolCall {
 func NewOpenAIGoListMessage(messages []*openai.ChatCompletionMessage) []openaigo.ChatCompletionMessage {
 	result := make([]openaigo.ChatCompletionMessage, len(messages))
 	for i, msg := range messages {
-		result[i] = utils.Value(NewOpenAIGoMessage(msg))
+		result[i] = utils.ValOf(NewOpenAIGoMessage(msg))
 	}
 
 	return result
@@ -185,14 +185,14 @@ func NewOpenAIGoFunction(function *openai.FunctionDefinition) *openaigo.Function
 	_ = json.Unmarshal(function.Parameters, &parameters)
 
 	// NOTE: 'required' is required to be supplied and to be an array including every key in properties
-	parameters.Required = hmap.FromMap(parameters.Properties).Keys()
+	parameters.Required = hmap.Of(parameters.Properties).Keys()
 	// NOTE: 'additionalProperties' is required to be supplied and to be false
 	parameters.AdditionalProperties = false
 
 	return &openaigo.FunctionDefinition{
 		Name:        function.Name,
-		Description: utils.Value(function.Description),
-		Strict:      utils.Value(function.Strict),
+		Description: utils.ValOf(function.Description),
+		Strict:      utils.ValOf(function.Strict),
 		Parameters:  &parameters,
 	}
 }
@@ -200,7 +200,7 @@ func NewOpenAIGoFunction(function *openai.FunctionDefinition) *openaigo.Function
 func NewOpenAIGoListFunction(functions []*openai.FunctionDefinition) []openaigo.FunctionDefinition {
 	result := make([]openaigo.FunctionDefinition, len(functions))
 	for i, function := range functions {
-		result[i] = utils.Value(NewOpenAIGoFunction(function))
+		result[i] = utils.ValOf(NewOpenAIGoFunction(function))
 	}
 
 	return result
@@ -229,7 +229,7 @@ func NewOpenAIGoStreamOptions(streamOptions *openai.StreamOptions) *openaigo.Str
 	}
 
 	return &openaigo.StreamOptions{
-		IncludeUsage: utils.Value(streamOptions.IncludeUsage),
+		IncludeUsage: utils.ValOf(streamOptions.IncludeUsage),
 	}
 }
 
@@ -262,8 +262,8 @@ func NewOpenAIResponseChoice(choice *openaigo.ChatCompletionStreamChoice) *opena
 
 func NewOpenAIResponseDelta(delta *openaigo.ChatCompletionStreamChoiceDelta) *openai.ChatCompletionStreamChoiceDelta {
 	return &openai.ChatCompletionStreamChoiceDelta{
-		Content:      utils.OptionalPointer(delta.Content),
-		Role:         utils.OptionalPointer(delta.Role),
+		Content:      utils.OPtrOf(delta.Content),
+		Role:         utils.OPtrOf(delta.Role),
 		FunctionCall: NewOpenAIFunctionCall(delta.FunctionCall),
 		ToolCalls:    NewOpenAIListToolCall(delta.ToolCalls),
 	}
@@ -275,8 +275,8 @@ func NewOpenAIFunctionCall(functionCall *openaigo.FunctionCall) *openai.Function
 	}
 
 	return &openai.FunctionCall{
-		Name:      utils.OptionalPointer(functionCall.Name),
-		Arguments: utils.OptionalPointer(functionCall.Arguments),
+		Name:      utils.OPtrOf(functionCall.Name),
+		Arguments: utils.OPtrOf(functionCall.Arguments),
 	}
 }
 
@@ -287,7 +287,7 @@ func NewOpenAIToolCall(toolCall *openaigo.ToolCall) *openai.ToolCall {
 
 	var index *int32
 	if toolCall.Index != nil {
-		index = utils.Pointer(int32(*toolCall.Index))
+		index = utils.PtrOf(int32(*toolCall.Index))
 	}
 
 	var typ openai.ToolType

@@ -6,8 +6,7 @@ import (
     "context"
     "math"
 
-    "github.com/aiagt/aiagt/app/{{ .Service.Name }}/model"
-    "github.com/aiagt/aiagt/common/ctxutil"
+    "github.com/aiagt/aiagt/apps/{{ .Service.Name }}/model"
     "github.com/aiagt/aiagt/kitex_gen/base"
 	"github.com/aiagt/aiagt/pkg/snowflake"
     "github.com/pkg/errors"
@@ -26,7 +25,7 @@ func New{{ .Model.Camel }}Dao() *{{ .Model.Camel }}Dao {
 }
 
 func (d *{{ .Model.Camel }}Dao) db(ctx context.Context) *gorm.DB {
-    return ctxutil.Tx(ctx)
+	return ktdb.DBCtx(ctx)
 }
 
 // GetByID get {{ .Model.Snake }} by id
@@ -64,7 +63,7 @@ func (d *{{ .Model.Camel }}Dao) List(ctx context.Context, page *base.PaginationR
 
     err := d.db(ctx).Model(d.m).Count(&total).Offset(offset).Limit(limit).Find(&list).Error
     if err != nil {
-        return nil, errors.Wrap(err, "{{ .Model.Snake }} dao get page error")
+        return nil, nil, errors.Wrap(err, "{{ .Model.Snake }} dao get page error")
     }
 
     pageTotal := int32(math.Ceil(float64(total) / float64(page.PageSize)))

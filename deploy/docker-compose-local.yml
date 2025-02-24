@@ -53,6 +53,15 @@ services:
     ports:
       - 8935:80
 
+  workflow:
+    image: aigat-workflow:latest
+    networks:
+      - aiagt-network
+    volumes:
+      - ./log/workflow:/app/log
+    ports:
+      - 8936:80
+
 networks:
   aiagt-network:
     external: true

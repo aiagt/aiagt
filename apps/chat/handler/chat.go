@@ -39,7 +39,7 @@ func (s *ChatServiceImpl) Chat(req *chatsvc.ChatReq, stream chatsvc.ChatService_
 	}
 
 	// get app information
-	getAppResp, err := s.appCli.GetAppByID(ctx, &appsvc.GetAppByIDReq{Id: req.AppId, Unfold: utils.Pointer(true)})
+	getAppResp, err := s.appCli.GetAppByID(ctx, &appsvc.GetAppByIDReq{Id: req.AppId, Unfold: utils.PtrOf(true)})
 	if err != nil {
 		return bizChat.CallErr(err).Log(ctx, "get app by id error")
 	}
@@ -171,7 +171,7 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 		OpenaiReq: &openai.ChatCompletionRequest{
 			Messages: append([]*openai.ChatCompletionMessage{{
 				Role:    "system",
-				Content: utils.Pointer(fmt.Sprintf(`You are an agent on the ai agent platform "Aiagt", your identity information is:\nName: %s,\nDescription: "%s",\nAuthor: %s`, app.Name, app.Description, app.Author.Username)),
+				Content: utils.PtrOf(fmt.Sprintf(`You are an agent on the ai agent platform "Aiagt", your identity information is:\nName: %s,\nDescription: "%s",\nAuthor: %s`, app.Name, app.Description, app.Author.Username)),
 			}}, messages...),
 			MaxTokens:   modelConfig.MaxTokens,
 			Temperature: modelConfig.Temperature,
@@ -265,8 +265,8 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 				functionCallArguments.WriteString(functionCall.GetArguments())
 			case choice.FinishReason == "function_call":
 				functionCall := &openai.FunctionCall{
-					Name:      utils.Pointer(functionCallName.String()),
-					Arguments: utils.Pointer(functionCallArguments.String()),
+					Name:      utils.PtrOf(functionCallName.String()),
+					Arguments: utils.PtrOf(functionCallArguments.String()),
 				}
 				klog.CtxInfof(ctx, "function call: %s", utils.Pretty(functionCall, 1<<10))
 
@@ -316,14 +316,14 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 				return s.handleFunctionCall(ctx, functionCall, tool, conversationID, user, msgs, app, token, stream)
 			case len(choice.Delta.ToolCalls) > 0:
 				toolCall := utils.First(choice.Delta.ToolCalls)
-				index := int(utils.Value(toolCall.Index))
+				index := int(utils.ValOf(toolCall.Index))
 
 				if index > len(toolCalls) || utils.NonZeroAndNotEqual(toolCall.Id, toolCallID.String()) {
 					toolCalls = append(toolCalls, &openai.ToolCall{
 						Id: toolCallID.String(),
 						Function: &openai.FunctionCall{
-							Name:      utils.Pointer(toolCallName.String()),
-							Arguments: utils.Pointer(toolCallArguments.String()),
+							Name:      utils.PtrOf(toolCallName.String()),
+							Arguments: utils.PtrOf(toolCallArguments.String()),
 						},
 					})
 
@@ -333,14 +333,14 @@ func (s *ChatServiceImpl) chat(ctx context.Context, conversationID int64, user *
 				}
 
 				toolCallID.WriteString(toolCall.Id)
-				toolCallName.WriteString(utils.Value(toolCall.Function.Name))
-				toolCallArguments.WriteString(utils.Value(toolCall.Function.Arguments))
+				toolCallName.WriteString(utils.ValOf(toolCall.Function.Name))
+				toolCallArguments.WriteString(utils.ValOf(toolCall.Function.Arguments))
 			case choice.FinishReason == "tool_calls":
 				toolCalls = append(toolCalls, &openai.ToolCall{
 					Id: toolCallID.String(),
 					Function: &openai.FunctionCall{
-						Name:      utils.Pointer(toolCallName.String()),
-						Arguments: utils.Pointer(toolCallArguments.String()),
+						Name:      utils.PtrOf(toolCallName.String()),
+						Arguments: utils.PtrOf(toolCallArguments.String()),
 					}})
 
 				for _, toolCall := range toolCalls {
@@ -604,7 +604,7 @@ func (s *ChatServiceImpl) generateNewTitle(ctx context.Context, stream chatsvc.C
 			Messages: []*openai.ChatCompletionMessage{
 				{
 					Role:    mapper.NewOpenAIMessageRole(model.MessageRoleSystem),
-					Content: utils.Pointer("Create a short title based on the user's conversation content. The number of characters should not exceed 32. The English word should not exceed 5 words. Try to keep it within 4. The language of the title content should be consistent with the language of the conversation content."),
+					Content: utils.PtrOf("Create a short title based on the user's conversation content. The number of characters should not exceed 32. The English word should not exceed 5 words. Try to keep it within 4. The language of the title content should be consistent with the language of the conversation content."),
 				},
 				{
 					Role:    mapper.NewOpenAIMessageRole(model.MessageRoleUser),
@@ -615,9 +615,9 @@ func (s *ChatServiceImpl) generateNewTitle(ctx context.Context, stream chatsvc.C
 				Type: openai.ChatCompletionResponseFormatType_JSON_SCHEMA,
 				JsonSchema: &openai.ChatCompletionResponseFormatJSONSchema{
 					Name:        "TitleResponse",
-					Description: utils.Pointer("JSON schema for title response"),
+					Description: utils.PtrOf("JSON schema for title response"),
 					Schema:      `{ "type": "object", "properties": { "title": { "type": "string", "description": "Conversation title" } }, "required": [ "title" ], "additionalProperties": false }`,
-					Strict:      utils.Pointer(true),
+					Strict:      utils.PtrOf(true),
 				},
 			},
 		},
@@ -664,7 +664,7 @@ func (s *ChatServiceImpl) generateNewTitle(ctx context.Context, stream chatsvc.C
 		}
 
 		if resp != nil && resp.OpenaiResp != nil && len(resp.OpenaiResp.Choices) > 0 && resp.OpenaiResp.Choices[0].Delta != nil {
-			title.WriteString(utils.Value(resp.OpenaiResp.Choices[0].Delta.Content))
+			title.WriteString(utils.ValOf(resp.OpenaiResp.Choices[0].Delta.Content))
 		}
 	}
 }

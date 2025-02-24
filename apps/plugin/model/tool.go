@@ -1,9 +1,8 @@
 package model
 
 import (
-	"time"
-
 	"github.com/aiagt/aiagt/pkg/caller"
+	"time"
 )
 
 type PluginTool struct {

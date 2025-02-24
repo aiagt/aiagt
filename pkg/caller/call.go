@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"github.com/aiagt/aiagt/pkg/schema"
 	"io"
 	"net/http"
 
@@ -32,7 +33,7 @@ func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *Re
 	// verify request body
 	var requestBody interface{}
 
-	err := VerifySchemaAndUnmarshal(requestType.Def(), reqBody, &requestBody)
+	err := schema.VerifySchemaAndUnmarshal(requestType.Def(), reqBody, &requestBody)
 	if err != nil {
 		return nil, 0, errors.Wrap(err, "request body validation error")
 	}
@@ -72,7 +73,7 @@ func Call(ctx context.Context, body *RequestBody, apiURL string, requestType *Re
 	// verify response body
 	var responseBody interface{}
 
-	err = VerifySchemaAndUnmarshal(responseType.Def(), respBody, responseBody)
+	err = schema.VerifySchemaAndUnmarshal(responseType.Def(), respBody, responseBody)
 	if err != nil {
 		return respBody, resp.StatusCode, errors.Wrap(err, "response body validation error")
 	}

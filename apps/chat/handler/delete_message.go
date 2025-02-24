@@ -28,7 +28,7 @@ func (s *ChatServiceImpl) DeleteMessage(ctx context.Context, req *chatsvc.Delete
 		return nil, bizDeleteMessage.CodeErr(bizerr.ErrCodeForbidden)
 	}
 
-	if utils.Value(req.More) > 0 {
+	if utils.ValOf(req.More) > 0 {
 		err = s.messageDao.DeleteGteID(ctx, message.ID, conversation.ID)
 	} else {
 		err = s.messageDao.Delete(ctx, req.Id)

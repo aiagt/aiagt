@@ -30,7 +30,7 @@ import (
 )
 
 func main() {
-	handle := handler.NewModelService(db.NewModelDao(), cache.NewCallTokenCache())
+	handle := handler.NewModelService(db.NewModelDao(), db.NewApiKeyDao(), cache.NewCallTokenCache())
 
 	config := conf.Conf()
 	observability.InitMetrics(config.Server.Name, config.Metrics.Addr, config.Registry.Address[0])
@@ -47,7 +47,7 @@ func main() {
 		)),
 		server.WithSuite(serversuite.NewServerSuite(config.GetServerConf(), rpc.UserCli)))
 
-	logerr.Fatal(ktdb.DB().AutoMigrate(new(model.Models)))
+	logerr.Fatal(ktdb.DB().AutoMigrate(new(model.Models), new(model.ApiKey)))
 	logerr.Fatal(ktdb.DB().Use(tracing.NewPlugin(tracing.WithoutMetrics())))
 
 	err := svr.Run()
